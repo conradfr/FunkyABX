@@ -1,13 +1,13 @@
 import Config
 
 # Configure your database
-config :funkyabx, FunkyABX.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "funkyabx_dev",
-  hostname: "localhost",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+# config :funkyabx, FunkyABX.Repo,
+#  username: "postgres",
+#  password: "postgres",
+#  database: "funkyabx_dev",
+#  hostname: "localhost",
+#  show_sensitive_data_on_connection_error: true,
+#  pool_size: 10
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -24,8 +24,7 @@ config :funkyabx, FunkyABXWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "nqYjkLGym8kDJMmqX4qZzbEOVt157hzyWqxb/MWr9Nm8+SQzQeRtcun5w1dCB6Cn",
   watchers: [
-    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    node: ["build.js", "--watch", cd: Path.expand("../assets", __DIR__)]
   ]
 
 # ## SSL Support

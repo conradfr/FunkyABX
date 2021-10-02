@@ -1,0 +1,34 @@
+.navbar {
+  background-image: none;
+  padding-top: 0.4rem !important;
+  padding-bottom: 0.4rem !important;
+
+  margin-bottom: 15px;
+
+  .navbar-brand {
+    font-family: barqish, Arial, sans-serif, cursive;
+    font-size: 1.5rem;
+    //text-shadow: -2px 2px 3px $navbar-shadow;
+  }
+
+  .nav-link {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}
+
+.navbar-tests {
+  a {
+	text-decoration: none;
+	
+	&:hover {
+	  text-decoration: underline;
+	}
+  }
+  
+  .navbar-tests-action {
+	a {
+	  font-size: 0.875rem;
+	}
+  }
+}

@@ -9,7 +9,9 @@ import Config
 
 config :funkyabx,
   namespace: FunkyABX,
-  ecto_repos: [FunkyABX.Repo]
+  ecto_repos: [FunkyABX.Repo],
+  analytics: nil,
+  env: Mix.env()
 
 # Configures the endpoint
 config :funkyabx, FunkyABXWeb.Endpoint,
@@ -18,6 +20,10 @@ config :funkyabx, FunkyABXWeb.Endpoint,
   pubsub_server: FunkyABX.PubSub,
   live_view: [signing_salt: "bNwuWfzu"]
 
+# config :mime, :types, %{
+#  "audio/ogg" => ["ogg"]
+# }
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
@@ -25,19 +31,22 @@ config :funkyabx, FunkyABXWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
+# config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
+
+config :funkyabx, FunkyABX.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  ssl: true,
+  #       tls: :always,
+  #       auth: :always,
+  #       dkim: [
+  #         s: "default", d: "domain.com",
+  #         private_key: {:pem_plain, File.read!("priv/keys/domain.private")}
+  #       ],
+  retries: 2,
+  no_mx_lookups: false
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
-
-# Configure esbuild (the version is required)
-config :esbuild,
-  version: "0.12.18",
-  default: [
-    args: ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets),
-    cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
-  ]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -46,6 +55,10 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :ex_cldr,
+  default_locale: "en",
+  default_backend: FunkyABX.Cldr
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

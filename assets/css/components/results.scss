@@ -1,0 +1,19 @@
+.results {
+  .bi-trophy-fill {
+    &.trophy-1 { color: #e3ac19; }
+    &.trophy-2 { color: #a39d9f; }
+    &.trophy-3 { color: #a48756; }
+  }
+}
+
+.color-correct {
+  color: green;
+}
+
+.color-incorrect {
+  color: red;
+}
+
+.track-results {
+  //font-size: 0.875rem;
+}

@@ -1,0 +1,16 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUserMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-person-circle"></i>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdownUserMenuLink">
+    <%= if @current_user do %>
+      <li class="px-3 mb-2"><%= @current_user.email %></li>
+      <li><hr class="dropdown-divider" style="background-color: white;"></li>
+      <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit), class: "dropdown-item" %></li>
+      <li><%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "dropdown-item" %></li>
+    <% else %>
+      <li><%= link "Register", to: Routes.user_registration_path(@conn, :new), class: "dropdown-item" %></li>
+      <li><%= link "Log in", to: Routes.user_session_path(@conn, :new), class: "dropdown-item" %></li>
+    <% end %>
+  </ul>
+</li>
