@@ -1,0 +1,17 @@
+footer {
+  font-size: 0.688rem;
+  //color: $footer-text;
+
+  padding: 5px 0;
+
+  a {
+    color: $footer-text;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: lighten($footer-text, 10%);
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+.tracks {
+  .track {
+    height: 55px;
+    background-color: $track-bg-color;
+
+    &.active {
+      background-color: $track-active-bg-color;
+    }
+
+    .waveform-canvas {
+      height: 50px;
+      width: 100%;
+
+      padding-top: 7px;
+    }
+  }
+
+  .track-guess {
+    height: 35px;
+    background-color: transparent;
+  }
+
+  .track-wrong {
+    color: red;
+  }
+
+  .track-correct {
+    color: green;
+  }
+}

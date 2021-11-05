@@ -1,8 +1,23 @@
 /* This file is for your main application CSS */
-@import "./phoenix.css";
+/*@import "./phoenix.css";*/
+//@import "./bootstrap.min.css";
+
+@import "colors";
+@import "components/utils";
+
+@import "./theme/variables";
+@import "~bootstrap/scss/bootstrap";
+@import "./theme/bootswatch";
+
+@import "components/footer";
+@import "components/navbar";
+@import "components/test-public";
+@import "components/track";
+@import "components/results";
+@import "components/form";
 
 /* Alerts and form errors used by phx.new */
-.alert {
+/*.alert {
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
@@ -28,11 +43,20 @@
 }
 .alert:empty {
   display: none;
+}*/
+
+h5 {
+  font-size: 1.125rem;
 }
+
+body > div.container {
+  margin-top: 0px;
+}
+
 .invalid-feedback {
   color: #a94442;
   display: block;
-  margin: -1rem 0 2rem;
+  //margin: -1rem 0 2rem;
 }
 
 /* LiveView specific classes for your customization */
@@ -46,10 +70,10 @@
   transition: opacity 1s ease-out;
 }
 
-.phx-disconnected{
+.phx-loading{
   cursor: wait;
 }
-.phx-disconnected *{
+.phx-loading *{
   pointer-events: none;
 }
 

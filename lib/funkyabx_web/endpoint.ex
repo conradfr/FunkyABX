@@ -10,7 +10,8 @@ defmodule FunkyABXWeb.Endpoint do
     signing_salt: "dLpZhLVv"
   ]
 
-  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+  socket "/live", Phoenix.LiveView.Socket,
+    websocket: [connect_info: [:peer_data, session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -20,7 +21,7 @@ defmodule FunkyABXWeb.Endpoint do
     at: "/",
     from: :funkyabx,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: ~w(uploads assets fonts images favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -42,6 +43,8 @@ defmodule FunkyABXWeb.Endpoint do
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
+
+  plug CORSPlug
 
   plug Plug.MethodOverride
   plug Plug.Head

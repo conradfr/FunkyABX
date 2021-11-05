@@ -1,11 +1,20 @@
 <main class="container">
-  <p class="alert alert-info" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="info"><%= live_flash(@flash, :info) %></p>
+  <%= if message = live_flash(@flash, :info) do %>
+    <div class="alert alert-info" role="alert"
+      phx-click="lv:clear-flash"
+      phx-value-key="info"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= message %></div>
+  <% end %>
 
-  <p class="alert alert-danger" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+  <%= if message = live_flash(@flash, :success) do %>
+    <div class="alert alert-success" role="alert"
+      phx-click="lv:clear-flash"
+      phx-value-key="success"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;<%= message %></div>
+  <% end %>
 
+  <%= if message = live_flash(@flash, :error) do %>
+    <div class="alert alert-danger" role="alert"
+      phx-click="lv:clear-flash"
+      phx-value-key="error"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= message %></div>
+  <% end %>
   <%= @inner_content %>
 </main>

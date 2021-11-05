@@ -18,6 +18,13 @@ defmodule FunkyABXWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/lol", PageController, :test
+    live "/upload", Upload, as: :test_upload
+    live "/test/:slug/:key", TestFormLive, as: :test_edit
+    live "/test/:slug", TestLive, as: :test_public
+    live "/results/:slug", TestResultsLive, as: :test_result_public
+    live "/results/:slug/:key", TestResultsLive, as: :test_results_private
+    live "/test", TestFormLive, as: :test_new
   end
 
   # Other scopes may use custom stacks.
