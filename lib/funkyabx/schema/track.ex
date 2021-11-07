@@ -13,6 +13,7 @@ defmodule FunkyABX.Track do
     field(:delete, :boolean, virtual: true)
     field(:fake_id, :integer, virtual: true)
     field(:hash, :string, virtual: true)
+    field(:width, :string, virtual: true)
     belongs_to(:test, Test, type: :binary_id)
   end
 

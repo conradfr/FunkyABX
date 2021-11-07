@@ -9,7 +9,8 @@ import Config
 
 config :funkyabx,
   namespace: FunkyABX,
-  ecto_repos: [FunkyABX.Repo]
+  ecto_repos: [FunkyABX.Repo],
+  analytics: nil
 
 # Configures the endpoint
 config :funkyabx, FunkyABXWeb.Endpoint,
@@ -17,15 +18,6 @@ config :funkyabx, FunkyABXWeb.Endpoint,
   render_errors: [view: FunkyABXWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: FunkyABX.PubSub,
   live_view: [signing_salt: "bNwuWfzu"]
-
-{:ok, origin} =
-  System.get_env("CORS", ".*")
-  |> Regex.compile()
-
-config :cors_plug,
-  origin: [origin],
-  max_age: 86400,
-  methods: ["GET", "POST", "PUT", "OPTIONS"]
 
 # config :mime, :types, %{
 #  "audio/ogg" => ["ogg"]
@@ -38,7 +30,19 @@ config :cors_plug,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
+# config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
+
+config :funkyabx, FunkyABX.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  ssl: true,
+  #       tls: :always,
+  #       auth: :always,
+  #       dkim: [
+  #         s: "default", d: "domain.com",
+  #         private_key: {:pem_plain, File.read!("priv/keys/domain.private")}
+  #       ],
+  retries: 2,
+  no_mx_lookups: false
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
@@ -50,6 +54,10 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :ex_cldr,
+  default_locale: "en",
+  default_backend: FunkyABX.Cldr
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

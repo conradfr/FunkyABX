@@ -1,18 +1,24 @@
 .tracks {
   .track {
-    height: 55px;
+    min-height: 55px;
+    @include media-breakpoint-up(md) {
+      height: 55px;
+    }
+
     background-color: $track-bg-color;
 
-    &.active {
+    &.track-active {
       background-color: $track-active-bg-color;
-    }
 
-    .waveform-canvas {
-      height: 50px;
-      width: 100%;
+      .text-muted {
+        color: $track-active-text-muted;
+      }
 
-      padding-top: 7px;
     }
+  }
+
+  .waveform-wrapper {
+    height: 45px;
   }
 
   .track-guess {
@@ -27,4 +33,13 @@
   .track-correct {
     color: green;
   }
+}
+
+.waveform-canvas {
+  height: 50px;
+  //width: 100%;
+
+  //border: 1px solid red;
+
+  //padding-top: 7px;
 }

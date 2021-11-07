@@ -1,20 +1,26 @@
-<main class="container">
+<main class="container-xxl px-2 px-sm-4">
   <%= if message = live_flash(@flash, :info) do %>
-    <div class="alert alert-info" role="alert"
+    <div class="alert alert-info alert-dismissible fade show" role="alert"
       phx-click="lv:clear-flash"
-      phx-value-key="info"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= message %></div>
+      phx-value-key="info"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
 
   <%= if message = live_flash(@flash, :success) do %>
-    <div class="alert alert-success" role="alert"
+    <div class="alert alert-success alert-dismissible fade show" role="alert"
       phx-click="lv:clear-flash"
-      phx-value-key="success"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;<%= message %></div>
+      phx-value-key="success"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;<%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
 
   <%= if message = live_flash(@flash, :error) do %>
-    <div class="alert alert-danger" role="alert"
+    <div class="alert alert-danger alert-dismissible fade show" role="alert"
       phx-click="lv:clear-flash"
-      phx-value-key="error"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= message %></div>
+      phx-value-key="error"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
   <%= @inner_content %>
 </main>

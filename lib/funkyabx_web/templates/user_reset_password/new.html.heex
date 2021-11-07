@@ -1,0 +1,22 @@
+<h3 class="header-chemyretro">Forgot your password?</h3>
+
+<div class="row">
+  <div class="col-12 col-sm-6">
+    <.form let={f} for={:user} action={Routes.user_reset_password_path(@conn, :create)}>
+      <div class="mb-3">
+        <%= label f, :email, class: "form-label" %>
+        <%= email_input f, :email, required: true, class: "form-control" %>
+        <%= error_tag f, :email %>
+      </div>
+
+      <div>
+        <%= submit "Send instructions to reset password", class: "btn btn-primary" %>
+      </div>
+    </.form>
+
+    <p class="mt-3">
+      <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
+      <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
+    </p>
+  </div>
+</div>

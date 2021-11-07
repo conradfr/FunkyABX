@@ -5,21 +5,23 @@ $primary: #c44811;
 $secondary: #583247;
 //$secondary: #7f4601;
 $dark: #444;
+$info: #00606e;
+$light: #bdaa24;
 
-$info: #006b79;
+// $text-muted: #444444;
 
 $body-bg: $black;
 $body-color: $white;
 
 $navbar-light-color: $white;
 
-
-$footer-text: #888;
-
+$dropdown-divider-bg: $white;
+$footer-text: #505050;
 
 $track-bg-color: #303030;
 
 $track-active-bg-color: #097287;
+$track-active-text-muted: darken($white, 10%) !important;
 
 $form-unit-bg-color: #303030;
 

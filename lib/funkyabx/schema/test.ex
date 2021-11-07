@@ -1,6 +1,7 @@
 defmodule FunkyABX.Test do
   import Ecto.Changeset
   use Ecto.Schema
+  alias FunkyABX.Accounts.User
   alias FunkyABX.Test.TitleSlug
   alias FunkyABX.Track
 
@@ -12,6 +13,7 @@ defmodule FunkyABX.Test do
     field(:title, :string)
     field(:author, :string)
     field(:description, :string)
+    field(:description_markdown, :boolean)
     field(:slug, TitleSlug.Type)
     field(:public, :boolean)
     field(:password, :string)
@@ -20,6 +22,7 @@ defmodule FunkyABX.Test do
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
     field(:ip_address, :binary)
     timestamps()
+    belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
   end
 
@@ -29,6 +32,7 @@ defmodule FunkyABX.Test do
       :title,
       :author,
       :description,
+      :description_markdown,
       :public,
       :password,
       :type,
@@ -36,10 +40,11 @@ defmodule FunkyABX.Test do
       :identification
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
-    |> validate_required([:type, :title, :password])
+    |> cast_assoc(:user)
+    |> validate_required([:type, :title])
     |> validate_general_type()
-    |> validate_length(:tracks, min: @minimum_tracks)
-    #    |> validate_minimum_tracks()
+    #    |> validate_length(:tracks, min: @minimum_tracks)
+    |> validate_minimum_tracks()
     |> TitleSlug.maybe_generate_slug()
     |> TitleSlug.unique_constraint()
   end
@@ -50,6 +55,7 @@ defmodule FunkyABX.Test do
       :title,
       :author,
       :description,
+      :description_markdown,
       :public,
       :password,
       :type,
@@ -57,7 +63,7 @@ defmodule FunkyABX.Test do
       :identification
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
-    |> validate_required([:type, :title, :password])
+    |> validate_required([:type, :title])
     |> validate_general_type()
     |> validate_length(:tracks, min: @minimum_tracks)
     |> TitleSlug.unique_constraint()
@@ -85,7 +91,7 @@ defmodule FunkyABX.Test do
     tracks = get_field(changeset, :tracks)
 
     if Kernel.length(tracks) < @minimum_tracks do
-      add_error(changeset, :type, "A test needs to have at least two tracks.")
+      add_error(changeset, :tracks, "A test needs to have at least two tracks.")
     else
       changeset
     end

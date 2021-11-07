@@ -1,7 +1,12 @@
 .fs-7 {
+  font-size: 0.938rem;
+}
+
+.fs-8 {
   font-size: 0.813rem;
 }
-.fs-8 {
+
+.fs-9 {
   font-size: 0.75rem;
 }
 
@@ -12,21 +17,12 @@
 .alert-thin {
   padding-top: 0.75rem !important;
   padding-bottom: 0.75rem !important;
-  padding-left: 0.813rem;
+  padding-left: 0.813rem !important;
 }
 
-.header-jazz {
-  font-family: jazz, Arial, sans-serif, cursive;
-  font-weight: normal;
-}
 
-.header-royal {
-  font-family: royalacid, Arial, sans-serif, cursive;
-  font-weight: normal;
-}
-
-.header-airstream {
-  font-family: royalacid, Arial, sans-serif, cursive;
+.header-barqish {
+  font-family: barqish, Arial, sans-serif, cursive;
   font-weight: normal;
 }
 
@@ -40,7 +36,7 @@
   font-weight: normal;
 }
 
-.header-retroica {
-  font-family: retroica, Arial, sans-serif, cursive;
+.header-texgyreadventor {
+  font-family: texgyreadventor, Arial, sans-serif, cursive;
   font-weight: normal;
 }

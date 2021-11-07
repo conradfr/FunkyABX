@@ -7,6 +7,8 @@ const deploy = args.includes('--deploy')
 // import { sassPlugin } from "esbuild-sass-plugin";
 const { sassPlugin } = require("esbuild-sass-plugin");
 
+const isProd = process.argv[2] === 'prod'
+
 const loader = {
   // Add loaders for images/fonts/etc, e.g. { '.svg': 'file' }
 }
@@ -23,7 +25,8 @@ let opts = {
   outdir: '../priv/static/assets',
   logLevel: 'info',
   loader,
-  plugins
+  plugins,
+  minify: !!isProd
 }
 
 if (watch) {

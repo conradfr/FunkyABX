@@ -14,6 +14,12 @@ if config_env() == :prod do
       For example: ecto://USER:PASS@HOST/DATABASE
       """
 
+  config :funkyabx,
+    cdn_prefix: System.get_env("CDN_PREFIX"),
+    email_from: System.get_env("EMAIL_FROM"),
+    analytics: System.get_env("ANALYTICS") || nil,
+    bucket: System.get_env("S3_BUCKET") || ""
+
   config :funkyabx, FunkyABX.Repo,
     # ssl: true,
     # socket_options: [:inet6],
@@ -41,14 +47,19 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: String.to_integer(System.get_env("PORT") || "4000")
     ],
-    secret_key_base: secret_key_base
+    check_origin: [System.get_env("ORIGIN")],
+    secret_key_base: secret_key_base,
+    url: [host: System.get_env("HOST"), port: 443, scheme: "https"]
+
+  config :funkyabx,
+    audiofiles_path: System.get_env("MEDIA_PATH")
 
   # ## Using releases
   #
   # If you are doing OTP releases, you need to instruct Phoenix
   # to start each relevant endpoint:
   #
-  #     config :funkyabx, FunkyABXWeb.Endpoint, server: true
+  config :funkyabx, FunkyABXWeb.Endpoint, server: true
   #
   # Then you can assemble a release by calling `mix release`.
   # See `mix help release` for more information.
@@ -70,4 +81,19 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  config :funkyabx, FunkyABX.Mailer,
+    relay: System.get_env("MAILER_SMTP"),
+    username: System.get_env("MAILER_USERNAME"),
+    password: System.get_env("MAILER_PASSWORD"),
+    port: System.get_env("MAILER_PORT")
+
+  config :ex_aws,
+    access_key_id: System.get_env("S3_ACCESS_KEY"),
+    secret_access_key: System.get_env("S3_SECRET_KEY")
+
+  config :ex_aws, :s3,
+    region: System.get_env("S3_REGION"),
+    scheme: "https://",
+    host: System.get_env("S3_HOST")
 end

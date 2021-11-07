@@ -36,7 +36,6 @@ export default class {
     this.setStateChange(STATE_DECODING);
 
     return new Promise((resolve, reject) => {
-      console.log(this.ac);
       this.ac.decodeAudioData(
         audioData,
         (audioBuffer) => {

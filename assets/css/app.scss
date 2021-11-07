@@ -2,8 +2,10 @@
 /*@import "./phoenix.css";*/
 //@import "./bootstrap.min.css";
 
+//$font-size-base: 0.875rem;
+
 @import "colors";
-@import "components/utils";
+@import "utils/utils";
 
 @import "./theme/variables";
 @import "~bootstrap/scss/bootstrap";
@@ -15,6 +17,8 @@
 @import "components/track";
 @import "components/results";
 @import "components/form";
+
+@import "page/home";
 
 /* Alerts and form errors used by phx.new */
 /*.alert {
@@ -49,8 +53,12 @@ h5 {
   font-size: 1.125rem;
 }
 
+hr {
+  opacity: 0.1;
+}
+
 body > div.container {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .invalid-feedback {

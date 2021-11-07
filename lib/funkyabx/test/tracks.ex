@@ -1,17 +1,17 @@
 defmodule FunkyABX.Tracks do
-  alias FunkyABX.Test
-  alias FunkyABX.Track
-
   def to_json(tracks, test) do
     tracks
     |> Enum.map(fn t ->
       %{
-#        id: t.id,
-        url: Application.fetch_env!(:funkyabx, :cdn_prefix) <> test.id <> "/" <> t.filename,
+        #        id: t.id,
+        url: get_media_url(t, test),
         hash: t.hash
       }
-      end
-    )
+    end)
     |> Jason.encode!()
+  end
+
+  def get_media_url(track, test) do
+    Application.fetch_env!(:funkyabx, :cdn_prefix) <> test.id <> "/" <> track.filename
   end
 end
