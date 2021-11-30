@@ -236,6 +236,7 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def mount(%{"slug" => slug} = params, session, socket) do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
+         nil <- test.deleted_at,
          true <-
            (params["key"] != nil and params["key"] == test.password) or
              Map.get(session, "current_user_id") == test.user_id do
@@ -246,8 +247,6 @@ defmodule FunkyABXWeb.TestFormLive do
 
       {:ok,
        socket
-       # force to to it here instead of at creation because the event is not in jS before the redirect
-       #      |> push_event("saveTest", %{test_id: test.id, test_password: test.password, test_author: test.author})
        |> assign_new(:current_user, fn ->
          case session["user_token"] do
            nil -> nil
@@ -268,7 +267,7 @@ defmodule FunkyABXWeb.TestFormLive do
        })}
     else
       _ ->
-        {:ok, redirect(socket, to: Routes.test_new_path(socket, FunkyABXWeb.TestLive))}
+        {:ok, redirect(socket, to: Routes.test_new_path(socket, FunkyABXWeb.TestFormLive))}
     end
   end
 
@@ -332,14 +331,7 @@ defmodule FunkyABXWeb.TestFormLive do
      assign(socket, %{changeset: changeset, tracks_updatable: false, tracks_to_delete: []})}
   end
 
-  def handle_info({:redirect_deleted, url} = _payload, socket) do
-    {:noreply,
-     socket
-     |> put_flash(:success, "Your test has been successfully deleted.")
-     |> push_redirect(to: url, redirect: true)}
-  end
-
-  def handle_info({:redirect_created, url, text} = _payload, socket) do
+  def handle_info({:redirect, url, text} = _payload, socket) do
     {:noreply,
      socket
      |> put_flash(:success, text)
@@ -514,7 +506,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
         Process.send_after(
           self(),
-          {:redirect_created, redirect, flash_text},
+          {:redirect, redirect, flash_text},
           1500
         )
 
@@ -541,13 +533,18 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def handle_event("delete_test", _params, socket) do
     Files.delete_all(socket.assigns.test.id)
-    Repo.delete(socket.assigns.test)
+    socket.assigns.test
+    |> Test.changeset_delete()
+    |> Repo.update()
+    |> IO.inspect()
 
     FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_deleted", nil)
 
+    flash_text = "Your test has been successfully deleted."
+
     Process.send_after(
       self(),
-      {:redirect_deleted, Routes.info_path(socket, FunkyABXWeb.FlashLive)},
+      {:redirect, Routes.info_path(socket, FunkyABXWeb.FlashLive), flash_text},
       1500
     )
 
@@ -558,14 +555,7 @@ defmodule FunkyABXWeb.TestFormLive do
         test_id: socket.assigns.test.id,
         test_password: socket.assigns.test.password
       })
-      |> put_flash(:success, "Your test has been successfully deleted.")
-      #      |> redirect(
-      #           to:
-      #             Routes.info_path(
-      #               socket,
-      #               FunkyABXWeb.FlashLive
-      #             )
-      #         )
+      |> put_flash(:success, flash_text)
     }
   end
 

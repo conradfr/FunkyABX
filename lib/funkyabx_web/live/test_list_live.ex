@@ -42,7 +42,9 @@ defmodule FunkyABXWeb.TestListLive do
   def mount(_params, session, socket) do
     with user when not is_nil(user) <- Accounts.get_user_by_session_token(session["user_token"]) do
       user = Repo.preload(user, :tests)
-      {:ok, assign(socket, tests: user.tests)}
+      tests =Enum.filter(user.tests, fn t -> t.deleted_at == nil end)
+
+      {:ok, assign(socket, tests: tests)}
     else
       _ ->
         {:ok, socket}

@@ -21,6 +21,9 @@ defmodule FunkyABX.Test do
     field(:identification, :boolean)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
     field(:ip_address, :binary)
+    field(:to_closed_at, :naive_datetime)
+    field(:closed_at, :naive_datetime)
+    field(:deleted_at, :naive_datetime)
     timestamps()
     belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
@@ -66,6 +69,11 @@ defmodule FunkyABX.Test do
     |> validate_required([:type, :title])
     |> validate_general_type()
     |> validate_length(:tracks, min: @minimum_tracks)
+  end
+
+  def changeset_delete(test, attrs \\ %{}) do
+    test
+    |> cast(%{"deleted_at" => NaiveDateTime.utc_now()}, [:deleted_at])
   end
 
   def validate_general_type(changeset) do

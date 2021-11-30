@@ -12,7 +12,7 @@ defmodule FunkyABXWeb.LayoutView do
        when not is_nil(current_user) do
     query =
       from(t in Test,
-        where: t.user_id == ^current_user.id,
+        where: t.user_id == ^current_user.id and is_nil(t.deleted_at),
         order_by: [desc: t.inserted_at],
         limit: 11,
         select: t
@@ -36,7 +36,7 @@ defmodule FunkyABXWeb.LayoutView do
 
     query =
       from(t in Test,
-        where: t.id in ^test_ids and t.password in ^password_ids,
+        where: t.id in ^test_ids and t.password in ^password_ids and is_nil(t.deleted_at),
         order_by: [desc: t.inserted_at],
         limit: 11,
         select: t
