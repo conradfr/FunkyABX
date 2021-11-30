@@ -341,9 +341,9 @@ defmodule FunkyABXWeb.TestFormLive do
 
   def handle_info({:redirect_created, url, text} = _payload, socket) do
     {:noreply,
-      socket
-      |> put_flash(:success, text)
-      |> push_redirect(to: url, redirect: true)}
+     socket
+     |> put_flash(:success, text)
+     |> push_redirect(to: url, redirect: true)}
   end
 
   def handle_info(%{event: _event} = _payload, socket) do
@@ -382,7 +382,8 @@ defmodule FunkyABXWeb.TestFormLive do
     changeset =
       socket.assigns.test
       |> Test.changeset_update(test_params)
-      # |> Map.put(:action, :insert)
+
+    # |> Map.put(:action, :insert)
 
     {:noreply,
      assign(socket,
@@ -405,7 +406,9 @@ defmodule FunkyABXWeb.TestFormLive do
                 for entry <- entries do
                   consume_uploaded_entry(socket, entry, fn %{path: path} ->
                     filename_dest = Files.get_destination_filename(entry.client_name)
-                    final_filename_dest = Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
+
+                    final_filename_dest =
+                      Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
 
                     {entry.client_name, final_filename_dest}
                   end)
@@ -465,7 +468,9 @@ defmodule FunkyABXWeb.TestFormLive do
                                                                                        },
                                                                                        entry ->
             filename_dest = Files.get_destination_filename(entry.client_name)
-            final_filename_dest = Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
+
+            final_filename_dest =
+              Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
 
             {entry.client_name, final_filename_dest}
           end)
@@ -502,7 +507,10 @@ defmodule FunkyABXWeb.TestFormLive do
             )
           end
 
-        flash_text = "Your test has been successfully created !<br><br>You can now share the <a href=\"" <> Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <> "\">test's public link</a> for people to take it."
+        flash_text =
+          "Your test has been successfully created !<br><br>You can now share the <a href=\"" <>
+            Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <>
+            "\">test's public link</a> for people to take it."
 
         Process.send_after(
           self(),
@@ -512,16 +520,17 @@ defmodule FunkyABXWeb.TestFormLive do
 
         changeset = Test.changeset_update(test)
 
-        {:noreply,
-         socket
-         |> assign(action: "update", test: test, changeset: changeset)
-         |> push_event("saveTest", %{
-           test_id: test.id,
-           test_password: test.password,
-           test_author: test.author
-         })
-         |> put_flash(:success, flash_text)
-#         |> push_redirect(to: redirect, replace: true)
+        {
+          :noreply,
+          socket
+          |> assign(action: "update", test: test, changeset: changeset)
+          |> push_event("saveTest", %{
+            test_id: test.id,
+            test_password: test.password,
+            test_author: test.author
+          })
+          |> put_flash(:success, flash_text)
+          #         |> push_redirect(to: redirect, replace: true)
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->

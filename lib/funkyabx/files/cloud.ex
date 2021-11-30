@@ -1,5 +1,4 @@
 defmodule FunkyABX.Files.Cloud do
-
   def save(src_path, dest_path) do
     Application.fetch_env!(:funkyabx, :bucket)
     |> ExAws.S3.put_object(dest_path, File.read!(src_path), acl: "public-read")

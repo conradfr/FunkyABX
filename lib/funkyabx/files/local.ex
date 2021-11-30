@@ -1,5 +1,4 @@
 defmodule FunkyABX.Files.Local do
-
   def save(src_path, dest_path) do
     local_dest_path = local_path(dest_path)
 

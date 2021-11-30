@@ -1,11 +1,14 @@
-<div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+<div class="row flex-lg-row-reverse align-items-center g-5 py-3 py-sm-5">
       <div class="col-12 order-2 order-sm-1 col-sm-6 text-center">
         <img src="https://getbootstrap.com/docs/5.1/examples/heroes/bootstrap-themes.png"
           class="d-block mx-lg-auto img-fluid homepage-image" alt="Bootstrap Themes" loading="lazy" width="700" height="500">
       </div>
       <div class="col-12 order-1 order-sm-2 col-sm-6 text-sm-start text-center px-4">
-        <h1 class="display-5 fw-bold lh-1 mb-4 header-barqish">FunkyABX <span class="fs-4 header-chemyretro">... Groovy blind tests !</span></h1>
-        <p class="lead mb-4">Get people to rank and identify your favorite compressor or saturation plugins.</p>
+        <div class="d-flex flex-wrap justify-content-between">
+          <h1 class="display-5 fw-bold lh-1 mb-4 header-barqish align-self-end flex-grow-1 text-start">FunkyABX</h1>
+          <p class="fs-4 header-chemyretro align-self-end text-end flex-grow-1">... Groovy blind tests !</p>
+        </div>
+        <p class="lead mb-4">Get people to rank and identify your favorite compressors, saturation plugins ... or whole tracks!</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
           <%= link "Create a test", to: Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive), class: "btn btn-info btn-lg px-4 me-md-2" %>
           <%= link "Try a demo test", to: Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive), class: "btn btn-secondary btn-lg px-4 me-md-2" %>

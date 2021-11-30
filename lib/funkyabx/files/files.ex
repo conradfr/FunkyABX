@@ -11,22 +11,33 @@ defmodule FunkyABX.Files do
   # ---------- PUBLIC API ----------
 
   def get_destination_filename(filename) do
-    Integer.to_string(DateTime.to_unix(DateTime.now!("Etc/UTC")))
-    <> "_"
-    <> Base.encode16(:crypto.hash(:sha, filename))
-    <> Path.extname(filename)
+    Integer.to_string(DateTime.to_unix(DateTime.now!("Etc/UTC"))) <>
+      "_" <>
+      Base.encode16(:crypto.hash(:sha, filename)) <>
+      Path.extname(filename)
   end
 
   def save(src_path, dest_path) do
     {real_src_path, real_dest_path} =
-      if (Path.extname(dest_path) in @ext_to_flac) do
+      if Path.extname(dest_path) in @ext_to_flac do
         flac_dest = flac_dest(dest_path)
         updated_dest_path = filename_to_flac(dest_path)
 
         ensure_folder_of_file_exists(flac_dest)
 
-#        System.cmd("flac", ["-4", "--output-name=#{flac_dest}", src_path])
-        System.cmd("ffmpeg", ["-i", src_path, "-hide_banner", "-loglevel", "error", "-compression_level", "6", "-af", "aformat=s16:48000", flac_dest])
+        #        System.cmd("flac", ["-4", "--output-name=#{flac_dest}", src_path])
+        System.cmd("ffmpeg", [
+          "-i",
+          src_path,
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-compression_level",
+          "6",
+          "-af",
+          "aformat=s16:48000",
+          flac_dest
+        ])
 
         {flac_dest, updated_dest_path}
       else
@@ -39,7 +50,7 @@ defmodule FunkyABX.Files do
       Cloud.save(real_src_path, real_dest_path)
     end
 
-    if (Path.extname(dest_path) in @ext_to_flac), do: delete_folder_of_file(real_src_path)
+    if Path.extname(dest_path) in @ext_to_flac, do: delete_folder_of_file(real_src_path)
 
     Path.basename(real_dest_path)
   end
@@ -79,8 +90,7 @@ defmodule FunkyABX.Files do
   end
 
   defp flac_dest(dest_path) do
-    Application.fetch_env!(:funkyabx, :flac_folder)
-    <> String.replace_suffix(dest_path, Path.extname(dest_path), @flac_ext)
+    Application.fetch_env!(:funkyabx, :flac_folder) <>
+      String.replace_suffix(dest_path, Path.extname(dest_path), @flac_ext)
   end
-
 end
