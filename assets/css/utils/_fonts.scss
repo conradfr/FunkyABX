@@ -1,0 +1,52 @@
+
+@font-face {
+  font-family: barqish;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/Barqish.woff2') format('woff2'),
+  url('/assets/fonts/Barqish.woff') format('woff'),
+  url('/assets/fonts/Barqish.otf') format('opentype'),
+  url('/assets/fonts/Barqish.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: typographica;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/TypoGraphica.otf') format('opentype');
+}
+
+@font-face {
+  font-family: chemyretro;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/ChemyRetro_v01.ttf') format('truetype'),
+  url('/assets/fonts/ChemyRetro_v01.otf') format('opentype');
+}
+
+@font-face {
+  font-family: texgyreadventor;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/texgyreadventor-regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: texgyreadventor;
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+  src: url('/assets/fonts/texgyreadventor-bold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: neon;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('http://localhost:4000/assets/fonts/Neon.ttf') format('truetype');
+}

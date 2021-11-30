@@ -15,7 +15,9 @@ const loader = {
 
 const plugins = [
   // Add and configure plugins here
-  sassPlugin()
+  sassPlugin({
+    cache: true
+  })
 ]
 
 let opts = {
@@ -26,7 +28,8 @@ let opts = {
   logLevel: 'info',
   loader,
   plugins,
-  minify: !!isProd
+  minify: !!isProd,
+  external: ['*.woff2','*.woff', '*.ttf', '*.otf']
 }
 
 if (watch) {
