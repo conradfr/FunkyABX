@@ -6,6 +6,7 @@ defmodule FunkyABX.Files do
   @flac_ext ".flac"
 
   # TODO dynamic module instead of if
+  # TODO Move the encoding part to another file
 
   # ---------- PUBLIC API ----------
 
@@ -24,7 +25,8 @@ defmodule FunkyABX.Files do
 
         ensure_folder_of_file_exists(flac_dest)
 
-        System.cmd("flac", ["-4", "--output-name=#{flac_dest}", src_path])
+#        System.cmd("flac", ["-4", "--output-name=#{flac_dest}", src_path])
+        System.cmd("ffmpeg", ["-i", src_path, "-hide_banner", "-loglevel", "error", "-compression_level", "6", "-af", "aformat=s16:48000", flac_dest])
 
         {flac_dest, updated_dest_path}
       else

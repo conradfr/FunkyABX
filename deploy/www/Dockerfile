@@ -34,7 +34,7 @@ ENV DATABASE_URL=${DATABASE_URL} \
     S3_HOST=${S3_HOST}
 
 RUN apt-get update && apt-get install -y \
-    flac curl
+    ffmpeg curl
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
 

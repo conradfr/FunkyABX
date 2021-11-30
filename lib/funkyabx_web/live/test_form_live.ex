@@ -332,11 +332,18 @@ defmodule FunkyABXWeb.TestFormLive do
      assign(socket, %{changeset: changeset, tracks_updatable: false, tracks_to_delete: []})}
   end
 
-  def handle_info({:redirect_delete, url} = _payload, socket) do
+  def handle_info({:redirect_deleted, url} = _payload, socket) do
     {:noreply,
      socket
      |> put_flash(:success, "Your test has been successfully deleted.")
      |> push_redirect(to: url, redirect: true)}
+  end
+
+  def handle_info({:redirect_created, url, text} = _payload, socket) do
+    {:noreply,
+      socket
+      |> put_flash(:success, text)
+      |> push_redirect(to: url, redirect: true)}
   end
 
   def handle_info(%{event: _event} = _payload, socket) do
@@ -495,16 +502,27 @@ defmodule FunkyABXWeb.TestFormLive do
             )
           end
 
+        flash_text = "Your test has been successfully created !<br><br>You can now share the <a href=\"" <> Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <> "\">test's public link</a> for people to take it."
+
+        Process.send_after(
+          self(),
+          {:redirect_created, redirect, flash_text},
+          1500
+        )
+
+        changeset = Test.changeset_update(test)
+
         {:noreply,
          socket
-         |> assign(action: "update", test: test)
+         |> assign(action: "update", test: test, changeset: changeset)
          |> push_event("saveTest", %{
            test_id: test.id,
            test_password: test.password,
            test_author: test.author
          })
-         |> put_flash(:success, "Your test has been successfully created !<br><br>You can now share the <a href=\"" <> Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <> "\">test's public link</a> for people to take the test.")
-         |> push_redirect(to: redirect, replace: true)}
+         |> put_flash(:success, flash_text)
+#         |> push_redirect(to: redirect, replace: true)
+        }
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -520,7 +538,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
     Process.send_after(
       self(),
-      {:redirect_delete, Routes.info_path(socket, FunkyABXWeb.FlashLive)},
+      {:redirect_deleted, Routes.info_path(socket, FunkyABXWeb.FlashLive)},
       1500
     )
 
