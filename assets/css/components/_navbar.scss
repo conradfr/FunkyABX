@@ -15,6 +15,14 @@
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important;
   }
+
+  a.funkyabx-connected {
+    i {
+      color: mix(rgba(248, 248, 248, 0.6), white);
+      $shadow-color: darken(#c44811, 7%);
+      text-shadow: 2px 2px 0 $shadow-color, 2px -2px 0 $shadow-color, -2px 2px 0 $shadow-color, -2px -2px 0 $shadow-color, 2px 0px 0 $shadow-color, 0px 2px 0 $shadow-color, -2px 0px 0 $shadow-color, 0px -2px 0 $shadow-color, 0px 0px 12px rgba(26,11,7,0.70) ;
+    }
+  }
 }
 
 .navbar-tests {

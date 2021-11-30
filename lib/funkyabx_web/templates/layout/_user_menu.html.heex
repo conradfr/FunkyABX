@@ -1,6 +1,6 @@
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUserMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="bi bi-person-circle"></i>
+  <a class={"nav-link dropdown-toggle#{if @current_user, do: " funkyabx-connected"}"} href="#" id="navbarDropdownUserMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-person-circle"></i>&nbsp;&nbsp;User
   </a>
   <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdownUserMenuLink">
     <%= if @current_user do %>
