@@ -32,7 +32,7 @@ defmodule FunkyABX.Tests do
         left_join: r in Rank,
         on: t.id == r.test_id,
         left_join: i in Identification,
-        on: t.id == i.track_id,
+        on: t.id == i.test_id,
         where: t.id == ^test_id,
         group_by: [t.id],
         select: %{

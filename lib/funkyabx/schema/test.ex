@@ -76,6 +76,14 @@ defmodule FunkyABX.Test do
     |> cast(%{"deleted_at" => NaiveDateTime.utc_now()}, [:deleted_at])
   end
 
+  def changeset_to_user(test, attrs \\ %{}) do
+    test
+    |> cast(attrs, [
+      :password,
+    ])
+    |> put_assoc(:user, attrs["user"])
+  end
+
   def validate_general_type(changeset) do
     ranking = get_field(changeset, :ranking)
     identification = get_field(changeset, :identification)

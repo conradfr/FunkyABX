@@ -15,6 +15,11 @@ defmodule FunkyABX.Accounts.User do
     timestamps()
   end
 
+  def changeset(user, attrs \\ %{}, opts \\ []) do
+    user
+    |> cast(attrs, [])
+  end
+
   @doc """
   A user changeset for registration.
 

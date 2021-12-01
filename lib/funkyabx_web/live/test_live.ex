@@ -268,6 +268,12 @@ defmodule FunkyABXWeb.TestLive do
      )}
   end
 
+  def handle_info({:skip_to_results, url} = _payload, socket) do
+    {:noreply,
+      socket
+      |> redirect(to: url)}
+  end
+
   def handle_info({:redirect_results, url} = _payload, socket) do
     {:noreply,
      socket
@@ -524,6 +530,17 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_event("no_participate", _params, socket) do
+    Process.send_after(
+      self(),
+      {:skip_to_results,
+        Routes.test_results_public_path(
+          socket,
+          FunkyABXWeb.TestResultsLive,
+          socket.assigns.test.slug
+        )},
+      1000
+    )
+
     {:noreply, push_event(socket, "bypass_test", %{})}
   end
 
