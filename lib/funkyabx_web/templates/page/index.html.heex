@@ -14,7 +14,7 @@
       <%= link "Try a demo test", to: Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive), class: "btn btn-secondary btn-lg px-4 me-md-2" %>
     </div>
     <p class="mt-5 text-center header-texgyreadventor text-muted">
-      <%= get_tests_total() %> tests created so far...
+      <small><%= get_tests_total() %> tests created so far...</small>
     </p>
   </div>
 </div>
