@@ -20,6 +20,12 @@ defmodule FunkyABX.Accounts.User do
     |> cast(attrs, [])
   end
 
+  def delete_changeset(user, attrs \\ %{}, opts \\ []) do
+    user
+    |> cast(attrs, [:email])
+    |> unique_constraint(:email)
+  end
+
   @doc """
   A user changeset for registration.
 

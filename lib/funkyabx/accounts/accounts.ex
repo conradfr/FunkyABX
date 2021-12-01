@@ -99,6 +99,21 @@ defmodule FunkyABX.Accounts do
   ## Settings
 
   @doc """
+  Returns an `%Ecto.Changeset{}` for deleting user.
+  """
+  def change_delete_account(user, attrs \\ %{}) do
+    User.delete_changeset(user, attrs)
+  end
+
+  @doc """
+  Delete account (anonymizing)
+  """
+  def delete_account(user, attrs \\ %{}) do
+    change_delete_account(user, attrs)
+    |> Repo.update()
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for changing the user email.
 
   ## Examples

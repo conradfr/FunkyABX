@@ -27,7 +27,7 @@
       </div>
 
       <div>
-        <%= submit "Change email", class: "btn btn-primary" %>
+        <%= submit "Change email", class: "btn btn-secondary" %>
       </div>
     </.form>
 
@@ -61,7 +61,26 @@
       </div>
 
       <div>
-        <%= submit "Change password", class: "btn btn-primary" %>
+        <%= submit "Change password", class: "btn btn-secondary" %>
+      </div>
+    </.form>
+
+    <h4 class="mt-5 header-typographica">Delete your account</h4>
+
+    <.form let={f} for={@delete_changeset} action={Routes.user_settings_path(@conn, :update)} id="delete_account"
+      onsubmit="return confirm('Do you really want to delete your account?');">
+      <%= if @delete_changeset.action do %>
+        <div class="alert alert-danger">
+          Oops, something went wrong! Please check the errors below.
+        </div>
+      <% end %>
+
+      <%= hidden_input f, :action, name: "action", value: "delete_account" %>
+
+      <div class="alert alert-warning" role="alert"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;All your tests, results and audio files will be deleted.</div>
+
+      <div>
+        <%= submit "Yes, delete my account", class: "btn btn-danger" %>
       </div>
     </.form>
   </div>

@@ -1,7 +1,11 @@
 defmodule FunkyABXWeb.UserSettingsController do
   use FunkyABXWeb, :controller
 
+  alias Ecto.UUID
+  alias FunkyABX.Repo
   alias FunkyABX.Accounts
+  alias FunkyABX.Files
+  alias FunkyABX.Accounts.UserNotifier
   alias FunkyABXWeb.UserAuth
 
   plug :assign_email_and_password_changesets
@@ -50,6 +54,30 @@ defmodule FunkyABXWeb.UserSettingsController do
     end
   end
 
+  def update(conn, %{"action" => "delete_account"} = _params) do
+    old_email = conn.assigns.current_user.email
+    # Anonymize the account
+    case Accounts.delete_account(conn.assigns.current_user, %{"email" => UUID.generate()}) do
+      {:ok, user} ->
+        UserNotifier.deliver_account_deleted(old_email)
+        # Delete audio tracks
+        user = Repo.preload(user, :tests)
+        user.tests
+        |> Enum.filter(fn t -> t.deleted_at == nil end)
+        |> Enum.each(fn t ->
+          Files.delete_all(t.id)
+        end)
+
+        conn
+        |> put_flash(:info, "Your account has been successfully deleted.")
+        |> UserAuth.log_out_user()
+        |> redirect(Routes.page_path(conn, :index))
+
+      {:error, changeset} ->
+        render(conn, "edit.html", password_changeset: changeset)
+    end
+  end
+
   def confirm_email(conn, %{"token" => token}) do
     case Accounts.update_user_email(conn.assigns.current_user, token) do
       :ok ->
@@ -70,5 +98,6 @@ defmodule FunkyABXWeb.UserSettingsController do
     conn
     |> assign(:email_changeset, Accounts.change_user_email(user))
     |> assign(:password_changeset, Accounts.change_user_password(user))
+    |> assign(:delete_changeset, Accounts.change_delete_account(user))
   end
 end

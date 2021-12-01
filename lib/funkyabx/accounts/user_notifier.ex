@@ -110,4 +110,18 @@ defmodule FunkyABX.Accounts.UserNotifier do
     FunkyABX
     """)
   end
+
+  @doc """
+  Deliver account deleted email
+  """
+  def deliver_account_deleted(email) do
+    deliver(email, "FunkyABX - account deleted", """
+    Hi #{email},
+
+    As requested, your account has been successfully deleted.
+
+    Regards,
+    FunkyABX
+    """)
+  end
 end

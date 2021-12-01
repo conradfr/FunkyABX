@@ -536,7 +536,6 @@ defmodule FunkyABXWeb.TestFormLive do
     socket.assigns.test
     |> Test.changeset_delete()
     |> Repo.update()
-    |> IO.inspect()
 
     FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_deleted", nil)
 
