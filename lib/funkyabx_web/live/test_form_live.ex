@@ -148,12 +148,12 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="form-check ms-4 float-end">
                   <label class="form-check-label">
                     <%= checkbox(f, :description_markdown, class: "form-check-input") %>
-                    Use <a target="_blank" href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>
+                    Use <a target="_blank" href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>&nbsp;&nbsp;<small><i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="left" title="<br> supported for line breaks"></i></small>
                   </label>
                 </div>
                 Description
               <% end %>
-              <%= textarea(f, :description, class: "form-control", rows: "3", placeholder: "Optional") %>
+              <%= textarea(f, :description, class: "form-control", rows: "5", placeholder: "Optional") %>
               <div class="fs-8 mt-2 mb-1 cursor-link" phx-click="toggle_description">Preview&nbsp;&nbsp;<i class={"bi bi-arrow-#{if @view_description == true do "down" else "right" end}-circle"}></i></div>
               <%= if @view_description == true do %>
                 <TestDescription.format description_markdown={@description_markdown} description={@description} />

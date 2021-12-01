@@ -170,6 +170,11 @@ Hooks.Player = {
 
 Hooks.TestForm = {
   mounted() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
     this.handleEvent('clipboard', (params) => {
       toClipboard(params.text);
     });

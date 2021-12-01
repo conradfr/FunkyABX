@@ -36,16 +36,18 @@ defmodule FunkyABX.Accounts.UserNotifier do
       """
         Hello,
 
-        You have registered an account on >FunkyABX.
-        If that's not you, you can change the password here http://link and then delete the account.
+        You have registered an account on FunkyABX.
+
+        If that's not you, you can change the password here https://abx.funkybits.fr/users/reset_password and then delete the account.
 
         Regards,
         FunkyABX
+        https://abx.funkybits.fr
       """,
       """
         <p>Hello,</p>
-        <p>You have registered an account on <a href=\"#\">FunkyABX</a>.</p>
-        <p>If that's not you, you can change the password here and then delete the account.</p>
+        <p>You have registered an account on <a href=\"https://abx.funkybits.fr\">FunkyABX</a>.</p>
+        <p>If that's not you, you can change the password <a href="https://abx.funkybits.fr/users/reset_password">here</a> and then delete the account.</p>
         <p>Regards,<br>FunkyABX</p>
       """
     )
