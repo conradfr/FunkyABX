@@ -21,7 +21,7 @@ defmodule FunkyABXWeb.TestListLive do
           <tbody class="table-striped">
             <%= for test <- @tests do %>
               <tr>
-                <td><%= test.title %></td>
+                <td><%= link test.title, to: Routes.test_public_path(@socket, FunkyABXWeb.TestLive, test.slug), class: "test-link" %></td>
                 <td class="text-center"><%= format_date(test.inserted_at) %></td>
                 <%= unless test.type == :listening do %>
                   <td class="text-center"></td>
