@@ -75,10 +75,10 @@ defmodule FunkyABXWeb.TestFormLive do
                   <label for="test_public_link" class="form-label">Test public page <span class="form-text">(share this link)</span></label>
                   <div class="input-group mb-3">
                     <%= text_input(f, :public_link, class: "form-control", readonly: "readonly", value: Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)) %>
-                    <button class="btn btn-info" type="button" phx-click="clipboard" phx-value-text={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)}>
+                    <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)}>
                       <i class="bi bi-clipboard"></i>
                     </button>
-                    <a class="btn btn-light" type="button" target="_blank" href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
+                    <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
                   </div>
                 </div>
                 <div class="mb-3">
@@ -86,16 +86,16 @@ defmodule FunkyABXWeb.TestFormLive do
                   <div class="input-group mb-3">
                     <%= if @current_user do %>
                       <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)) %>
-                      <button class="btn btn-info" type="button" phx-click="clipboard" phx-value-text={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)}>
+                      <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)}>
                         <i class="bi bi-clipboard"></i>
                       </button>
-                      <a class="btn btn-light" type="button" target="_blank" href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% else %>
                       <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)) %>
-                        <button class="btn btn-info" type="button" phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)}>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                      <a class="btn btn-light" type="button" target="_blank" href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% end %>
                   </div>
                 </div>
@@ -105,16 +105,16 @@ defmodule FunkyABXWeb.TestFormLive do
                     <div class="input-group mb-3">
                       <%= if @current_user do %>
                         <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)) %>
-                        <button class="btn btn-info" type="button" phx-click="clipboard" phx-value-text={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)}>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% else %>
                         <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)) %>
-                        <button class="btn btn-info" type="button" phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)}>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% end %>
                     </div>
                   </div>
@@ -168,7 +168,7 @@ defmodule FunkyABXWeb.TestFormLive do
           <%= if @tracks_updatable == false do %>
             <div class="alert alert-danger alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be modified once at least one person has taken the test.</div>
           <% else %>
-            <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, ogg, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac. No normalization or gain correction is applied, do it yourself :)</div>
+            <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac. No normalization or gain correction is applied, do it yourself :)</div>
           <% end %>
 
           <%= error_tag f, :tracks %>
@@ -597,7 +597,7 @@ defmodule FunkyABXWeb.TestFormLive do
     socket
     |> assign(changeset: changeset)
     |> allow_upload(String.to_atom("track" <> temp_id),
-      accept: ~w(.wav .mp3 .aac .ogg),
+      accept: ~w(.wav .mp3 .aac),
       max_entries: 1,
       max_file_size: 50_000_000
     )

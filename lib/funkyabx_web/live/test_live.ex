@@ -1,5 +1,6 @@
 defmodule FunkyABXWeb.TestLive do
   use FunkyABXWeb, :live_view
+  alias Phoenix.LiveView.JS
   alias FunkyABX.Tests
   alias FunkyABX.Tracks
   alias FunkyABX.Test
@@ -29,19 +30,19 @@ defmodule FunkyABXWeb.TestLive do
         data-rotate={to_string(@rotate)}
         data-loop={to_string(@loop)}>
         <div class="p-2 me-auto d-flex align-items-center">
-          <button type="button" phx-click="back" class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
+          <button type="button" phx-click={JS.dispatch("back", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
             <i class="bi bi-skip-start-fill"></i>
           </button>
           <%= if @playing == true do %>
-            <button type="button" phx-click="pause" class="btn btn-success me-1">
+            <button type="button" phx-click={JS.dispatch("pause", to: "body")} class="btn btn-success me-1">
               <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;Pause&nbsp;&nbsp;
             </button>
           <% else %>
-            <button type="button" phx-click="play" class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}>
+            <button type="button" phx-click={JS.dispatch("play", to: "body")} class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}>
               <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;Play&nbsp;&nbsp;
             </button>
           <% end %>
-          <button type="button" phx-click="stop" class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
+          <button type="button" phx-click={JS.dispatch("stop", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
             <i class="bi bi-stop-fill"></i>
           </button>
           <%= if @tracks_loaded == false do %>
@@ -90,9 +91,9 @@ defmodule FunkyABXWeb.TestLive do
           <div class={"track my-1 d-flex flex-wrap flex-md-nowrap align-items-center #{if @current_track == track.hash, do: "track-active", else: ""}"}>
             <div class="p-3">
               <%= if @current_track == track.hash and @playing == true do %>
-                <i class="bi bi-pause-fill cursor-link" phx-click="pause"></i>
+                <i class="bi bi-pause-fill cursor-link" phx-click={JS.dispatch("pause", to: "body")}></i>
               <% else %>
-                <i class={"bi bi-play-fill #{if @tracks_loaded == false, do: " text-muted", else: " cursor-link"}"} phx-click="play" phx-value-track_hash={track.hash}></i>
+                <i class={"bi bi-play-fill #{if @tracks_loaded == false, do: " text-muted", else: " cursor-link"}"} phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}></i>
               <% end %>
             </div>
               <%= if @test.type === :listening do %>
@@ -234,13 +235,6 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_event("test_already_taken", _params, socket) do
-    {:noreply,
-     socket
-     |> put_flash(:info, "You have already taken this test.")
-     |> assign(test_already_taken: true)}
-  end
-
   def handle_info(%{event: "test_deleted"} = _payload, socket) do
     {:noreply,
      socket
@@ -254,6 +248,7 @@ defmodule FunkyABXWeb.TestLive do
      )}
   end
 
+  @impl true
   def handle_info(%{event: "test_updated"} = _payload, socket) do
     {:noreply,
      socket
@@ -268,12 +263,14 @@ defmodule FunkyABXWeb.TestLive do
      )}
   end
 
+  @impl true
   def handle_info({:skip_to_results, url} = _payload, socket) do
     {:noreply,
       socket
       |> redirect(to: url)}
   end
 
+  @impl true
   def handle_info({:redirect_results, url} = _payload, socket) do
     {:noreply,
      socket
@@ -281,44 +278,17 @@ defmodule FunkyABXWeb.TestLive do
      |> redirect(to: url)}
   end
 
+  @impl true
   def handle_info(%{event: _event} = _payload, socket) do
     {:noreply, socket}
   end
 
-  # ---------- PLAYER ACTIONS ----------
-
   @impl true
-  def handle_event("play", %{"track_hash" => track_hash} = _params, socket) do
-    {:noreply, push_event(socket, "play", %{trackHash: track_hash})}
-  end
-
-  @impl true
-  def handle_event("play", _params, socket) do
-    {:noreply, push_event(socket, "play", %{})}
-  end
-
-  @impl true
-  def handle_event("stop", _params, socket) do
-    {:noreply, push_event(socket, "stop", %{})}
-  end
-
-  @impl true
-  def handle_event("pause", _params, socket) do
-    {:noreply, push_event(socket, "pause", %{})}
-  end
-
-  @impl true
-  def handle_event("back", _params, socket) do
-    {:noreply, push_event(socket, "back", %{})}
-  end
-
-  @impl true
-  def handle_event(
-        "waveform-click",
-        %{"track_hash" => track_hash, "time" => time} = _params,
-        socket
-      ) do
-    {:noreply, push_event(socket, "play", %{trackHash: track_hash, startTime: time})}
+  def handle_event("test_already_taken", _params, socket) do
+    {:noreply,
+      socket
+      |> put_flash(:info, "You have already taken this test.")
+      |> assign(test_already_taken: true)}
   end
 
   # ---------- PLAYER CLIENT ----------

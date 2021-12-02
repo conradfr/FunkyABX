@@ -1,5 +1,6 @@
 defmodule FunkyABXWeb.TestResultsLive do
   use FunkyABXWeb, :live_view
+  alias Phoenix.LiveView.JS
   alias FunkyABX.Tests
   alias FunkyABX.Tracks
   alias FunkyABX.Ranks
@@ -7,6 +8,7 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @title_max_length 100
 
+  @impl true
   def render(assigns) do
     ~H"""
       <div class="row">
@@ -42,11 +44,11 @@ defmodule FunkyABXWeb.TestResultsLive do
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
               <div class="p-2">
                 <%= if @play_track_id == rank.track_id do %>
-                  <button type="button" phx-click="stop" phx-value-track_id={rank.track_id} class="btn btn-dark px-2">
+                  <button type="button" phx-click={JS.dispatch("stop", to: "body")} class="btn btn-dark px-2">
                     <i class="bi bi-stop-fill"></i>
                   </button>
                 <% else %>
-                  <button type="button" phx-click="play" phx-value-track_id={rank.track_id} class="btn btn-dark px-2">
+                  <button type="button" phx-click={JS.dispatch("play", to: "body", detail: %{"track_id" => rank.track_id, "track_url" => get_track_url(rank.track_id, @test)})} class="btn btn-dark px-2">
                     <i class="bi bi-play-fill"></i>
                   </button>
                 <% end %>
@@ -104,11 +106,11 @@ defmodule FunkyABXWeb.TestResultsLive do
             <div class={"track my-1 #{if (i > 1), do: "mt-4"} d-flex flex-wrap align-items-center"}>
               <div class="p-2">
                 <%= if @play_track_id == identification.track_id do %>
-                  <button type="button" phx-click="stop" phx-value-track_id={identification.track_id} class="btn btn-dark px-2">
+                  <button type="button" phx-click={JS.dispatch("stop", to: "body")}  class="btn btn-dark px-2">
                     <i class="bi bi-stop-fill"></i>
                   </button>
                 <% else %>
-                  <button type="button" phx-click="play" phx-value-track_id={identification.track_id} class="btn btn-dark px-2">
+                  <button type="button" phx-click={JS.dispatch("play", to: "body", detail: %{"track_id" => identification.track_id, "track_url" => get_track_url(identification.track_id, @test)})} class="btn btn-dark px-2">
                     <i class="bi bi-play-fill"></i>
                   </button>
                 <% end %>
@@ -162,6 +164,7 @@ defmodule FunkyABXWeb.TestResultsLive do
   end
 
   # Password given by query string / url
+  @impl true
   def mount(%{"slug" => slug, "key" => key} = params, %{}, socket) do
     test = Tests.get_by_slug(slug)
     # will throw an error if password is incorrect
@@ -172,6 +175,7 @@ defmodule FunkyABXWeb.TestResultsLive do
     |> mount(%{}, socket)
   end
 
+  @impl true
   def mount(%{"slug" => slug} = _params, session, socket) do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
          true <-
@@ -206,6 +210,7 @@ defmodule FunkyABXWeb.TestResultsLive do
     end
   end
 
+  @impl true
   def handle_event("test_not_taken", _params, socket) do
     with false <- socket.assigns.current_user_id == socket.assigns.test.user_id do
       {:noreply,
@@ -223,8 +228,35 @@ defmodule FunkyABXWeb.TestResultsLive do
     end
   end
 
+  # ---------- EVENTS ----------
+
+  @impl true
+  def handle_event("results", params, socket) do
+    {:noreply,
+      socket
+      |> assign(:visitor_ranking, Map.get(params, "ranking", %{}))
+      |> assign(:visitor_identification, Map.get(params, "identification", %{}))
+      |> assign(
+           :visitor_identification_score,
+           calculate_identification_score(Map.get(params, "identification", %{}))
+         )}
+  end
+
+  # ---------- PLAYER ----------
+
+  @impl true
+  def handle_event("playing",  %{"track_id" => track_id} = _params, socket) do
+    {:noreply, assign(socket, :play_track_id, track_id)}
+  end
+
+  @impl true
+  def handle_event("stopping", _params, socket) do
+    {:noreply, assign(socket, :play_track_id, nil)}
+  end
+
   # ---------- PUB/SUB EVENTS ----------
 
+  @impl true
   def handle_info(%{event: "test_updated"} = _payload, socket) do
     test = Tests.get(socket.assigns.test.id)
 
@@ -234,6 +266,7 @@ defmodule FunkyABXWeb.TestResultsLive do
      })}
   end
 
+  @impl true
   def handle_info(%{event: "test_taken"} = _payload, socket) do
     ranks = Ranks.get_ranks(socket.assigns.test)
     identifications = Identifications.get_identification(socket.assigns.test)
@@ -245,6 +278,7 @@ defmodule FunkyABXWeb.TestResultsLive do
      })}
   end
 
+  @impl true
   def handle_info(%{event: "test_deleted"} = _payload, socket) do
     {:noreply,
      socket
@@ -258,42 +292,9 @@ defmodule FunkyABXWeb.TestResultsLive do
      )}
   end
 
+  @impl true
   def handle_info(%{event: _event} = _payload, socket) do
     {:noreply, socket}
-  end
-
-  # ---------- EVENTS ----------
-
-  def handle_event("results", params, socket) do
-    {:noreply,
-     socket
-     |> assign(:visitor_ranking, Map.get(params, "ranking", %{}))
-     |> assign(:visitor_identification, Map.get(params, "identification", %{}))
-     |> assign(
-       :visitor_identification_score,
-       calculate_identification_score(Map.get(params, "identification", %{}))
-     )}
-  end
-
-  # ---------- PLAYER ----------
-
-  def handle_event("play", %{"track_id" => track_id} = _params, socket) do
-    url =
-      track_id
-      |> get_track_from_id(socket.assigns.test.tracks)
-      |> Tracks.get_media_url(socket.assigns.test)
-
-    {:noreply,
-     socket
-     |> assign(:play_track_id, track_id)
-     |> push_event("play", %{url: url})}
-  end
-
-  def handle_event("stop", _params, socket) do
-    {:noreply,
-     socket
-     |> assign(:play_track_id, nil)
-     |> push_event("stop", %{})}
   end
 
   # ---------- UTILS ----------
@@ -362,5 +363,11 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   def get_track_from_id(id, tracks) do
     Enum.find(tracks, fn t -> t.id == id end)
+  end
+
+  def get_track_url(track_id, test) do
+    track_id
+    |> get_track_from_id(test.tracks)
+    |> Tracks.get_media_url(test)
   end
 end

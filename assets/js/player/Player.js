@@ -65,7 +65,7 @@ export default class {
         if (this.state === playerState.PLAYER_PLAYING) {
           if (this.loop === true) {
             restarted = true;
-            this.ee.emit('push_event', { event: 'play' });
+            this.play();
           } else {
             this.setState(playerState.PLAYER_STOPPED);
           }
@@ -79,7 +79,7 @@ export default class {
 
     this.ee.on('waveform-click', (params) => {
       const { track_hash, time } = params;
-      this.ee.emit('push_event', { event: 'waveform-click', data: { track_hash, time } });
+       this.play(track_hash, time);
     });
 
     // ---------- LOAD ----------

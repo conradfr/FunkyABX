@@ -62,23 +62,34 @@ Hooks.TestResults = {
       this.pushEvent("test_not_taken", {});
     }
 
-    this.handleEvent('play', (params) => {
+    const play = (e) => {
+      const { track_id, track_url } = e.detail;
       // pause currently playing track if any
       if (audio !== null) {
         audio.pause()
         audio = null;
       }
-      audio = new Audio(params.url);
+      audio = new Audio(track_url);
       audio.volume = 1;
       audio.play();
-    });
 
-    this.handleEvent('stop', () => {
+      this.pushEvent('playing', { track_id });
+    };
+
+    const stop = () => {
       if (audio !== null) {
         audio.pause()
         audio = null;
+        this.pushEvent('stopping');
       }
-    });
+    };
+
+    window.addEventListener('play', play, false);
+    window.addEventListener('stop', stop, false);
+  },
+  beforeDestroy() {
+    window.removeEventListener('play', play, false);
+    window.removeEventListener('stop', stop, false);
   }
 };
 
@@ -97,7 +108,6 @@ Hooks.Test = {
     }
 
     this.handleEvent('store_test', (params) => {
-      console.log('loooooooool pas bien');
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}`, true);
       localStorage.setItem(testId, JSON.stringify(params));
       localStorage.setItem(`${testId}_taken`, true);
@@ -125,7 +135,29 @@ Hooks.Player = {
       ee
     );
 
-    this.handleEvent('play', ({ trackHash, startTime }) => {
+    const play = (e) => {
+      const { track_hash, start_time} = e.detail;
+      player.play(track_hash, start_time);
+    };
+
+    const stop = () => {
+      player.stop();
+    };
+
+    const pause = () => {
+      player.pause();
+    };
+
+    const back = () => {
+      player.back();
+    };
+
+    window.addEventListener('play', play, false);
+    window.addEventListener('stop', stop, false);
+    window.addEventListener('pause', pause, false);
+    window.addEventListener('back', back, false);
+
+/*    this.handleEvent('play', ({ trackHash, startTime }) => {
       player.play(trackHash, startTime);
     });
 
@@ -139,7 +171,7 @@ Hooks.Player = {
 
     this.handleEvent('pause', () => {
       player.pause();
-    });
+    });*/
 
     this.handleEvent('loop', (params) => {
       player.loop = params.loop === true;
@@ -161,6 +193,12 @@ Hooks.Player = {
       this.pushEvent(event, data);
     });
   },
+  beforeDestroy() {
+    window.removeEventListener('play', play, false);
+    window.removeEventListener('stop', stop, false);
+    window.removeEventListener('pause', pause, false);
+    window.removeEventListener('back', back, false);
+  }
   /* updated() {
     console.log("editor update...")
   } */
