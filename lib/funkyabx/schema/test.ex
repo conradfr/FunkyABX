@@ -71,7 +71,7 @@ defmodule FunkyABX.Test do
     |> validate_length(:tracks, min: @minimum_tracks)
   end
 
-  def changeset_delete(test, attrs \\ %{}) do
+  def changeset_delete(test, _attrs \\ %{}) do
     test
     |> cast(%{"deleted_at" => NaiveDateTime.utc_now()}, [:deleted_at])
   end

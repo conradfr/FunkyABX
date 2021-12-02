@@ -1,7 +1,9 @@
 <div class="row flex-lg-row-reverse align-items-center g-5 py-3 py-sm-5">
   <div class="col-12 order-2 order-sm-1 col-sm-6 text-center">
-    <img src={Routes.static_path(@conn, "/images/demohome.png")}
-      class="d-block mx-lg-auto img-fluid homepage-image" alt="Demo screenshot" loading="lazy" width="650" height="380">
+    <a href={Routes.test_public_path(@conn, FunkyABXWeb.TestLive, "demo")}>
+      <img src={Routes.static_path(@conn, "/images/demohome.png")}
+        class="d-block mx-lg-auto img-fluid homepage-image" alt="Demo screenshot" loading="lazy" width="650" height="380">
+    </a>
   </div>
   <div class="col-12 order-1 order-sm-2 col-sm-6 text-sm-start text-center px-4">
     <div class="d-flex flex-wrap justify-content-between">

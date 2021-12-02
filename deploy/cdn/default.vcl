@@ -36,6 +36,8 @@ sub vcl_backend_response {
         return (deliver);
     }
 
+    set beresp.ttl = 1d;
+
      if (bereq.url ~ "^[^?]*\.(7z|avi|aac|bz2|flac|flv|gz|mka|mkv|mov|mp3|mp4|mpeg|mpg|ogg|ogm|opus|rar|tar|tgz|tbz|txz|wav|webm|xz|zip)(\?.*)?$") {
           unset beresp.http.set-cookie;
           set beresp.do_stream = true;  # Check memory usage it'll grow in fetch_chunksize blocks (128k by default) if the backend doesn't send a Content-Length header, so only enable it for big objects
