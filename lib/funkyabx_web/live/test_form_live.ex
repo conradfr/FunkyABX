@@ -281,6 +281,14 @@ defmodule FunkyABXWeb.TestFormLive do
       end
 
     password = if user == nil, do: UUID.generate(), else: nil
+    ip_address =
+      case get_connect_info(socket) do
+        nil -> nil
+        info ->
+          info.peer_data.address
+          |> Tuple.to_list()
+          |> Enum.join(".")
+      end
 
     test = %Test{
       id: UUID.generate(),
@@ -290,7 +298,8 @@ defmodule FunkyABXWeb.TestFormLive do
       password: password,
       description_markdown: false,
       tracks: [],
-      user: user
+      user: user,
+      ip_address: ip_address
     }
 
     changeset = Test.changeset(test)
