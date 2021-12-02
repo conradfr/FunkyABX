@@ -42,9 +42,6 @@ defmodule FunkyABXWeb.UserRegistrationController do
     test_ids = Enum.take_every(ids, 2)
     password_ids = ids -- test_ids
 
-    IO.puts "#{inspect test_ids}"
-    IO.puts "#{inspect password_ids}"
-
     query =
       from(t in Test,
         where: t.id in ^test_ids and t.password in ^password_ids and is_nil(t.deleted_at),

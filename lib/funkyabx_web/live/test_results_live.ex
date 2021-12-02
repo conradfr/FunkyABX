@@ -180,7 +180,8 @@ defmodule FunkyABXWeb.TestResultsLive do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
          true <-
            Map.get(session, "test_taken_" <> slug, false) or
-             Map.get(session, "current_user_id") == test.user_id do
+          (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) do
+
       ranks = Ranks.get_ranks(test)
       identifications = Identifications.get_identification(test)
 
@@ -252,6 +253,20 @@ defmodule FunkyABXWeb.TestResultsLive do
   @impl true
   def handle_event("stopping", _params, socket) do
     {:noreply, assign(socket, :play_track_id, nil)}
+  end
+
+  # ---------- UI ----------
+
+  def handle_event("toggle_description", _value, socket) do
+    toggle = !socket.assigns.view_description
+
+    {:noreply, assign(socket, view_description: toggle)}
+  end
+
+  def handle_event("toggle_identification_detail", _value, socket) do
+    toggle = !socket.assigns.identification_detail
+
+    {:noreply, assign(socket, identification_detail: toggle)}
   end
 
   # ---------- PUB/SUB EVENTS ----------
@@ -343,18 +358,6 @@ defmodule FunkyABXWeb.TestResultsLive do
 
     [rankings_taken, identifications_taken]
     |> Enum.max()
-  end
-
-  def handle_event("toggle_description", _value, socket) do
-    toggle = !socket.assigns.view_description
-
-    {:noreply, assign(socket, view_description: toggle)}
-  end
-
-  def handle_event("toggle_identification_detail", _value, socket) do
-    toggle = !socket.assigns.identification_detail
-
-    {:noreply, assign(socket, identification_detail: toggle)}
   end
 
   def percent_of(count, total) do
