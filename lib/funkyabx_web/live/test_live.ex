@@ -97,11 +97,11 @@ defmodule FunkyABXWeb.TestLive do
               <% end %>
             </div>
               <%= if @test.type === :listening do %>
-                <div class="p-2 text-truncate" style="width: 300px;">
+                <div class="p-2 text-truncate cursor-link" style="width: 300px;" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
                   <%= track.title %>
                 </div>
               <% else %>
-                <div class="p-2" style="min-width: 100px">
+                <div class="p-2 cursor-link" style="min-width: 100px" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
                   Track <%= i %>
                 </div>
               <% end %>

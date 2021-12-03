@@ -41,17 +41,15 @@ defmodule FunkyABXWeb.TestResultsLive do
             <div class="alert alert-info alert-thin">No ranking done ... yet!</div>
           <% end %>
           <%= for rank <- @ranks do %>
-            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
+            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == rank.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => rank.track_id, "track_url" => get_track_url(rank.track_id, @test)})}>
               <div class="p-2">
-                <%= if @play_track_id == rank.track_id do %>
-                  <button type="button" phx-click={JS.dispatch("stop", to: "body")} class="btn btn-dark px-2">
+                <button type="button" class="btn btn-dark px-2">
+                  <%= if @play_track_id == rank.track_id do %>
                     <i class="bi bi-stop-fill"></i>
-                  </button>
-                <% else %>
-                  <button type="button" phx-click={JS.dispatch("play", to: "body", detail: %{"track_id" => rank.track_id, "track_url" => get_track_url(rank.track_id, @test)})} class="btn btn-dark px-2">
+                  <% else %>
                     <i class="bi bi-play-fill"></i>
-                  </button>
-                <% end %>
+                  <% end %>
+                </button>
               </div>
               <div class="p-2">
                 <%= if (rank.rank < 4) do %>
@@ -60,7 +58,7 @@ defmodule FunkyABXWeb.TestResultsLive do
                   #<%= rank.rank %>
                 <% end %>
               </div>
-              <div class="p-2 flex-grow-1 text-truncate"><%= rank.track_title %></div>
+              <div class="p-2 flex-grow-1 text-truncate cursor-link"><%= rank.track_title %></div>
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
               <%= if @visitor_ranking != %{} do %>
                 <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You ranked this track: #<%= @visitor_ranking[rank.track_id] %></small></div>
@@ -103,17 +101,15 @@ defmodule FunkyABXWeb.TestResultsLive do
             <div class="alert alert-info alert-thin">No tracks guesses ... yet!</div>
           <% end %>
           <%= for {identification, i} <- @identifications |> Enum.with_index(1) do %>
-            <div class={"track my-1 #{if (i > 1), do: "mt-4"} d-flex flex-wrap align-items-center"}>
+            <div class={"track my-1 #{if (i > 1), do: "mt-4"} d-flex flex-wrap align-items-center"} phx-click={JS.dispatch(if @play_track_id == identification.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => identification.track_id, "track_url" => get_track_url(identification.track_id, @test)})}>
               <div class="p-2">
-                <%= if @play_track_id == identification.track_id do %>
-                  <button type="button" phx-click={JS.dispatch("stop", to: "body")}  class="btn btn-dark px-2">
+                <button type="button" class="btn btn-dark px-2">
+                  <%= if @play_track_id == identification.track_id do %>
                     <i class="bi bi-stop-fill"></i>
-                  </button>
-                <% else %>
-                  <button type="button" phx-click={JS.dispatch("play", to: "body", detail: %{"track_id" => identification.track_id, "track_url" => get_track_url(identification.track_id, @test)})} class="btn btn-dark px-2">
+                  <% else %>
                     <i class="bi bi-play-fill"></i>
-                  </button>
-                <% end %>
+                  <% end %>
+                </button>
               </div>
               <div class="p-2">
                 <%= if (i < 4) do %>
@@ -122,7 +118,7 @@ defmodule FunkyABXWeb.TestResultsLive do
                   #<%= i %>
                 <% end %>
               </div>
-              <div class="p-2 flex-grow-1"><%= identification.title %></div>
+              <div class="p-2 flex-grow-1 cursor-link"><%= identification.title %></div>
                 <div class="p-3 flex-grow-1 text-end text-truncate">
                   <%= if @visitor_identification != %{} do %>
                     <%= if identification.track_id == @visitor_identification[identification.track_id] do %>
