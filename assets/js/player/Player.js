@@ -130,12 +130,21 @@ export default class {
   }
 
   getNextTrackIndex(from) {
-    let nextTrack = (from === undefined ? this.currentTrackIndex : from) + 1;
-    if (nextTrack >= this.tracks.length) {
-      nextTrack = 0;
+    let nextTrackIndex = (from === undefined ? this.currentTrackIndex : from) + 1;
+    if (nextTrackIndex >= this.tracks.length) {
+      nextTrackIndex = 0;
     }
 
-    return nextTrack;
+    return nextTrackIndex;
+  }
+
+  getPrevTrackIndex(from) {
+    let prevTrackIndex = (from === undefined ? this.currentTrackIndex : from) - 1;
+    if (prevTrackIndex < 0) {
+      prevTrackIndex = this.tracks.length - 1;
+    }
+
+    return prevTrackIndex;
   }
 
   getTrackIndexFromHash(track_hash) {
@@ -218,9 +227,75 @@ export default class {
     }
   }
 
+  togglePlay(goBack) {
+    if (this.state === playerState.PLAYER_PLAYING) {
+      goBack === true ? this.stop() : this.pause();
+      return;
+    }
+
+    this.play(null, goBack === true ? 0 : null);
+  }
+
+  goToTrack(trackNumber, goBack) {
+    if (trackNumber >  this.tracks.length) {
+      return;
+    }
+
+    const track = this.tracks[trackNumber - 1];
+
+    if (this.startTime + track.getDuration() < this.currentTime) {
+      return;
+    }
+
+    this.switchToTrack(trackNumber - 1, goBack);
+    this.setRotate();
+  }
+
+  goToNext(goBack) {
+    let nextTrackIndex = null;
+    let index = this.currentTrackIndex;
+    do {
+      nextTrackIndex = this.getNextTrackIndex(index);
+      const nextTrack = this.tracks[nextTrackIndex];
+
+      if (this.startTime + nextTrack.getDuration() < this.currentTime) {
+        index = nextTrackIndex;
+        nextTrackIndex = null;
+      }
+    } while (nextTrackIndex === null && index !== this.currentTrackIndex);
+
+    if (nextTrackIndex === this.currentTrackIndex) {
+      return;
+    }
+
+    this.switchToTrack(nextTrackIndex, goBack);
+    this.setRotate();
+  }
+
+  goToPrev(goBack) {
+    let prevTrackIndex = null;
+    let index = this.currentTrackIndex;
+    do {
+      prevTrackIndex = this.getPrevTrackIndex(index);
+      const prevTrack = this.tracks[prevTrackIndex];
+
+      if (this.startTime + prevTrack.getDuration() < this.currentTime) {
+        index = prevTrackIndex;
+        prevTrackIndex = null;
+      }
+    } while (prevTrackIndex === null && index !== this.currentTrackIndex);
+
+    if (prevTrackIndex === this.currentTrackIndex) {
+      return;
+    }
+
+    this.switchToTrack(prevTrackIndex, goBack);
+    this.setRotate();
+  }
+
   // ---------- INTERNAL----------
 
-  switchToTrack(nextTrackIndex, startTime) {
+  switchToTrack(nextTrackIndex, goBack) {
     this.currentTrackIndex = nextTrackIndex;
 
     this.tracks.forEach((track, index) => {
@@ -230,6 +305,10 @@ export default class {
           data: { track_hash: track.src.hash } });
       }
     });
+
+    if (goBack === true) {
+      this.back();
+    }
   }
 
   setRotate() {
@@ -238,7 +317,7 @@ export default class {
       this.rotateInterval = null;
     }
 
-    if (this.rotate === false) {
+    if (this.rotate === false || this.isPlaying() === false) {
       return;
     }
 

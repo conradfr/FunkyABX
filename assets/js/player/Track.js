@@ -132,7 +132,9 @@ export default class {
 
       this.source.stop();
     }
+    this.pausedAt = null;
     this.startTime = null;
+    this.currentSeconds = 0;
     this.cleanSource();
   }
 

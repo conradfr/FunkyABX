@@ -88,12 +88,16 @@ defmodule FunkyABXWeb.TestLive do
 
       <div class="tracks my-2">
         <%= for {track, i} <- @tracks |> Enum.with_index(1) do %>
-          <div class={"track my-1 d-flex flex-wrap flex-md-nowrap align-items-center #{if @current_track == track.hash, do: "track-active", else: ""}"}>
+          <div class={"track my-1 d-flex flex-wrap flex-md-nowrap align-items-center #{if @current_track == track.hash, do: "track-active"}"}>
             <div class="p-3">
               <%= if @current_track == track.hash and @playing == true do %>
-                <i class="bi bi-pause-fill cursor-link" phx-click={JS.dispatch("pause", to: "body")}></i>
+                <button type="button" class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"} phx-click={JS.dispatch("pause", to: "body")}>
+                  <i class="bi bi-pause-fill"></i>
+                </button>
               <% else %>
-                <i class={"bi bi-play-fill #{if @tracks_loaded == false, do: " text-muted", else: " cursor-link"}"} phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}></i>
+                <button type="button" class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"} phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}>
+                  <i class={"bi bi-play-fill #{if @tracks_loaded == false, do: " text-muted"}"}></i>
+                </button>
               <% end %>
             </div>
               <%= if @test.type === :listening do %>
@@ -148,6 +152,12 @@ defmodule FunkyABXWeb.TestLive do
       <%= unless @test.type == :listening do %>
         <div class="mt-3">
           <div class="d-flex flex-row align-items-center justify-content-between">
+            <div class="me-2">
+              <small><i class="bi bi-info-circle text-muted" title="Player controls" role="button"
+                data-bs-toggle="popover" data-bs-placement="auto"  data-bs-html="true"
+                data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track #</li><li>ctrl+key: command + rewind</li></ul>">
+              </i></small>
+            </div>
             <%= unless @test_already_taken == true do %>
               <div class="px-1">
                 <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>

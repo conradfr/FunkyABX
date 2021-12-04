@@ -124,6 +124,14 @@ Hooks.Player = {
   mounted() {
     // ---------- INIT ----------
 
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl, {
+        trigger: 'hover',
+        container: 'body'
+      })
+    });
+
     const ee = new EventEmitter();
 
     const player = new Player(
@@ -157,21 +165,30 @@ Hooks.Player = {
     window.addEventListener('pause', pause, false);
     window.addEventListener('back', back, false);
 
-/*    this.handleEvent('play', ({ trackHash, startTime }) => {
-      player.play(trackHash, startTime);
-    });
+    document.addEventListener('keyup', (event) => {
+      const key = event.key
+      switch (key) {
+        case " ":
+          player.togglePlay(event.ctrlKey);
+          break;
 
-    this.handleEvent('stop', () => {
-      player.stop();
-    });
+        case "ArrowDown":
+        case "ArrowRight":
+          player.goToNext(event.ctrlKey);
+          break;
 
-    this.handleEvent('back', () => {
-      player.back();
-    });
+        case "ArrowUp":
+        case "ArrowLeft":
+          player.goToPrev(event.ctrlKey);
+          break;
 
-    this.handleEvent('pause', () => {
-      player.pause();
-    });*/
+        default:
+          const toDigit = Number.parseInt(key, 10);
+          if (Number.isInteger(toDigit) && toDigit > 0) {
+            player.goToTrack(toDigit, event.ctrlKey);
+          }
+      }
+    });
 
     this.handleEvent('loop', (params) => {
       player.loop = params.loop === true;
@@ -218,8 +235,8 @@ Hooks.TestForm = {
     });
 
     this.handleEvent('saveTest', (params) => {
-      if (params.autor !== undefined && params.autor !== null && params.test_author !== '') {
-        cookies.set(COOKIE_TEST_AUTHOR, params.autor);
+      if (params.test_author !== undefined && params.test_author !== null && params.test_author !== '') {
+        cookies.set(COOKIE_TEST_AUTHOR, params.test_author);
       }
 
       // test if from a logged user
