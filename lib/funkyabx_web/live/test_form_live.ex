@@ -162,6 +162,23 @@ defmodule FunkyABXWeb.TestFormLive do
           </div>
         </fieldset>
 
+        <fieldset class="form-group mb-3">
+          <legend class="mt-1 header-typographica">Visibility</legend>
+          <div class="form-unit p-3 pb-1 rounded-3">
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <%= checkbox(f, :public, class: "form-check-input") %>
+                    &nbsp;&nbsp;The test is public
+                  </label>
+                  <div class="form-text">It will be published in the gallery 15 minutes after its creation</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
         <fieldset>
           <legend class="header-typographica"><span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;Two tracks minimum</span>Tracks</legend>
 
@@ -293,6 +310,7 @@ defmodule FunkyABXWeb.TestFormLive do
     test = %Test{
       id: UUID.generate(),
       type: :regular,
+      public: false,
       ranking: true,
       identification: false,
       password: password,

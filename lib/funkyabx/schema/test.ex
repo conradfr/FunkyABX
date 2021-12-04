@@ -4,6 +4,8 @@ defmodule FunkyABX.Test do
   alias FunkyABX.Accounts.User
   alias FunkyABX.Test.TitleSlug
   alias FunkyABX.Track
+  alias FunkyABX.RankDetails
+  alias FunkyABX.IdentificationDetails
 
   @minimum_tracks 2
 
@@ -27,6 +29,8 @@ defmodule FunkyABX.Test do
     timestamps()
     belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
+    has_many(:rank_details, RankDetails)
+    has_many(:identification_details, IdentificationDetails)
   end
 
   def changeset(test, attrs \\ %{}) do

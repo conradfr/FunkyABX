@@ -327,33 +327,7 @@ defmodule FunkyABXWeb.TestResultsLive do
   # ---------- VIEW HELPERS ----------
 
   def get_number_of_tests_taken(rankings, identifications) do
-    rankings_taken =
-      case Kernel.length(rankings) do
-        0 ->
-          0
-
-        _ ->
-          rankings
-          |> List.first(%{})
-          |> Map.get(:count, 0)
-      end
-
-    identifications_taken =
-      case Kernel.length(identifications) do
-        0 ->
-          0
-
-        _ ->
-          identifications
-          |> List.first(%{})
-          |> Map.get(:guesses, [])
-          |> Enum.reduce(0, fn i, acc ->
-            acc + i["count"]
-          end)
-      end
-
-    [rankings_taken, identifications_taken]
-    |> Enum.max()
+    Tests.get_how_many_taken(rankings, identifications)
   end
 
   def percent_of(count, total) do

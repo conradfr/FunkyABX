@@ -5,7 +5,7 @@ defmodule TestFlag do
 
   def render(assigns) do
     ~H"""
-        <div class="float-end text-end">
+        <div class="text-end">
           <span class="fs-9 text-muted cursor-link" phx-target={@myself} phx-click="flag_toggle" title="Flag this test"><i class="bi bi-flag"></i></span>
           <%= if @flag_display === true do %>
           <div class="input-group mt-1">

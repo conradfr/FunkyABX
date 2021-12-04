@@ -5,6 +5,7 @@ $primary: #c44811;
 $secondary: #583247;
 //$secondary: #7f4601;
 $dark: #444;
+$darker: #303030;
 $info: #00606e;
 $light: #bdaa24;
 
@@ -23,6 +24,9 @@ $track-bg-color: #303030;
 $track-active-bg-color: #097287;
 $track-active-text-muted: darken($white, 10%) !important;
 
-$form-unit-bg-color: #303030;
+$form-unit-bg-color: $darker;
 
-$test-description-bg: #303030;
+$test-description-bg: $darker;
+
+$gallery-test-bg-color: $darker;
+$gallery-test-by-bg-color: $dark;

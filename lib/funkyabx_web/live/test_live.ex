@@ -10,13 +10,21 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <.live_component module={TestFlag} id="flag" test={@test} />
+      <div class="row">
+        <div class="col-sm-6">
       <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
-        <%= @test.title %>
-      </h3>
-      <%= if @test.author != nil do %>
-        <h6 class="header-typographica">By <%= @test.author %></h6>
-      <% end %>
+            <%= @test.title %>
+          </h3>
+          <%= if @test.author != nil do %>
+            <h6 class="header-typographica">By <%= @test.author %></h6>
+          <% end %>
+        </div>
+        <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
+          <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@test) %></strong> times</div>
+          <.live_component module={TestFlag} id="flag" test={@test} />
+        </div>
+      </div>
+
       <%= if @test.description != nil do %>
         <TestDescription.format wrapper_class="my-3 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
       <% end %>
@@ -89,7 +97,7 @@ defmodule FunkyABXWeb.TestLive do
       <div class="tracks my-2">
         <%= for {track, i} <- @tracks |> Enum.with_index(1) do %>
           <div class={"track my-1 d-flex flex-wrap flex-md-nowrap align-items-center #{if @current_track == track.hash, do: "track-active"}"}>
-            <div class="p-3">
+            <div class="p-2">
               <%= if @current_track == track.hash and @playing == true do %>
                 <button type="button" class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"} phx-click={JS.dispatch("pause", to: "body")}>
                   <i class="bi bi-pause-fill"></i>
@@ -445,7 +453,7 @@ defmodule FunkyABXWeb.TestLive do
       if is_ranking_valid?(socket.assigns.ranking, socket.assigns.test) == true and
            is_identification_valid?(socket.assigns.identification, socket.assigns.test) == true do
         params_ranking =
-          unless socket.assigns.ranking == false do
+          unless socket.assigns.test.ranking == false do
             Tests.submit_ranking(socket.assigns.test, socket.assigns.ranking, socket.assigns.ip)
             socket.assigns.ranking
           else
@@ -453,7 +461,7 @@ defmodule FunkyABXWeb.TestLive do
           end
 
         params_identification =
-          unless socket.assigns.identification == false do
+          unless socket.assigns.test.identification == false do
             # match fake ids to the real track ids
             identification =
               socket.assigns.identification
@@ -522,6 +530,12 @@ defmodule FunkyABXWeb.TestLive do
     )
 
     {:noreply, push_event(socket, "bypass_test", %{})}
+  end
+
+  # ---------- VIEW HELPERS ----------
+
+  def get_number_of_tests_taken(test) do
+    Tests.get_how_many_taken(test)
   end
 
   # ---------- TEST UTILS ----------

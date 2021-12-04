@@ -33,6 +33,7 @@ defmodule FunkyABXWeb.Router do
 
     get "/", PageController, :index
     live "/info", FlashLive, as: :info
+    live "/gallery", GalleryLive, as: :gallery
     live "/edit/:slug/:key", TestFormLive, as: :test_edit_private
     #    live "/test/:slug", TestLive, as: :test_public
     live "/results/:slug/:key", TestResultsLive, as: :test_results_private

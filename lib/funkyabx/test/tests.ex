@@ -3,9 +3,13 @@ defmodule FunkyABX.Tests do
   alias FunkyABX.Repo
   alias FunkyABX.Test
   alias FunkyABX.Rank
+  alias FunkyABX.Ranks
   alias FunkyABX.Identification
+  alias FunkyABX.Identifications
   alias FunkyABX.RankDetails
   alias FunkyABX.IdentificationDetails
+
+  @min_test_created_minutes 15
 
   # ---------- GET ----------
 
@@ -22,6 +26,16 @@ defmodule FunkyABX.Tests do
   def get_edit(slug, key) when is_binary(slug) and is_binary(key) do
     Repo.get_by!(Test, slug: slug, password: key)
     |> Repo.preload([:tracks])
+  end
+
+  def get_for_gallery() do
+    query =
+      from t in Test,
+      where: t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and t.inserted_at < ago(@min_test_created_minutes, "minute"),
+      order_by: [desc: t.inserted_at],
+      select: t
+
+    Repo.all(query)
   end
 
   # ---------- VOTES ----------
@@ -57,6 +71,42 @@ defmodule FunkyABX.Tests do
     end
   end
 
+  def get_how_many_taken(test) do
+    ranks = Ranks.get_ranks(test)
+    identifications = Identifications.get_identification(test)
+    get_how_many_taken(ranks, identifications)
+  end
+
+  def get_how_many_taken(rankings, identifications) do
+    rankings_taken =
+      case Kernel.length(rankings) do
+        0 ->
+          0
+
+        _ ->
+          rankings
+          |> List.first(%{})
+          |> Map.get(:count, 0)
+      end
+
+    identifications_taken =
+      case Kernel.length(identifications) do
+        0 ->
+          0
+
+        _ ->
+          identifications
+          |> List.first(%{})
+          |> Map.get(:guesses, [])
+          |> Enum.reduce(0, fn i, acc ->
+            acc + i["count"]
+          end)
+      end
+
+    [rankings_taken, identifications_taken]
+    |> Enum.max()
+  end
+
   def submit_ranking(test, ranking, ip_address) do
     Enum.each(ranking, fn {track_id, rank} ->
       track = Enum.find(test.tracks, fn t -> t.id == track_id end)
@@ -72,10 +122,10 @@ defmodule FunkyABX.Tests do
         )
     end)
 
-    RankDetails.changeset(%RankDetails{}, %{
+    %RankDetails{test: test}
+    |> RankDetails.changeset(%{
       votes: ranking,
-      ip_address: get_ip_as_binary(ip_address),
-      test: test
+      ip_address: get_ip_as_binary(ip_address)
     })
     |> Repo.insert()
   end
@@ -97,10 +147,10 @@ defmodule FunkyABX.Tests do
         )
     end)
 
-    IdentificationDetails.changeset(%IdentificationDetails{}, %{
+    %IdentificationDetails{test: test}
+    |> IdentificationDetails.changeset(%{
       votes: identification,
-      ip_address: get_ip_as_binary(ip_address),
-      test: test
+      ip_address: get_ip_as_binary(ip_address)
     })
     |> Repo.insert()
   end

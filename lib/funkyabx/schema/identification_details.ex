@@ -12,6 +12,7 @@ defmodule FunkyABX.IdentificationDetails do
   def changeset(identification, attrs \\ %{}) do
     identification
     |> cast(attrs, [:votes, :ip_address])
+    |> cast_assoc(:test)
     |> validate_required([:votes])
     |> assoc_constraint(:test)
   end

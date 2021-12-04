@@ -1,0 +1,40 @@
+.gallery-test {
+  width: 150px;
+  min-height: 200px;
+  max-height: 300px;
+
+  @include media-breakpoint-up(sm) {
+    width: 250px;
+  }
+
+  background-color: $gallery-test-bg-color;
+
+  .gallery-test-title {
+    background-color: $primary;
+  }
+
+  .gallery-test-by {
+    font-size: 0.75rem;
+    background-color: $gallery-test-by-bg-color;
+  }
+
+  .gallery-test-description {
+    font-size: 0.813rem;
+    overflow-y: hidden;
+  }
+
+  .gallery-test-link {
+    background-color: $secondary;
+
+    a {
+      font-size: 0.875rem;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+  }
+
+}

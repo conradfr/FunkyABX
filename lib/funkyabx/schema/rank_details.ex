@@ -12,6 +12,7 @@ defmodule FunkyABX.RankDetails do
   def changeset(rank, attrs \\ %{}) do
     rank
     |> cast(attrs, [:votes, :ip_address])
+#    |> cast_assoc(:test)
     |> validate_required([:votes])
     |> assoc_constraint(:test)
   end

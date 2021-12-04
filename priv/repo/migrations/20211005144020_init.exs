@@ -9,7 +9,7 @@ defmodule FunkyABX.Repo.Migrations.Init do
       add :description, :string, size: 2000
       add :description_markdown, :boolean
       add :slug, :string, size: 255, null: false
-      add :public, :boolean, default: true
+      add :public, :boolean, default: false
       add :password, :string, size: 255, null: true
       add :ranking, :boolean
       add :identification, :boolean
