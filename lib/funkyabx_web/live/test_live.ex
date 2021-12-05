@@ -59,6 +59,13 @@ defmodule FunkyABXWeb.TestLive do
             <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
+          <% else %>
+            <div class="ms-2 text-muted" role="status">
+              <small><i class="bi bi-info-circle text-extra-muted" title="Player controls" role="button"
+                data-bs-toggle="popover" data-bs-placement="auto" data-bs-html="true"
+                data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track #</li><li>ctrl+key: command + rewind</li></ul>">
+              </i></small>
+            </div>
           <% end %>
         </div>
         <div class="p-2">
@@ -160,12 +167,6 @@ defmodule FunkyABXWeb.TestLive do
       <%= unless @test.type == :listening do %>
         <div class="mt-3">
           <div class="d-flex flex-row align-items-center justify-content-between">
-            <div class="me-2">
-              <small><i class="bi bi-info-circle text-muted" title="Player controls" role="button"
-                data-bs-toggle="popover" data-bs-placement="auto"  data-bs-html="true"
-                data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track #</li><li>ctrl+key: command + rewind</li></ul>">
-              </i></small>
-            </div>
             <%= unless @test_already_taken == true do %>
               <div class="px-1">
                 <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>
@@ -302,7 +303,11 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_event("tracksLoaded", _params, socket) do
-    {:noreply, assign(socket, tracks_loaded: true)}
+    {:noreply,
+      socket
+      |> assign(tracks_loaded: true)
+      |> push_event("tracks_loaded", %{})
+    }
   end
 
   @impl true

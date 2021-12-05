@@ -124,14 +124,6 @@ Hooks.Player = {
   mounted() {
     // ---------- INIT ----------
 
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-    const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-      return new bootstrap.Popover(popoverTriggerEl, {
-        trigger: 'hover',
-        container: 'body'
-      })
-    });
-
     const ee = new EventEmitter();
 
     const player = new Player(
@@ -208,6 +200,16 @@ Hooks.Player = {
     ee.on('push_event', (params) => {
       const {event, data} = params;
       this.pushEvent(event, data);
+    });
+
+    this.handleEvent('tracks_loaded', () => {
+      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+      const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl, {
+          trigger: 'hover',
+          // container: 'body'
+        })
+      });
     });
   },
   beforeDestroy() {
