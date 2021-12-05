@@ -12,7 +12,7 @@ defmodule FunkyABXWeb.TestLive do
     ~H"""
       <div class="row">
         <div class="col-sm-6">
-      <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
+          <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
             <%= @test.title %>
           </h3>
           <%= if @test.author != nil do %>
@@ -20,7 +20,9 @@ defmodule FunkyABXWeb.TestLive do
           <% end %>
         </div>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@test) %></strong> times</div>
+          <%= unless @test.type === :listening do %>
+            <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@test) %></strong> times</div>
+          <% end %>
           <.live_component module={TestFlag} id="flag" test={@test} />
         </div>
       </div>
@@ -54,10 +56,8 @@ defmodule FunkyABXWeb.TestLive do
             <i class="bi bi-stop-fill"></i>
           </button>
           <%= if @tracks_loaded == false do %>
-            <div class="track-loader text-muted ms-2">
-              <div class="refresh-animate">
-                <i class="bi bi-arrow-repeat"></i>
-              </div>
+            <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
           <% end %>
         </div>
