@@ -23,12 +23,12 @@ defmodule FunkyABXWeb.TestLive do
           <%= unless @test.type === :listening do %>
             <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@test) %></strong> times</div>
           <% end %>
-          <.live_component module={TestFlag} id="flag" test={@test} />
+          <.live_component module={TestFlagComponent} id="flag" test={@test} />
         </div>
       </div>
 
       <%= if @test.description != nil do %>
-        <TestDescription.format wrapper_class="my-3 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
+        <TestDescriptionComponent.format wrapper_class="my-3 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
       <% end %>
 
       <form phx-change="change_player_settings">
@@ -206,7 +206,7 @@ defmodule FunkyABXWeb.TestLive do
             width: "0"
         }
       end)
-      |> Enum.shuffle()
+      |> shuffle_tracks_if_needed(test)
 
     FunkyABXWeb.Endpoint.subscribe(test.id)
 
@@ -231,17 +231,6 @@ defmodule FunkyABXWeb.TestLive do
        #          test_already_taken: false
        test_already_taken: Map.get(session, "test_taken_" <> slug, false)
      })}
-
-    #    else
-    #      _ ->
-    #        # Test taken, redirect to results
-    #        {:ok,
-    #          socket
-    #          |> put_flash(:info, "You have already taken this test.")
-    #          |> assign(test_already_taken: true)
-    #          |> redirect(to: Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, slug))
-    #        }
-    #    end
   end
 
   # ---------- PUB/SUB EVENTS ----------
@@ -539,6 +528,14 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   # ---------- TEST UTILS ----------
+
+  defp shuffle_tracks_if_needed(tracks, test) when test.type != :listening do
+    Enum.shuffle(tracks)
+  end
+
+  defp shuffle_tracks_if_needed(tracks, _test) do
+    tracks
+  end
 
   defp is_valid(assigns) do
     if is_ranking_valid?(assigns.ranking, assigns.test) == true and

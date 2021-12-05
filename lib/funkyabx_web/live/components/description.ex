@@ -1,4 +1,4 @@
-defmodule TestDescription do
+defmodule TestDescriptionComponent do
   use Phoenix.Component
   use Phoenix.HTML
 

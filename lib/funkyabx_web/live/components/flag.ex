@@ -1,4 +1,4 @@
-defmodule TestFlag do
+defmodule TestFlagComponent do
   use FunkyABXWeb, :live_component
   alias FunkyABX.Repo
   alias FunkyABX.Flag

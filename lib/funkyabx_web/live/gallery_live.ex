@@ -21,7 +21,7 @@ defmodule FunkyABXWeb.GalleryLive do
               </div>
             <% end %>
             <%= unless test.description == nil do %>
-              <TestDescription.format wrapper_class="flex-fill gallery-test-description p-2 px-3" description_markdown={test.description_markdown} description={test.description} />
+              <TestDescriptionComponent.format wrapper_class="flex-fill gallery-test-description p-2 px-3" description_markdown={test.description_markdown} description={test.description} />
             <% end %>
             <div class="mt-auto py-1 text-center gallery-test-link">
               <%= link "View", to: Routes.test_public_path(@socket, FunkyABXWeb.TestLive, test.slug) %>

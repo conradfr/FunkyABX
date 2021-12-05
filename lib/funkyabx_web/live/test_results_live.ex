@@ -29,7 +29,7 @@ defmodule FunkyABXWeb.TestResultsLive do
           <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">View description&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
         <% else %>
           <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">Hide description&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></div>
-          <TestDescription.format wrapper_class="my-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
+          <TestDescriptionComponent.format wrapper_class="my-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
         <% end %>
       <% end %>
 

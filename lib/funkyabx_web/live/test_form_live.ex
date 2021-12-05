@@ -156,7 +156,7 @@ defmodule FunkyABXWeb.TestFormLive do
               <%= textarea(f, :description, class: "form-control", rows: "5", placeholder: "Optional") %>
               <div class="fs-8 mt-2 mb-1 cursor-link" phx-click="toggle_description">Preview&nbsp;&nbsp;<i class={"bi bi-arrow-#{if @view_description == true do "down" else "right" end}-circle"}></i></div>
               <%= if @view_description == true do %>
-                <TestDescription.format description_markdown={@description_markdown} description={@description} />
+                <TestDescriptionComponent.format description_markdown={@description_markdown} description={@description} />
               <% end %>
             </div>
           </div>
