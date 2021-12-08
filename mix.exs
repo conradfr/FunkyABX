@@ -64,7 +64,8 @@ defmodule FunkyABX.MixProject do
       {:hackney, "~> 1.18"},
       {:sweet_xml, "~> 0.7.1"},
       {:gen_smtp, "~> 1.1"},
-      {:ex_cldr_dates_times, "~> 2.0"}
+      {:ex_cldr_dates_times, "~> 2.0"},
+      {:httpoison, "~> 1.8"}
     ]
   end
 

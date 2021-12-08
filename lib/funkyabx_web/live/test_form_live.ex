@@ -1,7 +1,9 @@
 defmodule FunkyABXWeb.TestFormLive do
+  require Logger
   use FunkyABXWeb, :live_view
   alias Ecto.UUID
   alias FunkyABX.Accounts
+  alias FunkyABX.Download
   alias FunkyABX.Repo
   alias FunkyABX.Tests
   alias FunkyABX.Test
@@ -193,7 +195,7 @@ defmodule FunkyABXWeb.TestFormLive do
           <div class="mb-2">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
               <%= unless Enum.member?(@tracks_to_delete, fp.data.id) == true do %>
-                <div class="row mb-1 p-2 form-unit mx-0">
+                <div class={"row p-2 form-unit mx-0#{unless fp.data.id == nil, do: " mb-2"}"}>
                   <%= if fp.data.id != nil do %>
                     <%= hidden_input(fp, :id) %>
                     <%= hidden_input(fp, :delete) %>
@@ -206,28 +208,41 @@ defmodule FunkyABXWeb.TestFormLive do
                   <div class="col-sm-4">
                     <%= text_input fp, :title, class: "form-control", disabled: !@tracks_updatable, required: true %>
                   </div>
-                  <%= label :fp, :filename, "File:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
-                  <div class="col text-center">
+                  <%= if fp.data.id != nil do %>
+                    <%= label :fp, :filename, "File:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                    <div class="col text-center w-100 text-truncate d-flex align-items-center">
+                      <div><%= fp.data.original_filename %></div>
+                    </div>
+                  <% else %>
+                    <div class="col-sm-5">&nbsp;</div>
+                  <% end %>
+                  <div class="col-sm-1 d-flex flex-row-reverse" style="min-width: 62px">
                     <%= if fp.data.id != nil do %>
-                      <label class="col-sm-1 col-form-label w-100"><%= fp.data.original_filename %></label>
+                      <button type="button" class={"btn btn-dark#{if @tracks_updatable == false, do: " disabled"}"} data-confirm="Are you sure?" phx-click="delete_track" phx-value-id={fp.data.id}><i class="bi bi-trash text-danger"></i></button>
                     <% else %>
-                      <%= live_file_input @uploads[String.to_atom("track" <> fp.data.temp_id)], required: true %>
+                      <button type="button" class={"btn btn-dark#{if @tracks_updatable == false, do: " disabled"}"} phx-click="remove_track" phx-value-id={fp.data.temp_id}><i class="bi bi-trash text-danger"></i></button>
+                    <% end %>
+                  </div>
+                </div>
+                <%= if fp.data.id == nil do %>
+                  <div class="row mb-3 p-2 form-unit mx-0">
+                    <div class="col-sm-1 col-form-label">&nbsp;</div>
+                    <%= label :fp, :filename, "Upload file:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                    <div class="col text-center">
+                      <%= live_file_input @uploads[String.to_atom("track" <> fp.data.temp_id)] %>
                       <%= for entry <- @uploads[String.to_atom("track" <> fp.data.temp_id)].entries do %>
                         <progress value={entry.progress} max="100"> <%= entry.progress %>% </progress>
                         <%= for err <- upload_errors(@uploads[String.to_atom("track" <> fp.data.temp_id)], entry) do %>
                           <div class="alert alert-thin alert-danger"><%= error_to_string(err) %></div>
                         <% end %>
-                      <%end %>
-                    <% end %>
-                  </div>
-                    <div class="col-sm-1 text-left" style="width: 62px">
-                      <%= if fp.data.id != nil do %>
-                        <button type="button" class={"btn btn-dark#{if @tracks_updatable == false, do: " disabled"}"} data-confirm="Are you sure?" phx-click="delete_track" phx-value-id={fp.data.id}><i class="bi bi-trash text-danger"></i></button>
-                      <% else %>
-                        <button type="button" class={"btn btn-dark#{if @tracks_updatable == false, do: " disabled"}"} phx-click="remove_track" phx-value-id={fp.data.temp_id}><i class="bi bi-trash text-danger"></i></button>
                       <% end %>
-                   </div>
-                </div>
+                    </div>
+                    <%= label :fp, :filename, "... Or download from url:", class: "col-sm-2 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                    <div class="col-sm-4">
+                      <%= text_input fp, :url, class: "form-control", disabled: !@tracks_updatable %>
+                    </div>
+                  </div>
+                <% end %>
               <% end %>
             <% end %>
           </div>
@@ -417,6 +432,7 @@ defmodule FunkyABXWeb.TestFormLive do
   def handle_event("update", %{"test" => test_params}, socket) do
     updated_tracks =
       test_params["tracks"]
+      # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         unless Map.has_key?(t, "temp_id") == false do
           case uploaded_entries(socket, String.to_atom("track" <> t["temp_id"])) do
@@ -445,6 +461,18 @@ defmodule FunkyABXWeb.TestFormLive do
           Map.put(acc, k, t)
         end
       end)
+        # url download
+      |> Enum.reduce(%{}, fn {k, t}, acc ->
+        case Map.has_key?(t, "id") == false and Map.has_key?(t, "filename") == false and Map.has_key?(t, "url")do
+          true ->
+            t
+            |> import_track_url(socket.assigns.test)
+            |> (&(Map.put(acc, k, &1))).()
+
+          _ ->
+            Map.put(acc, k, t)
+        end
+      end)
 
     updated_test_params = Map.put(test_params, "tracks", updated_tracks)
 
@@ -455,6 +483,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
     case update do
       {:ok, test} ->
+        Logger.info("Test updated")
+
         FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_updated", nil)
 
         # Delete files from removed tracks
@@ -463,10 +493,35 @@ defmodule FunkyABXWeb.TestFormLive do
         |> Enum.map(fn t -> t.filename end)
         |> Files.delete(socket.assigns.test.id)
 
+        # logged or not
+        redirect =
+          unless test.password == nil do
+            Routes.test_edit_private_path(
+              FunkyABXWeb.Endpoint,
+              FunkyABXWeb.TestFormLive,
+              test.slug,
+              test.password
+            )
+          else
+            Routes.test_edit_path(
+              FunkyABXWeb.Endpoint,
+              FunkyABXWeb.TestFormLive,
+              test.slug
+            )
+          end
+
+        flash_text = "Your test has been successfully updated."
+
+        Process.send_after(
+          self(),
+          {:redirect, redirect, flash_text},
+          1000
+        )
+
         {:noreply,
          socket
          |> assign(test: test)
-         |> put_flash(:success, "Your test has been updated !")}
+         |> put_flash(:success, flash_text)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset, tracks_to_delete: [])}
@@ -479,25 +534,38 @@ defmodule FunkyABXWeb.TestFormLive do
     updated_tracks =
       test_params
       |> Map.get("tracks", %{})
+      # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
-        [{original_filename, filename}] =
+        upload_consumed =
           consume_uploaded_entries(socket, String.to_atom("track" <> t["temp_id"]), fn %{
                                                                                          path:
                                                                                            path
                                                                                        },
                                                                                        entry ->
             filename_dest = Files.get_destination_filename(entry.client_name)
-
-            final_filename_dest =
-              Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
+            final_filename_dest = Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
 
             {entry.client_name, final_filename_dest}
           end)
 
-        updated_track =
-          Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
+        case upload_consumed do
+          [{original_filename, filename}] ->
+            updated_track = Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
+            Map.put(acc, k, updated_track)
 
-        Map.put(acc, k, updated_track)
+          _ -> Map.put(acc, k, t)
+        end
+      end)
+      # url download
+      |> Enum.reduce(%{}, fn {k, t}, acc ->
+        case Map.get(t, "filename") do
+          nil ->
+            t
+            |> import_track_url(socket.assigns.test)
+            |> (&(Map.put(acc, k, &1))).()
+
+          _ -> Map.put(acc, k, t)
+        end
       end)
 
     updated_test_params = Map.put(test_params, "tracks", updated_tracks)
@@ -539,6 +607,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
         changeset = Test.changeset_update(test)
 
+        Logger.info("Test created")
+
         {
           :noreply,
           socket
@@ -573,6 +643,8 @@ defmodule FunkyABXWeb.TestFormLive do
       {:redirect, Routes.info_path(socket, FunkyABXWeb.FlashLive), flash_text},
       1500
     )
+
+    Logger.info("Test deleted")
 
     {
       :noreply,
@@ -678,4 +750,26 @@ defmodule FunkyABXWeb.TestFormLive do
   def error_to_string(:too_large), do: "Too large"
   def error_to_string(:too_many_files), do: "You have selected too many files"
   def error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+
+  # ---
+
+  defp import_track_url(track, test) do
+    task = Task.Supervisor.async(FunkyABX.TaskSupervisor, Download, :from_url, [track["url"]])
+    result = Task.await(task)
+
+    case result do
+      {original_filename, download_path} ->
+        filename_dest =
+          track
+          |> Map.get("url")
+          |> Files.get_destination_filename()
+          |> (&(Path.join([test.id, &1]))).()
+
+        final_filename_dest = Files.save(download_path, filename_dest)
+        File.rm(download_path)
+        Map.merge(track, %{"url" => track["url"], "filename" => final_filename_dest, "original_filename" => original_filename})
+
+      _ -> track
+    end
+  end
 end

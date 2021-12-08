@@ -19,7 +19,8 @@ if config_env() == :prod do
     email_from: System.get_env("EMAIL_FROM"),
     analytics: System.get_env("ANALYTICS") || nil,
     bucket: System.get_env("S3_BUCKET") || "",
-    flac_folder: System.get_env("FLAC_FOLDER")
+    flac_folder: System.get_env("FLAC_FOLDER"),
+    temp_folder: System.get_env("TEMP_FOLDER")
 
   config :funkyabx, FunkyABX.Repo,
     # ssl: true,

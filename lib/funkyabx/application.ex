@@ -14,6 +14,7 @@ defmodule FunkyABX.Application do
       FunkyABXWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: FunkyABX.PubSub},
+      {Task.Supervisor, name: FunkyABX.TaskSupervisor},
       # Start the Endpoint (http/https)
       FunkyABXWeb.Endpoint
       # Start a worker by calling: FunkyABX.Worker.start_link(arg)
