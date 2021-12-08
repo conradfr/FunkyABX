@@ -154,14 +154,9 @@ export default class {
   }
 
   drawWaveform(isRefresh) {
-    /*
-      We get the canvas wrapper to get the dimensions, but we create the canvas in the body
-      and not in the wrapper and position it in absolute to avoid LiveView refreshes
-      that would destroy the canvas
-   */
-
-    const canvasParentElem = document.getElementById(`wrapper-waveform-${this.src.hash}`);
-    let canvasElem = document.getElementById(`waveform-${this.src.hash}`);
+    // We get the canvas to get the dimensions as a canvas needs pixel dimensions
+    let canvasParentElem = document.getElementById(`waveform-${this.src.hash}`);
+    let canvasElem = document.getElementById(`waveform-canvas-${this.src.hash}`);
 
     if (this.waveform === null) {
       if (canvasElem === null) {
@@ -205,11 +200,8 @@ export default class {
 
   createCanvas(canvasParentElem) {
     const canvasElem = document.createElement('canvas');
-    canvasElem.id = `waveform-${this.src.hash}`;
+    canvasElem.id = `waveform-canvas-${this.src.hash}`;
     canvasElem.dataset.hash = this.src.hash;
-    canvasElem.style.position = 'absolute';
-    canvasElem.style.top = `${canvasParentElem.offsetTop}px`;
-    canvasElem.style.left = `${canvasParentElem.offsetLeft}px`;
     canvasElem.style.width = `${canvasParentElem.offsetWidth}px`;
     canvasElem.style.height = `${canvasParentElem.offsetHeight}px`;
     canvasElem.width = canvasParentElem.offsetWidth;
@@ -217,12 +209,12 @@ export default class {
     canvasElem.className = 'waveform-canvas cursor-link';
 
     canvasElem.addEventListener('click', (e) => {
-      const time = Math.floor((e.layerX * this.tracksMaxDuration) / e.target.width);
+      const rect = e.target.getBoundingClientRect();
+      const time = Math.floor(((e.layerX - rect.left) * this.tracksMaxDuration) / e.target.width);
       this.ee.emit('waveform-click', { track_hash: e.target.dataset.hash, time });
     });
 
-    const bodyElem = document.getElementsByTagName('body')[0];
-    bodyElem.appendChild(canvasElem);
+    canvasParentElem.appendChild(canvasElem);
 
     return canvasElem;
   }

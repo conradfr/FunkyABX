@@ -1,4 +1,5 @@
 defmodule FunkyABXWeb.TestLive do
+  require Logger
   use FunkyABXWeb, :live_view
   alias Phoenix.LiveView.JS
   alias FunkyABX.Tests
@@ -125,7 +126,7 @@ defmodule FunkyABXWeb.TestLive do
                 </div>
               <% end %>
             <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px">
-              <div id={"wrapper-waveform-#{:crypto.hash(:md5 , track.id <> track.filename) |> Base.encode16()}"} class="waveform-wrapper">
+              <div phx-update="ignore" id={"waveform-#{:crypto.hash(:md5 , track.id <> track.filename) |> Base.encode16()}"} class="waveform-wrapper">
               </div>
             </div>
             <%= unless (@test_already_taken == true) or (@test.type == :listening) do %>
@@ -486,6 +487,8 @@ defmodule FunkyABXWeb.TestLive do
       end
 
     unless params == nil do
+      Logger.info("Test taken")
+
       Process.send_after(
         self(),
         {:redirect_results,
