@@ -145,6 +145,15 @@ defmodule FunkyABXWeb.TestLive do
                     </div>
                 </div>
               <% end %>
+              <%= if @test.picking == true do %>
+                <div class="p-2 text-center flex-grow-1 flex-sm-grow-0" style="min-width: 220px">
+                  <%= if @picking == track.id do %>
+                    <span class="test-pick-chosen"><i class="bi bi-check-lg"></i>&nbsp;&nbsp;This track is my favorite</span>
+                  <% else %>
+                    <button class="btn btn-secondary" name="pick" phx-click="pick_track" phx-value-track_id={track.id}>Pick this track as favorite</button>
+                  <% end %>
+                </div>
+              <% end %>
               <%= if @test.identification == true do %>
                 <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
                   <div class="me-auto ms-0 ms-md-3 flex-fill text-start text-md-end">
@@ -226,6 +235,7 @@ defmodule FunkyABXWeb.TestLive do
        changeset: changeset,
        ranking: %{},
        identification: %{},
+       picking: nil,
        playing: false,
        playingTime: 0,
        valid: false,
@@ -408,7 +418,15 @@ defmodule FunkyABXWeb.TestLive do
       end
 
     {:noreply,
-     socket |> assign(ranking: ranking_updated) |> (&assign(&1, valid: is_valid(&1.assigns))).()}
+     socket |> assign(ranking: ranking_updated) |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
+  end
+
+  @impl true
+  def handle_event("pick_track", %{"track_id" => track_id} = _picking_params, socket) do
+    {:noreply,
+      socket
+      |> assign(picking: track_id)
+      |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
   end
 
   @impl true
@@ -439,18 +457,25 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply,
      socket
      |> assign(identification: identification_updated)
-     |> (&assign(&1, valid: is_valid(&1.assigns))).()}
+     |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
   end
 
   @impl true
   def handle_event("submit", _params, socket) do
     params =
-      if is_ranking_valid?(socket.assigns.ranking, socket.assigns.test) == true and
-           is_identification_valid?(socket.assigns.identification, socket.assigns.test) == true do
+      if is_valid?(socket.assigns) == true do
         params_ranking =
           unless socket.assigns.test.ranking == false do
             Tests.submit_ranking(socket.assigns.test, socket.assigns.ranking, socket.assigns.ip)
             socket.assigns.ranking
+          else
+            %{}
+          end
+
+        params_picking =
+          unless socket.assigns.test.picking == false do
+            Tests.submit_picking(socket.assigns.test, socket.assigns.picking, socket.assigns.ip)
+            socket.assigns.picking
           else
             %{}
           end
@@ -481,11 +506,10 @@ defmodule FunkyABXWeb.TestLive do
           end
 
         FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_taken", nil)
-        %{ranking: params_ranking, identification: params_identification}
+        %{ranking: params_ranking, picking: params_picking, identification: params_identification}
       else
         nil
       end
-
     unless params == nil do
       Logger.info("Test taken")
 
@@ -545,9 +569,11 @@ defmodule FunkyABXWeb.TestLive do
     tracks
   end
 
-  defp is_valid(assigns) do
+  defp is_valid?(assigns) do
     if is_ranking_valid?(assigns.ranking, assigns.test) == true and
-         is_identification_valid?(assigns.identification, assigns.test) == true do
+         is_picking_valid?(assigns.picking, assigns.test) and
+         is_identification_valid?(assigns.identification, assigns.test) == true
+      do
       true
     else
       false
@@ -567,6 +593,13 @@ defmodule FunkyABXWeb.TestLive do
           count when count < Kernel.length(test.tracks) -> false
           _ -> true
         end
+    end
+  end
+
+  defp is_picking_valid?(picking, test) do
+    case test.picking do
+      false -> true
+      true -> picking != nil
     end
   end
 

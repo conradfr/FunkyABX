@@ -4,6 +4,7 @@ defmodule FunkyABXWeb.TestResultsLive do
   alias FunkyABX.Tests
   alias FunkyABX.Tracks
   alias FunkyABX.Ranks
+  alias FunkyABX.Picks
   alias FunkyABX.Identifications
 
   @title_max_length 100
@@ -20,7 +21,7 @@ defmodule FunkyABXWeb.TestResultsLive do
           <% end %>
         </div>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@ranks, @identifications) %></strong> times</span>
+          <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@ranks, @picks, @identifications) %></strong> times</span>
         </div>
       </div>
 
@@ -65,6 +66,43 @@ defmodule FunkyABXWeb.TestResultsLive do
               <% end %>
               <div class="p-3 ps-0 text-end">
                 <%= rank.count %> votes as #<%= rank.rank %>
+              </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= if @test.picking == true do %>
+        <div class="tracks my-2 mb-4 track-results results">
+          <%= if Kernel.length(@picks) == 0 do %>
+            <div class="alert alert-info alert-thin">No track picked done ... yet!</div>
+          <% end %>
+          <%= for {pick, i} <- @picks |> Enum.with_index(1) do %>
+            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == pick.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => pick.track_id, "track_url" => get_track_url(pick.track_id, @test)})}>
+              <div class="p-2">
+                <button type="button" class="btn btn-dark px-2">
+                  <%= if @play_track_id == pick.track_id do %>
+                    <i class="bi bi-stop-fill"></i>
+                  <% else %>
+                    <i class="bi bi-play-fill"></i>
+                  <% end %>
+                </button>
+              </div>
+              <div class="p-2">
+                <%= if (i < 4) do %>
+                  <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
+                <% else %>
+                  #<%= i %>
+                <% end %>
+              </div>
+              <div class="p-2 flex-grow-1 text-truncate cursor-link"><%= pick.track_title %></div>
+              <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+              <%= if @visitor_picking == pick.track_id do %>
+                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You picked this track</small></div>
+              <% end %>
+              <div class="p-3 ps-0 text-end">
+                Picked <%= pick.picked %> times
               </div>
               </div>
             </div>
@@ -178,8 +216,9 @@ defmodule FunkyABXWeb.TestResultsLive do
            Map.get(session, "test_taken_" <> slug, false) or
           (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) do
 
-      ranks = Ranks.get_ranks(test)
-      identifications = Identifications.get_identification(test)
+      ranks = if test.ranking == true, do: Ranks.get_ranks(test), else: nil
+      picks = if test.picking == true, do: Picks.get_picks(test), else: nil
+      identifications = if test.identification == true, do: Identifications.get_identification(test), else: nil
 
       FunkyABXWeb.Endpoint.subscribe(test.id)
 
@@ -189,10 +228,12 @@ defmodule FunkyABXWeb.TestResultsLive do
          test: test,
          current_user_id: Map.get(session, "current_user_id"),
          ranks: ranks,
+         picks: picks,
          identifications: identifications,
          identification_detail: false,
          view_description: false,
          visitor_ranking: %{},
+         visitor_picking: nil,
          visitor_identification: %{},
          visitor_identification_score: nil,
          play_track_id: nil
@@ -232,6 +273,7 @@ defmodule FunkyABXWeb.TestResultsLive do
     {:noreply,
       socket
       |> assign(:visitor_ranking, Map.get(params, "ranking", %{}))
+      |> assign(:visitor_picking, Map.get(params, "picking", nil))
       |> assign(:visitor_identification, Map.get(params, "identification", %{}))
       |> assign(
            :visitor_identification_score,
@@ -326,8 +368,8 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   # ---------- VIEW HELPERS ----------
 
-  def get_number_of_tests_taken(rankings, identifications) do
-    Tests.get_how_many_taken(rankings, identifications)
+  def get_number_of_tests_taken(rankings, pickings, identifications) do
+    Tests.get_how_many_taken(rankings, pickings, identifications)
   end
 
   def percent_of(count, total) do

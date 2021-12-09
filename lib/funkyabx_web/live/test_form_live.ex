@@ -28,25 +28,35 @@ defmodule FunkyABXWeb.TestFormLive do
             </h3>
             <fieldset class="form-group mb-3">
               <legend class="mt-1 header-typographica">Test type</legend>
+                <%= if @test_updatable == false do %>
+                  <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Test type can't be changed  once at least one person has taken the test.</div>
+                <% end %>
               <div class="form-unit px-3 py-3 rounded-3">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <%= radio_button(f, :type, "regular", class: "form-check-input") %>
+                    <%= radio_button(f, :type, "regular", class: "form-check-input", disabled: !@test_updatable) %>
                     Blind test
                   </label>
                   <%= error_tag f, :type %>
                 </div>
-                <div class="fs-8 text-muted ms-4 mb-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select one or two options</div>
+                <div class="fs-8 text-muted ms-4 mb-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option</div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
-                    <%= checkbox(f, :ranking, class: "form-check-input") %>
+                    <%= checkbox(f, :picking, class: "form-check-input", disabled: !@test_updatable) %>
+                    Picking
+                  </label>
+                  <div class="form-text mb-1">People will have to pick their preferred track</div>
+                </div>
+                <div class="form-check ms-4">
+                  <label class="form-check-label">
+                    <%= checkbox(f, :ranking, class: "form-check-input", disabled: !@test_updatable) %>
                     Ranking
                   </label>
                   <div class="form-text mb-1">People will be asked to rank the tracks</div>
                 </div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
-                    <%= checkbox(f, :identification, class: "form-check-input") %>
+                    <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable) %>
                     Recognition
                   </label>
                   <div class="form-text mb-2">People will have to identify the anonymized tracks</div>
@@ -60,7 +70,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
                 <div class="form-check disabled">
                   <label class="form-check-label">
-                    <%= radio_button(f, :type, "listening", class: "form-check-input") %>
+                    <%= radio_button(f, :type, "listening", class: "form-check-input", disabled: !@test_updatable) %>
                     No test, only listening
                   </label>
                 </div>
@@ -184,8 +194,8 @@ defmodule FunkyABXWeb.TestFormLive do
         <fieldset>
           <legend class="header-typographica"><span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;Two tracks minimum</span>Tracks</legend>
 
-          <%= if @tracks_updatable == false do %>
-            <div class="alert alert-danger alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be modified once at least one person has taken the test.</div>
+          <%= if @test_updatable == false do %>
+            <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be modified once at least one person has taken the test.</div>
           <% else %>
             <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac. No normalization or gain correction is applied, do it yourself :)</div>
           <% end %>
@@ -206,7 +216,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <hr class="d-block d-sm-none mb-0">
                   <%= label :fp, :title, "Name:*", class: "col-sm-1 col-form-label text-start text-md-end" %>
                   <div class="col-sm-4">
-                    <%= text_input fp, :title, class: "form-control", disabled: !@tracks_updatable, required: true %>
+                    <%= text_input fp, :title, class: "form-control", disabled: !@test_updatable, required: true %>
                   </div>
                   <%= if fp.data.id != nil do %>
                     <%= label :fp, :filename, "File:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
@@ -218,9 +228,9 @@ defmodule FunkyABXWeb.TestFormLive do
                   <% end %>
                   <div class="col-sm-1 d-flex flex-row-reverse" style="min-width: 62px">
                     <%= if fp.data.id != nil do %>
-                      <button type="button" class={"btn btn-dark#{if @tracks_updatable == false, do: " disabled"}"} data-confirm="Are you sure?" phx-click="delete_track" phx-value-id={fp.data.id}><i class="bi bi-trash text-danger"></i></button>
+                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} data-confirm="Are you sure?" phx-click="delete_track" phx-value-id={fp.data.id}><i class="bi bi-trash text-danger"></i></button>
                     <% else %>
-                      <button type="button" class={"btn btn-dark#{if @tracks_updatable == false, do: " disabled"}"} phx-click="remove_track" phx-value-id={fp.data.temp_id}><i class="bi bi-trash text-danger"></i></button>
+                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} phx-click="remove_track" phx-value-id={fp.data.temp_id}><i class="bi bi-trash text-danger"></i></button>
                     <% end %>
                   </div>
                 </div>
@@ -239,7 +249,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     </div>
                     <%= label :fp, :filename, "... Or download from url:", class: "col-sm-2 col-form-label text-start text-md-end mt-2 mt-md-0" %>
                     <div class="col-sm-4">
-                      <%= text_input fp, :url, class: "form-control", disabled: !@tracks_updatable %>
+                      <%= text_input fp, :url, class: "form-control", disabled: !@test_updatable %>
                     </div>
                   </div>
                 <% end %>
@@ -247,7 +257,7 @@ defmodule FunkyABXWeb.TestFormLive do
             <% end %>
           </div>
           <div class="">
-            <button type="button" class={"btn btn-secondary mt-1#{if @tracks_updatable == false, do: " disabled"}"} phx-click="add_track"><i class="bi bi-plus-lg"></i> Add a track</button>
+            <button type="button" class={"btn btn-secondary mt-1#{if @test_updatable == false, do: " disabled"}"} phx-click="add_track"><i class="bi bi-plus-lg"></i> Add a track</button>
           </div>
         </fieldset>
 
@@ -272,7 +282,7 @@ defmodule FunkyABXWeb.TestFormLive do
          true <-
            (params["key"] != nil and params["key"] == test.password) or
              Map.get(session, "current_user_id") == test.user_id do
-      tracks_updatable = !Tests.has_tests_taken?(test.id)
+      test_updatable = !Tests.has_tests_taken?(test.id)
       changeset = Test.changeset_update(test)
 
       FunkyABXWeb.Endpoint.subscribe(test.id)
@@ -295,7 +305,7 @@ defmodule FunkyABXWeb.TestFormLive do
          description: test.description,
          uploaded_files: [],
          tracks_to_delete: [],
-         tracks_updatable: tracks_updatable
+         test_updatable: test_updatable
        })}
     else
       _ ->
@@ -326,7 +336,8 @@ defmodule FunkyABXWeb.TestFormLive do
       id: UUID.generate(),
       type: :regular,
       public: false,
-      ranking: true,
+      ranking: false,
+      picking: true,
       identification: false,
       password: password,
       description_markdown: false,
@@ -355,7 +366,7 @@ defmodule FunkyABXWeb.TestFormLive do
        description: "",
        uploaded_files: [],
        tracks_to_delete: [],
-       tracks_updatable: true
+       test_updatable: true
      })
      |> add_track()
      |> add_track()}
@@ -370,7 +381,7 @@ defmodule FunkyABXWeb.TestFormLive do
       |> Ecto.Changeset.put_assoc(:tracks, socket.assigns.test.tracks)
 
     {:noreply,
-     assign(socket, %{changeset: changeset, tracks_updatable: false, tracks_to_delete: []})}
+     assign(socket, %{changeset: changeset, test_updatable: false, tracks_to_delete: []})}
   end
 
   def handle_info({:redirect, url, text} = _payload, socket) do
@@ -393,31 +404,17 @@ defmodule FunkyABXWeb.TestFormLive do
 
   # ---------- FORM EVENTS ----------
 
-  # Edit
   @impl true
-  def handle_event("validate", %{"test" => test_params}, socket)
-      when socket.assigns.action == "update" do
+  def handle_event("validate", %{"test" => test_params, "_target" => target}, socket) do
+    updated_test_params =
+      target
+      |> List.last()
+      |> update_test_params(test_params)
+
     changeset =
       socket.assigns.test
-      |> Test.changeset_update(test_params)
-      |> Map.put(:action, :update)
-
-    {:noreply,
-     assign(socket,
-       changeset: changeset,
-       description: test_params["description"],
-       description_markdown: test_params["description_markdown"] == "true"
-     )}
-  end
-
-  # New
-  @impl true
-  def handle_event("validate", %{"test" => test_params}, socket) do
-    changeset =
-      socket.assigns.test
-      |> Test.changeset_update(test_params)
-
-    # |> Map.put(:action, :insert)
+      |> Test.changeset_update(updated_test_params)
+      |> update_action(socket.assigns.action)
 
     {:noreply,
      assign(socket,
@@ -671,28 +668,6 @@ defmodule FunkyABXWeb.TestFormLive do
     {:noreply, add_track(socket)}
   end
 
-  defp add_track(socket) do
-    temp_id = UUID.generate()
-
-    tracks =
-      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
-      |> Enum.concat([
-        Track.changeset(%Track{test_id: socket.assigns.test.id, temp_id: temp_id}, %{})
-      ])
-
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_assoc(:tracks, tracks)
-
-    socket
-    |> assign(changeset: changeset)
-    |> allow_upload(String.to_atom("track" <> temp_id),
-      accept: ~w(.wav .mp3 .aac),
-      max_entries: 1,
-      max_file_size: 50_000_000
-    )
-  end
-
   # Persisted tracks
   @impl true
   def handle_event("delete_track", %{"id" => track_id}, socket) do
@@ -747,6 +722,28 @@ defmodule FunkyABXWeb.TestFormLive do
     {:noreply, assign(socket, %{changeset: changeset})}
   end
 
+  defp add_track(socket) do
+    temp_id = UUID.generate()
+
+    tracks =
+      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
+      |> Enum.concat([
+        Track.changeset(%Track{test_id: socket.assigns.test.id, temp_id: temp_id}, %{})
+      ])
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:tracks, tracks)
+
+    socket
+    |> assign(changeset: changeset)
+    |> allow_upload(String.to_atom("track" <> temp_id),
+         accept: ~w(.wav .mp3 .aac),
+         max_entries: 1,
+         max_file_size: 50_000_000
+       )
+  end
+
   def error_to_string(:too_large), do: "Too large"
   def error_to_string(:too_many_files), do: "You have selected too many files"
   def error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
@@ -772,4 +769,28 @@ defmodule FunkyABXWeb.TestFormLive do
       _ -> track
     end
   end
+
+  # ---------- FORM UTILS ----------
+
+  defp update_action(changeset, "update") do
+    Map.put(changeset, :action, :update)
+  end
+
+  defp update_action(changeset, _action) do
+#    Map.put(:action, :insert)
+    changeset
+  end
+
+  defp update_test_params("ranking", %{"ranking" => ranking} = test_params) when ranking == "true" do
+    Map.put(test_params, "picking", false)
+  end
+
+  defp update_test_params("picking", %{"picking" => picking} = test_params) when picking == "true" do
+    Map.put(test_params, "ranking", false)
+  end
+
+  defp update_test_params(_target, test_params) do
+    test_params
+  end
+
 end

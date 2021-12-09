@@ -2,6 +2,7 @@ defmodule FunkyABX.Track do
   import Ecto.Changeset
   use Ecto.Schema
   alias FunkyABX.Test
+  alias FunkyABX.Pick
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -15,6 +16,7 @@ defmodule FunkyABX.Track do
     field(:hash, :string, virtual: true)
     field(:width, :string, virtual: true)
     belongs_to(:test, Test, type: :binary_id)
+    has_many(:pick, Pick)
   end
 
   def changeset(track, attrs \\ %{}) do
