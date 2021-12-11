@@ -5,19 +5,20 @@ defmodule FunkyABX.Download do
 
   def from_url(url) do
     file_path = local_path(url)
-    {:ok, fd} = File.open(file_path , [:write, :binary])
+    {:ok, fd} = File.open(file_path, [:write, :binary])
 
     try do
-      resp = url
-      |> HTTPoison.get!(%{},
-        stream_to: self(),
-        async: :once,
-        timeout: @timeout,
-        recv_timeout: @timeout,
-        hackney: [pool: :checker, insecure: true]
-      )
+      resp =
+        url
+        |> HTTPoison.get!(%{},
+          stream_to: self(),
+          async: :once,
+          timeout: @timeout,
+          recv_timeout: @timeout,
+          hackney: [pool: :checker, insecure: true]
+        )
 
-      async_download = fn(resp, fd, download_fn) ->
+      async_download = fn resp, fd, download_fn ->
         resp_id = resp.id
 
         receive do
@@ -48,9 +49,7 @@ defmodule FunkyABX.Download do
             Logger.warn("Error (#{url}): #{e.reason}")
 
           reason when reason == :checkout_timeout ->
-            Logger.warn(
-              "Error (#{url}): checkout_timeout - restarting pool ..."
-            )
+            Logger.warn("Error (#{url}): checkout_timeout - restarting pool ...")
 
             :hackney_pool.stop_pool(:checker)
 
@@ -68,6 +67,6 @@ defmodule FunkyABX.Download do
   defp local_path(url) do
     url
     |> Path.basename()
-    |> (&(Path.join([Application.fetch_env!(:funkyabx, :temp_folder), &1]))).()
+    |> (&Path.join([Application.fetch_env!(:funkyabx, :temp_folder), &1])).()
   end
 end

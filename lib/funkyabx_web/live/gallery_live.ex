@@ -37,10 +37,9 @@ defmodule FunkyABXWeb.GalleryLive do
     tests = Tests.get_for_gallery()
 
     {:ok,
-      assign(socket, %{
-        tests: tests
-      })}
-
+     assign(socket, %{
+       tests: tests
+     })}
   end
 
   defp format_date(datetime) do

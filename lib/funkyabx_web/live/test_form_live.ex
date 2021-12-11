@@ -323,9 +323,12 @@ defmodule FunkyABXWeb.TestFormLive do
       end
 
     password = if user == nil, do: UUID.generate(), else: nil
+
     ip_address =
       case get_connect_info(socket) do
-        nil -> nil
+        nil ->
+          nil
+
         info ->
           info.peer_data.address
           |> Tuple.to_list()
@@ -458,13 +461,14 @@ defmodule FunkyABXWeb.TestFormLive do
           Map.put(acc, k, t)
         end
       end)
-        # url download
+      # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
-        case Map.has_key?(t, "id") == false and Map.has_key?(t, "filename") == false and Map.has_key?(t, "url")do
+        case Map.has_key?(t, "id") == false and Map.has_key?(t, "filename") == false and
+               Map.has_key?(t, "url") do
           true ->
             t
             |> import_track_url(socket.assigns.test)
-            |> (&(Map.put(acc, k, &1))).()
+            |> (&Map.put(acc, k, &1)).()
 
           _ ->
             Map.put(acc, k, t)
@@ -540,17 +544,22 @@ defmodule FunkyABXWeb.TestFormLive do
                                                                                        },
                                                                                        entry ->
             filename_dest = Files.get_destination_filename(entry.client_name)
-            final_filename_dest = Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
+
+            final_filename_dest =
+              Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
 
             {entry.client_name, final_filename_dest}
           end)
 
         case upload_consumed do
           [{original_filename, filename}] ->
-            updated_track = Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
+            updated_track =
+              Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
+
             Map.put(acc, k, updated_track)
 
-          _ -> Map.put(acc, k, t)
+          _ ->
+            Map.put(acc, k, t)
         end
       end)
       # url download
@@ -559,9 +568,10 @@ defmodule FunkyABXWeb.TestFormLive do
           nil ->
             t
             |> import_track_url(socket.assigns.test)
-            |> (&(Map.put(acc, k, &1))).()
+            |> (&Map.put(acc, k, &1)).()
 
-          _ -> Map.put(acc, k, t)
+          _ ->
+            Map.put(acc, k, t)
         end
       end)
 
@@ -627,6 +637,7 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def handle_event("delete_test", _params, socket) do
     Files.delete_all(socket.assigns.test.id)
+
     socket.assigns.test
     |> Test.changeset_delete()
     |> Repo.update()
@@ -738,10 +749,10 @@ defmodule FunkyABXWeb.TestFormLive do
     socket
     |> assign(changeset: changeset)
     |> allow_upload(String.to_atom("track" <> temp_id),
-         accept: ~w(.wav .mp3 .aac),
-         max_entries: 1,
-         max_file_size: 50_000_000
-       )
+      accept: ~w(.wav .mp3 .aac),
+      max_entries: 1,
+      max_file_size: 50_000_000
+    )
   end
 
   def error_to_string(:too_large), do: "Too large"
@@ -760,13 +771,19 @@ defmodule FunkyABXWeb.TestFormLive do
           track
           |> Map.get("url")
           |> Files.get_destination_filename()
-          |> (&(Path.join([test.id, &1]))).()
+          |> (&Path.join([test.id, &1])).()
 
         final_filename_dest = Files.save(download_path, filename_dest)
         File.rm(download_path)
-        Map.merge(track, %{"url" => track["url"], "filename" => final_filename_dest, "original_filename" => original_filename})
 
-      _ -> track
+        Map.merge(track, %{
+          "url" => track["url"],
+          "filename" => final_filename_dest,
+          "original_filename" => original_filename
+        })
+
+      _ ->
+        track
     end
   end
 
@@ -777,20 +794,21 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   defp update_action(changeset, _action) do
-#    Map.put(:action, :insert)
+    #    Map.put(:action, :insert)
     changeset
   end
 
-  defp update_test_params("ranking", %{"ranking" => ranking} = test_params) when ranking == "true" do
+  defp update_test_params("ranking", %{"ranking" => ranking} = test_params)
+       when ranking == "true" do
     Map.put(test_params, "picking", false)
   end
 
-  defp update_test_params("picking", %{"picking" => picking} = test_params) when picking == "true" do
+  defp update_test_params("picking", %{"picking" => picking} = test_params)
+       when picking == "true" do
     Map.put(test_params, "ranking", false)
   end
 
   defp update_test_params(_target, test_params) do
     test_params
   end
-
 end

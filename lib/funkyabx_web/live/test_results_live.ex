@@ -214,11 +214,12 @@ defmodule FunkyABXWeb.TestResultsLive do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
          true <-
            Map.get(session, "test_taken_" <> slug, false) or
-          (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) do
-
+             (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) do
       ranks = if test.ranking == true, do: Ranks.get_ranks(test), else: nil
       picks = if test.picking == true, do: Picks.get_picks(test), else: nil
-      identifications = if test.identification == true, do: Identifications.get_identification(test), else: nil
+
+      identifications =
+        if test.identification == true, do: Identifications.get_identification(test), else: nil
 
       FunkyABXWeb.Endpoint.subscribe(test.id)
 
@@ -271,20 +272,20 @@ defmodule FunkyABXWeb.TestResultsLive do
   @impl true
   def handle_event("results", params, socket) do
     {:noreply,
-      socket
-      |> assign(:visitor_ranking, Map.get(params, "ranking", %{}))
-      |> assign(:visitor_picking, Map.get(params, "picking", nil))
-      |> assign(:visitor_identification, Map.get(params, "identification", %{}))
-      |> assign(
-           :visitor_identification_score,
-           calculate_identification_score(Map.get(params, "identification", %{}))
-         )}
+     socket
+     |> assign(:visitor_ranking, Map.get(params, "ranking", %{}))
+     |> assign(:visitor_picking, Map.get(params, "picking", nil))
+     |> assign(:visitor_identification, Map.get(params, "identification", %{}))
+     |> assign(
+       :visitor_identification_score,
+       calculate_identification_score(Map.get(params, "identification", %{}))
+     )}
   end
 
   # ---------- PLAYER ----------
 
   @impl true
-  def handle_event("playing",  %{"track_id" => track_id} = _params, socket) do
+  def handle_event("playing", %{"track_id" => track_id} = _params, socket) do
     {:noreply, assign(socket, :play_track_id, track_id)}
   end
 

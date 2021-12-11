@@ -88,7 +88,7 @@ defmodule FunkyABX.Test do
   def changeset_to_user(test, attrs \\ %{}) do
     test
     |> cast(attrs, [
-      :password,
+      :password
     ])
     |> put_assoc(:user, attrs["user"])
   end

@@ -13,7 +13,7 @@ defmodule FunkyABX.PickDetails do
   def changeset(rank, attrs \\ %{}) do
     rank
     |> cast(attrs, [:ip_address])
-#    |> cast_assoc(:test)
+    #    |> cast_assoc(:test)
     |> assoc_constraint(:test)
     |> assoc_constraint(:track)
   end

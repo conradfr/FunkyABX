@@ -34,9 +34,11 @@ defmodule FunkyABX.Tests do
   def get_for_gallery() do
     query =
       from t in Test,
-      where: t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and t.inserted_at < ago(@min_test_created_minutes, "minute"),
-      order_by: [desc: t.inserted_at],
-      select: t
+        where:
+          t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
+            t.inserted_at < ago(@min_test_created_minutes, "minute"),
+        order_by: [desc: t.inserted_at],
+        select: t
 
     Repo.all(query)
   end
@@ -89,7 +91,11 @@ defmodule FunkyABX.Tests do
   end
 
   def get_how_many_taken(rankings, picking, identifications) do
-    [get_how_many_rankings_taken(rankings), get_how_many_pickings_taken(picking), get_how_many_identifications_taken(identifications)]
+    [
+      get_how_many_rankings_taken(rankings),
+      get_how_many_pickings_taken(picking),
+      get_how_many_identifications_taken(identifications)
+    ]
     |> Enum.max()
   end
 
@@ -107,7 +113,9 @@ defmodule FunkyABX.Tests do
     0
   end
 
-  def get_how_many_identifications_taken(identifications) when is_nil(identifications) or length(identifications) == 0, do: 0
+  def get_how_many_identifications_taken(identifications)
+      when is_nil(identifications) or length(identifications) == 0,
+      do: 0
 
   def get_how_many_identifications_taken(identifications) do
     identifications

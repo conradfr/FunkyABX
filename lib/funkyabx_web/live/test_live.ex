@@ -285,8 +285,8 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def handle_info({:skip_to_results, url} = _payload, socket) do
     {:noreply,
-      socket
-      |> redirect(to: url)}
+     socket
+     |> redirect(to: url)}
   end
 
   @impl true
@@ -305,9 +305,9 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def handle_event("test_already_taken", _params, socket) do
     {:noreply,
-      socket
-      |> put_flash(:info, "You have already taken this test.")
-      |> assign(test_already_taken: true)}
+     socket
+     |> put_flash(:info, "You have already taken this test.")
+     |> assign(test_already_taken: true)}
   end
 
   # ---------- PLAYER CLIENT ----------
@@ -315,10 +315,9 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def handle_event("tracksLoaded", _params, socket) do
     {:noreply,
-      socket
-      |> assign(tracks_loaded: true)
-      |> push_event("tracks_loaded", %{})
-    }
+     socket
+     |> assign(tracks_loaded: true)
+     |> push_event("tracks_loaded", %{})}
   end
 
   @impl true
@@ -424,9 +423,9 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def handle_event("pick_track", %{"track_id" => track_id} = _picking_params, socket) do
     {:noreply,
-      socket
-      |> assign(picking: track_id)
-      |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
+     socket
+     |> assign(picking: track_id)
+     |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
   end
 
   @impl true
@@ -510,6 +509,7 @@ defmodule FunkyABXWeb.TestLive do
       else
         nil
       end
+
     unless params == nil do
       Logger.info("Test taken")
 
@@ -542,11 +542,11 @@ defmodule FunkyABXWeb.TestLive do
     Process.send_after(
       self(),
       {:skip_to_results,
-        Routes.test_results_public_path(
-          socket,
-          FunkyABXWeb.TestResultsLive,
-          socket.assigns.test.slug
-        )},
+       Routes.test_results_public_path(
+         socket,
+         FunkyABXWeb.TestResultsLive,
+         socket.assigns.test.slug
+       )},
       1000
     )
 
@@ -572,8 +572,7 @@ defmodule FunkyABXWeb.TestLive do
   defp is_valid?(assigns) do
     if is_ranking_valid?(assigns.ranking, assigns.test) == true and
          is_picking_valid?(assigns.picking, assigns.test) and
-         is_identification_valid?(assigns.identification, assigns.test) == true
-      do
+         is_identification_valid?(assigns.identification, assigns.test) == true do
       true
     else
       false
@@ -582,9 +581,6 @@ defmodule FunkyABXWeb.TestLive do
 
   defp is_ranking_valid?(ranking, test) do
     case test.ranking do
-      false ->
-        true
-
       true ->
         case ranking
              |> Map.values()
@@ -593,21 +589,21 @@ defmodule FunkyABXWeb.TestLive do
           count when count < Kernel.length(test.tracks) -> false
           _ -> true
         end
+
+      _ ->
+        true
     end
   end
 
   defp is_picking_valid?(picking, test) do
     case test.picking do
-      false -> true
       true -> picking != nil
+      _ -> true
     end
   end
 
   defp is_identification_valid?(identification, test) do
     case test.identification do
-      false ->
-        true
-
       true ->
         case identification
              |> Map.values()
@@ -615,6 +611,9 @@ defmodule FunkyABXWeb.TestLive do
           count when count < Kernel.length(test.tracks) -> false
           _ -> true
         end
+
+      _ ->
+        true
     end
   end
 

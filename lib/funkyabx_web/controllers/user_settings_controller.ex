@@ -62,6 +62,7 @@ defmodule FunkyABXWeb.UserSettingsController do
         UserNotifier.deliver_account_deleted(old_email)
         # Delete audio tracks
         user = Repo.preload(user, :tests)
+
         user.tests
         |> Enum.filter(fn t -> t.deleted_at == nil end)
         |> Enum.each(fn t ->
