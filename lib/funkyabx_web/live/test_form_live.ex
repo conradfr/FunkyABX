@@ -44,7 +44,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="form-check ms-4">
                   <label class="form-check-label">
                     <%= checkbox(f, :picking, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
-                    Picking <%= f.data.type %>
+                    Picking
                   </label>
                   <div class="form-text mb-1">People will have to pick their preferred track</div>
                 </div>

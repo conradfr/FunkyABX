@@ -356,17 +356,15 @@ defmodule FunkyABXWeb.TestLive do
         socket
       ) do
     with true <- is_binary(rotate_seconds) and rotate_seconds != "",
-         seconds <- String.to_integer(rotate_seconds)
-      do
+         seconds <- String.to_integer(rotate_seconds) do
       {:noreply,
-        socket
-        |> assign(rotate_seconds: rotate_seconds)
-        |> push_event("rotateSeconds", %{seconds: seconds})}
+       socket
+       |> assign(rotate_seconds: rotate_seconds)
+       |> push_event("rotateSeconds", %{seconds: seconds})}
     else
       _ ->
         {:noreply, socket}
     end
-
   end
 
   @impl true
@@ -473,8 +471,12 @@ defmodule FunkyABXWeb.TestLive do
   def handle_event("submit", _params, socket) do
     params =
       if is_valid?(socket.assigns) == true do
-        params_ranking = Ranks.submit(socket.assigns.test, socket.assigns.ranking, socket.assigns.ip)
-        params_picking = Picks.submit(socket.assigns.test, socket.assigns.picking, socket.assigns.ip)
+        params_ranking =
+          Ranks.submit(socket.assigns.test, socket.assigns.ranking, socket.assigns.ip)
+
+        params_picking =
+          Picks.submit(socket.assigns.test, socket.assigns.picking, socket.assigns.ip)
+
         params_identification =
           unless socket.assigns.test.identification == false do
             # match fake ids to the real track ids
@@ -560,8 +562,7 @@ defmodule FunkyABXWeb.TestLive do
   defp is_valid?(assigns) do
     with true <- Ranks.is_valid?(assigns.ranking, assigns.test),
          true <- Picks.is_valid?(assigns.picking, assigns.test),
-         true <- Identifications.is_valid?(assigns.identification, assigns.test)
-    do
+         true <- Identifications.is_valid?(assigns.identification, assigns.test) do
       true
     else
       _ -> false

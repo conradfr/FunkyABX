@@ -1,5 +1,4 @@
 defmodule FunkyABX.Utils do
-
   @moduledoc false
 
   def get_ip_as_binary(nil), do: nil

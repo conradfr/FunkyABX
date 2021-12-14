@@ -63,5 +63,4 @@ defmodule FunkyABX.Picks do
 
     track_id
   end
-
 end
