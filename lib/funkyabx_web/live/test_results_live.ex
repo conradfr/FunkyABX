@@ -21,7 +21,7 @@ defmodule FunkyABXWeb.TestResultsLive do
           <% end %>
         </div>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@ranks, @picks, @identifications) %></strong> times</span>
+          <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</span>
         </div>
       </div>
 
@@ -237,7 +237,8 @@ defmodule FunkyABXWeb.TestResultsLive do
          visitor_picking: nil,
          visitor_identification: %{},
          visitor_identification_score: nil,
-         play_track_id: nil
+         play_track_id: nil,
+         test_taken_times: Tests.get_how_many_taken(test)
        })}
     else
       _ ->
@@ -323,12 +324,15 @@ defmodule FunkyABXWeb.TestResultsLive do
   @impl true
   def handle_info(%{event: "test_taken"} = _payload, socket) do
     ranks = Ranks.get_ranks(socket.assigns.test)
+    picks = Picks.get_picks(socket.assigns.test)
     identifications = Identifications.get_identification(socket.assigns.test)
 
     {:noreply,
      assign(socket, %{
        ranks: ranks,
-       identifications: identifications
+       picks: picks,
+       identifications: identifications,
+       test_taken_times: socket.assigns.test_taken_times + 1
      })}
   end
 
@@ -368,10 +372,6 @@ defmodule FunkyABXWeb.TestResultsLive do
   end
 
   # ---------- VIEW HELPERS ----------
-
-  def get_number_of_tests_taken(rankings, pickings, identifications) do
-    Tests.get_how_many_taken(rankings, pickings, identifications)
-  end
 
   def percent_of(count, total) do
     Float.round(count * 100 / total)

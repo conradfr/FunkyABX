@@ -25,7 +25,7 @@ defmodule FunkyABXWeb.TestLive do
         </div>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
           <%= unless @test.type === :listening do %>
-            <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= get_number_of_tests_taken(@test) %></strong> times</div>
+            <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
           <% end %>
           <.live_component module={TestFlagComponent} id="flag" test={@test} />
         </div>
@@ -237,7 +237,7 @@ defmodule FunkyABXWeb.TestLive do
        playingTime: 0,
        valid: false,
        flag_display: false,
-       #          test_already_taken: false
+       test_taken_times: Tests.get_how_many_taken(test),
        test_already_taken: Map.get(session, "test_taken_" <> slug, false)
      })}
   end
@@ -248,6 +248,11 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def handle_info({:flash, {status, text}}, socket) do
     {:noreply, put_flash(socket, status, text)}
+  end
+
+  @impl true
+  def handle_info(%{event: "test_taken"} = _payload, socket) do
+    {:noreply, assign(socket, :test_taken_times, socket.assigns.test_taken_times + 1)}
   end
 
   @impl true
@@ -540,12 +545,6 @@ defmodule FunkyABXWeb.TestLive do
     )
 
     {:noreply, push_event(socket, "bypass_test", %{})}
-  end
-
-  # ---------- VIEW HELPERS ----------
-
-  def get_number_of_tests_taken(test) do
-    Tests.get_how_many_taken(test)
   end
 
   # ---------- TEST UTILS ----------
