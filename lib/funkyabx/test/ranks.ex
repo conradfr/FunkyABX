@@ -1,8 +1,10 @@
 defmodule FunkyABX.Ranks do
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [dynamic: 2, from: 2]
   alias FunkyABX.Repo
+  alias FunkyABX.Utils
   alias FunkyABX.Track
   alias FunkyABX.Rank
+  alias FunkyABX.RankDetails
 
   def get_ranks(test) do
     query =
@@ -47,5 +49,56 @@ defmodule FunkyABX.Ranks do
   defp already_has_track?(track_id, acc) do
     acc
     |> Enum.any?(fn t -> t.track_id == track_id end)
+  end
+
+  def get_how_many_taken(rankings) when is_nil(rankings) or length(rankings) == 0, do: 0
+
+  def get_how_many_taken(rankings) do
+    rankings
+    |> List.first(%{})
+    |> Map.get(:count, 0)
+  end
+
+  def is_valid?(ranking, test) do
+    case test.ranking do
+      true ->
+        case ranking
+             |> Map.values()
+             |> Enum.uniq()
+             |> Enum.count() do
+          count when count < Kernel.length(test.tracks) -> false
+          _ -> true
+        end
+
+      _ ->
+        true
+    end
+  end
+
+  def submit(test, _ranking, _ip_address) when test.ranking != true, do: %{}
+
+  def submit(test, ranking, ip_address) do
+    Enum.each(ranking, fn {track_id, rank} ->
+      track = Enum.find(test.tracks, fn t -> t.id == track_id end)
+
+      # we insert a new entry or increase the count if this combination of test + track + rank exists
+      on_conflict = [set: [count: dynamic([r], fragment("? + ?", r.count, 1))]]
+
+      {:ok, _updated} =
+        Repo.insert(%Rank{test: test, track: track, rank: rank, count: 1},
+          on_conflict: on_conflict,
+          #          conflict_target: {:unsafe_fragment, "ON CONSTRAINT rank_pkey"}
+          conflict_target: [:test_id, :track_id, :rank]
+        )
+    end)
+
+    %RankDetails{test: test}
+    |> RankDetails.changeset(%{
+      votes: ranking,
+      ip_address: ip_address
+    })
+    |> Repo.insert()
+
+    ranking
   end
 end

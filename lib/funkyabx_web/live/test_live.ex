@@ -3,6 +3,9 @@ defmodule FunkyABXWeb.TestLive do
   use FunkyABXWeb, :live_view
   alias Phoenix.LiveView.JS
   alias FunkyABX.Tests
+  alias FunkyABX.Ranks
+  alias FunkyABX.Picks
+  alias FunkyABX.Identifications
   alias FunkyABX.Tracks
   alias FunkyABX.Test
 
@@ -198,12 +201,6 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def mount(%{"slug" => slug} = _params, session, socket) do
     #    with false <- Map.get(session, "test_taken_" <> slug, false) do
-    ip_address =
-      case get_connect_info(socket) do
-        nil -> nil
-        info -> info.peer_data.address
-      end
-
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
 
@@ -224,7 +221,7 @@ defmodule FunkyABXWeb.TestLive do
     {:ok,
      assign(socket, %{
        page_title: String.slice(test.title, 0..@title_max_length),
-       ip: ip_address,
+       ip: Map.get(session, "visitor_ip", nil),
        test: test,
        tracks: tracks,
        tracks_loaded: false,
@@ -471,22 +468,8 @@ defmodule FunkyABXWeb.TestLive do
   def handle_event("submit", _params, socket) do
     params =
       if is_valid?(socket.assigns) == true do
-        params_ranking =
-          unless socket.assigns.test.ranking == false do
-            Tests.submit_ranking(socket.assigns.test, socket.assigns.ranking, socket.assigns.ip)
-            socket.assigns.ranking
-          else
-            %{}
-          end
-
-        params_picking =
-          unless socket.assigns.test.picking == false do
-            Tests.submit_picking(socket.assigns.test, socket.assigns.picking, socket.assigns.ip)
-            socket.assigns.picking
-          else
-            %{}
-          end
-
+        params_ranking = Ranks.submit(socket.assigns.test, socket.assigns.ranking, socket.assigns.ip)
+        params_picking = Picks.submit(socket.assigns.test, socket.assigns.picking, socket.assigns.ip)
         params_identification =
           unless socket.assigns.test.identification == false do
             # match fake ids to the real track ids
@@ -501,13 +484,11 @@ defmodule FunkyABXWeb.TestLive do
                 Map.put(acc, track_id, track_guess_id)
               end)
 
-            Tests.submit_identification(
+            Identifications.submit(
               socket.assigns.test,
               identification,
               socket.assigns.ip
             )
-
-            identification
           else
             %{}
           end
@@ -578,50 +559,13 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   defp is_valid?(assigns) do
-    if is_ranking_valid?(assigns.ranking, assigns.test) == true and
-         is_picking_valid?(assigns.picking, assigns.test) and
-         is_identification_valid?(assigns.identification, assigns.test) == true do
+    with true <- Ranks.is_valid?(assigns.ranking, assigns.test),
+         true <- Picks.is_valid?(assigns.picking, assigns.test),
+         true <- Identifications.is_valid?(assigns.identification, assigns.test)
+    do
       true
     else
-      false
-    end
-  end
-
-  defp is_ranking_valid?(ranking, test) do
-    case test.ranking do
-      true ->
-        case ranking
-             |> Map.values()
-             |> Enum.uniq()
-             |> Enum.count() do
-          count when count < Kernel.length(test.tracks) -> false
-          _ -> true
-        end
-
-      _ ->
-        true
-    end
-  end
-
-  defp is_picking_valid?(picking, test) do
-    case test.picking do
-      true -> picking != nil
-      _ -> true
-    end
-  end
-
-  defp is_identification_valid?(identification, test) do
-    case test.identification do
-      true ->
-        case identification
-             |> Map.values()
-             |> Enum.count() do
-          count when count < Kernel.length(test.tracks) -> false
-          _ -> true
-        end
-
-      _ ->
-        true
+      _ -> false
     end
   end
 
