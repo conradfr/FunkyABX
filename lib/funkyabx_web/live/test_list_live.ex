@@ -44,7 +44,12 @@ defmodule FunkyABXWeb.TestListLive do
       user = Repo.preload(user, :tests)
       tests = Enum.filter(user.tests, fn t -> t.deleted_at == nil end)
 
-      {:ok, assign(socket, tests: tests)}
+      {:ok, assign(
+        socket, %{
+          page_title: "My tests",
+          tests: tests
+        }
+      )}
     else
       _ ->
         {:ok, socket}

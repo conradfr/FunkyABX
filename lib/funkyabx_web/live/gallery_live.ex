@@ -36,6 +36,7 @@ defmodule FunkyABXWeb.GalleryLive do
 
     {:ok,
      assign(socket, %{
+       page_title: "Public tests",
        tests: tests
      })}
   end

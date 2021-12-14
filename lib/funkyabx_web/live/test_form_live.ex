@@ -1,4 +1,5 @@
 defmodule FunkyABXWeb.TestFormLive do
+  import Ecto.Changeset
   require Logger
   use FunkyABXWeb, :live_view
   alias Ecto.UUID
@@ -42,21 +43,21 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="fs-8 text-muted ms-4 mb-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option</div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
-                    <%= checkbox(f, :picking, class: "form-check-input", disabled: !@test_updatable) %>
-                    Picking
+                    <%= checkbox(f, :picking, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
+                    Picking <%= f.data.type %>
                   </label>
                   <div class="form-text mb-1">People will have to pick their preferred track</div>
                 </div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
-                    <%= checkbox(f, :ranking, class: "form-check-input", disabled: !@test_updatable) %>
+                    <%= checkbox(f, :ranking, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
                     Ranking
                   </label>
                   <div class="form-text mb-1">People will be asked to rank the tracks</div>
                 </div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
-                    <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable) %>
+                    <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
                     Recognition
                   </label>
                   <div class="form-text mb-2">People will have to identify the anonymized tracks</div>
@@ -168,7 +169,7 @@ defmodule FunkyABXWeb.TestFormLive do
               <%= textarea(f, :description, class: "form-control", rows: "5", placeholder: "Optional") %>
               <div class="fs-8 mt-2 mb-1 cursor-link" phx-click="toggle_description">Preview&nbsp;&nbsp;<i class={"bi bi-arrow-#{if @view_description == true do "down" else "right" end}-circle"}></i></div>
               <%= if @view_description == true do %>
-                <TestDescriptionComponent.format description_markdown={@description_markdown} description={@description} />
+                <TestDescriptionComponent.format description_markdown={get_field(@changeset, :description_markdown)} description={get_field(@changeset, :description)} />
               <% end %>
             </div>
           </div>
@@ -301,8 +302,6 @@ defmodule FunkyABXWeb.TestFormLive do
          changeset: changeset,
          test: test,
          view_description: false,
-         description_markdown: test.description_markdown,
-         description: test.description,
          uploaded_files: [],
          tracks_to_delete: [],
          test_updatable: test_updatable
@@ -354,8 +353,6 @@ defmodule FunkyABXWeb.TestFormLive do
        changeset: changeset,
        test: test,
        view_description: false,
-       description_markdown: false,
-       description: "",
        uploaded_files: [],
        tracks_to_delete: [],
        test_updatable: true
