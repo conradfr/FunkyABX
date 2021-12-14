@@ -1,9 +1,7 @@
 defmodule FunkyABXWeb.GalleryLive do
   use FunkyABXWeb, :live_view
   alias FunkyABX.Cldr
-  alias FunkyABX.Repo
   alias FunkyABX.Tests
-  alias FunkyABX.Accounts
 
   @impl true
   def render(assigns) do
@@ -33,7 +31,7 @@ defmodule FunkyABXWeb.GalleryLive do
   end
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
     tests = Tests.get_for_gallery()
 
     {:ok,

@@ -353,10 +353,18 @@ defmodule FunkyABXWeb.TestLive do
         %{"_target" => ["rotate-seconds"], "rotate-seconds" => rotate_seconds} = _player_params,
         socket
       ) do
-    {:noreply,
-     socket
-     |> assign(rotate_seconds: rotate_seconds)
-     |> push_event("rotateSeconds", %{seconds: String.to_integer(rotate_seconds)})}
+    with true <- is_binary(rotate_seconds) and rotate_seconds != "",
+         seconds <- String.to_integer(rotate_seconds)
+      do
+      {:noreply,
+        socket
+        |> assign(rotate_seconds: rotate_seconds)
+        |> push_event("rotateSeconds", %{seconds: seconds})}
+    else
+      _ ->
+        {:noreply, socket}
+    end
+
   end
 
   @impl true
