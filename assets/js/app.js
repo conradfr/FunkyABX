@@ -175,9 +175,12 @@ Hooks.Player = {
           break;
 
         default:
-          const toDigit = Number.parseInt(key, 10);
+          let toDigit = Number.parseInt(key, 10);
           if (Number.isInteger(toDigit) && toDigit > 0) {
-            player.goToTrack(toDigit, event.ctrlKey);
+            if (event.shiftKey === true || event.altKey) {
+              toDigit += 10;
+            }
+            player.goToTrack(toDigit, event.ctrlKey, event.shiftKey);
           }
       }
     });

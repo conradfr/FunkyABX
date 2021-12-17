@@ -67,7 +67,7 @@ defmodule FunkyABXWeb.TestLive do
             <div class="ms-2 text-muted" role="status">
               <small><i class="bi bi-info-circle text-extra-muted" title="Player controls" role="button"
                 data-bs-toggle="popover" data-bs-placement="auto" data-bs-html="true"
-                data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track #</li><li>ctrl+key: command + rewind</li></ul>">
+                data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li></ul>">
               </i></small>
             </div>
           <% end %>

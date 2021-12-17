@@ -1,7 +1,6 @@
 defmodule FunkyABX.Identifications do
   import Ecto.Query, only: [dynamic: 2, from: 2]
   alias FunkyABX.Repo
-  alias FunkyABX.Utils
   alias FunkyABX.Track
   alias FunkyABX.Tracks
   alias FunkyABX.Identification

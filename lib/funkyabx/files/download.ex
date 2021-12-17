@@ -22,7 +22,7 @@ defmodule FunkyABX.Download do
         resp_id = resp.id
 
         receive do
-          %HTTPoison.AsyncStatus{code: status_code, id: ^resp_id} ->
+          %HTTPoison.AsyncStatus{code: _status_code, id: ^resp_id} ->
             HTTPoison.stream_next(resp)
             download_fn.(resp, fd, download_fn)
 
