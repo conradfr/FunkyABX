@@ -17,7 +17,7 @@ defmodule FunkyABX.Files do
       Path.extname(filename)
   end
 
-  def save(src_path, dest_path) do
+  def save(src_path, dest_path, normalization \\ false) do
     {real_src_path, real_dest_path} =
       if Path.extname(dest_path) in @ext_to_flac do
         flac_dest = flac_dest(dest_path)
@@ -35,7 +35,7 @@ defmodule FunkyABX.Files do
           "-compression_level",
           "6",
           "-af",
-          "aformat=s16:48000",
+          filter(normalization),
           flac_dest
         ])
 
@@ -92,5 +92,13 @@ defmodule FunkyABX.Files do
   defp flac_dest(dest_path) do
     Application.fetch_env!(:funkyabx, :flac_folder) <>
       String.replace_suffix(dest_path, Path.extname(dest_path), @flac_ext)
+  end
+
+  defp filter(true) do
+    "loudnorm=TP=-1, aformat=s16:48000"
+  end
+
+  defp filter(_normalization) do
+    "aformat=s16:48000"
   end
 end

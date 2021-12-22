@@ -11,6 +11,8 @@ defmodule FunkyABXWeb.TestFormLive do
   alias FunkyABX.Track
   alias FunkyABX.Files
 
+  # TODO Reduce duplicate code between "new" and "update"
+
   @title_max_length 100
 
   @impl true
@@ -206,10 +208,24 @@ defmodule FunkyABXWeb.TestFormLive do
           <%= if @test_updatable == false do %>
             <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be modified once at least one person has taken the test.</div>
           <% else %>
-            <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac. No normalization or gain correction is applied, do it yourself :)</div>
+            <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac.</div>
           <% end %>
 
           <%= error_tag f, :tracks %>
+
+          <fieldset class="form-group mb-3">
+            <div class="form-unit p-3 rounded-3">
+              <div class="form-check">
+                <div class="d-flex justify-content-between">
+                  <label class="form-check-label">
+                    <%= checkbox(f, :normalization, class: "form-check-input") %>
+                    &nbsp;&nbsp;Apply EBU R128 loudness normalization during upload (wav files only)
+                  </label>
+                  <div class="text-muted text-end"><small><i class="bi bi-info-circle"></i>&nbsp; True Peak -1dB</small></div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
 
           <div class="mb-2">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
@@ -342,6 +358,7 @@ defmodule FunkyABXWeb.TestFormLive do
       password: password,
       description_markdown: false,
       tracks: [],
+      normalization: false,
       user: user,
       ip_address: Map.get(session, "visitor_ip", nil)
     }
@@ -430,6 +447,11 @@ defmodule FunkyABXWeb.TestFormLive do
       # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         unless Map.has_key?(t, "temp_id") == false do
+          normalization =
+            socket.assigns.test
+            |> Test.changeset_update(test_params)
+            |> get_field(:normalization)
+
           case uploaded_entries(socket, String.to_atom("track" <> t["temp_id"])) do
             {[_ | _] = entries, []} ->
               [{original_filename, filename}] =
@@ -438,7 +460,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     filename_dest = Files.get_destination_filename(entry.client_name)
 
                     final_filename_dest =
-                      Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
+                      Files.save(path, Path.join([socket.assigns.test.id, filename_dest]), normalization)
 
                     {entry.client_name, final_filename_dest}
                   end)
@@ -527,6 +549,11 @@ defmodule FunkyABXWeb.TestFormLive do
   # New
   @impl true
   def handle_event("save", %{"test" => test_params}, socket) do
+    normalization =
+      socket.assigns.test
+      |> Test.changeset_update(test_params)
+      |> get_field(:normalization)
+
     updated_tracks =
       test_params
       |> Map.get("tracks", %{})
@@ -541,7 +568,7 @@ defmodule FunkyABXWeb.TestFormLive do
             filename_dest = Files.get_destination_filename(entry.client_name)
 
             final_filename_dest =
-              Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
+              Files.save(path, Path.join([socket.assigns.test.id, filename_dest]), normalization)
 
             {entry.client_name, final_filename_dest}
           end)

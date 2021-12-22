@@ -30,6 +30,7 @@ defmodule FunkyABX.Test do
     field(:to_closed_at, :naive_datetime)
     field(:closed_at, :naive_datetime)
     field(:deleted_at, :naive_datetime)
+    field(:normalization, :boolean)
     timestamps()
     belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
@@ -51,7 +52,8 @@ defmodule FunkyABX.Test do
       :ranking,
       :ranking_only_extremities,
       :picking,
-      :identification
+      :identification,
+      :normalization
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> cast_assoc(:user)
@@ -77,7 +79,8 @@ defmodule FunkyABX.Test do
       :ranking,
       :ranking_only_extremities,
       :picking,
-      :identification
+      :identification,
+      :normalization
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> validate_required([:type, :title])
