@@ -9,6 +9,7 @@ defmodule FunkyABX.Test do
   alias FunkyABX.IdentificationDetails
 
   @minimum_tracks 2
+  @minimum_tracks_for_extremities_ranking 10
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -21,6 +22,7 @@ defmodule FunkyABX.Test do
     field(:public, :boolean)
     field(:password, :string)
     field(:ranking, :boolean)
+    field(:ranking_only_extremities, :boolean)
     field(:picking, :boolean)
     field(:identification, :boolean)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
@@ -47,6 +49,7 @@ defmodule FunkyABX.Test do
       :password,
       :type,
       :ranking,
+      :ranking_only_extremities,
       :picking,
       :identification
     ])
@@ -54,6 +57,7 @@ defmodule FunkyABX.Test do
     |> cast_assoc(:user)
     |> validate_required([:type, :title])
     |> validate_general_type()
+    |> validate_ranking_extremities()
     #    |> validate_length(:tracks, min: @minimum_tracks)
     |> validate_minimum_tracks()
     |> TitleSlug.maybe_generate_slug()
@@ -71,12 +75,14 @@ defmodule FunkyABX.Test do
       :password,
       :type,
       :ranking,
+      :ranking_only_extremities,
       :picking,
       :identification
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> validate_required([:type, :title])
     |> validate_general_type()
+    |> validate_ranking_extremities()
     |> validate_length(:tracks, min: @minimum_tracks)
   end
 
@@ -110,6 +116,19 @@ defmodule FunkyABX.Test do
     end
   end
 
+  defp validate_ranking_extremities(changeset) do
+    tracks = get_field(changeset, :tracks)
+    ranking = get_field(changeset, :ranking)
+    ranking_only_extremities = get_field(changeset, :ranking_only_extremities)
+
+    if ranking == true and Kernel.length(tracks) < @minimum_tracks_for_extremities_ranking
+       and ranking_only_extremities == true do
+      add_error(changeset, :type, "Ranking only top/worst tracks ins only allowed with 10+ tracks")
+    else
+      changeset
+    end
+  end
+
   def validate_minimum_tracks(changeset) do
     tracks = get_field(changeset, :tracks)
 
@@ -131,6 +150,7 @@ defmodule FunkyABX.Test do
   defp ranking_or_picking(changeset, ranking, picking) do
     if ranking == true and picking == true do
       add_error(changeset, :type, "Pick and rank can't be selected at the same time.")
+
     else
       changeset
     end

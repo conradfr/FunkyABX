@@ -54,6 +54,14 @@ defmodule FunkyABXWeb.TestFormLive do
                     Ranking
                   </label>
                   <div class="form-text mb-1">People will be asked to rank the tracks</div>
+                  <%= unless Kernel.length(get_field(@changeset, :tracks)) < 10 do %>
+                    <div class="form-check ms-4">
+                      <label class="form-check-label">
+                        <%= checkbox(f, :ranking_only_extremities, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or Kernel.length(get_field(@changeset, :tracks)) < 10) %>
+                      Only rank the top/bottom three tracks.
+                      </label>
+                    </div>
+                  <% end %>
                 </div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
@@ -329,6 +337,7 @@ defmodule FunkyABXWeb.TestFormLive do
       public: false,
       ranking: false,
       picking: true,
+      ranking_only_extremities: false,
       identification: false,
       password: password,
       description_markdown: false,

@@ -142,7 +142,7 @@ defmodule FunkyABXWeb.TestLive do
                       <form phx-change="change_ranking">
                         <input name="track[id]" type="hidden" value={track.id}>
                         <select class="form-select" name="rank">
-                          <%= options_for_select([""] ++ Enum.to_list(1..Kernel.length(@test.tracks)), Map.get(@ranking, track.id, "")) %>
+                          <%= options_for_select(Ranks.ranking_choices(@test), Map.get(@ranking, track.id, "")) %>
                         </select>
                       </form>
                     </div>

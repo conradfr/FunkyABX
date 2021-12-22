@@ -50,6 +50,15 @@ defmodule FunkyABX.Ranks do
     |> Enum.any?(fn t -> t.track_id == track_id end)
   end
 
+  def ranking_choices(test) when test.ranking_only_extremities == true do
+    nb_tracks = Kernel.length(test.tracks)
+    ["", "Best": [1, 2, 3], "Worst": [nb_tracks - 2, nb_tracks - 1, nb_tracks]]
+  end
+
+  def ranking_choices(test) do
+    [""] ++ Enum.to_list(1..Kernel.length(test.tracks))
+  end
+
   def get_how_many_taken(rankings) when is_nil(rankings) or length(rankings) == 0, do: 0
 
   def get_how_many_taken(rankings) do
@@ -61,18 +70,20 @@ defmodule FunkyABX.Ranks do
   def is_valid?(ranking, test) do
     case test.ranking do
       true ->
-        case ranking
-             |> Map.values()
-             |> Enum.uniq()
-             |> Enum.count() do
-          count when count < Kernel.length(test.tracks) -> false
-          _ -> true
-        end
+        ranking
+        |> Map.values()
+        |> Enum.uniq()
+        |> Enum.count()
+        |> is_valid_count?(test)
 
       _ ->
         true
     end
   end
+
+  defp is_valid_count?(count, test) when test.ranking_only_extremities == true, do: count == 6
+
+  defp is_valid_count?(count, test), do: count == Kernel.length(test.tracks)
 
   def submit(test, _ranking, _ip_address) when test.ranking != true, do: %{}
 
