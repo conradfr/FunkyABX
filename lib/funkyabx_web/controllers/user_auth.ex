@@ -1,6 +1,7 @@
 defmodule FunkyABXWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
+  require Logger
 
   alias FunkyABX.Accounts
   alias FunkyABXWeb.Router.Helpers, as: Routes
@@ -95,7 +96,9 @@ defmodule FunkyABXWeb.UserAuth do
     user_id =
       case user do
         nil -> nil
-        _ -> user.id
+        _ ->
+          Logger.metadata(user_id: user.id)
+          user.id
       end
 
     conn

@@ -26,7 +26,7 @@ defmodule FunkyABX.Download do
             HTTPoison.stream_next(resp)
             download_fn.(resp, fd, download_fn)
 
-          %HTTPoison.AsyncHeaders{headers: headers, id: ^resp_id} ->
+          %HTTPoison.AsyncHeaders{headers: _headers, id: ^resp_id} ->
             HTTPoison.stream_next(resp)
             download_fn.(resp, fd, download_fn)
 
