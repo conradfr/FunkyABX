@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.13.0-erlang-24.1.7-ubuntu-bionic-20210325
+1.13.1-erlang-24.2-ubuntu-bionic-20210325
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
@@ -35,7 +35,7 @@ ENV DATABASE_URL=${DATABASE_URL} \
     S3_REGION=${S3_REGION} \
     S3_HOST=${S3_HOST}
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-suggests -y \
     ffmpeg curl
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
