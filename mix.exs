@@ -65,7 +65,9 @@ defmodule FunkyABX.MixProject do
       {:sweet_xml, "~> 0.7.1"},
       {:gen_smtp, "~> 1.1"},
       {:ex_cldr_dates_times, "~> 2.0"},
-      {:httpoison, "~> 1.8"}
+      {:httpoison, "~> 1.8"},
+      {:remote_ip, "~> 1.0"},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 

@@ -11,6 +11,10 @@ defmodule FunkyABXWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+
+    plug RemoteIp,
+         clients: ~w[10.0.2.2/32]
+
     plug FunkyABXWeb.Plugs.Ip
   end
 
