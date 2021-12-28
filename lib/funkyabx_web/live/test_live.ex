@@ -5,6 +5,7 @@ defmodule FunkyABXWeb.TestLive do
   alias FunkyABX.Tests
   alias FunkyABX.Ranks
   alias FunkyABX.Picks
+  alias FunkyABX.Stars
   alias FunkyABX.Identifications
   alias FunkyABX.Tracks
   alias FunkyABX.Test
@@ -157,6 +158,19 @@ defmodule FunkyABXWeb.TestLive do
                   <% end %>
                 </div>
               <% end %>
+              <%= if @test.starring == true do %>
+                <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0 test-starring">
+                    <div class="me-auto flex-grow-1 flex-md-grow-0">
+                      <span class="me-3 text-muted"><small>I rate this track ...</small></span>
+                    </div>
+                    <div class=" p-0 p-md-3 flex-fill">
+                      <%= for star <- 1..5 do %>
+                        <i title={star} class={"bi bi-star#{if Map.get(@starring, track.id, 0) >= star, do: "-fill"}"}
+                          phx-click="star_track" phx-value-track_id={track.id} phx-value-star={star}></i>
+                      <% end %>
+                    </div>
+                </div>
+              <% end %>
               <%= if @test.identification == true do %>
                 <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
                   <div class="me-auto ms-0 ms-md-3 flex-fill text-start text-md-end">
@@ -233,6 +247,7 @@ defmodule FunkyABXWeb.TestLive do
        ranking: %{},
        identification: %{},
        picking: nil,
+       starring: %{},
        playing: false,
        playingTime: 0,
        valid: false,
@@ -403,9 +418,9 @@ defmodule FunkyABXWeb.TestLive do
   # ---------- TEST ----------
 
   @impl true
-  def handle_event("change_ranking", %{"track" => %{"id" => track_id}} = ranking_params, socket) do
+  def handle_event("change_ranking", %{"track" => %{"id" => track_id}, "rank" => rank} = ranking_params, socket) do
     ranking_updated =
-      case ranking_params["rank"] do
+      case rank do
         rank when rank == "" ->
           Map.delete(socket.assigns.ranking, track_id)
 
@@ -434,6 +449,18 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> assign(picking: track_id)
      |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
+  end
+
+  @impl true
+  def handle_event("star_track", %{"track_id" => track_id, "star" => star} = _picking_params, socket) do
+    starring_updated =
+      socket.assigns.starring
+      |> Map.put(track_id, String.to_integer(star))
+
+    {:noreply,
+      socket
+      |> assign(starring: starring_updated)
+      |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
   end
 
   @impl true
@@ -477,6 +504,9 @@ defmodule FunkyABXWeb.TestLive do
         params_picking =
           Picks.submit(socket.assigns.test, socket.assigns.picking, socket.assigns.ip)
 
+        params_starring =
+          Stars.submit(socket.assigns.test, socket.assigns.starring, socket.assigns.ip)
+
         params_identification =
           unless socket.assigns.test.identification == false do
             # match fake ids to the real track ids
@@ -501,7 +531,7 @@ defmodule FunkyABXWeb.TestLive do
           end
 
         FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_taken", nil)
-        %{ranking: params_ranking, picking: params_picking, identification: params_identification}
+        %{ranking: params_ranking, picking: params_picking, starring: params_starring, identification: params_identification}
       else
         nil
       end
@@ -562,6 +592,7 @@ defmodule FunkyABXWeb.TestLive do
   defp is_valid?(assigns) do
     with true <- Ranks.is_valid?(assigns.ranking, assigns.test),
          true <- Picks.is_valid?(assigns.picking, assigns.test),
+         true <- Stars.is_valid?(assigns.starring, assigns.test),
          true <- Identifications.is_valid?(assigns.identification, assigns.test) do
       true
     else

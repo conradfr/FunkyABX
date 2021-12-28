@@ -24,6 +24,7 @@ defmodule FunkyABX.Test do
     field(:ranking, :boolean)
     field(:ranking_only_extremities, :boolean)
     field(:picking, :boolean)
+    field(:starring, :boolean)
     field(:identification, :boolean)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
     field(:ip_address, :binary)
@@ -52,6 +53,7 @@ defmodule FunkyABX.Test do
       :ranking,
       :ranking_only_extremities,
       :picking,
+      :starring,
       :identification,
       :normalization
     ])
@@ -105,14 +107,15 @@ defmodule FunkyABX.Test do
   def validate_general_type(changeset) do
     ranking = get_field(changeset, :ranking)
     picking = get_field(changeset, :picking)
+    starring = get_field(changeset, :starring)
     identification = get_field(changeset, :identification)
     type = get_field(changeset, :type)
 
     case type do
       :regular ->
         changeset
-        |> at_least_one_regular(ranking, picking, identification)
-        |> ranking_or_picking(ranking, picking)
+        |> at_least_one_regular(ranking, picking, starring, identification)
+#        |> ranking_or_picking_or_picking(ranking, picking, starring)
 
       _ ->
         changeset
@@ -122,6 +125,7 @@ defmodule FunkyABX.Test do
   defp validate_ranking_extremities(changeset) do
     tracks = get_field(changeset, :tracks)
     ranking = get_field(changeset, :ranking)
+    starring = get_field(changeset, :starring)
     ranking_only_extremities = get_field(changeset, :ranking_only_extremities)
 
     if ranking == true and Kernel.length(tracks) < @minimum_tracks_for_extremities_ranking
@@ -142,15 +146,16 @@ defmodule FunkyABX.Test do
     end
   end
 
-  defp at_least_one_regular(changeset, ranking, picking, identification) do
-    if ranking == true or picking == true or identification == true do
+  defp at_least_one_regular(changeset, ranking, picking, starring, identification) do
+    if ranking == true or picking == true or starring == true or identification == true do
       changeset
     else
       add_error(changeset, :type, "Select at least one option.")
     end
   end
 
-  defp ranking_or_picking(changeset, ranking, picking) do
+  # todo refactor
+  defp ranking_or_picking_or_starring(changeset, ranking, picking, starring) do
     if ranking == true and picking == true do
       add_error(changeset, :type, "Pick and rank can't be selected at the same time.")
 

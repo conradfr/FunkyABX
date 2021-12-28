@@ -6,10 +6,14 @@ defmodule FunkyABX.Tests do
   alias FunkyABX.Ranks
   alias FunkyABX.Pick
   alias FunkyABX.Picks
+  alias FunkyABX.Star
+  alias FunkyABX.Stars
   alias FunkyABX.Identification
   alias FunkyABX.Identifications
 
   @min_test_created_minutes 15
+
+  # TODO dynamic module loading w/ behavior
 
   # ---------- GET ----------
 
@@ -49,6 +53,8 @@ defmodule FunkyABX.Tests do
         on: t.id == r.test_id,
         left_join: p in Pick,
         on: t.id == p.test_id,
+        left_join: s in Star,
+        on: t.id == s.test_id,
         left_join: i in Identification,
         on: t.id == i.test_id,
         where: t.id == ^test_id,
@@ -60,10 +66,15 @@ defmodule FunkyABX.Tests do
               "CASE WHEN SUM(CASE WHEN ? IS NOT NULL THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END",
               r.rank
             ),
-          has_picking:
+          has_picks:
             fragment(
               "CASE WHEN SUM(CASE WHEN ? IS NOT NULL THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END",
               p.picked
+            ),
+          has_stars:
+            fragment(
+              "CASE WHEN SUM(CASE WHEN ? IS NOT NULL THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END",
+              s.star
             ),
           has_identifications:
             fragment(
@@ -76,21 +87,25 @@ defmodule FunkyABX.Tests do
     |> case do
       %{has_identifications: true} = _data -> true
       %{has_ranks: true} = _data -> true
+      %{has_picks: true} = _data -> true
+      %{has_stars: true} = _data -> true
       _ -> false
     end
   end
 
   def get_how_many_taken(test) do
     ranks = Ranks.get_ranks(test)
-    picking = Picks.get_picks(test)
+    picks = Picks.get_picks(test)
+    stars = Stars.get_stars(test)
     identifications = Identifications.get_identification(test)
-    get_how_many_taken(ranks, picking, identifications)
+    get_how_many_taken(ranks, picks, stars, identifications)
   end
 
-  def get_how_many_taken(rankings, picking, identifications) do
+  def get_how_many_taken(ranks, picks, stars, identifications) do
     [
-      Ranks.get_how_many_taken(rankings),
-      Picks.get_how_many_taken(picking),
+      Ranks.get_how_many_taken(ranks),
+      Picks.get_how_many_taken(picks),
+      Stars.get_how_many_taken(stars),
       Identifications.get_how_many_taken(identifications)
     ]
     |> Enum.max()

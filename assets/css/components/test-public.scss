@@ -14,3 +14,22 @@
 .test-pick-chosen {
   color: $track-picked-color;
 }
+
+.test-starring {
+  i {
+    cursor: pointer;
+
+    &:hover {
+      color: $track-star-hover;
+    }
+  }
+
+  i.bi-star-fill {
+    color: $track-star-rated;
+
+    &:hover {
+      color: $track-star-rated-hover;
+    }
+  }
+
+}

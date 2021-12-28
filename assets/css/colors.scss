@@ -8,6 +8,7 @@ $dark: #444;
 $darker: #303030;
 $info: #00606e;
 $light: #bdaa24;
+$light-bright:  #ffea85;
 
 // $text-muted: #444444;
 
@@ -24,7 +25,11 @@ $track-bg-color: #303030;
 $track-active-bg-color: #097287;
 $track-active-text-muted: darken($white, 10%) !important;
 
-$track-picked-color: #ffea85;
+$track-picked-color: $light-bright;
+
+$track-star-hover: $light;
+$track-star-rated: $light;
+$track-star-rated-hover: $light-bright;
 
 $form-unit-bg-color: $darker;
 

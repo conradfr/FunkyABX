@@ -5,6 +5,7 @@ defmodule FunkyABXWeb.TestResultsLive do
   alias FunkyABX.Tracks
   alias FunkyABX.Ranks
   alias FunkyABX.Picks
+  alias FunkyABX.Stars
   alias FunkyABX.Identifications
 
   @title_max_length 100
@@ -34,9 +35,8 @@ defmodule FunkyABXWeb.TestResultsLive do
         <% end %>
       <% end %>
 
-      <h4 class="mt-3 header-neon">Ranking</h4>
-
       <%= if @test.ranking == true do %>
+        <h4 class="mt-3 header-neon">Ranking</h4>
         <div class="tracks my-2 mb-4 track-results results">
           <%= if Kernel.length(@ranks) == 0 do %>
             <div class="alert alert-info alert-thin">No ranking done ... yet!</div>
@@ -61,12 +61,12 @@ defmodule FunkyABXWeb.TestResultsLive do
               </div>
               <div class="p-2 flex-grow-1 text-truncate cursor-link"><%= rank.track_title %></div>
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-              <%= if @visitor_ranking != %{} do %>
-                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You ranked this track: #<%= @visitor_ranking[rank.track_id] %></small></div>
-              <% end %>
-              <div class="p-3 ps-0 text-end">
-                <%= rank.count %> votes as #<%= rank.rank %>
-              </div>
+                <%= if Map.has_key?(@visitor_ranking, rank.track_id) == true do %>
+                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You ranked this track: #<%= @visitor_ranking[rank.track_id] %></small></div>
+                <% end %>
+                <div class="p-3 ps-0 text-end">
+                  <%= rank.count %> votes as #<%= rank.rank %>
+                </div>
               </div>
             </div>
           <% end %>
@@ -74,6 +74,7 @@ defmodule FunkyABXWeb.TestResultsLive do
       <% end %>
 
       <%= if @test.picking == true do %>
+        <h4 class="mt-3 header-neon">Picking</h4>
         <div class="tracks my-2 mb-4 track-results results">
           <%= if Kernel.length(@picks) == 0 do %>
             <div class="alert alert-info alert-thin">No track picked done ... yet!</div>
@@ -104,6 +105,55 @@ defmodule FunkyABXWeb.TestResultsLive do
               <div class="p-3 ps-0 text-end">
                 Picked <%= pick.picked %> times
               </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= if @test.starring == true do %>
+        <h4 class="mt-3 header-neon">Rating</h4>
+        <div class="tracks my-2 mb-4 track-results results">
+          <%= if Kernel.length(@stars) == 0 do %>
+            <div class="alert alert-info alert-thin">No rating done ... yet!</div>
+          <% end %>
+          <%= for {star, i} <- @stars |> Enum.with_index(1) do %>
+            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == star.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => star.track_id, "track_url" => get_track_url(star.track_id, @test)})}>
+              <div class="p-2">
+                <button type="button" class="btn btn-dark px-2">
+                  <%= if @play_track_id == star.track_id do %>
+                    <i class="bi bi-stop-fill"></i>
+                  <% else %>
+                    <i class="bi bi-play-fill"></i>
+                  <% end %>
+                </button>
+              </div>
+              <div class="p-2">
+                <%= if (i < 4) do %>
+                  <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
+                <% else %>
+                  #<%= i %>
+                <% end %>
+              </div>
+              <div class="p-2 flex-grow-1 text-truncate cursor-link"><%= star.track_title %></div>
+              <div class="d-flex flex-grow-1 flex-no-wrap justify-content-between justify-content-sm-end align-items-center">
+                <%= if Map.has_key?(@visitor_starring, star.track_id) == true do %>
+                  <div class="p-3 text-sm-end text-start pe-2 pe-sm-4">
+                    <div class="d-flex flex-wrap flex-grow-1">
+                      <div class="pe-2"><small>You rated this track:</small></div>
+                      <div><small>
+                        <%= for star_nb <- 1..@visitor_starring[star.track_id] do %>
+                          <i title={star.star} class="bi bi-star-fill"></i>
+                        <% end %>
+                      </small></div>
+                    </div>
+                  </div>
+                <% end %>
+                <div class="p-3 ps-0 text-end test-starring">
+                  <%= for star_nb <- 1..5 do %>
+                    <i title={star.star} class={"bi bi-star#{if star.star >= star_nb, do: "-fill"}"}></i>
+                  <% end %>
+                </div>
               </div>
             </div>
           <% end %>
@@ -217,6 +267,7 @@ defmodule FunkyABXWeb.TestResultsLive do
              (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) do
       ranks = if test.ranking == true, do: Ranks.get_ranks(test), else: nil
       picks = if test.picking == true, do: Picks.get_picks(test), else: nil
+      stars = if test.starring == true, do: Stars.get_stars(test), else: nil
 
       identifications =
         if test.identification == true, do: Identifications.get_identification(test), else: nil
@@ -230,11 +281,13 @@ defmodule FunkyABXWeb.TestResultsLive do
          current_user_id: Map.get(session, "current_user_id"),
          ranks: ranks,
          picks: picks,
+         stars: stars,
          identifications: identifications,
          identification_detail: false,
          view_description: false,
          visitor_ranking: %{},
          visitor_picking: nil,
+         visitor_starring: %{},
          visitor_identification: %{},
          visitor_identification_score: nil,
          play_track_id: nil,
@@ -276,6 +329,7 @@ defmodule FunkyABXWeb.TestResultsLive do
      socket
      |> assign(:visitor_ranking, Map.get(params, "ranking", %{}))
      |> assign(:visitor_picking, Map.get(params, "picking", nil))
+     |> assign(:visitor_starring, Map.get(params, "starring", %{}))
      |> assign(:visitor_identification, Map.get(params, "identification", %{}))
      |> assign(
        :visitor_identification_score,
@@ -325,12 +379,14 @@ defmodule FunkyABXWeb.TestResultsLive do
   def handle_info(%{event: "test_taken"} = _payload, socket) do
     ranks = Ranks.get_ranks(socket.assigns.test)
     picks = Picks.get_picks(socket.assigns.test)
+    stars = Stars.get_stars(socket.assigns.test)
     identifications = Identifications.get_identification(socket.assigns.test)
 
     {:noreply,
      assign(socket, %{
        ranks: ranks,
        picks: picks,
+       stars: stars,
        identifications: identifications,
        test_taken_times: socket.assigns.test_taken_times + 1
      })}

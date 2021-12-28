@@ -5,7 +5,7 @@ defmodule FunkyABX.Test.TitleSlug do
   alias FunkyABX.Test
 
   # The slug library does not implements auto-increment if the slug already exists so we do it here instead
-  def build_slug(sources, changeset) do
+  def build_slug(sources, %Ecto.Changeset{} = changeset) do
     slug = super(sources, changeset)
 
     count =

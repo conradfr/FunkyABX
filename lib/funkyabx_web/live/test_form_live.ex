@@ -67,6 +67,13 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
+                    <%= checkbox(f, :starring, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
+                    Stars
+                  </label>
+                  <div class="form-text mb-1">Each track will have a 1-5 star rating</div>
+                </div>
+                <div class="form-check ms-4">
+                  <label class="form-check-label">
                     <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
                     Recognition
                   </label>
@@ -221,7 +228,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <%= checkbox(f, :normalization, class: "form-check-input") %>
                     &nbsp;&nbsp;Apply EBU R128 loudness normalization during upload (wav files only)
                   </label>
-                  <div class="text-muted text-end"><small><i class="bi bi-info-circle"></i>&nbsp; True Peak -1dB</small></div>
+                  <div class="text-muted text-end"><small><i class="bi bi-info-circle"></i>&nbsp; True Peak -1dB, target -24dB, </small></div>
                 </div>
               </div>
             </div>
@@ -353,6 +360,7 @@ defmodule FunkyABXWeb.TestFormLive do
       public: false,
       ranking: false,
       picking: true,
+      starring: false,
       ranking_only_extremities: false,
       identification: false,
       password: password,
@@ -822,12 +830,23 @@ defmodule FunkyABXWeb.TestFormLive do
 
   defp update_test_params("ranking", %{"ranking" => ranking} = test_params)
        when ranking == "true" do
-    Map.put(test_params, "picking", false)
+    test_params
+    |> Map.put("picking", false)
+    |> Map.put("starring", false)
   end
 
   defp update_test_params("picking", %{"picking" => picking} = test_params)
        when picking == "true" do
-    Map.put(test_params, "ranking", false)
+    test_params
+    |> Map.put("ranking", false)
+    |> Map.put("starring", false)
+  end
+
+  defp update_test_params("starring", %{"starring" => starring} = test_params)
+       when starring == "true" do
+    test_params
+    |> Map.put("ranking", false)
+    |> Map.put("picking", false)
   end
 
   defp update_test_params(_target, test_params) do
