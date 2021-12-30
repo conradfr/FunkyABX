@@ -2,6 +2,7 @@ defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2]
   alias FunkyABX.Repo
   alias FunkyABX.Test
+  alias FunkyABX.Tracks
   alias FunkyABX.Rank
   alias FunkyABX.Ranks
   alias FunkyABX.Pick
@@ -44,7 +45,75 @@ defmodule FunkyABX.Tests do
     Repo.all(query)
   end
 
+  # ---------- BUILD ----------
+
+  def get_test_modules(test) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:get_test_modules, [test])
+  end
+
+  def get_choices_modules(test) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:get_choices_modules, [test])
+  end
+
+  def get_result_modules(test) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:get_result_modules, [test])
+  end
+
+  defp get_test_module(test) do
+    case test.type do
+      :regular ->
+        FunkyABX.Tests.Regular
+
+      # :abx ->
+      #   FunkyABX.Tests.ABX
+
+      :listening ->
+        FunkyABX.Tests.Listening
+    end
+  end
+
+  # ---------- PARAMS ----------
+
+  def get_test_params(test) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:get_test_params, [test])
+  end
+
+  # ---------- FORM ----------
+
+  def is_valid?(test, choices) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:is_valid?, [test, choices])
+  end
+
+  # ---------- SAVE ----------
+
+  def clean_choices(choices, tracks, test) do
+    test
+    |> get_test_module()
+    |> IO.inspect()
+    |> Kernel.apply(:clean_choices, [choices, tracks, test])
+  end
+
+  # todo wrap everything in a transaction
+
+  def submit(test, choices, ip_address) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:submit, [test, choices, ip_address])
+  end
+
   # ---------- VOTES ----------
+
+  # todo dynamic query from modules
 
   def has_tests_taken?(test_id) do
     query =

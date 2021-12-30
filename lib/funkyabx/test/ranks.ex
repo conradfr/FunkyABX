@@ -5,6 +5,8 @@ defmodule FunkyABX.Ranks do
   alias FunkyABX.Rank
   alias FunkyABX.RankDetails
 
+  # ---------- GET ----------
+
   def get_ranks(test) do
     query =
       from r in Rank,
@@ -50,15 +52,6 @@ defmodule FunkyABX.Ranks do
     |> Enum.any?(fn t -> t.track_id == track_id end)
   end
 
-  def ranking_choices(test) when test.ranking_only_extremities == true do
-    nb_tracks = Kernel.length(test.tracks)
-    ["", "Best": [1, 2, 3], "Worst": [nb_tracks - 2, nb_tracks - 1, nb_tracks]]
-  end
-
-  def ranking_choices(test) do
-    [""] ++ Enum.to_list(1..Kernel.length(test.tracks))
-  end
-
   def get_how_many_taken(rankings) when is_nil(rankings) or length(rankings) == 0, do: 0
 
   def get_how_many_taken(rankings) do
@@ -67,28 +60,31 @@ defmodule FunkyABX.Ranks do
     |> Map.get(:count, 0)
   end
 
-  def is_valid?(ranking, test) do
-    case test.ranking do
-      true ->
-        ranking
-        |> Map.values()
-        |> Enum.uniq()
-        |> Enum.count()
-        |> is_valid_count?(test)
+  # ---------- FORM ----------
 
-      _ ->
-        true
-    end
+  def is_valid?(test, choices) when is_map_key(choices, :rank) do
+    choices
+    |> Map.get(:rank, %{})
+    |> Map.values()
+    |> Enum.uniq()
+    |> Enum.count()
+    |> is_valid_count?(test)
+  end
+
+  def is_valid?(_test, _choices) do
+    false
   end
 
   defp is_valid_count?(count, test) when test.ranking_only_extremities == true, do: count == 6
 
   defp is_valid_count?(count, test), do: count == Kernel.length(test.tracks)
 
-  def submit(test, _ranking, _ip_address) when test.ranking != true, do: %{}
+  # ---------- SAVE ----------
 
-  def submit(test, ranking, ip_address) do
-    Enum.each(ranking, fn {track_id, rank} ->
+  def clean_choices(choices, _tracks, _test), do: choices
+
+  def submit(test, %{rank: ranks} = _choices, ip_address) do
+    Enum.each(ranks, fn {track_id, rank} ->
       track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 
       # we insert a new entry or increase the count if this combination of test + track + rank exists
@@ -104,11 +100,9 @@ defmodule FunkyABX.Ranks do
 
     %RankDetails{test: test}
     |> RankDetails.changeset(%{
-      votes: ranking,
+      votes: ranks,
       ip_address: ip_address
     })
     |> Repo.insert()
-
-    ranking
   end
 end

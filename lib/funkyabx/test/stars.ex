@@ -5,6 +5,8 @@ defmodule FunkyABX.Stars do
   alias FunkyABX.Star
   alias FunkyABX.StarDetails
 
+  # ---------- GET ----------
+
   def get_stars(test) do
     query =
       from t in Track,
@@ -28,8 +30,8 @@ defmodule FunkyABX.Stars do
     query
     |> Repo.all()
     |> Enum.reduce([], fn s, acc ->
+      #             already_has_rank?(r.rank, acc) or
       with true <-
-#             already_has_rank?(r.rank, acc) or
              already_has_track?(s.track_id, acc) do
         acc
       else
@@ -52,22 +54,22 @@ defmodule FunkyABX.Stars do
     |> Map.get(:count, 0)
   end
 
-  def is_valid?(starring, test) do
-    case test.starring do
-      true ->
-        IO.puts "#{inspect map_size(starring)}"
-        IO.puts "#{inspect Kernel.length(test.tracks)}"
-        map_size(starring) == Kernel.length(test.tracks)
+  # ---------- FORM ----------
 
-      _ ->
-        true
-    end
+  def is_valid?(test, choices) when is_map_key(choices, :star) do
+    map_size(choices.star) == Kernel.length(test.tracks)
   end
 
-  def submit(test, _starring, _ip_address) when test.starring != true, do: %{}
+  def is_valid?(_test, _choices) do
+    false
+  end
 
-  def submit(test, starring, ip_address) do
-    Enum.each(starring, fn {track_id, star} ->
+  # ---------- SAVE ----------
+
+  def clean_choices(choices, _tracks, _test), do: choices
+
+  def submit(test, %{star: stars} = _choices, ip_address) do
+    Enum.each(stars, fn {track_id, star} ->
       track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 
       # we insert a new entry or increase the count if this combination of test + track + star exists
@@ -82,11 +84,9 @@ defmodule FunkyABX.Stars do
 
     %StarDetails{test: test}
     |> StarDetails.changeset(%{
-      stars: starring,
+      stars: stars,
       ip_address: ip_address
     })
     |> Repo.insert()
-
-    starring
   end
 end

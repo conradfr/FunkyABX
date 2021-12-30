@@ -5,6 +5,8 @@ defmodule FunkyABX.Picks do
   alias FunkyABX.Pick
   alias FunkyABX.PickDetails
 
+  # ---------- GET ----------
+
   def get_picks(test) do
     query =
       from t in Track,
@@ -32,16 +34,17 @@ defmodule FunkyABX.Picks do
     |> Enum.reduce(0, fn p, acc -> acc + p.picked end)
   end
 
-  def is_valid?(picking, test) do
-    case test.picking do
-      true -> picking != nil
-      _ -> true
-    end
+  # ---------- FORM ----------
+
+  def is_valid?(test, choices) do
+    Map.get(choices, :pick) != nil
   end
 
-  def submit(test, _picking, _ip_address) when test.picking != true, do: %{}
+  # ---------- SAVE ----------
 
-  def submit(test, track_id, ip_address) do
+  def clean_choices(choices, _tracks, _test), do: choices
+
+  def submit(test, %{pick: track_id} = _choices, ip_address) do
     track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 
     # we insert a new entry or increase the count if this combination of test + track + rank exists

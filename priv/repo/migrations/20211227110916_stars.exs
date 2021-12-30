@@ -8,12 +8,12 @@ defmodule FunkyABX.Repo.Migrations.Stars do
 
     create table(:star, primary_key: false) do
       add :test_id, references("test", on_delete: :delete_all, type: :binary_id),
-          primary_key: true,
-          null: false
+        primary_key: true,
+        null: false
 
       add :track_id, references("track", on_delete: :delete_all, type: :binary_id),
-          primary_key: true,
-          null: false
+        primary_key: true,
+        null: false
 
       add :star, :integer, primary_key: true, null: false
       add :count, :integer, null: false

@@ -21,12 +21,11 @@ defmodule FunkyABX.Test do
     field(:slug, TitleSlug.Type)
     field(:public, :boolean)
     field(:password, :string)
-    field(:ranking, :boolean)
-    field(:ranking_only_extremities, :boolean)
-    field(:picking, :boolean)
-    field(:starring, :boolean)
-    field(:identification, :boolean)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
+    field(:regular_type, Ecto.Enum, values: [rank: 1, pick: 2, star: 3])
+    field(:rating, :boolean)
+    field(:ranking_only_extremities, :boolean)
+    field(:identification, :boolean)
     field(:ip_address, :binary)
     field(:to_closed_at, :naive_datetime)
     field(:closed_at, :naive_datetime)
@@ -50,10 +49,9 @@ defmodule FunkyABX.Test do
       :public,
       :password,
       :type,
-      :ranking,
+      :rating,
+      :regular_type,
       :ranking_only_extremities,
-      :picking,
-      :starring,
       :identification,
       :normalization
     ])
@@ -61,8 +59,8 @@ defmodule FunkyABX.Test do
     |> cast_assoc(:user)
     |> validate_required([:type, :title])
     |> validate_general_type()
+    |> ensure_regular_type()
     |> validate_ranking_extremities()
-    #    |> validate_length(:tracks, min: @minimum_tracks)
     |> validate_minimum_tracks()
     |> TitleSlug.maybe_generate_slug()
     |> TitleSlug.unique_constraint()
@@ -78,15 +76,16 @@ defmodule FunkyABX.Test do
       :public,
       :password,
       :type,
-      :ranking,
+      :rating,
+      :regular_type,
       :ranking_only_extremities,
-      :picking,
       :identification,
       :normalization
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> validate_required([:type, :title])
     |> validate_general_type()
+    |> ensure_regular_type()
     |> validate_ranking_extremities()
     |> validate_length(:tracks, min: @minimum_tracks)
   end
@@ -104,18 +103,22 @@ defmodule FunkyABX.Test do
     |> put_assoc(:user, attrs["user"])
   end
 
-  def validate_general_type(changeset) do
-    ranking = get_field(changeset, :ranking)
-    picking = get_field(changeset, :picking)
-    starring = get_field(changeset, :starring)
-    identification = get_field(changeset, :identification)
+  def ensure_regular_type(changeset) do
+    rating = get_field(changeset, :rating)
+
+    case rating do
+      false -> put_change(changeset, :regular_type, nil)
+      _ -> changeset
+    end
+  end
+
+  defp validate_general_type(changeset) do
     type = get_field(changeset, :type)
 
     case type do
       :regular ->
         changeset
-        |> at_least_one_regular(ranking, picking, starring, identification)
-#        |> ranking_or_picking_or_picking(ranking, picking, starring)
+        |> at_least_one_regular()
 
       _ ->
         changeset
@@ -124,13 +127,14 @@ defmodule FunkyABX.Test do
 
   defp validate_ranking_extremities(changeset) do
     tracks = get_field(changeset, :tracks)
-    ranking = get_field(changeset, :ranking)
-    starring = get_field(changeset, :starring)
+    rating = get_field(changeset, :rating)
+    regular_type = get_field(changeset, :regular_type)
     ranking_only_extremities = get_field(changeset, :ranking_only_extremities)
 
-    if ranking == true and Kernel.length(tracks) < @minimum_tracks_for_extremities_ranking
-       and ranking_only_extremities == true do
-      add_error(changeset, :type, "Ranking only top/worst tracks ins only allowed with 10+ tracks")
+    if rating == true and regular_type == :raking and
+         Kernel.length(tracks) < @minimum_tracks_for_extremities_ranking and
+         ranking_only_extremities == true do
+      add_error(changeset, :type, "Ranking only top/worst tracks is only allowed with 10+ tracks")
     else
       changeset
     end
@@ -146,21 +150,14 @@ defmodule FunkyABX.Test do
     end
   end
 
-  defp at_least_one_regular(changeset, ranking, picking, starring, identification) do
-    if ranking == true or picking == true or starring == true or identification == true do
+  defp at_least_one_regular(changeset) do
+    rating = get_field(changeset, :rating)
+    identification = get_field(changeset, :identification)
+
+    unless rating == false and identification == false do
       changeset
     else
       add_error(changeset, :type, "Select at least one option.")
-    end
-  end
-
-  # todo refactor
-  defp ranking_or_picking_or_starring(changeset, ranking, picking, starring) do
-    if ranking == true and picking == true do
-      add_error(changeset, :type, "Pick and rank can't be selected at the same time.")
-
-    else
-      changeset
     end
   end
 end

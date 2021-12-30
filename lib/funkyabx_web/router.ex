@@ -13,7 +13,7 @@ defmodule FunkyABXWeb.Router do
     plug :fetch_current_user
 
     plug RemoteIp,
-         clients: ~w[10.0.2.2/32]
+      clients: ~w[10.0.2.2/32]
 
     plug FunkyABXWeb.Plugs.Ip
   end

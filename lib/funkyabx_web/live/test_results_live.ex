@@ -2,11 +2,6 @@ defmodule FunkyABXWeb.TestResultsLive do
   use FunkyABXWeb, :live_view
   alias Phoenix.LiveView.JS
   alias FunkyABX.Tests
-  alias FunkyABX.Tracks
-  alias FunkyABX.Ranks
-  alias FunkyABX.Picks
-  alias FunkyABX.Stars
-  alias FunkyABX.Identifications
 
   @title_max_length 100
 
@@ -35,215 +30,10 @@ defmodule FunkyABXWeb.TestResultsLive do
         <% end %>
       <% end %>
 
-      <%= if @test.ranking == true do %>
-        <h4 class="mt-3 header-neon">Ranking</h4>
-        <div class="tracks my-2 mb-4 track-results results">
-          <%= if Kernel.length(@ranks) == 0 do %>
-            <div class="alert alert-info alert-thin">No ranking done ... yet!</div>
-          <% end %>
-          <%= for rank <- @ranks do %>
-            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == rank.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => rank.track_id, "track_url" => get_track_url(rank.track_id, @test)})}>
-              <div class="p-2">
-                <button type="button" class="btn btn-dark px-2">
-                  <%= if @play_track_id == rank.track_id do %>
-                    <i class="bi bi-stop-fill"></i>
-                  <% else %>
-                    <i class="bi bi-play-fill"></i>
-                  <% end %>
-                </button>
-              </div>
-              <div class="p-2">
-                <%= if (rank.rank < 4) do %>
-                  <i class={"bi bi-trophy-fill trophy-#{rank.rank}"}></i>
-                <% else %>
-                  #<%= rank.rank %>
-                <% end %>
-              </div>
-              <div class="p-2 flex-grow-1 text-truncate cursor-link"><%= rank.track_title %></div>
-              <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <%= if Map.has_key?(@visitor_ranking, rank.track_id) == true do %>
-                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You ranked this track: #<%= @visitor_ranking[rank.track_id] %></small></div>
-                <% end %>
-                <div class="p-3 ps-0 text-end">
-                  <%= rank.count %> votes as #<%= rank.rank %>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
+      <%= for module <- @result_modules do %>
+        <.live_component module={module} id={Atom.to_string(module)} test={@test} visitor_choices={@visitor_choices} play_track_id={@play_track_id} test_taken_times={@test_taken_times} />
       <% end %>
 
-      <%= if @test.picking == true do %>
-        <h4 class="mt-3 header-neon">Picking</h4>
-        <div class="tracks my-2 mb-4 track-results results">
-          <%= if Kernel.length(@picks) == 0 do %>
-            <div class="alert alert-info alert-thin">No track picked done ... yet!</div>
-          <% end %>
-          <%= for {pick, i} <- @picks |> Enum.with_index(1) do %>
-            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == pick.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => pick.track_id, "track_url" => get_track_url(pick.track_id, @test)})}>
-              <div class="p-2">
-                <button type="button" class="btn btn-dark px-2">
-                  <%= if @play_track_id == pick.track_id do %>
-                    <i class="bi bi-stop-fill"></i>
-                  <% else %>
-                    <i class="bi bi-play-fill"></i>
-                  <% end %>
-                </button>
-              </div>
-              <div class="p-2">
-                <%= if (i < 4) do %>
-                  <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
-                <% else %>
-                  #<%= i %>
-                <% end %>
-              </div>
-              <div class="p-2 flex-grow-1 text-truncate cursor-link"><%= pick.track_title %></div>
-              <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-              <%= if @visitor_picking == pick.track_id do %>
-                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You picked this track</small></div>
-              <% end %>
-              <div class="p-3 ps-0 text-end">
-                Picked <%= pick.picked %> times
-              </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-
-      <%= if @test.starring == true do %>
-        <h4 class="mt-3 header-neon">Rating</h4>
-        <div class="tracks my-2 mb-4 track-results results">
-          <%= if Kernel.length(@stars) == 0 do %>
-            <div class="alert alert-info alert-thin">No rating done ... yet!</div>
-          <% end %>
-          <%= for {star, i} <- @stars |> Enum.with_index(1) do %>
-            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == star.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => star.track_id, "track_url" => get_track_url(star.track_id, @test)})}>
-              <div class="p-2">
-                <button type="button" class="btn btn-dark px-2">
-                  <%= if @play_track_id == star.track_id do %>
-                    <i class="bi bi-stop-fill"></i>
-                  <% else %>
-                    <i class="bi bi-play-fill"></i>
-                  <% end %>
-                </button>
-              </div>
-              <div class="p-2">
-                <%= if (i < 4) do %>
-                  <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
-                <% else %>
-                  #<%= i %>
-                <% end %>
-              </div>
-              <div class="p-2 flex-grow-1 text-truncate cursor-link"><%= star.track_title %></div>
-              <div class="d-flex flex-grow-1 flex-no-wrap justify-content-between justify-content-sm-end align-items-center">
-                <%= if Map.has_key?(@visitor_starring, star.track_id) == true do %>
-                  <div class="p-3 text-sm-end text-start pe-2 pe-sm-4">
-                    <div class="d-flex flex-wrap flex-grow-1">
-                      <div class="pe-2"><small>You rated this track:</small></div>
-                      <div><small>
-                        <%= for star_nb <- 1..@visitor_starring[star.track_id] do %>
-                          <i title={star.star} class="bi bi-star-fill"></i>
-                        <% end %>
-                      </small></div>
-                    </div>
-                  </div>
-                <% end %>
-                <div class="p-3 ps-0 text-end test-starring">
-                  <%= for star_nb <- 1..5 do %>
-                    <i title={star.star} class={"bi bi-star#{if star.star >= star_nb, do: "-fill"}"}></i>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-
-      <%= if @test.identification == true do %>
-        <div class="d-flex flex-row align-items-end">
-          <div class="me-auto">
-            <h4 class="mt-3 header-neon">Identification</h4>
-            <%= if @visitor_identification_score != nil do %>
-              <div class="mb-3">
-                Your score: <strong><%= Kernel.elem(@visitor_identification_score, 0) %>/<%= Kernel.elem(@visitor_identification_score, 1) %></strong>
-                <%= if Kernel.elem(@visitor_identification_score, 0) == Kernel.elem(@visitor_identification_score, 1) do %>
-                  <i class="bi bi-hand-thumbs-up"></i>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-          <div class="justify-content-end text-end pt-4">
-            <!--
-            <%= if @identification_detail == false do %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_identification_detail">View details&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
-            <% else %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_identification_detail">Hide details&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
-            <% end %>
-            -->
-          </div>
-        </div>
-
-        <div class="tracks track-results mb-2 results">
-          <%= if Kernel.length(@identifications) == 0 do %>
-            <div class="alert alert-info alert-thin">No tracks guesses ... yet!</div>
-          <% end %>
-          <%= for {identification, i} <- @identifications |> Enum.with_index(1) do %>
-            <div class={"track my-1 #{if (i > 1), do: "mt-4"} d-flex flex-wrap align-items-center"} phx-click={JS.dispatch(if @play_track_id == identification.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => identification.track_id, "track_url" => get_track_url(identification.track_id, @test)})}>
-              <div class="p-2">
-                <button type="button" class="btn btn-dark px-2">
-                  <%= if @play_track_id == identification.track_id do %>
-                    <i class="bi bi-stop-fill"></i>
-                  <% else %>
-                    <i class="bi bi-play-fill"></i>
-                  <% end %>
-                </button>
-              </div>
-              <div class="p-2">
-                <%= if (i < 4) do %>
-                  <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
-                <% else %>
-                  #<%= i %>
-                <% end %>
-              </div>
-              <div class="p-2 flex-grow-1 cursor-link"><%= identification.title %></div>
-                <div class="p-3 flex-grow-1 text-end text-truncate">
-                  <%= if @visitor_identification != %{} do %>
-                    <%= if identification.track_id == @visitor_identification[identification.track_id] do %>
-                      <i class="bi bi-check color-correct"></i> You identified this track correctly!
-                    <% else %>
-                      <i class="bi bi-x color-incorrect"></i> You identified this track as <%= get_track_from_id(@visitor_identification[identification.track_id], @test.tracks).title  %>
-                    <% end %>
-                  <% else %>
-                    <%= if (i == 1) do %>
-                      <small class="text-muted">You did not participate in this test</small>
-                    <% end %>
-                  <% end %>
-                </div>
-            </div>
-
-              <%= for {guess, j} <- identification.guesses |> Enum.with_index() do %>
-                <%= if (j == 0) do %>
-                  <div class="my-1 d-flex flex-wrap align-items-center justify-content-end">
-                    <div class="p-1 ps-0 text-end text-muted"><small>Mostly identified as</small></div>
-                    <div class="p-1 ps-0 text-end text-truncate"><i class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}}></i> <%= guess["title"]  %></div>
-                    <div class="p-1 ps-0 text-end text-muted"><small>at</small></div>
-                    <div class="p-2 ps-0 text-end"><%= percent_of(guess["count"], identification.total_guess) %>%</div>
-                  </div>
-                <% else %>
-                  <%= if @identification_detail == true do %>
-                    <div class="track-guess d-flex align-items-center justify-content-end">
-                      <div class="p-1 ps-0 text-end text-muted"><small>Identified as</small></div>
-                      <div class="p-1 ps-0 text-end text-truncate"><i class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}}></i><%= guess["title"] %></div>
-                      <div class="p-1 ps-0 text-end text-muted"><small>at</small></div>
-                      <div class="p-2 ps-0 text-end"><%= percent_of(guess["count"], identification.total_guess) %>%</div>
-                    </div>
-                  <% end %>
-                <% end %>
-              <% end %>
-          <% end %>
-        </div>
-      <% end %>
     """
   end
 
@@ -265,12 +55,7 @@ defmodule FunkyABXWeb.TestResultsLive do
          true <-
            Map.get(session, "test_taken_" <> slug, false) or
              (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) do
-      ranks = if test.ranking == true, do: Ranks.get_ranks(test), else: nil
-      picks = if test.picking == true, do: Picks.get_picks(test), else: nil
-      stars = if test.starring == true, do: Stars.get_stars(test), else: nil
-
-      identifications =
-        if test.identification == true, do: Identifications.get_identification(test), else: nil
+      result_modules = Tests.get_result_modules(test)
 
       FunkyABXWeb.Endpoint.subscribe(test.id)
 
@@ -278,18 +63,10 @@ defmodule FunkyABXWeb.TestResultsLive do
        assign(socket, %{
          page_title: "Test results - " <> String.slice(test.title, 0..@title_max_length),
          test: test,
+         result_modules: result_modules,
          current_user_id: Map.get(session, "current_user_id"),
-         ranks: ranks,
-         picks: picks,
-         stars: stars,
-         identifications: identifications,
-         identification_detail: false,
          view_description: false,
-         visitor_ranking: %{},
-         visitor_picking: nil,
-         visitor_starring: %{},
-         visitor_identification: %{},
-         visitor_identification_score: nil,
+         visitor_choices: %{},
          play_track_id: nil,
          test_taken_times: Tests.get_how_many_taken(test)
        })}
@@ -325,16 +102,15 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @impl true
   def handle_event("results", params, socket) do
-    {:noreply,
-     socket
-     |> assign(:visitor_ranking, Map.get(params, "ranking", %{}))
-     |> assign(:visitor_picking, Map.get(params, "picking", nil))
-     |> assign(:visitor_starring, Map.get(params, "starring", %{}))
-     |> assign(:visitor_identification, Map.get(params, "identification", %{}))
-     |> assign(
-       :visitor_identification_score,
-       calculate_identification_score(Map.get(params, "identification", %{}))
-     )}
+    {
+      :noreply,
+      socket
+      |> assign(:visitor_choices, params)
+      #     |> assign(
+      #       :visitor_identification_score,
+      #       calculate_identification_score(Map.get(params, "identification", %{}))
+      #     )
+    }
   end
 
   # ---------- PLAYER ----------
@@ -357,11 +133,13 @@ defmodule FunkyABXWeb.TestResultsLive do
     {:noreply, assign(socket, view_description: toggle)}
   end
 
-  def handle_event("toggle_identification_detail", _value, socket) do
-    toggle = !socket.assigns.identification_detail
+  # todo move to component
 
-    {:noreply, assign(socket, identification_detail: toggle)}
-  end
+  #  def handle_event("toggle_identification_detail", _value, socket) do
+  #    toggle = !socket.assigns.identification_detail
+  #
+  #    {:noreply, assign(socket, identification_detail: toggle)}
+  #  end
 
   # ---------- PUB/SUB EVENTS ----------
 
@@ -377,17 +155,9 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @impl true
   def handle_info(%{event: "test_taken"} = _payload, socket) do
-    ranks = Ranks.get_ranks(socket.assigns.test)
-    picks = Picks.get_picks(socket.assigns.test)
-    stars = Stars.get_stars(socket.assigns.test)
-    identifications = Identifications.get_identification(socket.assigns.test)
-
+    # todo manage refresh of the data on components
     {:noreply,
      assign(socket, %{
-       ranks: ranks,
-       picks: picks,
-       stars: stars,
-       identifications: identifications,
        test_taken_times: socket.assigns.test_taken_times + 1
      })}
   end
@@ -409,37 +179,5 @@ defmodule FunkyABXWeb.TestResultsLive do
   @impl true
   def handle_info(%{event: _event} = _payload, socket) do
     {:noreply, socket}
-  end
-
-  # ---------- UTILS ----------
-
-  defp calculate_identification_score(choices) when choices == %{}, do: nil
-
-  defp calculate_identification_score(choices) do
-    choices
-    |> Enum.reduce({0, 0}, fn {track_id, track_guess_id}, {correct_count, total} ->
-      if track_id == track_guess_id do
-        correct_count + 1
-      else
-        correct_count
-      end
-      |> (&{&1, total + 1}).()
-    end)
-  end
-
-  # ---------- VIEW HELPERS ----------
-
-  def percent_of(count, total) do
-    Float.round(count * 100 / total)
-  end
-
-  def get_track_from_id(id, tracks) do
-    Enum.find(tracks, fn t -> t.id == id end)
-  end
-
-  def get_track_url(track_id, test) do
-    track_id
-    |> get_track_from_id(test.tracks)
-    |> Tracks.get_media_url(test)
   end
 end

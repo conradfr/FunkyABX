@@ -95,7 +95,9 @@ defmodule FunkyABXWeb.UserAuth do
 
     user_id =
       case user do
-        nil -> nil
+        nil ->
+          nil
+
         _ ->
           Logger.metadata(user_id: user.id)
           user.id

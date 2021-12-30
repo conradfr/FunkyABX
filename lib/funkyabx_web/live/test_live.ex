@@ -2,13 +2,9 @@ defmodule FunkyABXWeb.TestLive do
   require Logger
   use FunkyABXWeb, :live_view
   alias Phoenix.LiveView.JS
-  alias FunkyABX.Tests
-  alias FunkyABX.Ranks
-  alias FunkyABX.Picks
-  alias FunkyABX.Stars
-  alias FunkyABX.Identifications
-  alias FunkyABX.Tracks
   alias FunkyABX.Test
+  alias FunkyABX.Tests
+  alias FunkyABX.Tracks
 
   @title_max_length 100
 
@@ -25,7 +21,7 @@ defmodule FunkyABXWeb.TestLive do
           <% end %>
         </div>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <%= unless @test.type === :listening do %>
+          <%= unless @test_params.has_choices == true do %>
             <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
           <% end %>
           <.live_component module={TestFlagComponent} id="flag" test={@test} />
@@ -120,7 +116,7 @@ defmodule FunkyABXWeb.TestLive do
                 </button>
               <% end %>
             </div>
-              <%= if @test.type === :listening do %>
+              <%= if @test_params.display_track_titles == true do %>
                 <div class="p-2 text-truncate cursor-link" style="width: 300px;" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
                   <%= track.title %>
                 </div>
@@ -133,65 +129,17 @@ defmodule FunkyABXWeb.TestLive do
               <div phx-update="ignore" id={"waveform-#{:crypto.hash(:md5 , track.id <> track.filename) |> Base.encode16()}"} class="waveform-wrapper">
               </div>
             </div>
-            <%= unless (@test_already_taken == true) or (@test.type == :listening) do %>
-              <%= if @test.ranking == true do %>
-                <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
-                    <div class="me-auto flex-grow-1 flex-md-grow-0">
-                      <span class="me-3 text-muted"><small>I rank this track ...</small></span>
-                    </div>
-                    <div class=" p-0 p-md-3 flex-fill">
-                      <form phx-change="change_ranking">
-                        <input name="track[id]" type="hidden" value={track.id}>
-                        <select class="form-select" name="rank">
-                          <%= options_for_select(Ranks.ranking_choices(@test), Map.get(@ranking, track.id, "")) %>
-                        </select>
-                      </form>
-                    </div>
-                </div>
-              <% end %>
-              <%= if @test.picking == true do %>
-                <div class="p-2 text-center flex-grow-1 flex-sm-grow-0" style="min-width: 220px">
-                  <%= if @picking == track.id do %>
-                    <span class="test-pick-chosen"><i class="bi bi-check-lg"></i>&nbsp;&nbsp;This track is my favorite</span>
-                  <% else %>
-                    <button class="btn btn-secondary" name="pick" phx-click="pick_track" phx-value-track_id={track.id}>Pick this track as favorite</button>
-                  <% end %>
-                </div>
-              <% end %>
-              <%= if @test.starring == true do %>
-                <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0 test-starring">
-                    <div class="me-auto flex-grow-1 flex-md-grow-0">
-                      <span class="me-3 text-muted"><small>I rate this track ...</small></span>
-                    </div>
-                    <div class=" p-0 p-md-3 flex-fill">
-                      <%= for star <- 1..5 do %>
-                        <i title={star} class={"bi bi-star#{if Map.get(@starring, track.id, 0) >= star, do: "-fill"}"}
-                          phx-click="star_track" phx-value-track_id={track.id} phx-value-star={star}></i>
-                      <% end %>
-                    </div>
-                </div>
-              <% end %>
-              <%= if @test.identification == true do %>
-                <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
-                  <div class="me-auto ms-0 ms-md-3 flex-fill text-start text-md-end">
-                    <span class="me-2 text-muted"><small>I think this is ...</small></span>
-                  </div>
-                  <div class="me-auto p-0 p-md-3 ps-0 flex-grow-1 flex-md-grow-0">
-                    <form phx-change="change_identification">
-                      <input name="track[id]" type="hidden" value={track.id}>
-                      <select class="form-select" name="guess">
-                        <%= options_for_select([""] ++ Enum.map(@tracks |> Enum.sort_by(&Map.fetch(&1, :title)), fn x -> {x.title, x.fake_id} end), Map.get(@identification, track.fake_id, "")) %>
-                      </select>
-                    </form>
-                  </div>
-                </div>
+
+            <%= unless @test_already_taken == true do %>
+              <%= for module <- @choices_modules do %>
+                <.live_component module={module} id={Atom.to_string(module) <> "_#{i}"} track={track} test={@test} tracks={@tracks} choices_taken={@choices_taken} />
               <% end %>
             <% end %>
           </div>
         <% end %>
       </div>
 
-      <%= unless @test.type == :listening do %>
+      <%= unless @test_params.has_choices == false do %>
         <div class="mt-3">
           <div class="d-flex flex-row align-items-center justify-content-between">
             <%= unless @test_already_taken == true do %>
@@ -217,6 +165,7 @@ defmodule FunkyABXWeb.TestLive do
     #    with false <- Map.get(session, "test_taken_" <> slug, false) do
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
+    test_params = Tests.get_test_params(test)
 
     tracks =
       test.tracks
@@ -228,26 +177,27 @@ defmodule FunkyABXWeb.TestLive do
             width: "0"
         }
       end)
-      |> shuffle_tracks_if_needed(test)
+      |> shuffle_tracks_if_needed(test_params)
+
+    choices_modules = Tests.get_choices_modules(test)
 
     FunkyABXWeb.Endpoint.subscribe(test.id)
 
     {:ok,
      assign(socket, %{
        page_title: String.slice(test.title, 0..@title_max_length),
-       ip: Map.get(session, "visitor_ip", nil),
+       ip_address: Map.get(session, "visitor_ip", nil),
        test: test,
        tracks: tracks,
+       choices_modules: choices_modules,
+       test_params: test_params,
        tracks_loaded: false,
        current_track: nil,
        loop: true,
        rotate: true,
        rotate_seconds: 7,
        changeset: changeset,
-       ranking: %{},
-       identification: %{},
-       picking: nil,
-       starring: %{},
+       choices_taken: %{},
        playing: false,
        playingTime: 0,
        valid: false,
@@ -319,12 +269,12 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply, socket}
   end
 
-  @impl true
-  def handle_event("test_already_taken", _params, socket) do
-    {:noreply,
-     socket
-     |> put_flash(:info, "You have already taken this test.")
-     |> assign(test_already_taken: true)}
+  # ---------- FROM COMPONENT ----------
+
+  def handle_info({:update_choices_taken, params}, socket) do
+    updated_choices_taken = Map.merge(socket.assigns.choices_taken, params)
+    valid = is_valid?(socket.assigns.test, updated_choices_taken)
+    {:noreply, assign(socket, %{choices_taken: updated_choices_taken, valid: valid})}
   end
 
   # ---------- PLAYER CLIENT ----------
@@ -410,134 +360,30 @@ defmodule FunkyABXWeb.TestLive do
      |> push_event("loop", %{loop: loop})}
   end
 
-  #  def handle_event("change_player_settings", player_params, socket) do
-  #    IO.puts "#{inspect player_params}"
-  #    {:noreply, socket}
-  #  end
-
   # ---------- TEST ----------
 
   @impl true
-  def handle_event("change_ranking", %{"track" => %{"id" => track_id}, "rank" => rank} = ranking_params, socket) do
-    ranking_updated =
-      case rank do
-        rank when rank == "" ->
-          Map.delete(socket.assigns.ranking, track_id)
-
-        rank ->
-          new_rank = String.to_integer(rank)
-
-          socket.assigns.ranking
-          |> Enum.find(nil, fn {_, value} -> value == new_rank end)
-          |> case do
-            nil ->
-              socket.assigns.ranking
-
-            {key, _} ->
-              Map.delete(socket.assigns.ranking, key)
-          end
-          |> Map.put(track_id, new_rank)
-      end
-
-    {:noreply,
-     socket |> assign(ranking: ranking_updated) |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
-  end
-
-  @impl true
-  def handle_event("pick_track", %{"track_id" => track_id} = _picking_params, socket) do
+  def handle_event("test_already_taken", _params, socket) do
     {:noreply,
      socket
-     |> assign(picking: track_id)
-     |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
-  end
-
-  @impl true
-  def handle_event("star_track", %{"track_id" => track_id, "star" => star} = _picking_params, socket) do
-    starring_updated =
-      socket.assigns.starring
-      |> Map.put(track_id, String.to_integer(star))
-
-    {:noreply,
-      socket
-      |> assign(starring: starring_updated)
-      |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
-  end
-
-  @impl true
-  def handle_event(
-        "change_identification",
-        %{"track" => %{"id" => track_id}} = identification_params,
-        socket
-      ) do
-    fake_id = find_fake_id_from_track_id(track_id, socket.assigns.tracks)
-
-    identification_updated =
-      case identification_params["guess"] do
-        guess when guess == "" ->
-          Map.delete(socket.assigns.identification, fake_id)
-
-        guess ->
-          guess_int = String.to_integer(guess)
-
-          socket.assigns.identification
-          |> Enum.find(nil, fn {_, value} -> value == guess_int end)
-          |> case do
-            nil -> socket.assigns.identification
-            {key, _} -> Map.delete(socket.assigns.identification, key)
-          end
-          |> Map.put(fake_id, guess_int)
-      end
-
-    {:noreply,
-     socket
-     |> assign(identification: identification_updated)
-     |> (&assign(&1, valid: is_valid?(&1.assigns))).()}
+     |> put_flash(:info, "You have already taken this test.")
+     |> assign(test_already_taken: true)}
   end
 
   @impl true
   def handle_event("submit", _params, socket) do
-    params =
-      if is_valid?(socket.assigns) == true do
-        params_ranking =
-          Ranks.submit(socket.assigns.test, socket.assigns.ranking, socket.assigns.ip)
-
-        params_picking =
-          Picks.submit(socket.assigns.test, socket.assigns.picking, socket.assigns.ip)
-
-        params_starring =
-          Stars.submit(socket.assigns.test, socket.assigns.starring, socket.assigns.ip)
-
-        params_identification =
-          unless socket.assigns.test.identification == false do
-            # match fake ids to the real track ids
-            identification =
-              socket.assigns.identification
-              |> Enum.reduce(%{}, fn {track_fake_id, track_guess_fake_id}, acc ->
-                track_id = find_track_id_from_fake_id(track_fake_id, socket.assigns.tracks)
-
-                track_guess_id =
-                  find_track_id_from_fake_id(track_guess_fake_id, socket.assigns.tracks)
-
-                Map.put(acc, track_id, track_guess_id)
-              end)
-
-            Identifications.submit(
-              socket.assigns.test,
-              identification,
-              socket.assigns.ip
-            )
-          else
-            %{}
-          end
-
-        FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_taken", nil)
-        %{ranking: params_ranking, picking: params_picking, starring: params_starring, identification: params_identification}
-      else
-        nil
-      end
-
-    unless params == nil do
+    with test <- socket.assigns.test,
+         tracks <- socket.assigns.tracks,
+         choices <- socket.assigns.choices_taken,
+         true <- Tests.is_valid?(test, choices) do
       Logger.info("Test taken")
+
+      choices_cleaned =
+        Tests.clean_choices(choices, tracks, test)
+
+      Tests.submit(test, choices_cleaned, socket.assigns.ip_address)
+
+      FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
 
       Process.send_after(
         self(),
@@ -545,21 +391,21 @@ defmodule FunkyABXWeb.TestLive do
          Routes.test_results_public_path(
            socket,
            FunkyABXWeb.TestResultsLive,
-           socket.assigns.test.slug
+           test.slug
          )},
         1000
       )
 
       {:noreply,
        socket
-       |> push_event("store_test", params)
-       #        |> push_redirect(
-       #            to: Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, socket.assigns.test.slug),
-       #            replace: true
-       #        )
+       |> push_event("store_test", choices_cleaned)
+       # |> push_redirect(
+       #     to: Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, socket.assigns.test.slug),
+       #     replace: true
+       # )
        |> put_flash(:success, "Your submission has been registered!")}
     else
-      {:noreply, socket}
+      _ -> {:noreply, socket}
     end
   end
 
@@ -581,32 +427,25 @@ defmodule FunkyABXWeb.TestLive do
 
   # ---------- TEST UTILS ----------
 
-  defp shuffle_tracks_if_needed(tracks, test) when test.type != :listening do
+  defp is_valid?(test, choices) do
+    Tests.is_valid?(test, choices)
+  end
+
+  defp shuffle_tracks_if_needed(tracks, test_params) when test_params.shuffle_tracks == true do
     Enum.shuffle(tracks)
   end
 
-  defp shuffle_tracks_if_needed(tracks, _test) do
+  defp shuffle_tracks_if_needed(tracks, _test_params) do
     tracks
   end
 
-  defp is_valid?(assigns) do
-    with true <- Ranks.is_valid?(assigns.ranking, assigns.test),
-         true <- Picks.is_valid?(assigns.picking, assigns.test),
-         true <- Stars.is_valid?(assigns.starring, assigns.test),
-         true <- Identifications.is_valid?(assigns.identification, assigns.test) do
-      true
-    else
-      _ -> false
-    end
-  end
-
-  defp find_track_id_from_fake_id(fake_id, tracks) do
+  def find_track_id_from_fake_id(fake_id, tracks) do
     tracks
     |> Enum.find(fn x -> x.fake_id == fake_id end)
     |> Map.get(:id)
   end
 
-  defp find_fake_id_from_track_id(track_id, tracks) do
+  def find_fake_id_from_track_id(track_id, tracks) do
     tracks
     |> Enum.find(fn x -> x.id == track_id end)
     |> Map.get(:fake_id)

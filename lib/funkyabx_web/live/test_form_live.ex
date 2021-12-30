@@ -42,40 +42,53 @@ defmodule FunkyABXWeb.TestFormLive do
                   </label>
                   <%= error_tag f, :type %>
                 </div>
-                <div class="fs-8 text-muted ms-4 mb-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option</div>
+                <div class="fs-8 mb-2 text-muted ms-4 mb-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option</div>
                 <div class="form-check ms-4">
                   <label class="form-check-label">
-                    <%= checkbox(f, :picking, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
-                    Picking
+                    <%= checkbox(f, :rating, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
+                    Enable rating
                   </label>
-                  <div class="form-text mb-1">People will have to pick their preferred track</div>
+
+                  <div class="form-check mt-2 ms-1">
+                    <label class="form-check-label">
+                      <%= radio_button(f, :regular_type, "pick",
+                        class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
+                      Picking
+                    </label>
+                    <div class="form-text mb-2">People will have to pick their preferred track</div>
+                  </div>
+
+                  <div class="form-check ms-1">
+                    <label class="form-check-label">
+                      <%= radio_button(f, :regular_type, "star",
+                        class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
+                      Stars
+                    </label>
+                    <div class="form-text mb-2">Each track will have a 1-5 star rating</div>
+                  </div>
+
+                  <div class="form-check ms-1">
+                    <label class="form-check-label">
+                      <%= radio_button(f, :regular_type, "rank", class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
+                      Ranking
+                    </label>
+                    <div class="form-text mb-2">People will be asked to rank the tracks</div>
+                      <div class="form-check ms-4">
+                        <label class="form-check-label">
+                          <%= checkbox(f, :ranking_only_extremities,
+                            class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or Kernel.length(get_field(@changeset, :tracks)) < 10) %>
+                        Only rank the top/bottom three tracks
+                        </label>
+                        <div class="form-text mb-2">Only for tests with 10+ tracks</div>
+                      </div>
+                  </div>
+
                 </div>
-                <div class="form-check ms-4">
-                  <label class="form-check-label">
-                    <%= checkbox(f, :ranking, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
-                    Ranking
-                  </label>
-                  <div class="form-text mb-1">People will be asked to rank the tracks</div>
-                  <%= unless Kernel.length(get_field(@changeset, :tracks)) < 10 do %>
-                    <div class="form-check ms-4">
-                      <label class="form-check-label">
-                        <%= checkbox(f, :ranking_only_extremities, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or Kernel.length(get_field(@changeset, :tracks)) < 10) %>
-                      Only rank the top/bottom three tracks.
-                      </label>
-                    </div>
-                  <% end %>
-                </div>
-                <div class="form-check ms-4">
-                  <label class="form-check-label">
-                    <%= checkbox(f, :starring, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
-                    Stars
-                  </label>
-                  <div class="form-text mb-1">Each track will have a 1-5 star rating</div>
-                </div>
+
                 <div class="form-check ms-4">
                   <label class="form-check-label">
                     <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
-                    Recognition
+                    Recognition test
                   </label>
                   <div class="form-text mb-2">People will have to identify the anonymized tracks</div>
                 </div>
@@ -357,10 +370,8 @@ defmodule FunkyABXWeb.TestFormLive do
     test = %Test{
       id: UUID.generate(),
       type: :regular,
-      public: false,
-      ranking: false,
-      picking: true,
-      starring: false,
+      rating: true,
+      regular_type: :pick,
       ranking_only_extremities: false,
       identification: false,
       password: password,
@@ -468,7 +479,11 @@ defmodule FunkyABXWeb.TestFormLive do
                     filename_dest = Files.get_destination_filename(entry.client_name)
 
                     final_filename_dest =
-                      Files.save(path, Path.join([socket.assigns.test.id, filename_dest]), normalization)
+                      Files.save(
+                        path,
+                        Path.join([socket.assigns.test.id, filename_dest]),
+                        normalization
+                      )
 
                     {entry.client_name, final_filename_dest}
                   end)

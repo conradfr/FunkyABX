@@ -6,6 +6,8 @@ defmodule FunkyABX.Identifications do
   alias FunkyABX.Identification
   alias FunkyABX.IdentificationDetails
 
+  # ---------- GET ----------
+
   def get_identification(test) do
     query =
       from i in Identification,
@@ -53,27 +55,48 @@ defmodule FunkyABX.Identifications do
     end)
   end
 
-  def is_valid?(identification, test) do
-    case test.identification do
-      true ->
-        case identification
-             |> Map.values()
-             |> Enum.count() do
-          count when count < Kernel.length(test.tracks) -> false
-          _ -> true
-        end
+  # ---------- FORM ----------
 
-      _ ->
-        true
+  def is_valid?(test, choices) when is_map_key(choices, :identification) do
+    case choices.identification
+         |> Map.values()
+         |> Enum.count() do
+      count when count < Kernel.length(test.tracks) -> false
+      _ -> true
     end
   end
 
-  def submit(test, _identification, _ip_address) when test.identification != true, do: %{}
+  def is_valid?(_test, _choices) do
+    false
+  end
 
-  def submit(test, identification, ip_address) do
+  # ---------- SAVE ----------
+
+  def clean_choices(choices, _tracks, test) when test.identification == false, do: choices
+
+  def clean_choices(%{identification: identification} = choices, tracks, _test) do
+    identification_cleaned =
+      identification
+      |> Enum.reduce(%{}, fn {track_fake_id, track_guess_fake_id}, acc ->
+        track_id = Tracks.find_track_id_from_fake_id(track_fake_id, tracks)
+
+        track_guess_id = Tracks.find_track_id_from_fake_id(track_guess_fake_id, tracks)
+
+        Map.put(acc, track_id, track_guess_id)
+      end)
+
+    %{choices | identification: identification_cleaned}
+  end
+
+  def submit(test, %{identification: identification} = _choices, ip_address) do
     Enum.each(identification, fn {track_id, track_id_guess} ->
-      track = Tracks.find_track(test.tracks, track_id)
-      track_guessed = Tracks.find_track(test.tracks, track_id_guess)
+      IO.puts("#{inspect(track_id)}")
+
+      track =
+        Tracks.find_track(track_id, test.tracks)
+        |> IO.inspect()
+
+      track_guessed = Tracks.find_track(track_id_guess, test.tracks)
 
       # we insert a new entry or increase the count if this combination of test + track + rank exists
       on_conflict = [set: [count: dynamic([i], fragment("? + ?", i.count, 1))]]
@@ -93,7 +116,5 @@ defmodule FunkyABX.Identifications do
       ip_address: ip_address
     })
     |> Repo.insert()
-
-    identification
   end
 end
