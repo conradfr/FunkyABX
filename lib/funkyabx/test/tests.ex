@@ -2,7 +2,6 @@ defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2]
   alias FunkyABX.Repo
   alias FunkyABX.Test
-  alias FunkyABX.Tracks
   alias FunkyABX.Rank
   alias FunkyABX.Ranks
   alias FunkyABX.Pick
@@ -99,7 +98,6 @@ defmodule FunkyABX.Tests do
   def clean_choices(choices, tracks, test) do
     test
     |> get_test_module()
-    |> IO.inspect()
     |> Kernel.apply(:clean_choices, [choices, tracks, test])
   end
 

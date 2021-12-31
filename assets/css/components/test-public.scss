@@ -31,5 +31,10 @@
       color: $track-star-rated-hover;
     }
   }
+}
 
+.test-starring-result {
+  i.bi-star-fill {
+    color: $track-star-rated;
+  }
 }

@@ -13,37 +13,22 @@ defmodule FunkyABX.Stars do
         join: s in Star,
         on: t.id == s.track_id,
         where: s.test_id == ^test.id,
+        group_by: [t.id, s.track_id],
         order_by: [
-          desc: s.star,
-          desc: s.count,
+          desc: fragment("rank_decimal"),
           asc: t.title,
           desc: s.track_id
         ],
         select: %{
           track_id: s.track_id,
           track_title: t.title,
-          star: s.star,
-          count: s.count
+          rank: fragment("ROUND((SUM(? * ?)::decimal / SUM(?)))::integer", s.star, s.count, s.count),
+          rank_decimal: fragment("(SUM(? * ?)::decimal / SUM(?)) as rank_decimal", s.star, s.count, s.count)
         }
 
     # Can't make a sql query that avoids duplicate track or star so we clean the data here instead
     query
     |> Repo.all()
-    |> Enum.reduce([], fn s, acc ->
-      #             already_has_rank?(r.rank, acc) or
-      with true <-
-             already_has_track?(s.track_id, acc) do
-        acc
-      else
-        _ -> [s | acc]
-      end
-    end)
-    |> Enum.sort(fn curr, prev -> curr.star < prev.star end)
-  end
-
-  defp already_has_track?(track_id, acc) do
-    acc
-    |> Enum.any?(fn t -> t.track_id == track_id end)
   end
 
   def get_how_many_taken(starring) when is_nil(starring) or length(starring) == 0, do: 0

@@ -90,12 +90,8 @@ defmodule FunkyABX.Identifications do
 
   def submit(test, %{identification: identification} = _choices, ip_address) do
     Enum.each(identification, fn {track_id, track_id_guess} ->
-      IO.puts("#{inspect(track_id)}")
 
-      track =
-        Tracks.find_track(track_id, test.tracks)
-        |> IO.inspect()
-
+      track = Tracks.find_track(track_id, test.tracks)
       track_guessed = Tracks.find_track(track_id_guess, test.tracks)
 
       # we insert a new entry or increase the count if this combination of test + track + rank exists

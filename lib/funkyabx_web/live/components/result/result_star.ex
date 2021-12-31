@@ -34,15 +34,15 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                       <div class="pe-2"><small>You rated this track:</small></div>
                       <div><small>
                         <%= for star_nb <- 1..@visitor_starred[star.track_id] do %>
-                          <i title={star.star} class="bi bi-star-fill"></i>
+                          <i title={star.rank} class="bi bi-star-fill"></i>
                         <% end %>
                       </small></div>
                     </div>
                   </div>
                 <% end %>
-                <div class="p-3 ps-0 text-end test-starring">
+                <div class="p-3 ps-0 text-end test-starring-result">
                   <%= for star_nb <- 1..5 do %>
-                    <i title={star.star} class={"bi bi-star#{if star.star >= star_nb, do: "-fill"}"}></i>
+                    <i title={star.rank} class={"bi bi-star#{if star.rank >= star_nb, do: "-fill"}"}></i>
                   <% end %>
                 </div>
               </div>
