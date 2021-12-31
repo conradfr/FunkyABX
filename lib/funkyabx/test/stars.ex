@@ -22,8 +22,10 @@ defmodule FunkyABX.Stars do
         select: %{
           track_id: s.track_id,
           track_title: t.title,
-          rank: fragment("ROUND((SUM(? * ?)::decimal / SUM(?)))::integer", s.star, s.count, s.count),
-          rank_decimal: fragment("(SUM(? * ?)::decimal / SUM(?)) as rank_decimal", s.star, s.count, s.count),
+          rank:
+            fragment("ROUND((SUM(? * ?)::decimal / SUM(?)))::integer", s.star, s.count, s.count),
+          rank_decimal:
+            fragment("(SUM(? * ?)::decimal / SUM(?)) as rank_decimal", s.star, s.count, s.count),
           total_star: fragment("SUM(?)", s.count)
         }
 

@@ -378,8 +378,7 @@ defmodule FunkyABXWeb.TestLive do
          true <- Tests.is_valid?(test, choices) do
       Logger.info("Test taken")
 
-      choices_cleaned =
-        Tests.clean_choices(choices, tracks, test)
+      choices_cleaned = Tests.clean_choices(choices, tracks, test)
 
       Tests.submit(test, choices_cleaned, socket.assigns.ip_address)
 

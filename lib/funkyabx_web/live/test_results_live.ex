@@ -1,6 +1,5 @@
 defmodule FunkyABXWeb.TestResultsLive do
   use FunkyABXWeb, :live_view
-  alias Phoenix.LiveView.JS
   alias FunkyABX.Tests
 
   @title_max_length 100

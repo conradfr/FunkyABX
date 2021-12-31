@@ -33,8 +33,8 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                     <div class="d-flex flex-wrap flex-grow-1">
                       <div class="pe-2"><small>You rated this track:</small></div>
                       <div><small>
-                        <%= for star_nb <- 1..@visitor_starred[star.track_id] do %>
-                          <i title={star.rank} class="bi bi-star-fill"></i>
+                        <%= for _star_nb <- 1..@visitor_starred[star.track_id] do %>
+                          <i title={@visitor_starred[star.track_id]} class="bi bi-star-fill"></i>
                         <% end %>
                       </small></div>
                     </div>

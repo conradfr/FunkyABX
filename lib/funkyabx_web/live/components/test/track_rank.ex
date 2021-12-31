@@ -25,7 +25,7 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
   @impl true
   def handle_event(
         "change_ranking",
-        %{"track" => %{"id" => track_id}, "rank" => rank} = ranking_params,
+        %{"track" => %{"id" => track_id}, "rank" => rank} = _ranking_params,
         socket
       ) do
     ranked = Map.get(socket.assigns.choices_taken, :rank, %{})

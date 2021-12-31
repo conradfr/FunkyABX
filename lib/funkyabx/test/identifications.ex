@@ -90,7 +90,6 @@ defmodule FunkyABX.Identifications do
 
   def submit(test, %{identification: identification} = _choices, ip_address) do
     Enum.each(identification, fn {track_id, track_id_guess} ->
-
       track = Tracks.find_track(track_id, test.tracks)
       track_guessed = Tracks.find_track(track_id_guess, test.tracks)
 

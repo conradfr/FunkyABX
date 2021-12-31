@@ -36,7 +36,7 @@ defmodule FunkyABX.Picks do
 
   # ---------- FORM ----------
 
-  def is_valid?(test, choices) do
+  def is_valid?(_test, choices) do
     Map.get(choices, :pick) != nil
   end
 
