@@ -164,6 +164,7 @@ defmodule FunkyABX.Tests do
     ranks = Ranks.get_ranks(test)
     picks = Picks.get_picks(test)
     stars = Stars.get_stars(test)
+            |> IO.inspect()
     identifications = Identifications.get_identification(test)
     get_how_many_taken(ranks, picks, stars, identifications)
   end

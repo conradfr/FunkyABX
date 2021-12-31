@@ -23,7 +23,8 @@ defmodule FunkyABX.Stars do
           track_id: s.track_id,
           track_title: t.title,
           rank: fragment("ROUND((SUM(? * ?)::decimal / SUM(?)))::integer", s.star, s.count, s.count),
-          rank_decimal: fragment("(SUM(? * ?)::decimal / SUM(?)) as rank_decimal", s.star, s.count, s.count)
+          rank_decimal: fragment("(SUM(? * ?)::decimal / SUM(?)) as rank_decimal", s.star, s.count, s.count),
+          total_star: fragment("SUM(?)", s.count)
         }
 
     # Can't make a sql query that avoids duplicate track or star so we clean the data here instead
@@ -31,12 +32,12 @@ defmodule FunkyABX.Stars do
     |> Repo.all()
   end
 
-  def get_how_many_taken(starring) when is_nil(starring) or length(starring) == 0, do: 0
+  def get_how_many_taken(stars) when is_nil(stars) or length(stars) == 0, do: 0
 
-  def get_how_many_taken(starring) do
-    starring
-    |> List.first(%{})
-    |> Map.get(:count, 0)
+  def get_how_many_taken(stars) do
+    stars
+    |> Enum.reduce(0, fn s, acc -> acc + s.total_star end)
+    |> Kernel.div(length(stars))
   end
 
   # ---------- FORM ----------
