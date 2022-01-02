@@ -796,7 +796,7 @@ defmodule FunkyABXWeb.TestFormLive do
     |> allow_upload(String.to_atom("track" <> temp_id),
       accept: ~w(.wav .mp3 .aac),
       max_entries: 1,
-      max_file_size: 50_000_000
+      max_file_size: 500_000_000
     )
   end
 
