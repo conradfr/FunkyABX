@@ -58,7 +58,7 @@ WORKDIR /var/funkyabx/
 RUN rm -Rf /var/funkyabx/_build && \
     mix local.hex --force && \
     mix local.rebar --force && \
-    mix deps.get --only prod && \
+    mix deps.get --only $MIX_ENV && \
     mix deps.compile
 
 COPY / /var/funkyabx/

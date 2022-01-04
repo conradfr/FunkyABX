@@ -3,17 +3,18 @@ defmodule FunkyABXWeb.TestFormLive do
   require Logger
   use FunkyABXWeb, :live_view
   alias Ecto.UUID
+  alias FunkyABX.Repo
   alias FunkyABX.Accounts
   alias FunkyABX.Download
-  alias FunkyABX.Repo
-  alias FunkyABX.Tests
   alias FunkyABX.Test
+  alias FunkyABX.Tests
   alias FunkyABX.Track
   alias FunkyABX.Files
 
   # TODO Reduce duplicate code between "new" and "update"
 
   @title_max_length 100
+  @default_rounds 10
 
   @impl true
   def render(assigns) do
@@ -82,9 +83,7 @@ defmodule FunkyABXWeb.TestFormLive do
                         <div class="form-text mb-2">Only for tests with 10+ tracks</div>
                       </div>
                   </div>
-
                 </div>
-
                 <div class="form-check ms-4">
                   <label class="form-check-label">
                     <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
@@ -92,19 +91,36 @@ defmodule FunkyABXWeb.TestFormLive do
                   </label>
                   <div class="form-text mb-2">People will have to identify the anonymized tracks</div>
                 </div>
-                <div class="form-check disabled mb-2">
+
+                <div class="form-check disabled mt-4 mb-2">
                   <label class="form-check-label">
-                    <%= radio_button(f, :type, "abx", class: "form-check-input", disabled: true, checked: f.data.type == :abx) %>
+                    <%= radio_button(f, :type, "abx", class: "form-check-input", disabled: !@test_updatable) %>
                     ABX test
                   </label>
-                  <div class="form-text mb-2">Coming soon(ish) ...</div>
+                  <div class="form-text mb-2">People will have to guess which track is cloned for n rounds</div>
+                  <div class="row ms-4 mb-1">
+                    <label for="inputEmail3" class="col-4 col-form-label ps-0">Number of rounds:</label>
+                    <div class="col-2">
+                      <%= number_input(f, :nb_of_rounds, class: "form-control", required: f.data.type == :abx,
+                        disabled: !@test_updatable or get_field(@changeset, :type) !== :abx) %>
+                    </div>
+                  </div>
+                  <div class="form-check mt-2 ms-4 mb-3">
+                    <label class="form-check-label">
+                      <%= checkbox(f, :anonymized_track_title,
+                        class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :abx) %>
+                      Hide tracks' title
+                    </label>
+                  </div>
                 </div>
-                <div class="form-check disabled">
+
+                <div class="form-check disabled mt-4">
                   <label class="form-check-label">
                     <%= radio_button(f, :type, "listening", class: "form-check-input", disabled: !@test_updatable) %>
                     No test, only listening
                   </label>
                 </div>
+
               </div>
             </fieldset>
           </div>
@@ -327,7 +343,7 @@ defmodule FunkyABXWeb.TestFormLive do
          true <-
            (params["key"] != nil and params["key"] == test.password) or
              Map.get(session, "current_user_id") == test.user_id do
-      test_updatable = !Tests.has_tests_taken?(test.id)
+      test_updatable = !Tests.has_tests_taken?(test)
       changeset = Test.changeset_update(test)
 
       FunkyABXWeb.Endpoint.subscribe(test.id)
@@ -379,6 +395,8 @@ defmodule FunkyABXWeb.TestFormLive do
       tracks: [],
       normalization: false,
       user: user,
+      nb_of_rounds: @default_rounds,
+      anonymized_track_title: true,
       ip_address: Map.get(session, "visitor_ip", nil)
     }
 

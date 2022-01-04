@@ -19,15 +19,24 @@ defmodule FunkyABX.Tests.Type do
   @doc """
     Test params:
       has_choices
-      display_track_titles
-      shuffle_tracks
+      rounds
   """
   @callback get_test_params(test :: Test) :: map()
 
   @doc """
+    How many times the test has been taken
+  """
+  @callback get_how_many_taken(test :: Test) :: integer()
+
+  @doc """
+    Transform tracks to be used on the test
+  """
+  @callback prep_tracks(list(), test :: Test) :: list()
+
+  @doc """
     Is the test valid?
   """
-  @callback is_valid?(test :: Test, map()) :: boolean()
+  @callback is_valid?(test :: Test, integer(), map()) :: boolean()
 
   @doc """
     Clean the choices from the user to be saved/stored

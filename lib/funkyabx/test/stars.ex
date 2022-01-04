@@ -29,28 +29,27 @@ defmodule FunkyABX.Stars do
           total_star: fragment("SUM(?)", s.count)
         }
 
-    # Can't make a sql query that avoids duplicate track or star so we clean the data here instead
     query
     |> Repo.all()
   end
 
-  def get_how_many_taken(stars) when is_nil(stars) or length(stars) == 0, do: 0
+  def get_how_many_taken(test) do
+    query =
+      from sd in StarDetails,
+        where: sd.test_id == ^test.id,
+        select: fragment("COUNT(*)")
 
-  def get_how_many_taken(stars) do
-    stars
-    |> Enum.reduce(0, fn s, acc -> acc + s.total_star end)
-    |> Kernel.div(length(stars))
+    query
+    |> Repo.one()
   end
 
   # ---------- FORM ----------
 
-  def is_valid?(test, choices) when is_map_key(choices, :star) do
-    map_size(choices.star) == Kernel.length(test.tracks)
+  def is_valid?(test, round, choices) when is_map_key(choices, round) do
+    map_size(choices[round][:star] || %{}) == Kernel.length(test.tracks)
   end
 
-  def is_valid?(_test, _choices) do
-    false
-  end
+  def is_valid?(_test, _round, _choices), do: false
 
   # ---------- SAVE ----------
 

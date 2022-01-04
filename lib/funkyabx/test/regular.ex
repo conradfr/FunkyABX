@@ -37,7 +37,6 @@ defmodule FunkyABX.Tests.Regular do
   @impl true
   def get_choices_modules(test) do
     module = get_rating_choice_module(test)
-    #    module = [:"FunkyABXWeb.TestTrackPickComponent"]
     identification_module = get_identification_choice_module(test)
 
     module ++ identification_module
@@ -100,28 +99,48 @@ defmodule FunkyABX.Tests.Regular do
   @impl true
   def get_test_params(_test) do
     %{
-      has_choices: true,
-      display_track_titles: false,
-      shuffle_tracks: true
+      has_choices: true
     }
+  end
+
+  # ---------- TAKEN ----------
+
+  @impl true
+  def get_how_many_taken(test) do
+    test
+    |> get_test_modules()
+    |> Kernel.hd()
+    |> Kernel.apply(:get_how_many_taken, [test])
+  end
+
+  # ---------- TRACKS ----------
+
+  @impl true
+  def prep_tracks(tracks, _test) do
+    Enum.shuffle(tracks)
   end
 
   # ---------- FORM ----------
 
   @impl true
-  def is_valid?(test, choices) do
+  def is_valid?(_test, round, choices) when is_map_key(choices, round) == false, do: false
+
+  @impl true
+  def is_valid?(test, round, choices) do
     test
     |> get_test_modules()
     |> Enum.reduce([], fn m, acc ->
-      [Kernel.apply(m, :is_valid?, [test, choices]) | acc]
+      [Kernel.apply(m, :is_valid?, [test, round, choices]) | acc]
     end)
     |> Enum.all?()
   end
 
   # ---------- SAVE ----------
 
+  # Current assumption here and for all "regular" test code is that there is only one round
+
   @impl true
-  def clean_choices(choices, tracks, test) do
+  def clean_choices(%{1 => choices} = _all_choices, tracks, test) do
     test
     |> get_test_modules()
     |> Enum.reduce(choices, fn m, acc ->

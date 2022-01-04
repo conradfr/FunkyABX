@@ -1,9 +1,13 @@
 defmodule FunkyABXWeb.TestTrackPickComponent do
   use FunkyABXWeb, :live_component
+  alias FunkyABX.Tests
 
   @impl true
   def render(assigns) do
-    assigns = assign_new(assigns, :picked, fn -> Map.get(assigns.choices_taken, :pick, nil) end)
+    assigns =
+      assign_new(assigns, :picked, fn ->
+        Tests.assign_new(assigns.choices_taken, assigns.round, :pick, nil)
+      end)
 
     ~H"""
       <div class="p-2 text-center flex-grow-1 flex-sm-grow-0" style="min-width: 220px">
@@ -18,7 +22,7 @@ defmodule FunkyABXWeb.TestTrackPickComponent do
 
   @impl true
   def handle_event("pick_track", %{"track_id" => track_id} = _picking_params, socket) do
-    send(self(), {:update_choices_taken, %{pick: track_id}})
+    send(self(), {:update_choices_taken, socket.assigns.round, %{pick: track_id}})
     {:noreply, socket}
   end
 end

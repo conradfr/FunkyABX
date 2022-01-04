@@ -27,18 +27,23 @@ defmodule FunkyABX.Picks do
     |> Repo.all()
   end
 
-  def get_how_many_taken(pickings) when is_nil(pickings) or length(pickings) == 0, do: 0
+  def get_how_many_taken(test) do
+    query =
+      from pd in PickDetails,
+        where: pd.test_id == ^test.id,
+        select: fragment("COUNT(*)")
 
-  def get_how_many_taken(pickings) do
-    pickings
-    |> Enum.reduce(0, fn p, acc -> acc + p.picked end)
+    query
+    |> Repo.one()
   end
 
   # ---------- FORM ----------
 
-  def is_valid?(_test, choices) do
-    Map.get(choices, :pick) != nil
+  def is_valid?(_test, round, choices) when is_map_key(choices, round) do
+    Map.get(choices[round], :pick) != nil
   end
+
+  def is_valid?(_test, _round, _choices), do: false
 
   # ---------- SAVE ----------
 

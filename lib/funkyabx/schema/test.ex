@@ -23,9 +23,11 @@ defmodule FunkyABX.Test do
     field(:password, :string)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
     field(:regular_type, Ecto.Enum, values: [rank: 1, pick: 2, star: 3])
+    field(:anonymized_track_title, :boolean)
     field(:rating, :boolean)
     field(:ranking_only_extremities, :boolean)
     field(:identification, :boolean)
+    field(:nb_of_rounds, :integer)
     field(:ip_address, :binary)
     field(:to_closed_at, :naive_datetime)
     field(:closed_at, :naive_datetime)
@@ -49,6 +51,8 @@ defmodule FunkyABX.Test do
       :public,
       :password,
       :type,
+      :nb_of_rounds,
+      :anonymized_track_title,
       :rating,
       :regular_type,
       :ranking_only_extremities,
@@ -57,11 +61,16 @@ defmodule FunkyABX.Test do
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> cast_assoc(:user)
-    |> validate_required([:type, :title])
     |> validate_general_type()
     |> ensure_regular_type()
     |> validate_ranking_extremities()
-    |> validate_minimum_tracks()
+    |> validate_nb_rounds()
+    |> validate_anonymized()
+    |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
+    |> validate_length(:tracks,
+      min: @minimum_tracks,
+      message: "A test needs to have at least two tracks."
+    )
     |> TitleSlug.maybe_generate_slug()
     |> TitleSlug.unique_constraint()
   end
@@ -76,6 +85,8 @@ defmodule FunkyABX.Test do
       :public,
       :password,
       :type,
+      :nb_of_rounds,
+      :anonymized_track_title,
       :rating,
       :regular_type,
       :ranking_only_extremities,
@@ -83,11 +94,16 @@ defmodule FunkyABX.Test do
       :normalization
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
-    |> validate_required([:type, :title])
     |> validate_general_type()
     |> ensure_regular_type()
     |> validate_ranking_extremities()
-    |> validate_length(:tracks, min: @minimum_tracks)
+    |> validate_nb_rounds()
+    |> validate_anonymized()
+    |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
+    |> validate_length(:tracks,
+      min: @minimum_tracks,
+      message: "A test needs to have at least two tracks."
+    )
   end
 
   def changeset_delete(test, _attrs \\ %{}) do
@@ -140,13 +156,23 @@ defmodule FunkyABX.Test do
     end
   end
 
-  def validate_minimum_tracks(changeset) do
-    tracks = get_field(changeset, :tracks)
+  defp validate_anonymized(changeset) do
+    type = get_field(changeset, :type)
 
-    if Kernel.length(tracks) < @minimum_tracks do
-      add_error(changeset, :tracks, "A test needs to have at least two tracks.")
-    else
-      changeset
+    case type do
+      :regular -> put_change(changeset, :anonymized_track_title, true)
+      :listening -> put_change(changeset, :anonymized_track_title, false)
+      :abx -> changeset
+              |> IO.inspect()
+    end
+  end
+
+  defp validate_nb_rounds(changeset) do
+    type = get_field(changeset, :type)
+
+    case type do
+      :abx -> changeset
+      _ -> put_change(changeset, :nb_of_rounds, 1)
     end
   end
 

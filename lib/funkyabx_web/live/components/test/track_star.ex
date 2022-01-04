@@ -1,9 +1,13 @@
 defmodule FunkyABXWeb.TestTrackStarComponent do
   use FunkyABXWeb, :live_component
+  alias FunkyABX.Tests
 
   @impl true
   def render(assigns) do
-    assigns = assign_new(assigns, :starred, fn -> Map.get(assigns.choices_taken, :star, %{}) end)
+    assigns =
+      assign_new(assigns, :starred, fn ->
+        Tests.assign_new(assigns.choices_taken, assigns.round, :star)
+      end)
 
     ~H"""
       <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0 test-starring">
@@ -27,10 +31,12 @@ defmodule FunkyABXWeb.TestTrackStarComponent do
         socket
       ) do
     star_updated =
-      Map.get(socket.assigns.choices_taken, :star, %{})
-      |> Map.put(track_id, String.to_integer(star))
+      socket.assigns.choices_taken
+      |> Map.get(socket.assigns.round, %{})
+      |> Map.get(:star, %{})
+      |> Map.merge(%{track_id => String.to_integer(star)})
 
-    send(self(), {:update_choices_taken, %{star: star_updated}})
+    send(self(), {:update_choices_taken, socket.assigns.round, %{star: star_updated}})
     {:noreply, socket}
   end
 end

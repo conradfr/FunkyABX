@@ -25,16 +25,24 @@ defmodule FunkyABX.Tests.Listening do
   @impl true
   def get_test_params(_test) do
     %{
-      has_choices: false,
-      display_track_titles: true,
-      shuffle_tracks: false
+      has_choices: false
     }
   end
+
+  # ---------- TAKEN ----------
+
+  @impl true
+  def get_how_many_taken(_test), do: 0
+
+  # ---------- TRACKS ----------
+
+  @impl true
+  def prep_tracks(tracks, _test), do: tracks
 
   # ---------- FORM ----------
 
   @impl true
-  def is_valid?(_test, _choices), do: true
+  def is_valid?(_test, _round, _choices), do: true
 
   # ---------- SAVE ----------
 

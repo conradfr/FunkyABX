@@ -1,9 +1,13 @@
 defmodule FunkyABXWeb.TestTrackRankComponent do
   use FunkyABXWeb, :live_component
+  alias FunkyABX.Tests
 
   @impl true
   def render(assigns) do
-    assigns = assign_new(assigns, :ranked, fn -> Map.get(assigns.choices_taken, :rank, %{}) end)
+    assigns =
+      assign_new(assigns, :ranked, fn ->
+        Tests.assign_new(assigns.choices_taken, assigns.round, :rank)
+      end)
 
     ~H"""
       <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
@@ -28,7 +32,10 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
         %{"track" => %{"id" => track_id}, "rank" => rank} = _ranking_params,
         socket
       ) do
-    ranked = Map.get(socket.assigns.choices_taken, :rank, %{})
+    ranked =
+      socket.assigns.choices_taken
+      |> Map.get(socket.assigns.round, %{})
+      |> Map.get(:rank, %{})
 
     ranking_updated =
       case rank do
@@ -50,7 +57,7 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
           |> Map.put(track_id, new_rank)
       end
 
-    send(self(), {:update_choices_taken, %{rank: ranking_updated}})
+    send(self(), {:update_choices_taken, socket.assigns.round, %{rank: ranking_updated}})
     {:noreply, socket}
   end
 

@@ -69,6 +69,11 @@ defmodule FunkyABXWeb.TestLive do
             </div>
           <% end %>
         </div>
+        <%= if @test.nb_of_rounds > 1 do %>
+          <div class="flex-grow-1 p-2 text-center">
+            Round <%= @current_round %> / <%= @test.nb_of_rounds %>
+          </div>
+        <% end %>
         <div class="p-2">
           <fieldset class="form-group">
             <div class="form-check">
@@ -116,7 +121,7 @@ defmodule FunkyABXWeb.TestLive do
                 </button>
               <% end %>
             </div>
-              <%= if @test_params.display_track_titles == true do %>
+              <%= if @test.anonymized_track_title == false do %>
                 <div class="p-2 text-truncate cursor-link" style="width: 300px;" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
                   <%= track.title %>
                 </div>
@@ -126,13 +131,13 @@ defmodule FunkyABXWeb.TestLive do
                 </div>
               <% end %>
             <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px">
-              <div phx-update="ignore" id={"waveform-#{:crypto.hash(:md5 , track.id <> track.filename) |> Base.encode16()}"} class="waveform-wrapper">
+              <div phx-update="ignore" id={"waveform-#{Tracks.get_track_hash(track)}"} class="waveform-wrapper">
               </div>
             </div>
 
             <%= unless @test_already_taken == true do %>
               <%= for module <- @choices_modules do %>
-                <.live_component module={module} id={Atom.to_string(module) <> "_#{i}"} track={track} test={@test} tracks={@tracks} choices_taken={@choices_taken} />
+                <.live_component module={module} id={Atom.to_string(module) <> "_#{i}"} track={track} test={@test} tracks={@tracks} choices_taken={@choices_taken} round={@current_round} />
               <% end %>
             <% end %>
           </div>
@@ -169,15 +174,8 @@ defmodule FunkyABXWeb.TestLive do
 
     tracks =
       test.tracks
-      |> Enum.map(fn t ->
-        %{
-          t
-          | fake_id: :rand.uniform(1_000_000),
-            hash: :crypto.hash(:md5, t.id <> t.filename) |> Base.encode16(),
-            width: "0"
-        }
-      end)
-      |> shuffle_tracks_if_needed(test_params)
+      |> Tracks.prep_tracks(test)
+      |> Tests.prep_tracks(test)
 
     choices_modules = Tests.get_choices_modules(test)
 
@@ -191,6 +189,7 @@ defmodule FunkyABXWeb.TestLive do
        tracks: tracks,
        choices_modules: choices_modules,
        test_params: test_params,
+       current_round: 1,
        tracks_loaded: false,
        current_track: nil,
        loop: true,
@@ -271,9 +270,16 @@ defmodule FunkyABXWeb.TestLive do
 
   # ---------- FROM COMPONENT ----------
 
-  def handle_info({:update_choices_taken, params}, socket) do
-    updated_choices_taken = Map.merge(socket.assigns.choices_taken, params)
-    valid = is_valid?(socket.assigns.test, updated_choices_taken)
+  def handle_info({:update_choices_taken, round, params}, socket) do
+    updated_choices_taken_round =
+      socket.assigns.choices_taken
+      |> Map.get(round, %{})
+      |> Map.merge(params)
+
+    updated_choices_taken =
+      Map.merge(socket.assigns.choices_taken, %{round => updated_choices_taken_round})
+
+    valid = Tests.is_valid?(socket.assigns.test, round, updated_choices_taken)
     {:noreply, assign(socket, %{choices_taken: updated_choices_taken, valid: valid})}
   end
 
@@ -370,12 +376,25 @@ defmodule FunkyABXWeb.TestLive do
      |> assign(test_already_taken: true)}
   end
 
+  # When there is more than one round, go to next when valid instead of submit
   @impl true
-  def handle_event("submit", _params, socket) do
+  def handle_event("submit", _params, %{assigns: %{current_round: current_round}} = socket)
+      when current_round < socket.assigns.test.nb_of_rounds do
+    with test <- socket.assigns.test,
+         choices <- socket.assigns.choices_taken,
+         true <- Tests.is_valid?(test, current_round, choices) do
+      {:noreply, assign(socket, current_round: current_round + 1, valid: false)}
+    else
+      _ -> {:noreply, socket}
+    end
+  end
+
+  @impl true
+  def handle_event("submit", _params, %{assigns: %{current_round: current_round}} = socket) do
     with test <- socket.assigns.test,
          tracks <- socket.assigns.tracks,
          choices <- socket.assigns.choices_taken,
-         true <- Tests.is_valid?(test, choices) do
+         true <- Tests.is_valid?(test, current_round, choices) do
       Logger.info("Test taken")
 
       choices_cleaned = Tests.clean_choices(choices, tracks, test)
@@ -422,31 +441,5 @@ defmodule FunkyABXWeb.TestLive do
     )
 
     {:noreply, push_event(socket, "bypass_test", %{})}
-  end
-
-  # ---------- TEST UTILS ----------
-
-  defp is_valid?(test, choices) do
-    Tests.is_valid?(test, choices)
-  end
-
-  defp shuffle_tracks_if_needed(tracks, test_params) when test_params.shuffle_tracks == true do
-    Enum.shuffle(tracks)
-  end
-
-  defp shuffle_tracks_if_needed(tracks, _test_params) do
-    tracks
-  end
-
-  def find_track_id_from_fake_id(fake_id, tracks) do
-    tracks
-    |> Enum.find(fn x -> x.fake_id == fake_id end)
-    |> Map.get(:id)
-  end
-
-  def find_fake_id_from_track_id(track_id, tracks) do
-    tracks
-    |> Enum.find(fn x -> x.id == track_id end)
-    |> Map.get(:fake_id)
   end
 end

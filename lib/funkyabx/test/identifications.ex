@@ -42,23 +42,20 @@ defmodule FunkyABX.Identifications do
     Repo.all(query)
   end
 
-  def get_how_many_taken(identifications)
-      when is_nil(identifications) or length(identifications) == 0,
-      do: 0
+  def get_how_many_taken(test) do
+    query =
+      from id in IdentificationDetails,
+        where: id.test_id == ^test.id,
+        select: fragment("COUNT(*)")
 
-  def get_how_many_taken(identifications) do
-    identifications
-    |> List.first(%{})
-    |> Map.get(:guesses, [])
-    |> Enum.reduce(0, fn i, acc ->
-      acc + i["count"]
-    end)
+    query
+    |> Repo.one()
   end
 
   # ---------- FORM ----------
 
-  def is_valid?(test, choices) when is_map_key(choices, :identification) do
-    case choices.identification
+  def is_valid?(test, round, choices) when is_map_key(choices, round) do
+    case Map.get(choices[round], :identification, %{})
          |> Map.values()
          |> Enum.count() do
       count when count < Kernel.length(test.tracks) -> false
@@ -66,9 +63,7 @@ defmodule FunkyABX.Identifications do
     end
   end
 
-  def is_valid?(_test, _choices) do
-    false
-  end
+  def is_valid?(_test, _round, _choices), do: false
 
   # ---------- SAVE ----------
 
@@ -79,13 +74,12 @@ defmodule FunkyABX.Identifications do
       identification
       |> Enum.reduce(%{}, fn {track_fake_id, track_guess_fake_id}, acc ->
         track_id = Tracks.find_track_id_from_fake_id(track_fake_id, tracks)
-
         track_guess_id = Tracks.find_track_id_from_fake_id(track_guess_fake_id, tracks)
 
         Map.put(acc, track_id, track_guess_id)
       end)
 
-    %{choices | identification: identification_cleaned}
+    Map.put(choices, :identification, identification_cleaned)
   end
 
   def submit(test, %{identification: identification} = _choices, ip_address) do

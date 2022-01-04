@@ -2,14 +2,6 @@ defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2]
   alias FunkyABX.Repo
   alias FunkyABX.Test
-  alias FunkyABX.Rank
-  alias FunkyABX.Ranks
-  alias FunkyABX.Pick
-  alias FunkyABX.Picks
-  alias FunkyABX.Star
-  alias FunkyABX.Stars
-  alias FunkyABX.Identification
-  alias FunkyABX.Identifications
 
   @min_test_created_minutes 15
 
@@ -65,16 +57,11 @@ defmodule FunkyABX.Tests do
   end
 
   defp get_test_module(test) do
-    case test.type do
-      :regular ->
-        FunkyABX.Tests.Regular
-
-      # :abx ->
-      #   FunkyABX.Tests.ABX
-
-      :listening ->
-        FunkyABX.Tests.Listening
-    end
+    test.type
+    |> Atom.to_string()
+    |> String.capitalize()
+    |> (&"Elixir.FunkyABX.Tests.#{&1}").()
+    |> String.to_atom()
   end
 
   # ---------- PARAMS ----------
@@ -85,12 +72,20 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:get_test_params, [test])
   end
 
-  # ---------- FORM ----------
+  # ---------- TRACKS ----------
 
-  def is_valid?(test, choices) do
+  def prep_tracks(tracks, test) do
     test
     |> get_test_module()
-    |> Kernel.apply(:is_valid?, [test, choices])
+    |> Kernel.apply(:prep_tracks, [tracks, test])
+  end
+
+  # ---------- FORM ----------
+
+  def is_valid?(test, round, choices) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:is_valid?, [test, round, choices])
   end
 
   # ---------- SAVE ----------
@@ -109,72 +104,24 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:submit, [test, choices, ip_address])
   end
 
-  # ---------- VOTES ----------
+  # ---------- TAKEN ----------
 
-  # todo dynamic query from modules
-
-  def has_tests_taken?(test_id) do
-    query =
-      from t in Test,
-        left_join: r in Rank,
-        on: t.id == r.test_id,
-        left_join: p in Pick,
-        on: t.id == p.test_id,
-        left_join: s in Star,
-        on: t.id == s.test_id,
-        left_join: i in Identification,
-        on: t.id == i.test_id,
-        where: t.id == ^test_id,
-        group_by: [t.id],
-        select: %{
-          id: t.id,
-          has_ranks:
-            fragment(
-              "CASE WHEN SUM(CASE WHEN ? IS NOT NULL THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END",
-              r.rank
-            ),
-          has_picks:
-            fragment(
-              "CASE WHEN SUM(CASE WHEN ? IS NOT NULL THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END",
-              p.picked
-            ),
-          has_stars:
-            fragment(
-              "CASE WHEN SUM(CASE WHEN ? IS NOT NULL THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END",
-              s.star
-            ),
-          has_identifications:
-            fragment(
-              "CASE WHEN SUM(CASE WHEN ? IS NOT NULL THEN 1 ELSE 0 END) > 0 THEN TRUE ELSE FALSE END",
-              i.count
-            )
-        }
-
-    Repo.one(query)
-    |> case do
-      %{has_identifications: true} = _data -> true
-      %{has_ranks: true} = _data -> true
-      %{has_picks: true} = _data -> true
-      %{has_stars: true} = _data -> true
-      _ -> false
-    end
+  def has_tests_taken?(test) do
+    get_how_many_taken(test) > 0
   end
 
   def get_how_many_taken(test) do
-    ranks = Ranks.get_ranks(test)
-    picks = Picks.get_picks(test)
-    stars = Stars.get_stars(test)
-    identifications = Identifications.get_identification(test)
-    get_how_many_taken(ranks, picks, stars, identifications)
+    test
+    |> get_test_module()
+    |> Kernel.apply(:get_how_many_taken, [test])
   end
 
-  def get_how_many_taken(ranks, picks, stars, identifications) do
-    [
-      Ranks.get_how_many_taken(ranks),
-      Picks.get_how_many_taken(picks),
-      Stars.get_how_many_taken(stars),
-      Identifications.get_how_many_taken(identifications)
-    ]
-    |> Enum.max()
+  # ---------- TAKEN ----------
+
+  def assign_new(choices, round, key, default \\ %{}) do
+    case is_map_key(choices, round) do
+      true -> Map.get(choices[round], key, default)
+      false -> default
+    end
   end
 end

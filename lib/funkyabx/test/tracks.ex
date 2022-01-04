@@ -15,6 +15,29 @@ defmodule FunkyABX.Tracks do
 
   # ---------- UTILS ----------
 
+  def prep_tracks(tracks, _test) do
+    tracks
+    |> Enum.map(&prep_track/1)
+  end
+
+  def prep_track(track) do
+    fake_id = :rand.uniform(1_000_000)
+
+    %{
+      track
+      | fake_id: fake_id,
+        hash: get_track_hash(track, fake_id)
+    }
+  end
+
+  def get_track_hash(track, fake_id \\ nil) do
+    track_fake_id = Map.get(track, :fake_id) || fake_id
+
+    :md5
+    |> :crypto.hash(track.id <> track.filename <> Integer.to_string(track_fake_id))
+    |> Base.encode16()
+  end
+
   def get_track_url(track_id, test) do
     track_id
     |> find_track(test.tracks)

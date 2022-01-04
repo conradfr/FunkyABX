@@ -1,12 +1,14 @@
 defmodule FunkyABXWeb.TestTrackIdentificationComponent do
   use FunkyABXWeb, :live_component
   alias FunkyABXWeb.TestLive
+  alias FunkyABX.Tests
+  alias FunkyABX.Tracks
 
   @impl true
   def render(assigns) do
     assigns =
       assign_new(assigns, :identified, fn ->
-        Map.get(assigns.choices_taken, :identification, %{})
+        Tests.assign_new(assigns.choices_taken, assigns.round, :identification)
       end)
 
     ~H"""
@@ -32,8 +34,12 @@ defmodule FunkyABXWeb.TestTrackIdentificationComponent do
         %{"track" => %{"id" => track_id}} = identification_params,
         socket
       ) do
-    identified = Map.get(socket.assigns.choices_taken, :identification, %{})
-    fake_id = TestLive.find_fake_id_from_track_id(track_id, socket.assigns.tracks)
+    identified =
+      socket.assigns.choices_taken
+      |> Map.get(socket.assigns.round, %{})
+      |> Map.get(:identification, %{})
+
+    fake_id = Tracks.find_fake_id_from_track_id(track_id, socket.assigns.tracks)
 
     identified_updated =
       case identification_params["guess"] do
@@ -52,7 +58,11 @@ defmodule FunkyABXWeb.TestTrackIdentificationComponent do
           |> Map.put(fake_id, guess_int)
       end
 
-    send(self(), {:update_choices_taken, %{identification: identified_updated}})
+    send(
+      self(),
+      {:update_choices_taken, socket.assigns.round, %{identification: identified_updated}}
+    )
+
     {:noreply, socket}
   end
 

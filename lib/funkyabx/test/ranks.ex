@@ -52,18 +52,21 @@ defmodule FunkyABX.Ranks do
     |> Enum.any?(fn t -> t.track_id == track_id end)
   end
 
-  def get_how_many_taken(rankings) when is_nil(rankings) or length(rankings) == 0, do: 0
+  def get_how_many_taken(test) do
+    query =
+      from rd in RankDetails,
+        where: rd.test_id == ^test.id,
+        select: fragment("COUNT(*)")
 
-  def get_how_many_taken(rankings) do
-    rankings
-    |> List.first(%{})
-    |> Map.get(:count, 0)
+    query
+    |> Repo.one()
   end
 
   # ---------- FORM ----------
 
-  def is_valid?(test, choices) when is_map_key(choices, :rank) do
+  def is_valid?(test, round, choices) when is_map_key(choices, round) do
     choices
+    |> Map.get(round, %{})
     |> Map.get(:rank, %{})
     |> Map.values()
     |> Enum.uniq()
@@ -71,9 +74,7 @@ defmodule FunkyABX.Ranks do
     |> is_valid_count?(test)
   end
 
-  def is_valid?(_test, _choices) do
-    false
-  end
+  def is_valid?(_test, _round, _choices), do: false
 
   defp is_valid_count?(count, test) when test.ranking_only_extremities == true, do: count == 6
 
