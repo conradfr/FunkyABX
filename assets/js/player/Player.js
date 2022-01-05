@@ -47,6 +47,10 @@ export default class {
     this.ee.on('stopping', (trackHash) => {
       this.playing -= 1;
       if (this.playing === 0) {
+        this.tracks.forEach((trackObj) => {
+          trackObj.refreshWaveform();
+        });
+
         if (this.rotateInterval !== null) {
           clearInterval(this.rotateInterval);
           this.rotateInterval = null;
@@ -55,10 +59,6 @@ export default class {
         if (this.timeInterval !== null) {
           clearInterval(this.timeInterval);
           this.timeInterval = null;
-
-          this.tracks.forEach((trackObj) => {
-            trackObj.refreshWaveform();
-          });
         }
 
         let restarted = false;

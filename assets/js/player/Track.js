@@ -1,6 +1,7 @@
 /* eslint-env browser */
 
-import Waveform from './Waveform';
+// import Waveform from './Waveform';
+import Timeline from './Timeline';
 import * as playerState from '../config/state';
 
 // const drawBuffer = require('draw-wave');
@@ -43,6 +44,7 @@ export default class {
     }
 
     this.active = active;
+    this.refreshWaveform();
   }
 
   getDuration() {
@@ -192,10 +194,9 @@ export default class {
       // return;
     }
 
-    this.lastPixel = currentPixel !== null ? currentPixel : this.lastPixel || 0;
+    this.lastPixel = currentPixel !== null ? Math.round(currentPixel) : this.lastPixel || 0;
 
     this.waveform.draw(this.lastPixel, this.active);
-    // drawBuffer.canvas(canvasElem, trackObj.buffer, 'white');
   }
 
   createCanvas(canvasParentElem) {
@@ -207,6 +208,8 @@ export default class {
     canvasElem.width = canvasParentElem.offsetWidth;
     canvasElem.height = canvasParentElem.offsetHeight;
     canvasElem.className = 'waveform-canvas cursor-link';
+
+    // drawBuffer.canvas(canvasElem, this.buffer, '#383838');
 
     canvasElem.addEventListener('click', (e) => {
       const rect = e.target.getBoundingClientRect();
@@ -224,6 +227,7 @@ export default class {
     const trackWidthPercent = this.tracksMaxDuration === this.getDuration()
       ? '100' : (this.getDuration() * 100) / this.tracksMaxDuration;
 
-    this.waveform = new Waveform(canvasElem, this.buffer, trackWidthPercent);
+    // this.waveform = new Waveform(canvasElem, this.buffer, trackWidthPercent);
+    this.waveform = new Timeline(canvasElem, this.buffer, trackWidthPercent);
   }
 }
