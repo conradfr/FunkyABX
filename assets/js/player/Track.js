@@ -7,7 +7,7 @@ import * as playerState from '../config/state';
 // const drawBuffer = require('draw-wave');
 
 export default class {
-  constructor(src, buffer, ac, ee, initialState) {
+  constructor(src, drawWaveform, buffer, ac, ee, initialState) {
     this.src = src;
     this.buffer = buffer;
     this.ac = ac;
@@ -26,6 +26,7 @@ export default class {
     this.tracksMaxDuration = null;
     this.sourceCtrl = null;
     this.waveform = null;
+    this.drawWaveformUnder = drawWaveform;
 
     this.playerState = initialState;
 
@@ -227,6 +228,6 @@ export default class {
       ? '100' : (this.getDuration() * 100) / this.tracksMaxDuration;
 
     // this.waveform = new Waveform(canvasElem, this.buffer, trackWidthPercent);
-    this.waveform = new Timeline(canvasElem, this.buffer, trackWidthPercent);
+    this.waveform = new Timeline(canvasElem, this.drawWaveformUnder, this.buffer, trackWidthPercent);
   }
 }

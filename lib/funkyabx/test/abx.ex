@@ -49,7 +49,8 @@ defmodule FunkyABX.Tests.Abx do
   @impl true
   def get_test_params(_test) do
     %{
-      has_choices: true
+      has_choices: true,
+      draw_waveform: false
     }
   end
 

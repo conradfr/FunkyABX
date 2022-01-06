@@ -132,6 +132,7 @@ Hooks.Player = {
       parseInt(this.el.dataset.rotateSeconds, 10) * 1000,
       this.el.dataset.rotate === 'true',
       this.el.dataset.loop === 'true',
+      this.el.dataset.waveform === 'true',
       ee
     );
 

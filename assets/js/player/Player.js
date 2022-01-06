@@ -5,7 +5,7 @@ import Track from './Track';
 import * as playerState from '../config/state';
 
 export default class {
-  constructor(tracks, rotateSeconds, rotate, loop, ee) {
+  constructor(tracks, rotateSeconds, rotate, loop, drawWaveform, ee) {
     this.ee = ee;
 
     this.rotateInterval = null;
@@ -29,6 +29,7 @@ export default class {
     this.rotateSeconds = rotateSeconds;
     this.rotate = rotate;
     this.loop = loop;
+    this.drawWaveform = drawWaveform;
 
     const trackList = this.tracks;
 
@@ -98,7 +99,7 @@ export default class {
         this.ee.emit('push_event', { event: 'tracksLoaded', data: {} });
 
         this.tracks = audioBuffers.map((audioBuffer, index) => {
-          return new Track(trackList[index], audioBuffer, this.ac, this.ee, this.state);
+          return new Track(trackList[index], this.drawWaveform, audioBuffer, this.ac, this.ee, this.state);
         });
 
         // const durations = this.tracks.map((trackObj) => trackObj.getDuration());

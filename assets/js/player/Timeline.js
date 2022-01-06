@@ -1,36 +1,40 @@
 /* eslint-env browser */
 
 export default class {
-  constructor(canvas, buffer, trackWidthPercent) {
+  constructor(canvas, drawWaveformUnder, buffer, trackWidthPercent) {
     this.canvas = canvas;
     this.buffer = buffer;
     this.trackWidthPercent = trackWidthPercent;
+    this.drawWaveformUnder = drawWaveformUnder;
+
+    this.width = Math.round((trackWidthPercent * canvas.width) / 100);
+    this.audioData = buffer.getChannelData(0);
 
     // Waveform
-    this.canvasWaveform = document.createElement('canvas');
-    this.canvasWaveform.width = this.canvas.width;
-    this.canvasWaveform.height = this.canvas.height;
+    if (this.drawWaveformUnder === true) {
+      this.canvasWaveform = document.createElement('canvas');
+      this.canvasWaveform.width = this.canvas.width;
+      this.canvasWaveform.height = this.canvas.height;
 
-    this.barWidth = 2;
-    this.barSpace = 1;
-    this.color = '#353535';
-    this.colorActive = '#0e778c';
-    this.colorPast = '#333333';
-    this.colorPastActive = '#0c758a';
+      this.barWidth = 2;
+      this.barSpace = 1;
+      this.color = '#353535';
+      this.colorActive = '#0e778c';
+      this.colorPast = '#333333';
+      this.colorPastActive = '#0c758a';
+
+      this.amp = canvas.height / 2;
+      this.nbOfBars = Math.round(this.width / (this.barWidth + this.barSpace));
+
+      this.nbPointsPerBar = Math.round(this.audioData.length / this.nbOfBars);
+      // we calculate bars coordinates only once
+      this.pixelData = this.generateData();
+    }
 
     // Timeline
     this.tlColor = 'white';
     this.tlColorPast = '#888';
     this.tlColorPastActive = '#40A8BDFF';
-
-    this.width = Math.round((trackWidthPercent * canvas.width) / 100);
-    this.amp = canvas.height / 2;
-    this.nbOfBars = Math.round(this.width / (this.barWidth + this.barSpace));
-
-    this.audioData = buffer.getChannelData(0);
-    this.nbPointsPerBar = Math.round(this.audioData.length / this.nbOfBars);
-    // we calculate bars coordinates only once
-    this.pixelData = this.generateData();
 
     this.seconds = Math.round(this.audioData.length / buffer.sampleRate);
     this.nbPixelsPerSecond = Math.round(this.width / this.seconds);
@@ -41,11 +45,14 @@ export default class {
   }
 
   draw(currentPixel, active) {
-    const ctxWaveform = this.canvasWaveform.getContext('2d');
     const ctx = this.canvas.getContext('2d');
 
-    this.drawWaveform(currentPixel, active, ctxWaveform);
-    ctx.drawImage(this.canvasWaveform, 0, 0);
+    if (this.drawWaveformUnder === true) {
+      const ctxWaveform = this.canvasWaveform.getContext('2d');
+      this.drawWaveform(currentPixel, active, ctxWaveform);
+      ctx.drawImage(this.canvasWaveform, 0, 0);
+
+    }
 
     ctx.clearRect(
       0,
@@ -54,7 +61,10 @@ export default class {
       this.canvas.height
     );
 
-    ctx.drawImage(this.canvasWaveform, 0, 0);
+    if (this.drawWaveformUnder === true) {
+      ctx.drawImage(this.canvasWaveform, 0, 0);
+    }
+
     this.drawTimeline(currentPixel, active, ctx);
     this.isActive = active;
   }

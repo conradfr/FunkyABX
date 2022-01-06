@@ -30,6 +30,7 @@ defmodule FunkyABX.Ranks do
     # Can't make a sql query that avoids duplicate track or rank so we clean the data here instead
     query
     |> Repo.all()
+    |> IO.inspect()
     |> Enum.reduce([], fn r, acc ->
       with true <-
              already_has_rank?(r.rank, acc) or

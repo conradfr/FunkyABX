@@ -25,7 +25,8 @@ defmodule FunkyABX.Tests.Listening do
   @impl true
   def get_test_params(_test) do
     %{
-      has_choices: false
+      has_choices: false,
+      draw_waveform: true
     }
   end
 

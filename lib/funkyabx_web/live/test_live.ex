@@ -39,7 +39,8 @@ defmodule FunkyABXWeb.TestLive do
         data-tracks={Tracks.to_json(@tracks, @test)}
         data-rotate-seconds={@rotate_seconds}
         data-rotate={to_string(@rotate)}
-        data-loop={to_string(@loop)}>
+        data-loop={to_string(@loop)}
+        data-waveform={to_string(@test_params.draw_waveform)}>
         <div class="p-2 me-auto d-flex align-items-center">
           <button type="button" phx-click={JS.dispatch("back", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
             <i class="bi bi-skip-start-fill"></i>
