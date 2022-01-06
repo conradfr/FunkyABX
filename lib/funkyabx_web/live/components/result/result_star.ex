@@ -93,9 +93,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
      socket
      |> assign(assigns)
      |> assign_new(:stars, fn -> Stars.get_stars(assigns.test) end)
-     |> assign_new(:star_detail, fn ->
-        false
-    end)}
+     |> assign_new(:star_detail, fn -> false end)}
   end
 
   @impl true
