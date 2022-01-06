@@ -16,6 +16,11 @@ defmodule FunkyABX.Stars do
         group_by: [t.id, s.track_id],
         order_by: [
           desc: fragment("rank_decimal"),
+          desc: fragment("total_star_5"),
+          desc: fragment("total_star_4"),
+          desc: fragment("total_star_3"),
+          desc: fragment("total_star_2"),
+          desc: fragment("total_star_1"),
           asc: t.title,
           desc: s.track_id
         ],
@@ -26,7 +31,13 @@ defmodule FunkyABX.Stars do
             fragment("ROUND((SUM(? * ?)::decimal / SUM(?)))::integer", s.star, s.count, s.count),
           rank_decimal:
             fragment("(SUM(? * ?)::decimal / SUM(?)) as rank_decimal", s.star, s.count, s.count),
-          total_star: fragment("SUM(?)", s.count)
+          total_star: fragment("SUM(?)", s.count),
+          # todo do better
+          total_star_5: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_5", s.star, 5, s.count),
+          total_star_4: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_4", s.star, 4, s.count),
+          total_star_3: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_3", s.star, 3, s.count),
+          total_star_2: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_2", s.star, 2, s.count),
+          total_star_1: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_1", s.star, 1, s.count)
         }
 
     query
