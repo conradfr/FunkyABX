@@ -9,10 +9,6 @@ config :pbkdf2_elixir, :rounds, 1
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :funkyabx, FunkyABX.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "funkyabx_test#{System.get_env("MIX_TEST_PARTITION")}",
-  hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
@@ -31,3 +27,5 @@ config :logger, level: :warn
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+import_config "test.secret.exs"

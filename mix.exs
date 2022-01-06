@@ -67,7 +67,8 @@ defmodule FunkyABX.MixProject do
       {:ex_cldr_dates_times, "~> 2.0"},
       {:httpoison, "~> 1.8"},
       {:remote_ip, "~> 1.0"},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 

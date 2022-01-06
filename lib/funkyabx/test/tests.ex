@@ -116,7 +116,7 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:get_how_many_taken, [test])
   end
 
-  # ---------- TAKEN ----------
+  # ---------- UTILS ----------
 
   def assign_new(choices, round, key, default \\ %{}) do
     case is_map_key(choices, round) do

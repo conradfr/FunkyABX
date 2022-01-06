@@ -163,7 +163,6 @@ defmodule FunkyABX.Test do
       :regular -> put_change(changeset, :anonymized_track_title, true)
       :listening -> put_change(changeset, :anonymized_track_title, false)
       :abx -> changeset
-              |> IO.inspect()
     end
   end
 
