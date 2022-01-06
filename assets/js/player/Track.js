@@ -212,8 +212,7 @@ export default class {
     // drawBuffer.canvas(canvasElem, this.buffer, '#383838');
 
     canvasElem.addEventListener('click', (e) => {
-      const rect = e.target.getBoundingClientRect();
-      const time = Math.floor(((e.layerX - rect.left) * this.tracksMaxDuration) / e.target.width);
+      const time = Math.floor(((e.clientX - e.target.getBoundingClientRect().x) * this.tracksMaxDuration) / e.target.width);
       this.ee.emit('waveform-click', { track_hash: e.target.dataset.hash, time });
     });
 

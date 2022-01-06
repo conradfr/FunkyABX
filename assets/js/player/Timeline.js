@@ -182,7 +182,7 @@ export default class {
     for(let i = 0; i <= this.seconds; i += 5) {
       // FizzBuzz!
       if (i % 30 === 0) {
-        y = 5;
+        y = 7;
       } else if (i % 15 === 0) {
         y = 14;
       } else if (i % 5 === 0) {
@@ -196,9 +196,9 @@ export default class {
 
       ctx.fillStyle = barColor;
 
-      if (y === 5) {
+      if (y === 7) {
         ctx.font = '10px serif';
-        ctx.fillText(this.formatTime(i), i * this.nbPixelsPerSecond + 7, 10);
+        ctx.fillText(this.formatTime(i), i * this.nbPixelsPerSecond + 7, 8);
       } /*else if (y === 15) {
         ctx.font = '9px serif';
         ctx.fillText(this.formatTime(i), i * this.nbPixelsPerSecond - 4, 40);
