@@ -1,6 +1,7 @@
 defmodule FunkyABX.Test do
   import Ecto.Changeset
   use Ecto.Schema
+  alias Ecto.UUID
   alias FunkyABX.Accounts.User
   alias FunkyABX.Test.TitleSlug
   alias FunkyABX.Track
@@ -109,6 +110,7 @@ defmodule FunkyABX.Test do
   def changeset_delete(test, _attrs \\ %{}) do
     test
     |> cast(%{"deleted_at" => NaiveDateTime.utc_now()}, [:deleted_at])
+    |> reclaim_slug_when_test_private()
   end
 
   def changeset_to_user(test, attrs \\ %{}) do
@@ -119,7 +121,17 @@ defmodule FunkyABX.Test do
     |> put_assoc(:user, attrs["user"])
   end
 
-  def ensure_regular_type(changeset) do
+  defp reclaim_slug_when_test_private(changeset) do
+    public = get_field(changeset, :public)
+    slug = get_field(changeset, :slug)
+
+    case public do
+      true -> changeset
+      false -> put_change(changeset, :slug, slug <> "_" <> UUID.generate())
+    end
+  end
+
+  defp ensure_regular_type(changeset) do
     rating = get_field(changeset, :rating)
 
     case rating do
