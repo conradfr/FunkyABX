@@ -27,11 +27,11 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
           </div>
         <% end %>
 
-        <div class="tracks my-2 mb-4 track-results results">
+        <div class="tracks my-2 mb-1 track-results results">
           <%= if Kernel.length(@abx) == 0 do %>
             <div class="alert alert-info alert-thin">No test taken ... yet!</div>
           <% end %>
-          <%= for {%{correct: guess, count: count}, i} <- @abx |> Enum.with_index(1) do %>
+          <%= for {%{correct: guess, count: count, probability: probability}, i} <- @abx |> Enum.with_index(1) do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
               <div class="p-3">
                 <%= if (guess < 4) do %>
@@ -49,12 +49,20 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
                   <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>Your score!</small></div>
                 <% end %>
               </div>
+              <%= if Kernel.length(@test.tracks) == 2 do %>
+                <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted"><small>Confidence that this result is better than chance: <%= probability %>%</small></div>
+                </div>
+              <% end %>
               <div class="p-3 ps-0 text-end">
                 <%= count %> times
               </div>
             </div>
           <% end %>
         </div>
+        <%= if Kernel.length(@test.tracks) == 2 do %>
+          <div class="text-muted"><small><i class="bi bi-info-circle"></i>&nbsp;&nbsp;A 95% confidence level is commonly considered statistically significant (<a href="https://en.wikipedia.org/wiki/ABX_test#Confidence" class="text-muted">source</a>).</small></div>
+        <% end %>
       </div>
     """
   end

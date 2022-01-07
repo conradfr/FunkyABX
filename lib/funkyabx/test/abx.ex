@@ -8,6 +8,8 @@ defmodule FunkyABX.Tests.Abx do
 
   @behaviour FunkyABX.Tests.Type
 
+  @p_value 0.5
+
   # ---------- GET ----------
 
   def get_abx(test) do
@@ -25,8 +27,28 @@ defmodule FunkyABX.Tests.Abx do
           count: a.count
         }
 
-    query
-    |> Repo.all()
+    result =
+      query
+      |> Repo.all()
+
+    # I have no idea what I'm doing and why I have to reverse this list to get the correct value
+
+    values_inverse =
+      result
+      |> Enum.map(fn a -> Statistics.Distributions.Binomial.cdf(test.nb_of_rounds, @p_value).(a.correct) end)
+      |> Enum.reverse()
+
+    # Add ABX Binomial Probability
+    result
+    |> Enum.with_index()
+    |> Enum.map(fn {a, k} ->
+      probability =
+        values_inverse
+        |> Enum.at(k)
+        |> format_probability()
+
+      Map.put(a, :probability, probability)
+    end)
   end
 
   # ---------- TEST MODULES ----------
@@ -133,4 +155,16 @@ defmodule FunkyABX.Tests.Abx do
     })
     |> Repo.insert()
   end
+
+  # ---------- UTILS ----------
+
+  defp format_probability(probability) do
+    probability_percent = (1 - probability) * 100
+
+    :io_lib.format("~.2f", [probability_percent])
+    |> IO.iodata_to_binary()
+  end
+
 end
+
+
