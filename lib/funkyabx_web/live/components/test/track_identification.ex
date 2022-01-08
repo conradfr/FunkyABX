@@ -1,6 +1,5 @@
 defmodule FunkyABXWeb.TestTrackIdentificationComponent do
   use FunkyABXWeb, :live_component
-  alias FunkyABXWeb.TestLive
   alias FunkyABX.Tests
   alias FunkyABX.Tracks
 

@@ -15,14 +15,14 @@ defmodule FunkyABX.Test.TitleSlugTest do
 
   describe "test slug" do
     test "return the slug with no incremented number" do
-      with_mock Repo, [one: fn(_query) -> 0 end] do
+      with_mock Repo, one: fn _query -> 0 end do
         test = Test.changeset(%Test{}, @valid_attrs)
         assert test.changes.slug == "the-title"
       end
     end
 
     test "return the slug with incremented number" do
-      with_mock Repo, [one: fn(_query) -> 2 end] do
+      with_mock Repo, one: fn _query -> 2 end do
         test = Test.changeset(%Test{}, @valid_attrs)
         assert test.changes.slug == "the-title-3"
       end

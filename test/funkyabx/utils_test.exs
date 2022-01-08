@@ -9,7 +9,7 @@ defmodule FunkyABX.UtilsTest do
     end
 
     test "get local ip" do
-      assert Utils.get_ip_as_binary({192,168,0,1}) == "192.168.0.1"
+      assert Utils.get_ip_as_binary({192, 168, 0, 1}) == "192.168.0.1"
     end
   end
 end

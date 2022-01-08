@@ -33,11 +33,16 @@ defmodule FunkyABX.Stars do
             fragment("(SUM(? * ?)::decimal / SUM(?)) as rank_decimal", s.star, s.count, s.count),
           total_star: fragment("SUM(?)", s.count),
           # todo do better
-          total_star_5: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_5", s.star, 5, s.count),
-          total_star_4: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_4", s.star, 4, s.count),
-          total_star_3: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_3", s.star, 3, s.count),
-          total_star_2: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_2", s.star, 2, s.count),
-          total_star_1: fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_1", s.star, 1, s.count)
+          total_star_5:
+            fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_5", s.star, 5, s.count),
+          total_star_4:
+            fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_4", s.star, 4, s.count),
+          total_star_3:
+            fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_3", s.star, 3, s.count),
+          total_star_2:
+            fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_2", s.star, 2, s.count),
+          total_star_1:
+            fragment("SUM(CASE WHEN ? = ? THEN ? ELSE 0 END) as total_star_1", s.star, 1, s.count)
         }
 
     query

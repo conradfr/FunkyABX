@@ -35,7 +35,9 @@ defmodule FunkyABX.Tests.Abx do
 
     values_inverse =
       result
-      |> Enum.map(fn a -> Statistics.Distributions.Binomial.cdf(test.nb_of_rounds, @p_value).(a.correct) end)
+      |> Enum.map(fn a ->
+        Statistics.Distributions.Binomial.cdf(test.nb_of_rounds, @p_value).(a.correct)
+      end)
       |> Enum.reverse()
 
     # Add ABX Binomial Probability
@@ -164,7 +166,4 @@ defmodule FunkyABX.Tests.Abx do
     :io_lib.format("~.2f", [probability_percent])
     |> IO.iodata_to_binary()
   end
-
 end
-
-

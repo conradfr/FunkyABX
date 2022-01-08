@@ -9,13 +9,13 @@
           <div class="px-3 flex-grow-1 text-truncate" style="width: 250px"><%= link test.title, to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, test.slug) %></div>
           <div class="d-flex text-end navbar-tests-actions">
             <%= if @current_user do %>
-              <div class="px-1"><%= link "results", to: Routes.test_results_public_path(@conn, FunkyABXWeb.TestResultsLive, test.slug) %></div>
-              <div class="text-muted"> | </div>
               <div class="px-1"><%= link "edit", to: Routes.test_edit_path(@conn, FunkyABXWeb.TestFormLive, test.slug) %></div>
-            <% else %>
-              <div class="px-1"><%= link "results", to: Routes.test_results_private_path(@conn, FunkyABXWeb.TestResultsLive, test.slug, test.password) %></div>
               <div class="text-muted"> | </div>
+              <div class="px-1"><%= link "results", to: Routes.test_results_public_path(@conn, FunkyABXWeb.TestResultsLive, test.slug) %></div>
+            <% else %>
               <div class="px-1"><%= link "edit", to: Routes.test_edit_private_path(@conn, FunkyABXWeb.TestFormLive, test.slug, test.password) %></div>
+              <div class="text-muted"> | </div>
+              <div class="px-1"><%= link "results", to: Routes.test_results_private_path(@conn, FunkyABXWeb.TestResultsLive, test.slug, test.password) %></div>
             <% end %>
           </div>
         </div>

@@ -5,7 +5,8 @@ defmodule FunkyABX.FilesTest do
 
   describe "test get_destination_filename" do
     test "destination has the correct ext mp3" do
-      assert Files.get_destination_filename("led_zeppelin.mp3") |> String.ends_with?(".mp3") === true
+      assert Files.get_destination_filename("led_zeppelin.mp3") |> String.ends_with?(".mp3") ===
+               true
     end
 
     test "destination has the correct ext flac" do
