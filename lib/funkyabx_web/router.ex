@@ -26,6 +26,10 @@ defmodule FunkyABXWeb.Router do
     plug FunkyABXWeb.Plugs.TestTaken
   end
 
+  pipeline :form do
+    plug FunkyABXWeb.Plugs.TestParams
+  end
+
   scope "/", FunkyABXWeb do
     pipe_through [:browser, :test]
 
@@ -33,16 +37,20 @@ defmodule FunkyABXWeb.Router do
     live "/results/:slug", TestResultsLive, as: :test_results_public
   end
 
+
   scope "/", FunkyABXWeb do
     pipe_through :browser
 
     get "/", PageController, :index
     live "/info", FlashLive, as: :info
     live "/gallery", GalleryLive, as: :gallery
-    live "/edit/:slug/:key", TestFormLive, as: :test_edit_private
-    #    live "/test/:slug", TestLive, as: :test_public
     live "/results/:slug/:key", TestResultsLive, as: :test_results_private
-    #    live "/results/:slug", TestResultsLive, as: :test_results_public
+  end
+
+  scope "/", FunkyABXWeb do
+    pipe_through [:browser, :form]
+
+    live "/edit/:slug/:key", TestFormLive, as: :test_edit_private
     live "/test", TestFormLive, as: :test_new
   end
 

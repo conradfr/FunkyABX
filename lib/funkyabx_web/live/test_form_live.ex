@@ -382,6 +382,7 @@ defmodule FunkyABXWeb.TestFormLive do
       end
 
     password = if user == nil, do: UUID.generate(), else: nil
+    name = Map.get(session, "author")
 
     test = %Test{
       id: UUID.generate(),
@@ -390,6 +391,7 @@ defmodule FunkyABXWeb.TestFormLive do
       regular_type: :pick,
       ranking_only_extremities: false,
       identification: false,
+      author: name,
       password: password,
       description_markdown: false,
       tracks: [],
