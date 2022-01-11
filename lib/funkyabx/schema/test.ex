@@ -21,6 +21,8 @@ defmodule FunkyABX.Test do
     field(:description_markdown, :boolean)
     field(:slug, TitleSlug.Type)
     field(:public, :boolean)
+    field(:access_key, :string)
+    field(:user_password, :string, virtual: true)
     field(:password, :string)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
     field(:regular_type, Ecto.Enum, values: [rank: 1, pick: 2, star: 3])
@@ -50,6 +52,7 @@ defmodule FunkyABX.Test do
       :description,
       :description_markdown,
       :public,
+      :access_key,
       :password,
       :type,
       :nb_of_rounds,
@@ -64,6 +67,7 @@ defmodule FunkyABX.Test do
     |> cast_assoc(:user)
     |> validate_general_type()
     |> ensure_regular_type()
+    |> ensure_not_public_when_password()
     |> validate_ranking_extremities()
     |> validate_nb_rounds()
     |> validate_anonymized()
@@ -84,6 +88,7 @@ defmodule FunkyABX.Test do
       :description,
       :description_markdown,
       :public,
+      :access_key,
       :password,
       :type,
       :nb_of_rounds,
@@ -97,6 +102,7 @@ defmodule FunkyABX.Test do
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> validate_general_type()
     |> ensure_regular_type()
+    |> ensure_not_public_when_password()
     |> validate_ranking_extremities()
     |> validate_nb_rounds()
     |> validate_anonymized()
@@ -116,7 +122,7 @@ defmodule FunkyABX.Test do
   def changeset_to_user(test, attrs \\ %{}) do
     test
     |> cast(attrs, [
-      :password
+      :access_key
     ])
     |> put_assoc(:user, attrs["user"])
   end
@@ -137,6 +143,19 @@ defmodule FunkyABX.Test do
     case rating do
       false -> put_change(changeset, :regular_type, nil)
       _ -> changeset
+    end
+  end
+
+  defp ensure_not_public_when_password(changeset) do
+    password =
+      case get_field(changeset, :password) do
+        nil -> nil
+        value -> String.trim(value)
+      end
+
+    case password do
+      nil -> changeset
+      _ -> put_change(changeset, :public, false)
     end
   end
 

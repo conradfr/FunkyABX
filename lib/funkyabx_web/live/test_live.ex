@@ -20,10 +20,8 @@ defmodule FunkyABXWeb.TestLive do
             <h6 class="header-typographica">By <%= @test.author %></h6>
           <% end %>
         </div>
-        <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <%= unless @test_params.has_choices == true do %>
+        <div class="col-sm-6 text-start text-sm-end pt-1">
             <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
-          <% end %>
           <.live_component module={TestFlagComponent} id="flag" test={@test} />
         </div>
       </div>

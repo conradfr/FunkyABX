@@ -36,24 +36,13 @@ defmodule FunkyABXWeb.TestResultsLive do
     """
   end
 
-  # Password given by query string / url
   @impl true
-  def mount(%{"slug" => slug, "key" => key} = params, %{}, socket) do
-    test = Tests.get_by_slug(slug)
-    # will throw an error if password is incorrect
-    true = test.password == key
-
-    params
-    |> Map.delete("key")
-    |> mount(%{}, socket)
-  end
-
-  @impl true
-  def mount(%{"slug" => slug} = _params, session, socket) do
+  def mount(%{"slug" => slug} = params, session, socket) do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
          true <-
            Map.get(session, "test_taken_" <> slug, false) or
-             (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) do
+             ((Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) or
+                (Map.get(params, "key") != nil and Map.get(params, "key") == test.access_key)) do
       result_modules = Tests.get_result_modules(test)
 
       FunkyABXWeb.Endpoint.subscribe(test.id)

@@ -246,16 +246,16 @@ Hooks.TestForm = {
       }
 
       // test if from a logged user
-      if (params.test_password === undefined || params.test_password === null) {
+      if (params.test_access_key === undefined || params.test_access_key === null) {
         return;
       }
 
-      cookies.set(`test_${params.test_id}`, params.test_password);
+      cookies.set(`test_${params.test_id}`, params.test_access_key);
     });
 
     this.handleEvent('deleteTest', (params) => {
       // test if from a logged user
-      if (params.test_password === undefined || params.test_password === null) {
+      if (params.test_access_key === undefined || params.test_access_key === null) {
         return;
       }
 

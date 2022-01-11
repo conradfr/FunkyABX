@@ -53,7 +53,7 @@ defmodule FunkyABXWeb.UserRegistrationController do
     |> Enum.map(fn t ->
       t
       |> Repo.preload(:user)
-      |> Test.changeset_to_user(%{"user" => user, "password" => nil})
+      |> Test.changeset_to_user(%{"user" => user, "access_key" => nil})
       |> Repo.update()
 
       t.id

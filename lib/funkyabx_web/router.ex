@@ -35,8 +35,8 @@ defmodule FunkyABXWeb.Router do
 
     live "/test/:slug", TestLive, as: :test_public
     live "/results/:slug", TestResultsLive, as: :test_results_public
+    live "/results/:slug/:key", TestResultsLive, as: :test_results_private
   end
-
 
   scope "/", FunkyABXWeb do
     pipe_through :browser
@@ -44,7 +44,6 @@ defmodule FunkyABXWeb.Router do
     get "/", PageController, :index
     live "/info", FlashLive, as: :info
     live "/gallery", GalleryLive, as: :gallery
-    live "/results/:slug/:key", TestResultsLive, as: :test_results_private
   end
 
   scope "/", FunkyABXWeb do

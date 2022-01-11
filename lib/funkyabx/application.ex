@@ -8,6 +8,7 @@ defmodule FunkyABX.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      FunkyABX.Cache,
       # Start the Ecto repository
       FunkyABX.Repo,
       # Start the Telemetry supervisor

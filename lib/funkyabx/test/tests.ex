@@ -1,19 +1,28 @@
 defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2]
+  use Nebulex.Caching
+
   alias FunkyABX.Repo
+  alias FunkyABX.Cache
   alias FunkyABX.Test
+  alias FunkyABX.Accounts.User
 
   @min_test_created_minutes 15
 
-  # TODO dynamic module loading w/ behavior
+  @cache_test_ttl :timer.hours(1)
+  @cache_user_ttl :timer.minutes(5)
+  @cache_gallery_ttl :timer.minutes(5)
+  @cache_gallery_key "gallery"
 
   # ---------- GET ----------
 
+  @decorate cacheable(cache: Cache, key: {Test, id}, opts: [ttl: @cache_test_ttl])
   def get(id) when is_binary(id) do
     Repo.get(Test, id)
     |> Repo.preload([:tracks])
   end
 
+  @decorate cacheable(cache: Cache, key: {Test, slug}, opts: [ttl: @cache_test_ttl])
   def get_by_slug(slug) when is_binary(slug) do
     Repo.get_by(Test, slug: slug)
     |> Repo.preload([:tracks])
@@ -24,6 +33,21 @@ defmodule FunkyABX.Tests do
     |> Repo.preload([:tracks])
   end
 
+  # todo also use limit as key
+  @decorate cacheable(cache: Cache, key: "user_test_#{user.id}", opts: [ttl: @cache_user_ttl])
+  def get_of_user(user, limit) do
+    query =
+      from(t in Test,
+        where: t.user_id == ^user.id and is_nil(t.deleted_at),
+        order_by: [desc: t.inserted_at],
+        limit: ^limit,
+        select: t
+      )
+
+    Repo.all(query)
+  end
+
+  @decorate cacheable(cache: Cache, key: @cache_gallery_key, opts: [ttl: @cache_gallery_ttl])
   def get_for_gallery() do
     query =
       from t in Test,
@@ -34,6 +58,21 @@ defmodule FunkyABX.Tests do
         select: t
 
     Repo.all(query)
+  end
+
+  # ---------- CACHE ----------
+
+  def clean_get_test_cache(%Test{} = test) do
+    Cache.delete({Test, test.id})
+    Cache.delete({Test, test.slug})
+
+    if test.public == true do
+      Cache.delete(@cache_gallery_key)
+    end
+  end
+
+  def clean_get_user_cache(%User{} = user) do
+    Cache.delete("user_test_#{user.id}")
   end
 
   # ---------- BUILD ----------
@@ -62,6 +101,13 @@ defmodule FunkyABX.Tests do
     |> String.capitalize()
     |> (&"Elixir.FunkyABX.Tests.#{&1}").()
     |> String.to_atom()
+  end
+
+  # ---------- PASSWORD ----------
+
+  def valid_password?(%Test{password: hashed_password}, password)
+      when is_binary(hashed_password) and byte_size(password) > 0 do
+    Pbkdf2.verify_pass(password, hashed_password)
   end
 
   # ---------- PARAMS ----------

@@ -13,9 +13,9 @@
               <div class="text-muted"> | </div>
               <div class="px-1"><%= link "results", to: Routes.test_results_public_path(@conn, FunkyABXWeb.TestResultsLive, test.slug) %></div>
             <% else %>
-              <div class="px-1"><%= link "edit", to: Routes.test_edit_private_path(@conn, FunkyABXWeb.TestFormLive, test.slug, test.password) %></div>
+              <div class="px-1"><%= link "edit", to: Routes.test_edit_private_path(@conn, FunkyABXWeb.TestFormLive, test.slug, test.access_key) %></div>
               <div class="text-muted"> | </div>
-              <div class="px-1"><%= link "results", to: Routes.test_results_private_path(@conn, FunkyABXWeb.TestResultsLive, test.slug, test.password) %></div>
+              <div class="px-1"><%= link "results", to: Routes.test_results_private_path(@conn, FunkyABXWeb.TestResultsLive, test.slug, test.access_key) %></div>
             <% end %>
           </div>
         </div>

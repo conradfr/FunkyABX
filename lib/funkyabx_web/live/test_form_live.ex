@@ -20,7 +20,7 @@ defmodule FunkyABXWeb.TestFormLive do
   def render(assigns) do
     ~H"""
       <.form class="mb-2" let={f} for={@changeset} phx-change="validate" phx-submit={@action}>
-        <%= hidden_input(f, :password) %>
+        <%= hidden_input(f, :access_key) %>
         <div class="row">
           <div class="col-md-6 col-sm-12 order-md-1 order-2">
             <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="TestForm">
@@ -150,11 +150,11 @@ defmodule FunkyABXWeb.TestFormLive do
                       </button>
                       <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% else %>
-                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)}>
+                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.access_key)) %>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.access_key)}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.password)}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.access_key)}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% end %>
                   </div>
                 </div>
@@ -169,11 +169,11 @@ defmodule FunkyABXWeb.TestFormLive do
                         </button>
                         <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% else %>
-                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)}>
+                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.access_key)) %>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.access_key)}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.password)}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.access_key)}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% end %>
                     </div>
                   </div>
@@ -224,7 +224,7 @@ defmodule FunkyABXWeb.TestFormLive do
         <fieldset class="form-group mb-3">
           <legend class="mt-1 header-typographica">Visibility</legend>
           <div class="form-unit p-3 pb-1 rounded-3">
-            <div class="row mb-3">
+            <div class="row mb-0">
               <div class="col-12 col-md-6">
                 <div class="form-check">
                   <label class="form-check-label">
@@ -236,6 +236,18 @@ defmodule FunkyABXWeb.TestFormLive do
               </div>
             </div>
           </div>
+          <!--
+          <div class="form-unit p-3 pb-1 rounded-3">
+            <div class="row mb-3">
+              <div class="col-12 col-md-6">
+                <%= label :f, :password, "Password", class: "form-label" %>
+                <%= text_input(f, :password, class: "form-control", placeholder: "Optional") %>
+                <%= error_tag f, :password %>
+                <div class="form-text">The test will require a password to be taken (public tests will be modified as private)</div>
+              </div>
+            </div>
+          </div>
+          -->
         </fieldset>
 
         <fieldset>
@@ -381,7 +393,7 @@ defmodule FunkyABXWeb.TestFormLive do
         token -> Accounts.get_user_by_session_token(token)
       end
 
-    password = if user == nil, do: UUID.generate(), else: nil
+    access_key = if user == nil, do: UUID.generate(), else: nil
     name = Map.get(session, "author")
 
     test = %Test{
@@ -392,7 +404,7 @@ defmodule FunkyABXWeb.TestFormLive do
       ranking_only_extremities: false,
       identification: false,
       author: name,
-      password: password,
+      access_key: access_key,
       description_markdown: false,
       tracks: [],
       normalization: false,
@@ -546,6 +558,7 @@ defmodule FunkyABXWeb.TestFormLive do
       {:ok, test} ->
         Logger.info("Test updated")
 
+        Tests.clean_get_test_cache(socket.assigns.test)
         FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_updated", nil)
 
         # Delete files from removed tracks
@@ -681,13 +694,18 @@ defmodule FunkyABXWeb.TestFormLive do
 
         Logger.info("Test created")
 
+        # Refresh user test list if logged
+        unless test.user == nil do
+          Tests.clean_get_user_cache(test.user)
+        end
+
         {
           :noreply,
           socket
           |> assign(action: "update", test: test, changeset: changeset)
           |> push_event("saveTest", %{
             test_id: test.id,
-            test_password: test.password,
+            test_access_key: test.access_key,
             test_author: test.author
           })
           |> put_flash(:success, flash_text)
@@ -701,13 +719,23 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @impl true
   def handle_event("delete_test", _params, socket) do
-    Files.delete_all(socket.assigns.test.id)
+    test =
+      socket.assigns.test
+      |> Repo.preload(:user)
 
-    socket.assigns.test
+    Files.delete_all(test.id)
+
+    test
     |> Test.changeset_delete()
     |> Repo.update()
 
-    FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_deleted", nil)
+    Tests.clean_get_test_cache(test)
+    # Refresh user test list if logged
+    unless test.user == nil or test.user.id == nil do
+      Tests.clean_get_user_cache(test.user)
+    end
+
+    FunkyABXWeb.Endpoint.broadcast!(test.id, "test_deleted", nil)
 
     flash_text = "Your test has been successfully deleted."
 
@@ -723,8 +751,8 @@ defmodule FunkyABXWeb.TestFormLive do
       :noreply,
       socket
       |> push_event("deleteTest", %{
-        test_id: socket.assigns.test.id,
-        test_password: socket.assigns.test.password
+        test_id: test.id,
+        test_access_key: test.access_key
       })
       |> put_flash(:success, flash_text)
     }
