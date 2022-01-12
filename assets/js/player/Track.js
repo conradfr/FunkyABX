@@ -158,7 +158,18 @@ export default class {
 
   drawWaveform(isRefresh) {
     // We get the canvas to get the dimensions as a canvas needs pixel dimensions
-    let canvasParentElem = document.getElementById(`waveform-${this.src.hash}`);
+
+    // Container is needed to allow multiple round with id/hash changing
+    const canvasContainer = document.getElementById(`waveform-${this.src.hash}`);
+    if (canvasContainer === null) {
+      return;
+    }
+
+    const canvasParentElem = canvasContainer.getElementsByClassName('waveform-wrapper')[0];
+    if (canvasParentElem === null) {
+      return;
+    }
+
     let canvasElem = document.getElementById(`waveform-canvas-${this.src.hash}`);
 
     if (this.waveform === null) {

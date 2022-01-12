@@ -126,31 +126,43 @@ Hooks.Player = {
 
     const ee = new EventEmitter();
 
-    const player = new Player(
-      // init data from the html
-      JSON.parse(this.el.dataset.tracks || '{}'),
-      parseInt(this.el.dataset.rotateSeconds, 10) * 1000,
-      this.el.dataset.rotate === 'true',
-      this.el.dataset.loop === 'true',
-      this.el.dataset.waveform === 'true',
-      ee
-    );
+    const loadPlayer = (tracksJson) => {
+      return new Player(
+        // init data from the html
+        JSON.parse(tracksJson || '{}'),
+        parseInt(this.el.dataset.rotateSeconds, 10) * 1000,
+        this.el.dataset.rotate === 'true',
+        this.el.dataset.loop === 'true',
+        this.el.dataset.waveform === 'true',
+        ee
+      );
+    }
+
+    let player = loadPlayer(this.el.dataset.tracks);
 
     const play = (e) => {
       const { track_hash, start_time} = e.detail;
-      player.play(track_hash, start_time);
+      if (player !== null && player !== undefined) {
+        player.play(track_hash, start_time);
+      }
     };
 
     const stop = () => {
-      player.stop();
+      if (player !== null && player !== undefined) {
+        player.stop();
+      }
     };
 
     const pause = () => {
-      player.pause();
+      if (player !== null && player !== undefined) {
+        player.pause();
+      }
     };
 
     const back = () => {
-      player.back();
+      if (player !== null && player !== undefined) {
+        player.back();
+      }
     };
 
     window.addEventListener('play', play, false);
@@ -159,6 +171,10 @@ Hooks.Player = {
     window.addEventListener('back', back, false);
 
     document.addEventListener('keyup', (event) => {
+      if (player === null || player === undefined) {
+        return;
+      }
+
       const key = event.key
       switch (key) {
         case " ":
@@ -187,17 +203,23 @@ Hooks.Player = {
     });
 
     this.handleEvent('loop', (params) => {
-      player.loop = params.loop === true;
+      if (player !== null && player !== undefined) {
+        player.loop = params.loop === true;
+      }
     });
 
     this.handleEvent('rotate', (params) => {
-      player.rotate = params.rotate === true;
-      player.setRotate();
+      if (player !== null && player !== undefined) {
+        player.rotate = params.rotate === true;
+        player.setRotate();
+      }
     });
 
     this.handleEvent('rotateSeconds', (params) => {
-      player.rotateSeconds = params.seconds * 1000;
-      player.setRotate();
+      if (player !== null && player !== undefined) {
+        player.rotateSeconds = params.seconds * 1000;
+        player.setRotate();
+      }
     });
 
     // push events from other components
@@ -205,6 +227,21 @@ Hooks.Player = {
       const {event, data} = params;
       this.pushEvent(event, data);
     });
+
+    /* todo clean */
+    this.handleEvent('update_tracks', (params) => {
+      stop();
+      this.pushEvent('stopping');
+      player = null;
+
+      ee.removeAllListeners('waveform-click');
+      ee.removeAllListeners('playing');
+      ee.removeAllListeners('stopping');
+      ee.removeAllListeners('player_state');
+
+      player = loadPlayer(params.tracks);
+    });
+
 
     this.handleEvent('tracks_loaded', () => {
       const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))

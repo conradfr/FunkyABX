@@ -129,8 +129,8 @@ defmodule FunkyABXWeb.TestLive do
                   Track <%= i %>
                 </div>
               <% end %>
-            <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px">
-              <div phx-update="ignore" id={"waveform-#{Tracks.get_track_hash(track)}"} class="waveform-wrapper">
+            <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px" id={"waveform-#{Tracks.get_track_hash(track)}"}>
+              <div phx-update="ignore" class="waveform-wrapper">
               </div>
             </div>
 
@@ -382,7 +382,15 @@ defmodule FunkyABXWeb.TestLive do
     with test <- socket.assigns.test,
          choices <- socket.assigns.choices_taken,
          true <- Tests.is_valid?(test, current_round, choices) do
-      {:noreply, assign(socket, current_round: current_round + 1, valid: false)}
+      tracks =
+        test.tracks
+        |> Tracks.prep_tracks(test)
+        |> Tests.prep_tracks(test)
+
+      {:noreply,
+        socket
+        |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
+        |> assign(current_round: current_round + 1, tracks: tracks, valid: false, current_track: nil, tracks_loaded: false)}
     else
       _ -> {:noreply, socket}
     end
