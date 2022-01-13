@@ -22,7 +22,7 @@ config :funkyabx, FunkyABXWeb.Endpoint,
 
 config :mime, :types, %{
   #  "audio/ogg" => ["ogg"]
- "audio/flac" => ["flac"]
+  "audio/flac" => ["flac"]
 }
 
 # Configures the mailer

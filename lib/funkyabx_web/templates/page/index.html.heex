@@ -11,9 +11,10 @@
       <p class="fs-4 header-chemyretro align-self-end text-end flex-grow-1">... Groovy blind tests !</p>
     </div>
     <p class="lead mb-4">Get people to rank and identify your favorite compressors, saturation plugins, instruments ... or even whole mixes!</p>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-      <%= link "Create a test", to: Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive), class: "btn btn-info btn-lg px-4 me-md-2" %>
-      <%= link "Take the demo test", to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, "demo"), class: "btn btn-secondary btn-lg px-4 me-md-2" %>
+    <div><%= link "Create a test", to: Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive), class: "btn btn-info btn-lg px-4 me-md-2" %></div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-3">
+      <%= link "Take the rating demo test", to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, "demo"), class: "btn btn-secondary btn-lg px-4 me-md-2" %>
+      <%= link "Take the ABX demo test", to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, "abx-demo"), class: "btn btn-secondary btn-lg px-4 me-md-2" %>
     </div>
     <p class="mt-5 text-center header-texgyreadventor text-muted">
       <small><%= get_tests_total() %> tests created so far...</small>

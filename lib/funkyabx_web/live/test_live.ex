@@ -388,9 +388,15 @@ defmodule FunkyABXWeb.TestLive do
         |> Tests.prep_tracks(test)
 
       {:noreply,
-        socket
-        |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
-        |> assign(current_round: current_round + 1, tracks: tracks, valid: false, current_track: nil, tracks_loaded: false)}
+       socket
+       |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
+       |> assign(
+         current_round: current_round + 1,
+         tracks: tracks,
+         valid: false,
+         current_track: nil,
+         tracks_loaded: false
+       )}
     else
       _ -> {:noreply, socket}
     end
