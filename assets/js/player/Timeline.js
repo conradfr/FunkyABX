@@ -18,7 +18,7 @@ export default class {
 
       this.barWidth = 2;
       this.barSpace = 1;
-      this.color = '#353535';
+      this.color = '#383838';
       this.colorActive = '#0e778c';
       this.colorPast = '#333333';
       this.colorPastActive = '#0c758a';

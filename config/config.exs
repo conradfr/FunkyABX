@@ -20,9 +20,10 @@ config :funkyabx, FunkyABXWeb.Endpoint,
   pubsub_server: FunkyABX.PubSub,
   live_view: [signing_salt: "bNwuWfzu"]
 
-# config :mime, :types, %{
-#  "audio/ogg" => ["ogg"]
-# }
+config :mime, :types, %{
+  #  "audio/ogg" => ["ogg"]
+ "audio/flac" => ["flac"]
+}
 
 # Configures the mailer
 #
