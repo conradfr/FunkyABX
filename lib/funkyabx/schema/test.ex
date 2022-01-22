@@ -22,8 +22,10 @@ defmodule FunkyABX.Test do
     field(:slug, TitleSlug.Type)
     field(:public, :boolean)
     field(:access_key, :string)
-    field(:user_password, :string, virtual: true)
+    field(:password_enabled, :boolean)
     field(:password, :string)
+    field(:password_length, :integer)
+    field(:password_input, :string, virtual: true)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
     field(:regular_type, Ecto.Enum, values: [rank: 1, pick: 2, star: 3])
     field(:anonymized_track_title, :boolean)
@@ -36,6 +38,7 @@ defmodule FunkyABX.Test do
     field(:closed_at, :naive_datetime)
     field(:deleted_at, :naive_datetime)
     field(:normalization, :boolean)
+    field(:email_notification, :boolean)
     timestamps()
     belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
@@ -53,6 +56,9 @@ defmodule FunkyABX.Test do
       :description_markdown,
       :public,
       :access_key,
+      :password_enabled,
+      :password_length,
+      :password_input,
       :password,
       :type,
       :nb_of_rounds,
@@ -61,13 +67,15 @@ defmodule FunkyABX.Test do
       :regular_type,
       :ranking_only_extremities,
       :identification,
-      :normalization
+      :normalization,
+      :email_notification
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> cast_assoc(:user)
     |> validate_general_type()
     |> ensure_regular_type()
-    |> ensure_not_public_when_password()
+    |> ensure_not_public_when_password_and_encode()
+    |> ensure_no_notification_when_not_logged()
     |> validate_ranking_extremities()
     |> validate_nb_rounds()
     |> validate_anonymized()
@@ -89,6 +97,9 @@ defmodule FunkyABX.Test do
       :description_markdown,
       :public,
       :access_key,
+      :password_enabled,
+      :password_length,
+      :password_input,
       :password,
       :type,
       :nb_of_rounds,
@@ -97,12 +108,14 @@ defmodule FunkyABX.Test do
       :regular_type,
       :ranking_only_extremities,
       :identification,
-      :normalization
+      :normalization,
+      :email_notification
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> validate_general_type()
     |> ensure_regular_type()
-    |> ensure_not_public_when_password()
+    |> ensure_not_public_when_password_and_encode()
+    |> ensure_no_notification_when_not_logged()
     |> validate_ranking_extremities()
     |> validate_nb_rounds()
     |> validate_anonymized()
@@ -146,16 +159,52 @@ defmodule FunkyABX.Test do
     end
   end
 
-  defp ensure_not_public_when_password(changeset) do
+  defp ensure_not_public_when_password_and_encode(changeset) do
+    changeset
+    |> get_field(:password_enabled)
+    |> password_values(changeset)
+  end
+
+  defp password_values(password_enabled, changeset) when password_enabled == false do
+    changeset
+    |> put_change(:password_enabled, password_enabled)
+    |> put_change(:password_length, nil)
+    |> put_change(:password, nil)
+  end
+
+  defp password_values(password_enabled, changeset) do
+    current_password = get_field(changeset, :password_length)
+
     password =
-      case get_field(changeset, :password) do
-        nil -> nil
-        value -> String.trim(value)
-      end
+      changeset
+      |> get_field(:password_input)
+      |> case do
+          nil -> nil
+          value -> String.trim(value)
+         end
+      |> case do
+          nil -> nil
+          "" -> nil
+          value -> value
+        end
 
     case password do
+      nil when is_nil(current_password) ->
+        add_error(changeset, :password_input, "Password can't be empty")
       nil -> changeset
-      _ -> put_change(changeset, :public, false)
+      value ->
+        changeset
+        |> put_change(:password_length, String.length(value))
+        |> put_change(:password_enabled, password_enabled)
+        |> put_change(:password, Pbkdf2.hash_pwd_salt(value))
+        |> put_change(:public, false)
+    end
+  end
+
+  defp ensure_no_notification_when_not_logged(changeset) do
+    case changeset.data.user_id do
+      nil -> put_change(changeset, :email_notification, false)
+      _ -> changeset
     end
   end
 

@@ -415,6 +415,7 @@ defmodule FunkyABXWeb.TestLive do
       Tests.submit(test, choices_cleaned, socket.assigns.ip_address)
 
       FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
+      FunkyABX.Notifier.Email.test_taken(test, socket)
 
       Process.send_after(
         self(),

@@ -221,34 +221,55 @@ defmodule FunkyABXWeb.TestFormLive do
           </div>
         </fieldset>
 
-        <fieldset class="form-group mb-3">
-          <legend class="mt-1 header-typographica">Visibility</legend>
-          <div class="form-unit p-3 pb-1 rounded-3">
-            <div class="row mb-0">
-              <div class="col-12 col-md-6">
-                <div class="form-check">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 order-md-1 order-2">
+
+            <fieldset class="form-group mb-3">
+              <legend class="mt-1 header-typographica">Options</legend>
+              <div class="form-unit p-3 pb-1 rounded-3">
+                <div class="form-check mb-3">
                   <label class="form-check-label">
                     <%= checkbox(f, :public, class: "form-check-input") %>
                     &nbsp;&nbsp;The test is public
                   </label>
                   <div class="form-text">It will be published in the gallery 15 minutes after its creation</div>
                 </div>
+
+                <div class="form-check mb-3">
+                  <label class="form-check-label">
+                    <%= checkbox(f, :email_notification, class: "form-check-input", disabled: @test.user == nil) %>
+                    &nbsp;&nbsp;Notify me by email when a test is taken
+                  </label>
+                  <%= if @test.user == nil do %>
+                    <div class="form-text">Available only for logged in users</div>
+                  <% end %>
+                </div>
+
+                <div class="form-check mb-2">
+                  <label class="form-check-label">
+                    <%= checkbox(f, :password_enabled, class: "form-check-input") %>
+                    &nbsp;&nbsp;Password protected
+                  </label>
+                  <div class="form-text">The test will require a password to be taken (public tests will be modified as private)</div>
+                </div>
+                <%= hidden_input(f, :password_length) %>
+                <%= if @test.password_enabled == true and @test.password_length != nil do %>
+                  <div class="form-check mt-2 mb-3">
+                    Current:&nbsp;
+                    <%= for star <- 1..@test.password_length do %>
+                      *
+                    <% end %>
+                  </div>
+                <% end %>
+                <div class="form-check mt-2 mb-3">
+                  <%= password_input(f, :password_input, class: "form-control", placeholder: "Enter new password") %>
+                  <%= error_tag f, :password_input %>
+                </div>
               </div>
-            </div>
+
+            </fieldset>
           </div>
-          <!--
-          <div class="form-unit p-3 pb-1 rounded-3">
-            <div class="row mb-3">
-              <div class="col-12 col-md-6">
-                <%= label :f, :password, "Password", class: "form-label" %>
-                <%= text_input(f, :password, class: "form-control", placeholder: "Optional") %>
-                <%= error_tag f, :password %>
-                <div class="form-text">The test will require a password to be taken (public tests will be modified as private)</div>
-              </div>
-            </div>
-          </div>
-          -->
-        </fieldset>
+        </div>
 
         <fieldset>
           <legend class="header-typographica"><span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;Two tracks minimum</span>Tracks</legend>
@@ -353,7 +374,7 @@ defmodule FunkyABXWeb.TestFormLive do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
          nil <- test.deleted_at,
          true <-
-           (params["key"] != nil and params["key"] == test.password) or
+           (params["key"] != nil and params["key"] == test.access_key) or
              Map.get(session, "current_user_id") == test.user_id do
       test_updatable = !Tests.has_tests_taken?(test)
       changeset = Test.changeset_update(test)
@@ -405,12 +426,15 @@ defmodule FunkyABXWeb.TestFormLive do
       identification: false,
       author: name,
       access_key: access_key,
+      password_enabled: false,
+      password_length: nil,
       description_markdown: false,
       tracks: [],
       normalization: false,
       user: user,
       nb_of_rounds: @default_rounds,
       anonymized_track_title: true,
+      email_notification: false,
       ip_address: Map.get(session, "visitor_ip", nil)
     }
 
