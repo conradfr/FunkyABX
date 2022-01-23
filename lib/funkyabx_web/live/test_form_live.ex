@@ -256,7 +256,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <%= if @test.password_enabled == true and @test.password_length != nil do %>
                   <div class="form-check mt-2 mb-3">
                     Current:&nbsp;
-                    <%= for star <- 1..@test.password_length do %>
+                    <%= for _star <- 1..@test.password_length do %>
                       *
                     <% end %>
                   </div>
@@ -355,7 +355,12 @@ defmodule FunkyABXWeb.TestFormLive do
           </div>
         </fieldset>
 
-        <div class="mt-4 mt-md-4 text-center text-md-end">
+        <div class="mt-4 mt-md-4 text-center text-md-end d-flex flex-row justify-content-end align-items-center">
+          <%= if @loading == true do %>
+            <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          <% end %>
           <%= if @action == "save" do %>
             <%= submit("Create test", class: "btn btn-lg btn-primary") %>
           <% else %>
@@ -392,6 +397,7 @@ defmodule FunkyABXWeb.TestFormLive do
        |> assign(%{
          page_title: "Edit test - " <> String.slice(test.title, 0..@title_max_length),
          action: "update",
+         loading: false,
          changeset: changeset,
          test: test,
          view_description: false,
@@ -451,6 +457,7 @@ defmodule FunkyABXWeb.TestFormLive do
      |> assign(%{
        page_title: "Create test",
        action: "save",
+       loading: false,
        changeset: changeset,
        test: test,
        view_description: false,
@@ -485,38 +492,9 @@ defmodule FunkyABXWeb.TestFormLive do
     {:noreply, socket}
   end
 
-  # ---------- MISC EVENTS ----------
+  # ---------- INDIRECT FORM EVENTS ----------
 
-  @impl true
-  def handle_event("clipboard", %{"text" => text}, socket) do
-    {:noreply, push_event(socket, "clipboard", %{text: text})}
-  end
-
-  # ---------- FORM EVENTS ----------
-
-  @impl true
-  def handle_event("validate", %{"test" => test_params, "_target" => target}, socket) do
-    updated_test_params =
-      target
-      |> List.last()
-      |> update_test_params(test_params)
-
-    changeset =
-      socket.assigns.test
-      |> Test.changeset_update(updated_test_params)
-      |> update_action(socket.assigns.action)
-
-    {:noreply,
-     assign(socket,
-       changeset: changeset,
-       description: test_params["description"],
-       description_markdown: test_params["description_markdown"] == "true"
-     )}
-  end
-
-  # Edit
-  @impl true
-  def handle_event("update", %{"test" => test_params}, socket) do
+  def handle_info({"update", %{"test" => test_params}}, socket) do
     updated_tracks =
       test_params["tracks"]
       # uploads
@@ -557,10 +535,10 @@ defmodule FunkyABXWeb.TestFormLive do
           Map.put(acc, k, t)
         end
       end)
-      # url download
+        # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         case Map.has_key?(t, "id") == false and Map.has_key?(t, "filename") == false and
-               Map.has_key?(t, "url") do
+             Map.has_key?(t, "url") do
           true ->
             t
             |> import_track_url(socket.assigns.test)
@@ -617,18 +595,16 @@ defmodule FunkyABXWeb.TestFormLive do
         )
 
         {:noreply,
-         socket
-         |> assign(test: test)
-         |> put_flash(:success, flash_text)}
+          socket
+          |> assign(test: test, laoding: false)
+          |> put_flash(:success, flash_text)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset, tracks_to_delete: [])}
+        {:noreply, assign(socket, loading: false, changeset: changeset, tracks_to_delete: [])}
     end
   end
 
-  # New
-  @impl true
-  def handle_event("save", %{"test" => test_params}, socket) do
+  def handle_info({"save", %{"test" => test_params}}, socket) do
     normalization =
       socket.assigns.test
       |> Test.changeset_update(test_params)
@@ -637,7 +613,7 @@ defmodule FunkyABXWeb.TestFormLive do
     updated_tracks =
       test_params
       |> Map.get("tracks", %{})
-      # uploads
+        # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         upload_consumed =
           consume_uploaded_entries(socket, String.to_atom("track" <> t["temp_id"]), fn %{
@@ -664,7 +640,7 @@ defmodule FunkyABXWeb.TestFormLive do
             Map.put(acc, k, t)
         end
       end)
-      # url download
+        # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         case Map.get(t, "filename") do
           nil ->
@@ -705,8 +681,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
         flash_text =
           "Your test has been successfully created !<br><br>You can now share the <a href=\"" <>
-            Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <>
-            "\">test's public link</a> for people to take it."
+          Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <>
+          "\">test's public link</a> for people to take it."
 
         Process.send_after(
           self(),
@@ -726,7 +702,7 @@ defmodule FunkyABXWeb.TestFormLive do
         {
           :noreply,
           socket
-          |> assign(action: "update", test: test, changeset: changeset)
+          |> assign(action: "update", loading: false, test: test, changeset: changeset)
           |> push_event("saveTest", %{
             test_id: test.id,
             test_access_key: test.access_key,
@@ -737,8 +713,51 @@ defmodule FunkyABXWeb.TestFormLive do
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign(socket, laoding: false, changeset: changeset)}
     end
+  end
+
+  # ---------- MISC EVENTS ----------
+
+  @impl true
+  def handle_event("clipboard", %{"text" => text}, socket) do
+    {:noreply, push_event(socket, "clipboard", %{text: text})}
+  end
+
+  # ---------- FORM EVENTS ----------
+
+  @impl true
+  def handle_event("validate", %{"test" => test_params, "_target" => target}, socket) do
+    updated_test_params =
+      target
+      |> List.last()
+      |> update_test_params(test_params)
+
+    changeset =
+      socket.assigns.test
+      |> Test.changeset_update(updated_test_params)
+      |> update_action(socket.assigns.action)
+
+    {:noreply,
+     assign(socket,
+       changeset: changeset,
+       description: test_params["description"],
+       description_markdown: test_params["description_markdown"] == "true"
+     )}
+  end
+
+  # Edit
+  @impl true
+  def handle_event("update", params, socket) do
+    send(self(), {"update", params})
+    {:noreply, assign(socket, :loading, true)}
+  end
+
+  # New
+  @impl true
+  def handle_event("save", params, socket) do
+    send(self(), {"save", params})
+    {:noreply, assign(socket, :loading, true)}
   end
 
   @impl true
