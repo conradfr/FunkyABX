@@ -59,6 +59,7 @@ defmodule FunkyABXWeb.TestLive do
             <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
+            <span class="text-muted ms-2"><small>Loading tracks ...</small></span>
           <% else %>
             <div class="ms-2 text-muted" role="status">
               <small><i class="bi bi-info-circle text-extra-muted" title="Player controls" role="button"
