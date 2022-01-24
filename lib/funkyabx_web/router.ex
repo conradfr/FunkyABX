@@ -51,6 +51,9 @@ defmodule FunkyABXWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/about", PageController, :about
+    get "/contact", PageController, :contact
+    post "/contact", PageController, :contact_submit
     get "/auth/:slug", TestController, :password
     post "/auth/:slug", TestController, :password_verify
     live "/info", FlashLive, as: :info

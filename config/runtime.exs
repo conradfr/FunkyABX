@@ -17,6 +17,7 @@ if config_env() == :prod do
   config :funkyabx,
     cdn_prefix: System.get_env("CDN_PREFIX"),
     email_from: System.get_env("EMAIL_FROM"),
+    email_to: System.get_env("EMAIL_TO"),
     analytics: System.get_env("ANALYTICS") || nil,
     bucket: System.get_env("S3_BUCKET") || "",
     flac_folder: System.get_env("FLAC_FOLDER"),

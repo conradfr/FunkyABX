@@ -1,0 +1,30 @@
+<h3 class="header-chemyretro">Contact</h3>
+
+<div class="row">
+  <div class="col-12 col-sm-6">
+
+    <.form let={f} for={@changeset} action={Routes.page_path(@conn, :contact_submit)}>
+      <div class="mb-3">
+        <%= label f, :name, "Name*:", class: "form-label" %>
+        <%= text_input f, :name, required: true, class: "form-control" %>
+        <%= error_tag f, :name %>
+      </div>
+
+      <div class="mb-3">
+        <%= label f, :email, "Email:", class: "form-label" %>
+        <%= email_input f, :email, required: false, class: "form-control", placeholder: "Optional" %>
+        <%= error_tag f, :email %>
+      </div>
+
+      <div class="mb-3">
+        <%= label f, :message, "Message*:", class: "form-label" %>
+        <%= textarea(f, :message, required: true, class: "form-control", rows: "5", placeholder: "Comments, ideas, suggestions, bot spam...") %>
+        <%= error_tag f, :message %>
+      </div>
+
+      <div class="text-end">
+        <%= submit "Send", class: "btn btn-secondary px-5" %>
+      </div>
+    </.form>
+  </div>
+</div>

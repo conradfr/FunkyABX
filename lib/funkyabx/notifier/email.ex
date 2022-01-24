@@ -30,6 +30,30 @@ defmodule FunkyABX.Notifier.Email do
     )
   end
 
+  def contact(contact) do
+    message =
+      """
+      Hi,
+
+      Someone sent a message !
+
+      Name: #{contact.name}
+      #{unless contact.email == nil, do: "Email:" <> contact.email, else: ""}
+
+      Message:
+      #{contact.message}
+
+      Regards,
+      FunkyABX
+      """
+
+    deliver(
+      Application.fetch_env!(:funkyabx, :email_to),
+      "FunkyABX - Contact form",
+      message
+    )
+  end
+
   defp get_from() do
     {"FunkyABX", Application.fetch_env!(:funkyabx, :email_from)}
   end

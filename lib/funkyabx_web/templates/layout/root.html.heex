@@ -31,19 +31,28 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div class="offcanvas-body pt-1">
-              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                 <li class="nav-item">
-                   <a class="nav-link" href="/">Home</a>
-                 </li>
-                 <li class="nav-item">
-                   <a class="nav-link" href={Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive)}>New test</a>
-                 </li>
-                 <li class="nav-item">
-                  <a class="nav-link" href={Routes.gallery_path(@conn, FunkyABXWeb.GalleryLive)}>Gallery</a>
-                </li>
-                 <%= render "_tests_menu.html", assigns %>
-                 <%= render "_user_menu.html", assigns %>
-               </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive)}>New test</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={Routes.gallery_path(@conn, FunkyABXWeb.GalleryLive)}>Gallery</a>
+              </li>
+              <%= render "_tests_menu.html", assigns %>
+              <%= render "_user_menu.html", assigns %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  More
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href={Routes.page_path(@conn, :contact)}>Contact</a></li>
+                  <li><a class="dropdown-item" href={Routes.page_path(@conn, :about)}>About</a></li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
 
