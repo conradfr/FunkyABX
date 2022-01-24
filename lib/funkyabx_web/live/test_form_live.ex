@@ -519,7 +519,7 @@ defmodule FunkyABXWeb.TestFormLive do
                         normalization
                       )
 
-                    {entry.client_name, final_filename_dest}
+                    {:ok, {entry.client_name, final_filename_dest}}
                   end)
                 end
 
@@ -626,7 +626,7 @@ defmodule FunkyABXWeb.TestFormLive do
             final_filename_dest =
               Files.save(path, Path.join([socket.assigns.test.id, filename_dest]), normalization)
 
-            {entry.client_name, final_filename_dest}
+            {:ok, {entry.client_name, final_filename_dest}}
           end)
 
         case upload_consumed do
