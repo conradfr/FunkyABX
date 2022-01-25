@@ -31,7 +31,7 @@ import topbar from '../vendor/topbar';
 const EventEmitter = require('eventemitter3');
 
 import Player from './player/Player';
-import { COOKIE_TEST_TAKEN, COOKIE_TEST_AUTHOR } from './config/config';
+import { COOKIE_TEST_TAKEN, COOKIE_TEST_AUTHOR, COOKIE_TEST_WAVEFORM } from './config/config';
 import cookies from './utils/cookies';
 
 const toClipboard = (text) => {
@@ -133,7 +133,8 @@ Hooks.Player = {
         parseInt(this.el.dataset.rotateSeconds, 10) * 1000,
         this.el.dataset.rotate === 'true',
         this.el.dataset.loop === 'true',
-        this.el.dataset.waveform === 'true',
+        this.el.dataset.waveform === 'true'
+          && cookies.get(COOKIE_TEST_WAVEFORM, false) !== 'false',
         ee
       );
     }
@@ -177,17 +178,21 @@ Hooks.Player = {
 
       const key = event.key
       switch (key) {
-        case " ":
+        case ' ':
           player.togglePlay(event.ctrlKey);
           break;
 
-        case "ArrowDown":
-        case "ArrowRight":
+        case 'w':
+          player.toggleDrawWaveform();
+          break;
+
+        case 'ArrowDown':
+        case 'ArrowRight':
           player.goToNext(event.ctrlKey);
           break;
 
-        case "ArrowUp":
-        case "ArrowLeft":
+        case 'ArrowUp':
+        case 'ArrowLeft':
           player.goToPrev(event.ctrlKey);
           break;
 

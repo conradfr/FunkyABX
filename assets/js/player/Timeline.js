@@ -44,6 +44,10 @@ export default class {
     this.isActive = false;
   }
 
+  setDrawWaveformUnder(drawWaveformUnder) {
+    this.drawWaveformUnder = drawWaveformUnder;
+  }
+
   draw(currentPixel, active) {
     const ctx = this.canvas.getContext('2d');
 

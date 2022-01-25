@@ -33,7 +33,7 @@ export default class {
     // Player state
     this.ee.on('player_state', (state) => {
       this.playerState = state;
-      // this.refreshWaveform();
+      // this.refreshTimeline();
     });
   }
 
@@ -45,7 +45,7 @@ export default class {
     }
 
     this.active = active;
-    this.refreshWaveform();
+    this.refreshTimeline();
   }
 
   getDuration() {
@@ -69,6 +69,11 @@ export default class {
       this.source = null;
       this.ee.emit('stopping', this.src.hash);
     }
+  }
+
+  setDrawWaveformUnder(drawWaveformUnder) {
+    this.drawWaveformUnder = drawWaveformUnder;
+    this.drawTimeline();
   }
 
   // ---------- PLAYBACK ----------
@@ -152,11 +157,11 @@ export default class {
 
   // ---------- WAVEFORM ----------
 
-  refreshWaveform() {
-    this.drawWaveform(true);
+  refreshTimeline() {
+    this.drawTimeline(true);
   }
 
-  drawWaveform(isRefresh) {
+  drawTimeline(isRefresh) {
     // We get the canvas to get the dimensions as a canvas needs pixel dimensions
 
     // Container is needed to allow multiple round with id/hash changing
@@ -171,6 +176,18 @@ export default class {
     }
 
     let canvasElem = document.getElementById(`waveform-canvas-${this.src.hash}`);
+
+    if (isRefresh !== true) {
+      if (this.waveform !== null) {
+        delete this.waveform;
+        this.waveform = null;
+      }
+
+      if (canvasElem !== null) {
+        canvasElem.remove();
+        canvasElem = null;
+      }
+    }
 
     if (this.waveform === null) {
       if (canvasElem === null) {

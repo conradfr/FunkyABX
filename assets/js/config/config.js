@@ -15,3 +15,4 @@ export const COOKIE_TEST_BYPASS = `${COOKIE_PREFIX}test_bypass`;
 export const COOKIE_TEST_AUTHOR = `${COOKIE_PREFIX}test_author`;
 export const COOKIE_TEST_ROTATE_SECONDS = `${COOKIE_PREFIX}rotate_seconds`;
 export const COOKIE_TEST_ROTATE = `${COOKIE_PREFIX}rotate`;
+export const COOKIE_TEST_WAVEFORM = `${COOKIE_PREFIX}waveform`;

@@ -1,5 +1,7 @@
 /* eslint-env browser */
 
+import { COOKIE_TEST_WAVEFORM } from '../config/config';
+import cookies from '../utils/cookies';
 import LoaderFactory from './loader/LoaderFactory';
 import Track from './Track';
 import * as playerState from '../config/state';
@@ -49,7 +51,7 @@ export default class {
       this.playing -= 1;
       if (this.playing === 0) {
         this.tracks.forEach((trackObj) => {
-          trackObj.refreshWaveform();
+          trackObj.refreshTimeline();
         });
 
         if (this.rotateInterval !== null) {
@@ -113,7 +115,7 @@ export default class {
 
         this.tracks = this.tracks.map((trackObj) => {
           trackObj.tracksMaxDuration = this.maxDuration;
-          trackObj.drawWaveform();
+          trackObj.drawTimeline();
           return trackObj;
         });
       });
@@ -150,6 +152,14 @@ export default class {
 
   getTrackIndexFromHash(track_hash) {
     return this.tracks.findIndex(track => track.src.hash === track_hash);
+  }
+
+  toggleDrawWaveform() {
+    this.drawWaveform = !this.drawWaveform;
+    cookies.set(COOKIE_TEST_WAVEFORM, this.drawWaveform);
+    this.tracks.forEach((trackObj) => {
+      trackObj.setDrawWaveformUnder(this.drawWaveform);
+    });
   }
 
   // ---------- COMMANDS ----------
@@ -197,7 +207,7 @@ export default class {
         setInterval(() => {
           this.currentTime = this.ac.currentTime;
           this.tracks.forEach((track) => {
-            track.refreshWaveform();
+            track.refreshTimeline();
           });
         }, 250);
     }
