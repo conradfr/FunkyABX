@@ -52,12 +52,12 @@ defmodule FunkyABXWeb.Router do
 
     get "/", PageController, :index
     get "/about", PageController, :about
+    get "/gallery", PageController, :gallery
     get "/contact", PageController, :contact
     post "/contact", PageController, :contact_submit
     get "/auth/:slug", TestController, :password
     post "/auth/:slug", TestController, :password_verify
     live "/info", FlashLive, as: :info
-    live "/gallery", GalleryLive, as: :gallery
   end
 
   scope "/", FunkyABXWeb do

@@ -1,7 +1,6 @@
 .gallery-test {
-  width: 150px;
-  min-height: 200px;
-  max-height: 300px;
+  width: 250px;
+  height: 350px;
 
   @include media-breakpoint-up(sm) {
     width: 250px;
@@ -11,6 +10,16 @@
 
   .gallery-test-title {
     background-color: $primary;
+
+    a {
+      //font-size: 0.875rem;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        //text-decoration: underline;
+      }
+    }
   }
 
   .gallery-test-by {
@@ -23,8 +32,13 @@
     overflow-y: hidden;
   }
 
+  .gallery-test-taken {
+    background-color: $gallery-test-taken-bg-color;
+    font-size: 0.875rem;
+  }
   .gallery-test-link {
-    background-color: $secondary;
+    background-color: $gallery-test-link-bg-color;
+    padding-bottom: 0.40rem !important;
 
     a {
       font-size: 0.875rem;
@@ -32,7 +46,7 @@
 
       &:hover,
       &:focus {
-        text-decoration: underline;
+        //text-decoration: underline;
       }
     }
   }

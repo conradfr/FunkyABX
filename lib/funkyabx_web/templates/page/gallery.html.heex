@@ -1,0 +1,26 @@
+<h3 class="mb-4 mt-0 header-chemyretro" id="test-form-header">Gallery</h3>
+<div class="d-flex flex-wrap justify-content-center">
+  <%= for test <- @tests do %>
+    <div class="gallery-test align-self-stretch rounded me-2 mb-2 d-flex flex-column">
+      <div class="gallery-test-title text-center p-2 px-3">
+        <%= link test.title, to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, test.slug), class: "header-typographica" %>
+      </div>
+      <%= unless test.author == nil do %>
+        <div class="gallery-test-by p-2 px-3 text-center">
+          <h7 class="mb-0 header-neon text-truncate">By <%= test.author %></h7>
+        </div>
+      <% end %>
+      <%= unless test.description == nil do %>
+        <TestDescriptionComponent.format wrapper_class="flex-fill gallery-test-description p-2 px-3" description_markdown={test.description_markdown} description={test.description} />
+      <% end %>
+      <div class="mt-auto">
+        <div class="py-1 text-center gallery-test-taken">
+          Test taken <%= test.taken %> times
+        </div>
+        <div class="py-1 text-center gallery-test-link">
+          <%= link "View", to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, test.slug) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

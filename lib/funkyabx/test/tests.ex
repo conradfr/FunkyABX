@@ -57,7 +57,14 @@ defmodule FunkyABX.Tests do
         order_by: [desc: t.inserted_at],
         select: t
 
-    Repo.all(query)
+    tests =
+      query
+      |> Repo.all()
+      # todo: one query, will do for now w/ caching & small number of tests
+      |> Enum.map(fn t ->
+        taken = get_how_many_taken(t)
+        Map.put(t, :taken, taken)
+      end)
   end
 
   # ---------- CACHE ----------
