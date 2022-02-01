@@ -46,12 +46,12 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
                 <%= if @visitor_guesses == guess do %>
-                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>Your score!</small></div>
+                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 small">Your score!</div>
                 <% end %>
               </div>
               <%= if Kernel.length(@test.tracks) == 2 do %>
                 <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted"><small>Confidence that this result is better than chance: <%= probability %>%</small></div>
+                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small">Confidence that this result is better than chance: <%= probability %>%</div>
                 </div>
               <% end %>
               <div class="p-3 ps-0 text-end">
@@ -61,7 +61,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
           <% end %>
         </div>
         <%= if Kernel.length(@test.tracks) == 2 do %>
-          <div class="text-muted"><small><i class="bi bi-info-circle"></i>&nbsp;&nbsp;A 95% confidence level is commonly considered statistically significant (<a href="https://en.wikipedia.org/wiki/ABX_test#Confidence" class="text-muted">source</a>).</small></div>
+          <div class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;A 95% confidence level is commonly considered statistically significant (<a href="https://en.wikipedia.org/wiki/ABX_test#Confidence" class="text-muted">source</a>).</div>
         <% end %>
       </div>
     """

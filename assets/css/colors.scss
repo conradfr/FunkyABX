@@ -6,6 +6,7 @@ $secondary: #583247;
 //$secondary: #7f4601;
 $dark: #444;
 $darker: #303030;
+$really-darker: darken(#303030, 5%);
 $info: #00606e;
 $light: #bdaa24;
 $light-bright:  #ffea85;
@@ -39,3 +40,5 @@ $gallery-test-bg-color: $darker;
 $gallery-test-by-bg-color: $dark;
 $gallery-test-taken-bg-color: $secondary;
 $gallery-test-link-bg-color: $info;
+
+$home-gallery-text: darken($white, 8%);

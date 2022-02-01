@@ -4,11 +4,14 @@ defmodule FunkyABXWeb.PageController do
   alias FunkyABX.Tests
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    tests_gallery = Tests.get_random()
+
+    render(conn, "index.html", tests_gallery: tests_gallery)
   end
 
   def gallery(conn, _params) do
     tests = Tests.get_for_gallery()
+
     render(conn, "gallery.html", tests: tests)
   end
 

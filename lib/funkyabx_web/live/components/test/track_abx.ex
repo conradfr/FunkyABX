@@ -15,7 +15,7 @@ defmodule FunkyABXWeb.TestTrackAbxComponent do
       <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
         <%= if Map.get(@track, :to_guess, false) do %>
           <div class="me-auto flex-grow-1 flex-md-grow-0">
-            <span class="me-3 text-muted"><small>I think this is ...</small></span>
+            <span class="me-3 text-muted small">I think this is ...</span>
           </div>
           <div class=" p-0 p-md-3 flex-fill">
             <form phx-change="change_guess" phx-target={@myself}>

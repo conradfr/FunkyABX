@@ -8,3 +8,13 @@
     box-shadow: 0px 0px 13px 0px rgba(255,249,242,0.2);
   }
 }
+
+.home-gallery-test {
+  width: 400px;
+  background-color: $really-darker;
+  color: $home-gallery-text;
+
+  .home-gallery-test-title {
+    font-size: 0.813rem;
+  }
+}
