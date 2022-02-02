@@ -596,7 +596,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
         {:noreply,
           socket
-          |> assign(test: test, laoding: false)
+          |> assign(test: test, loading: false)
           |> put_flash(:success, flash_text)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -713,7 +713,7 @@ defmodule FunkyABXWeb.TestFormLive do
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, laoding: false, changeset: changeset)}
+        {:noreply, assign(socket, loading: false, changeset: changeset)}
     end
   end
 
