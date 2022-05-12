@@ -686,7 +686,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
         Process.send_after(
           self(),
-          {:redirect, redirect, flash_text},
+          {:redirect, redirect <> "#top", flash_text},
           1500
         )
 
