@@ -179,19 +179,22 @@ defmodule FunkyABX.Test do
       changeset
       |> get_field(:password_input)
       |> case do
-          nil -> nil
-          value -> String.trim(value)
-         end
+        nil -> nil
+        value -> String.trim(value)
+      end
       |> case do
-          nil -> nil
-          "" -> nil
-          value -> value
-        end
+        nil -> nil
+        "" -> nil
+        value -> value
+      end
 
     case password do
       nil when is_nil(current_password) ->
         add_error(changeset, :password_input, "Password can't be empty")
-      nil -> changeset
+
+      nil ->
+        changeset
+
       value ->
         changeset
         |> put_change(:password_length, String.length(value))

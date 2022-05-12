@@ -31,21 +31,20 @@ defmodule FunkyABX.Notifier.Email do
   end
 
   def contact(contact) do
-    message =
-      """
-      Hi,
+    message = """
+    Hi,
 
-      Someone sent a message !
+    Someone sent a message !
 
-      Name: #{contact.name}
-      #{unless contact.email == nil, do: "Email:" <> contact.email, else: ""}
+    Name: #{contact.name}
+    #{unless contact.email == nil, do: "Email:" <> contact.email, else: ""}
 
-      Message:
-      #{contact.message}
+    Message:
+    #{contact.message}
 
-      Regards,
-      FunkyABX
-      """
+    Regards,
+    FunkyABX
+    """
 
     deliver(
       Application.fetch_env!(:funkyabx, :email_to),

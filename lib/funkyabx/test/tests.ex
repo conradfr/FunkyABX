@@ -64,25 +64,29 @@ defmodule FunkyABX.Tests do
 
     query
     |> Repo.all()
-      # todo: one query, will do for now w/ caching & small number of tests
+    # todo: one query, will do for now w/ caching & small number of tests
     |> Enum.map(fn t ->
       taken = get_how_many_taken(t)
       Map.put(t, :taken, taken)
     end)
   end
 
-  @decorate cacheable(cache: Cache, key: [@cache_gallery_home_ttl, number], opts: [ttl: @cache_gallery_home_ttl])
+  @decorate cacheable(
+              cache: Cache,
+              key: [@cache_gallery_home_ttl, number],
+              opts: [ttl: @cache_gallery_home_ttl]
+            )
   def get_random(number \\ 3) do
     query =
       from t in Test,
-           where:
-             t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
-             t.inserted_at < ago(@min_test_created_minutes, "minute") and
-             t.slug not in (@demo_slugs),
-           order_by: fragment("RANDOM()"),
-           limit: ^number,
-           select: t,
-           preload: [tracks: :test]
+        where:
+          t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
+            t.inserted_at < ago(@min_test_created_minutes, "minute") and
+            t.slug not in @demo_slugs,
+        order_by: fragment("RANDOM()"),
+        limit: ^number,
+        select: t,
+        preload: [tracks: :test]
 
     query
     |> Repo.all()

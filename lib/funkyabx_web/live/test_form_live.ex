@@ -535,10 +535,10 @@ defmodule FunkyABXWeb.TestFormLive do
           Map.put(acc, k, t)
         end
       end)
-        # url download
+      # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         case Map.has_key?(t, "id") == false and Map.has_key?(t, "filename") == false and
-             Map.has_key?(t, "url") do
+               Map.has_key?(t, "url") do
           true ->
             t
             |> import_track_url(socket.assigns.test)
@@ -595,9 +595,9 @@ defmodule FunkyABXWeb.TestFormLive do
         )
 
         {:noreply,
-          socket
-          |> assign(test: test, loading: false)
-          |> put_flash(:success, flash_text)}
+         socket
+         |> assign(test: test, loading: false)
+         |> put_flash(:success, flash_text)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, loading: false, changeset: changeset, tracks_to_delete: [])}
@@ -613,7 +613,7 @@ defmodule FunkyABXWeb.TestFormLive do
     updated_tracks =
       test_params
       |> Map.get("tracks", %{})
-        # uploads
+      # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         upload_consumed =
           consume_uploaded_entries(socket, String.to_atom("track" <> t["temp_id"]), fn %{
@@ -640,7 +640,7 @@ defmodule FunkyABXWeb.TestFormLive do
             Map.put(acc, k, t)
         end
       end)
-        # url download
+      # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         case Map.get(t, "filename") do
           nil ->
@@ -681,8 +681,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
         flash_text =
           "Your test has been successfully created !<br><br>You can now share the <a href=\"" <>
-          Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <>
-          "\">test's public link</a> for people to take it."
+            Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <>
+            "\">test's public link</a> for people to take it."
 
         Process.send_after(
           self(),
