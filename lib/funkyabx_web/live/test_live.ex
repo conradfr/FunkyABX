@@ -34,7 +34,7 @@ defmodule FunkyABXWeb.TestLive do
         <div class="fs-8 mt-2 mb-2 cursor-link text-muted" phx-click="toggle_tracklist">Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
       <% else %>
         <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_tracklist">Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></div>
-        <div class="test-tracklist mt-2 mb-4 p-3 py-2">
+        <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
           <%= for {track, i} <- @test.tracks |> Enum.with_index(1) do %>
             <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
           <% end %>

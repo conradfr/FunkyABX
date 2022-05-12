@@ -1,4 +1,4 @@
-.test-description, .test-tracklist {
+.test-description, .test-tracklist-bg {
   background-color: $test-description-bg;
   border-radius: 5px;
 
@@ -7,7 +7,7 @@
   }
 }
 
-.test-tracklist {
+.test-tracklist, .test-tracklist-bg {
   .test-tracklist-one {
     margin-bottom: 0.5rem;
 
