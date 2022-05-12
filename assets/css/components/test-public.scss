@@ -1,4 +1,4 @@
-.test-description {
+.test-description, .test-tracklist {
   background-color: $test-description-bg;
   border-radius: 5px;
 
@@ -7,34 +7,45 @@
   }
 }
 
-.btn-play {
-  letter-spacing: 0.08rem;
-}
+.test-tracklist {
+  .test-tracklist-one {
+    margin-bottom: 0.5rem;
 
-.test-pick-chosen {
-  color: $track-picked-color;
-}
-
-.test-starring {
-  i {
-    cursor: pointer;
-
-    &:hover {
-      color: $track-star-hover;
-    }
-  }
-
-  i.bi-star-fill {
-    color: $track-star-rated;
-
-    &:hover {
-      color: $track-star-rated-hover;
-    }
+    &:last-child {
+      margin-bottom: 5px;
   }
 }
 
-.test-starring-result {
-  i.bi-star-fill {
-    color: $track-star-rated;
+
+  .btn-play {
+    letter-spacing: 0.08rem;
+  }
+
+  .test-pick-chosen {
+    color: $track-picked-color;
+  }
+
+  .test-starring {
+    i {
+      cursor: pointer;
+
+      &:hover {
+        color: $track-star-hover;
+      }
+    }
+
+    i.bi-star-fill {
+      color: $track-star-rated;
+
+      &:hover {
+        color: $track-star-rated-hover;
+      }
+    }
+  }
+
+  .test-starring-result {
+    i.bi-star-fill {
+      color: $track-star-rated;
+    }
   }
 }

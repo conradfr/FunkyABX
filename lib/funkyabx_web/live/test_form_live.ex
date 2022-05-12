@@ -65,7 +65,7 @@ defmodule FunkyABXWeb.TestFormLive do
                         class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
                       Stars
                     </label>
-                    <div class="form-text mb-2">Each track will have a 1-5 star rating</div>
+                    <div class="form-text mb-2">Each track will have a 1-5 star rating (usually NOT the best choice !)</div>
                   </div>
 
                   <div class="form-check ms-1">

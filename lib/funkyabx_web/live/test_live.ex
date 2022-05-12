@@ -27,7 +27,18 @@ defmodule FunkyABXWeb.TestLive do
       </div>
 
       <%= if @test.description != nil do %>
-        <TestDescriptionComponent.format wrapper_class="my-3 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
+        <TestDescriptionComponent.format wrapper_class="mt-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
+      <% end %>
+
+      <%= if @view_tracklist == false do %>
+        <div class="fs-8 mt-2 mb-2 cursor-link text-muted" phx-click="toggle_tracklist">Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
+      <% else %>
+        <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_tracklist">Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></div>
+        <div class="test-tracklist mt-2 mb-4 p-3 py-2">
+          <%= for {track, i} <- @test.tracks |> Enum.with_index(1) do %>
+            <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
+          <% end %>
+        </div>
       <% end %>
 
       <form phx-change="change_player_settings">
@@ -131,7 +142,7 @@ defmodule FunkyABXWeb.TestLive do
                 </div>
               <% end %>
             <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px" id={"waveform-#{Tracks.get_track_hash(track)}"}>
-              <div phx-update="ignore" class="waveform-wrapper">
+              <div phx-update="ignore" id="waveform-wrapper" class="waveform-wrapper">
               </div>
             </div>
 
@@ -202,7 +213,8 @@ defmodule FunkyABXWeb.TestLive do
        valid: false,
        flag_display: false,
        test_taken_times: Tests.get_how_many_taken(test),
-       test_already_taken: Map.get(session, "test_taken_" <> slug, false)
+       test_already_taken: Map.get(session, "test_taken_" <> slug, false),
+       view_tracklist: test.description == nil
      })}
   end
 
@@ -456,5 +468,13 @@ defmodule FunkyABXWeb.TestLive do
     )
 
     {:noreply, push_event(socket, "bypass_test", %{})}
+  end
+
+  # ---------- UI ----------
+
+  def handle_event("toggle_tracklist", _value, socket) do
+    toggle = !socket.assigns.view_tracklist
+
+    {:noreply, assign(socket, view_tracklist: toggle)}
   end
 end

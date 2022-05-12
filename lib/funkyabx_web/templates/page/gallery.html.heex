@@ -12,6 +12,13 @@
       <% end %>
       <%= unless test.description == nil do %>
         <TestDescriptionComponent.format wrapper_class="flex-fill gallery-test-description p-2 px-3" description_markdown={test.description_markdown} description={test.description} />
+      <% else %>
+        <div class="test-tracklist mt-2 mb-4 p-3 py-2">
+          <p><strong>Tracks:</strong></p>
+          <%= for {track, i} <- test.tracks |> Enum.with_index(1) do %>
+          <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
+          <% end %>
+        </div>
       <% end %>
       <div class="mt-auto">
         <div class="py-1 text-center gallery-test-taken">

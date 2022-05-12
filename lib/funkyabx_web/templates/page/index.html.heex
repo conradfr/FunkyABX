@@ -40,6 +40,13 @@
                 <%= test.description |> html_escape() |> safe_to_string() |> text_max_length() |> AutoLinker.link(rel: false, scheme: true) |> text_to_html([escape: false]) %>
               <% end %>
             </div>
+          <% else %>
+            <div class="test-tracklist mt-2 mb-4 p-3 py-2">
+              <p><strong>Tracks:</strong></p>
+              <%= for {track, i} <- test.tracks |> Enum.with_index(1) do %>
+              <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
+              <% end %>
+            </div>
           <% end %>
           <div class="text-end mt-auto px-2">
             <%= link "Take the test", to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, test.slug), class: "btn btn-sm btn-secondary mt-2" %>

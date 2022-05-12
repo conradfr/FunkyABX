@@ -59,11 +59,12 @@ defmodule FunkyABX.Tests do
           t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
             t.inserted_at < ago(@min_test_created_minutes, "minute"),
         order_by: [desc: t.inserted_at],
-        select: t
+        select: t,
+        preload: [tracks: :test]
 
     query
     |> Repo.all()
-    # todo: one query, will do for now w/ caching & small number of tests
+      # todo: one query, will do for now w/ caching & small number of tests
     |> Enum.map(fn t ->
       taken = get_how_many_taken(t)
       Map.put(t, :taken, taken)
@@ -80,7 +81,8 @@ defmodule FunkyABX.Tests do
              t.slug not in (@demo_slugs),
            order_by: fragment("RANDOM()"),
            limit: ^number,
-           select: t
+           select: t,
+           preload: [tracks: :test]
 
     query
     |> Repo.all()
