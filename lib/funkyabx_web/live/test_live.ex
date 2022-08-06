@@ -142,7 +142,7 @@ defmodule FunkyABXWeb.TestLive do
                 </div>
               <% end %>
             <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px" id={"waveform-#{Tracks.get_track_hash(track)}"}>
-              <div phx-update="ignore" id="waveform-wrapper" class="waveform-wrapper">
+              <div phx-update="ignore" id={"waveform-wrapper-#{Tracks.get_track_hash(track)}"} class="waveform-wrapper">
               </div>
             </div>
 
