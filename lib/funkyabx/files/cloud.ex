@@ -1,5 +1,5 @@
 defmodule FunkyABX.Files.Cloud do
-  def save(src_path, dest_path) when is_binary(src_path) and is_binary(dest_path)do
+  def save(src_path, dest_path) when is_binary(src_path) and is_binary(dest_path) do
     Application.fetch_env!(:funkyabx, :bucket)
     |> ExAws.S3.put_object(dest_path, File.read!(src_path), acl: "public-read")
     |> ExAws.request!()

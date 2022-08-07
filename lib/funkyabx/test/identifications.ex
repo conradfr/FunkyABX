@@ -65,7 +65,8 @@ defmodule FunkyABX.Identifications do
 
   # ---------- SAVE ----------
 
-  def clean_choices(choices, _tracks, %Test{} = test) when test.identification == false, do: choices
+  def clean_choices(choices, _tracks, %Test{} = test) when test.identification == false,
+    do: choices
 
   def clean_choices(%{identification: identification} = choices, tracks, _test) do
     identification_cleaned =

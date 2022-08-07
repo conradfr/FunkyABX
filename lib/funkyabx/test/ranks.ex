@@ -75,7 +75,8 @@ defmodule FunkyABX.Ranks do
 
   def is_valid?(_test, _round, _choices), do: false
 
-  defp is_valid_count?(count, %Test{} = test) when test.ranking_only_extremities == true, do: count == 6
+  defp is_valid_count?(count, %Test{} = test) when test.ranking_only_extremities == true,
+    do: count == 6
 
   defp is_valid_count?(count, %Test{} = test), do: count == Kernel.length(test.tracks)
 

@@ -17,7 +17,8 @@ defmodule FunkyABX.Files do
       Path.extname(filename)
   end
 
-  def save(src_path, dest_path, normalization \\ false) when is_binary(src_path) and is_binary(dest_path) do
+  def save(src_path, dest_path, normalization \\ false)
+      when is_binary(src_path) and is_binary(dest_path) do
     {real_src_path, real_dest_path} =
       if Path.extname(dest_path) in @ext_to_flac do
         flac_dest = flac_dest(dest_path)
@@ -83,13 +84,13 @@ defmodule FunkyABX.Files do
     |> File.mkdir_p()
   end
 
-  defp delete_folder_of_file(filepath) when is_binary(filepath)  do
+  defp delete_folder_of_file(filepath) when is_binary(filepath) do
     filepath
     |> Path.dirname()
     |> File.rm_rf()
   end
 
-  defp flac_dest(dest_path) when is_binary(dest_path)  do
+  defp flac_dest(dest_path) when is_binary(dest_path) do
     Application.fetch_env!(:funkyabx, :flac_folder) <>
       String.replace_suffix(dest_path, Path.extname(dest_path), @flac_ext)
   end

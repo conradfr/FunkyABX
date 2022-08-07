@@ -3,7 +3,7 @@ defmodule FunkyABX.Download do
 
   @timeout 300_000
 
-  def from_url(url) when is_binary(url)  do
+  def from_url(url) when is_binary(url) do
     file_path = local_path(url)
     {:ok, fd} = File.open(file_path, [:write, :binary])
 
