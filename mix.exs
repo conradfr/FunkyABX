@@ -7,7 +7,7 @@ defmodule FunkyABX.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:gettext] ++ Mix.compilers(),
+      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
@@ -39,7 +39,7 @@ defmodule FunkyABX.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:pbkdf2_elixir, "~> 1.0"},
+      {:pbkdf2_elixir, "~> 2.0"},
       {:phoenix, "~> 1.6.0"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
@@ -47,14 +47,14 @@ defmodule FunkyABX.MixProject do
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.17.0"},
-      {:floki, ">= 0.30.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.5"},
+      {:floki, ">= 0.33.0", only: :test},
+      {:phoenix_live_dashboard, "~> 0.6"},
       #      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.6"},
+      {:swoosh, "~> 1.7"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.18"},
-      {:jason, "~> 1.2"},
+      {:gettext, "~> 0.2"},
+      {:jason, "~> 1.3"},
       {:plug_cowboy, "~> 2.5"},
       {:ecto_autoslug_field, "~> 3.0"},
       {:earmark, "1.4.20"},
@@ -70,7 +70,7 @@ defmodule FunkyABX.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:mock, "~> 0.3.0", only: :test},
       {:statistics, "~> 0.6.2"},
-      {:nebulex, "~> 2.3"},
+      {:nebulex, "~> 2.4"},
       {:decorator, "~> 1.4"},
       {:mime, "~> 2.0"}
     ]
