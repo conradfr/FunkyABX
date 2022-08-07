@@ -16,6 +16,7 @@ if config_env() == :prod do
 
   config :funkyabx,
     cdn_prefix: System.get_env("CDN_PREFIX"),
+    disqus_id: System.get_env("DISQUS_ID") || nil,
     email_from: System.get_env("EMAIL_FROM"),
     email_to: System.get_env("EMAIL_TO"),
     analytics: System.get_env("ANALYTICS") || nil,
