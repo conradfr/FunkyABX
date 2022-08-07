@@ -109,25 +109,25 @@ defmodule FunkyABX.Tests do
 
   # ---------- BUILD ----------
 
-  def get_test_modules(test) do
+  def get_test_modules(%Test{} = test) do
     test
     |> get_test_module()
     |> Kernel.apply(:get_test_modules, [test])
   end
 
-  def get_choices_modules(test) do
+  def get_choices_modules(%Test{} = test) do
     test
     |> get_test_module()
     |> Kernel.apply(:get_choices_modules, [test])
   end
 
-  def get_result_modules(test) do
+  def get_result_modules(%Test{} = test) do
     test
     |> get_test_module()
     |> Kernel.apply(:get_result_modules, [test])
   end
 
-  defp get_test_module(test) do
+  defp get_test_module(%Test{} = test) do
     test.type
     |> Atom.to_string()
     |> String.capitalize()
@@ -144,7 +144,7 @@ defmodule FunkyABX.Tests do
 
   # ---------- PARAMS ----------
 
-  def get_test_params(test) do
+  def get_test_params(%Test{} = test) do
     test
     |> get_test_module()
     |> Kernel.apply(:get_test_params, [test])
@@ -152,7 +152,7 @@ defmodule FunkyABX.Tests do
 
   # ---------- TRACKS ----------
 
-  def prep_tracks(tracks, test) do
+  def prep_tracks(tracks, %Test{} = test) when is_list(tracks) do
     test
     |> get_test_module()
     |> Kernel.apply(:prep_tracks, [tracks, test])
@@ -160,7 +160,7 @@ defmodule FunkyABX.Tests do
 
   # ---------- FORM ----------
 
-  def is_valid?(test, round, choices) do
+  def is_valid?(%Test{} = test, round, choices) do
     test
     |> get_test_module()
     |> Kernel.apply(:is_valid?, [test, round, choices])
@@ -168,7 +168,7 @@ defmodule FunkyABX.Tests do
 
   # ---------- SAVE ----------
 
-  def clean_choices(choices, tracks, test) do
+  def clean_choices(choices, tracks, %Test{} = test) when is_list(tracks) do
     test
     |> get_test_module()
     |> Kernel.apply(:clean_choices, [choices, tracks, test])
@@ -176,7 +176,7 @@ defmodule FunkyABX.Tests do
 
   # todo wrap everything in a transaction
 
-  def submit(test, choices, ip_address) do
+  def submit(%Test{} = test, choices, ip_address) do
     test
     |> get_test_module()
     |> Kernel.apply(:submit, [test, choices, ip_address])
@@ -184,11 +184,11 @@ defmodule FunkyABX.Tests do
 
   # ---------- TAKEN ----------
 
-  def has_tests_taken?(test) do
+  def has_tests_taken?(%Test{} = test) do
     get_how_many_taken(test) > 0
   end
 
-  def get_how_many_taken(test) do
+  def get_how_many_taken(%Test{} = test) do
     test
     |> get_test_module()
     |> Kernel.apply(:get_how_many_taken, [test])

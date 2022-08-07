@@ -1,13 +1,12 @@
 defmodule FunkyABX.Ranks do
   import Ecto.Query, only: [dynamic: 2, from: 2]
+
   alias FunkyABX.Repo
-  alias FunkyABX.Track
-  alias FunkyABX.Rank
-  alias FunkyABX.RankDetails
+  alias FunkyABX.{Test, Track, Rank, RankDetails}
 
   # ---------- GET ----------
 
-  def get_ranks(test) do
+  def get_ranks(%Test{} = test) do
     query =
       from r in Rank,
         join: t in Track,
@@ -52,7 +51,7 @@ defmodule FunkyABX.Ranks do
     |> Enum.any?(fn t -> t.track_id == track_id end)
   end
 
-  def get_how_many_taken(test) do
+  def get_how_many_taken(%Test{} = test) do
     query =
       from rd in RankDetails,
         where: rd.test_id == ^test.id,
@@ -64,7 +63,7 @@ defmodule FunkyABX.Ranks do
 
   # ---------- FORM ----------
 
-  def is_valid?(test, round, choices) when is_map_key(choices, round) do
+  def is_valid?(%Test{} = test, round, choices) when is_map_key(choices, round) do
     choices
     |> Map.get(round, %{})
     |> Map.get(:rank, %{})
@@ -76,15 +75,15 @@ defmodule FunkyABX.Ranks do
 
   def is_valid?(_test, _round, _choices), do: false
 
-  defp is_valid_count?(count, test) when test.ranking_only_extremities == true, do: count == 6
+  defp is_valid_count?(count, %Test{} = test) when test.ranking_only_extremities == true, do: count == 6
 
-  defp is_valid_count?(count, test), do: count == Kernel.length(test.tracks)
+  defp is_valid_count?(count, %Test{} = test), do: count == Kernel.length(test.tracks)
 
   # ---------- SAVE ----------
 
   def clean_choices(choices, _tracks, _test), do: choices
 
-  def submit(test, %{rank: ranks} = _choices, ip_address) do
+  def submit(%Test{} = test, %{rank: ranks} = _choices, ip_address) do
     Enum.each(ranks, fn {track_id, rank} ->
       track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 

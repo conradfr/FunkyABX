@@ -3,7 +3,7 @@ defmodule FunkyABX.Download do
 
   @timeout 300_000
 
-  def from_url(url) do
+  def from_url(url) when is_binary(url)  do
     file_path = local_path(url)
     {:ok, fd} = File.open(file_path, [:write, :binary])
 
@@ -53,7 +53,7 @@ defmodule FunkyABX.Download do
 
             :hackney_pool.stop_pool(:checker)
 
-          reason when is_tuple(reason) ->
+          reason when is_tuple(reason) and tuple_size(reason) == 2 ->
             {_error, {_error2, error_message}} = reason
             Logger.warn("Error (#{url}): #{to_string(error_message)}")
         end
@@ -64,7 +64,7 @@ defmodule FunkyABX.Download do
     end
   end
 
-  defp local_path(url) do
+  defp local_path(url) when is_binary(url) do
     url
     |> Path.basename()
     |> (&Path.join([Application.fetch_env!(:funkyabx, :temp_folder), &1])).()

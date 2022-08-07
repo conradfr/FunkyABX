@@ -1,10 +1,9 @@
 defmodule FunkyABX.Tests.Abx do
   import Ecto.Query, only: [dynamic: 2, from: 2]
+
   alias FunkyABX.Repo
-  alias FunkyABX.Test
-  alias FunkyABX.Tracks
+  alias FunkyABX.{Test, Tracks, AbxDetails}
   alias FunkyABX.Abx, as: AbxSchema
-  alias FunkyABX.AbxDetails
 
   @behaviour FunkyABX.Tests.Type
 
@@ -12,7 +11,7 @@ defmodule FunkyABX.Tests.Abx do
 
   # ---------- GET ----------
 
-  def get_abx(test) do
+  def get_abx(%Test{} = test) do
     query =
       from a in AbxSchema,
         join: t in Test,
@@ -81,7 +80,7 @@ defmodule FunkyABX.Tests.Abx do
   # ---------- TAKEN ----------
 
   @impl true
-  def get_how_many_taken(test) do
+  def get_how_many_taken(%Test{} = test) do
     query =
       from a in AbxSchema,
         where: a.test_id == ^test.id,
@@ -94,7 +93,7 @@ defmodule FunkyABX.Tests.Abx do
   # ---------- TRACKS ----------
 
   @impl true
-  def prep_tracks(tracks, _test) do
+  def prep_tracks(tracks, _test) when is_list(tracks) do
     picked =
       tracks
       |> Enum.random()
@@ -134,7 +133,7 @@ defmodule FunkyABX.Tests.Abx do
   end
 
   @impl true
-  def submit(test, choices, ip_address) do
+  def submit(%Test{} = test, choices, ip_address) do
     correct_guesses =
       choices
       |> Enum.count(fn {_track_id, round_result} ->
@@ -160,7 +159,7 @@ defmodule FunkyABX.Tests.Abx do
 
   # ---------- UTILS ----------
 
-  defp format_probability(probability) do
+  defp format_probability(probability) when is_number(probability) do
     probability_percent = (1 - probability) * 100
 
     :io_lib.format("~.2f", [probability_percent])

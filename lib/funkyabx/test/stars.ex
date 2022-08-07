@@ -1,13 +1,11 @@
 defmodule FunkyABX.Stars do
   import Ecto.Query, only: [dynamic: 2, from: 2]
   alias FunkyABX.Repo
-  alias FunkyABX.Track
-  alias FunkyABX.Star
-  alias FunkyABX.StarDetails
+  alias FunkyABX.{Test, Track, Star, StarDetails}
 
   # ---------- GET ----------
 
-  def get_stars(test) do
+  def get_stars(%Test{} = test) do
     query =
       from t in Track,
         join: s in Star,
@@ -61,7 +59,7 @@ defmodule FunkyABX.Stars do
 
   # ---------- FORM ----------
 
-  def is_valid?(test, round, choices) when is_map_key(choices, round) do
+  def is_valid?(%Test{} = test, round, choices) when is_map_key(choices, round) do
     map_size(choices[round][:star] || %{}) == Kernel.length(test.tracks)
   end
 
@@ -71,7 +69,7 @@ defmodule FunkyABX.Stars do
 
   def clean_choices(choices, _tracks, _test), do: choices
 
-  def submit(test, %{star: stars} = _choices, ip_address) do
+  def submit(%Test{} = test, %{star: stars} = _choices, ip_address) do
     Enum.each(stars, fn {track_id, star} ->
       track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 

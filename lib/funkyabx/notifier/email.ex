@@ -1,14 +1,15 @@
 defmodule FunkyABX.Notifier.Email do
   import Swoosh.Email
+
   alias FunkyABXWeb.Router.Helpers, as: Routes
-  alias FunkyABX.Repo
-  alias FunkyABX.Mailer
+  alias FunkyABX.{Repo, Mailer}
+  alias FunkyABX.{Test, Contact}
 
   # todo queue etc
 
-  def test_taken(test, _socket_or_conn) when test.email_notification == false, do: false
+  def test_taken(%Test{} = test, _socket_or_conn) when test.email_notification == false, do: false
 
-  def test_taken(test, socket_or_conn) do
+  def test_taken(%Test{} = test, socket_or_conn) do
     test = Repo.preload(test, [:user])
     url = Routes.test_results_public_url(socket_or_conn, FunkyABXWeb.TestResultsLive, test.slug)
 
@@ -30,7 +31,7 @@ defmodule FunkyABX.Notifier.Email do
     )
   end
 
-  def contact(contact) do
+  def contact(%Contact{} = contact) do
     message = """
     Hi,
 

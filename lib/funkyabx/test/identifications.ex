@@ -1,14 +1,12 @@
 defmodule FunkyABX.Identifications do
   import Ecto.Query, only: [dynamic: 2, from: 2]
+
   alias FunkyABX.Repo
-  alias FunkyABX.Track
-  alias FunkyABX.Tracks
-  alias FunkyABX.Identification
-  alias FunkyABX.IdentificationDetails
+  alias FunkyABX.{Test, Track, Tracks, Identification, IdentificationDetails}
 
   # ---------- GET ----------
 
-  def get_identification(test) do
+  def get_identification(%Test{} = test) do
     query =
       from i in Identification,
         inner_join: t in Track,
@@ -42,7 +40,7 @@ defmodule FunkyABX.Identifications do
     Repo.all(query)
   end
 
-  def get_how_many_taken(test) do
+  def get_how_many_taken(%Test{} = test) do
     query =
       from id in IdentificationDetails,
         where: id.test_id == ^test.id,
@@ -54,7 +52,7 @@ defmodule FunkyABX.Identifications do
 
   # ---------- FORM ----------
 
-  def is_valid?(test, round, choices) when is_map_key(choices, round) do
+  def is_valid?(%Test{} = test, round, choices) when is_map_key(choices, round) do
     case Map.get(choices[round], :identification, %{})
          |> Map.values()
          |> Enum.count() do
@@ -67,7 +65,7 @@ defmodule FunkyABX.Identifications do
 
   # ---------- SAVE ----------
 
-  def clean_choices(choices, _tracks, test) when test.identification == false, do: choices
+  def clean_choices(choices, _tracks, %Test{} = test) when test.identification == false, do: choices
 
   def clean_choices(%{identification: identification} = choices, tracks, _test) do
     identification_cleaned =
@@ -82,7 +80,7 @@ defmodule FunkyABX.Identifications do
     Map.put(choices, :identification, identification_cleaned)
   end
 
-  def submit(test, %{identification: identification} = _choices, ip_address) do
+  def submit(%Test{} = test, %{identification: identification} = _choices, ip_address) do
     Enum.each(identification, fn {track_id, track_id_guess} ->
       track = Tracks.find_track(track_id, test.tracks)
       track_guessed = Tracks.find_track(track_id_guess, test.tracks)

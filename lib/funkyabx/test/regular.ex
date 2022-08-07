@@ -1,21 +1,23 @@
 defmodule FunkyABX.Tests.Regular do
+  alias FunkyABX.Test
+
   @behaviour FunkyABX.Tests.Type
 
   # ---------- TEST MODULES ----------
 
   @impl true
-  def get_test_modules(test) do
+  def get_test_modules(%Test{} = test) do
     module = get_rating_module(test)
     identification_module = get_identification_module(test)
 
     module ++ identification_module
   end
 
-  defp get_rating_module(test) when test.rating == false do
+  defp get_rating_module(%Test{} = test) when test.rating == false do
     []
   end
 
-  defp get_rating_module(test) do
+  defp get_rating_module(%Test{} = test) do
     test.regular_type
     |> Atom.to_string()
     |> String.capitalize()
@@ -24,7 +26,7 @@ defmodule FunkyABX.Tests.Regular do
     |> List.wrap()
   end
 
-  defp get_identification_module(test) when test.identification == false do
+  defp get_identification_module(%Test{} = test) when test.identification == false do
     []
   end
 
@@ -35,18 +37,18 @@ defmodule FunkyABX.Tests.Regular do
   # ---------- CHOICE MODULES ----------
 
   @impl true
-  def get_choices_modules(test) do
+  def get_choices_modules(%Test{} = test) do
     module = get_rating_choice_module(test)
     identification_module = get_identification_choice_module(test)
 
     module ++ identification_module
   end
 
-  defp get_rating_choice_module(test) when test.rating == false do
+  defp get_rating_choice_module(%Test{} = test) when test.rating == false do
     []
   end
 
-  defp get_rating_choice_module(test) do
+  defp get_rating_choice_module(%Test{} = test) do
     test.regular_type
     |> Atom.to_string()
     |> String.capitalize()
@@ -55,7 +57,7 @@ defmodule FunkyABX.Tests.Regular do
     |> List.wrap()
   end
 
-  defp get_identification_choice_module(test) when test.identification == false do
+  defp get_identification_choice_module(%Test{} = test) when test.identification == false do
     []
   end
 
@@ -66,18 +68,18 @@ defmodule FunkyABX.Tests.Regular do
   # ---------- RESULT MODULES ----------
 
   @impl true
-  def get_result_modules(test) do
+  def get_result_modules(%Test{} = test) do
     module = get_rating_result_module(test)
     identification_module = get_identification_result_module(test)
 
     module ++ identification_module
   end
 
-  defp get_rating_result_module(test) when test.rating == false do
+  defp get_rating_result_module(%Test{} = test) when test.rating == false do
     []
   end
 
-  defp get_rating_result_module(test) do
+  defp get_rating_result_module(%Test{} = test) do
     test.regular_type
     |> Atom.to_string()
     |> String.capitalize()
@@ -86,7 +88,7 @@ defmodule FunkyABX.Tests.Regular do
     |> List.wrap()
   end
 
-  defp get_identification_result_module(test) when test.identification == false do
+  defp get_identification_result_module(%Test{} = test) when test.identification == false do
     []
   end
 
@@ -107,7 +109,7 @@ defmodule FunkyABX.Tests.Regular do
   # ---------- TAKEN ----------
 
   @impl true
-  def get_how_many_taken(test) do
+  def get_how_many_taken(%Test{} = test) do
     test
     |> get_test_modules()
     |> Kernel.hd()
@@ -117,7 +119,7 @@ defmodule FunkyABX.Tests.Regular do
   # ---------- TRACKS ----------
 
   @impl true
-  def prep_tracks(tracks, _test) do
+  def prep_tracks(tracks, _test) when is_list(tracks) do
     Enum.shuffle(tracks)
   end
 
@@ -127,7 +129,7 @@ defmodule FunkyABX.Tests.Regular do
   def is_valid?(_test, round, choices) when is_map_key(choices, round) == false, do: false
 
   @impl true
-  def is_valid?(test, round, choices) do
+  def is_valid?(%Test{} = test, round, choices) do
     test
     |> get_test_modules()
     |> Enum.reduce([], fn m, acc ->
@@ -141,7 +143,7 @@ defmodule FunkyABX.Tests.Regular do
   # Current assumption here and for all "regular" test code is that there is only one round
 
   @impl true
-  def clean_choices(%{1 => choices} = _all_choices, tracks, test) do
+  def clean_choices(%{1 => choices} = _all_choices, tracks, %Test{} = test) do
     test
     |> get_test_modules()
     |> Enum.reduce(choices, fn m, acc ->
@@ -150,7 +152,7 @@ defmodule FunkyABX.Tests.Regular do
   end
 
   @impl true
-  def submit(test, choices, ip_address) do
+  def submit(%Test{} = test, choices, ip_address) do
     test
     |> get_test_modules()
     |> Enum.reduce([], fn m, acc ->

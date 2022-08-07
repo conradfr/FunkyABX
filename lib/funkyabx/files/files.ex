@@ -10,14 +10,14 @@ defmodule FunkyABX.Files do
 
   # ---------- PUBLIC API ----------
 
-  def get_destination_filename(filename) do
+  def get_destination_filename(filename) when is_binary(filename) do
     Integer.to_string(DateTime.to_unix(DateTime.now!("Etc/UTC"))) <>
       "_" <>
       Base.encode16(:crypto.hash(:sha, filename)) <>
       Path.extname(filename)
   end
 
-  def save(src_path, dest_path, normalization \\ false) do
+  def save(src_path, dest_path, normalization \\ false) when is_binary(src_path) and is_binary(dest_path) do
     {real_src_path, real_dest_path} =
       if Path.extname(dest_path) in @ext_to_flac do
         flac_dest = flac_dest(dest_path)
@@ -55,7 +55,7 @@ defmodule FunkyABX.Files do
     Path.basename(real_dest_path)
   end
 
-  def delete(filename, test_id) do
+  def delete(filename, test_id) when is_binary(filename) or is_list(filename) do
     if Application.fetch_env!(:funkyabx, :env) == :dev do
       Local.delete(filename, test_id)
     else
@@ -73,23 +73,23 @@ defmodule FunkyABX.Files do
 
   # ---------- INTERNAL ----------
 
-  defp filename_to_flac(filename) do
+  defp filename_to_flac(filename) when is_binary(filename) do
     String.replace_suffix(filename, Path.extname(filename), @flac_ext)
   end
 
-  defp ensure_folder_of_file_exists(filepath) do
+  defp ensure_folder_of_file_exists(filepath) when is_binary(filepath) do
     filepath
     |> Path.dirname()
     |> File.mkdir_p()
   end
 
-  defp delete_folder_of_file(filepath) do
+  defp delete_folder_of_file(filepath) when is_binary(filepath)  do
     filepath
     |> Path.dirname()
     |> File.rm_rf()
   end
 
-  defp flac_dest(dest_path) do
+  defp flac_dest(dest_path) when is_binary(dest_path)  do
     Application.fetch_env!(:funkyabx, :flac_folder) <>
       String.replace_suffix(dest_path, Path.extname(dest_path), @flac_ext)
   end

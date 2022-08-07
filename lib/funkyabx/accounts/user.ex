@@ -15,12 +15,12 @@ defmodule FunkyABX.Accounts.User do
     timestamps()
   end
 
-  def changeset(user, attrs \\ %{}, opts \\ []) do
+  def changeset(user, attrs \\ %{}, _opts \\ []) do
     user
     |> cast(attrs, [])
   end
 
-  def delete_changeset(user, attrs \\ %{}, opts \\ []) do
+  def delete_changeset(user, attrs \\ %{}, _opts \\ []) do
     user
     |> cast(attrs, [:email])
     |> unique_constraint(:email)

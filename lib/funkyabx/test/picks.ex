@@ -1,13 +1,12 @@
 defmodule FunkyABX.Picks do
   import Ecto.Query, only: [dynamic: 2, from: 2]
+
   alias FunkyABX.Repo
-  alias FunkyABX.Track
-  alias FunkyABX.Pick
-  alias FunkyABX.PickDetails
+  alias FunkyABX.{Test, Track, Pick, PickDetails}
 
   # ---------- GET ----------
 
-  def get_picks(test) do
+  def get_picks(%Test{} = test) do
     query =
       from t in Track,
         left_join: p in Pick,
@@ -27,7 +26,7 @@ defmodule FunkyABX.Picks do
     |> Repo.all()
   end
 
-  def get_how_many_taken(test) do
+  def get_how_many_taken(%Test{} = test) do
     query =
       from pd in PickDetails,
         where: pd.test_id == ^test.id,
