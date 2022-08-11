@@ -61,6 +61,9 @@ config :ex_cldr,
   default_locale: "en",
   default_backend: FunkyABX.Cldr
 
+config :funkyabx,
+  file_module: FunkyABX.Files.Local
+
 config :funkyabx, FunkyABX.Cache,
   # When using :shards as backend
   # backend: :shards,

@@ -15,6 +15,7 @@ if config_env() == :prod do
       """
 
   config :funkyabx,
+    file_module: FunkyABX.Files.Cloud,
     cdn_prefix: System.get_env("CDN_PREFIX"),
     disqus_id: System.get_env("DISQUS_ID") || nil,
     email_from: System.get_env("EMAIL_FROM"),

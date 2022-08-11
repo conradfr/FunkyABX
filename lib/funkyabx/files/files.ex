@@ -45,11 +45,8 @@ defmodule FunkyABX.Files do
         {src_path, dest_path}
       end
 
-    if Application.fetch_env!(:funkyabx, :env) == :dev do
-      Local.save(real_src_path, real_dest_path)
-    else
-      Cloud.save(real_src_path, real_dest_path)
-    end
+    Application.fetch_env!(:funkyabx, :file_module)
+    |> Kernel.apply(:save, [real_src_path, real_dest_path])
 
     if Path.extname(dest_path) in @ext_to_flac, do: delete_folder_of_file(real_src_path)
 
@@ -57,19 +54,13 @@ defmodule FunkyABX.Files do
   end
 
   def delete(filename, test_id) when is_binary(filename) or is_list(filename) do
-    if Application.fetch_env!(:funkyabx, :env) == :dev do
-      Local.delete(filename, test_id)
-    else
-      Cloud.delete(filename, test_id)
-    end
+    Application.fetch_env!(:funkyabx, :file_module)
+    |> Kernel.apply(:delete, [filename, test_id])
   end
 
   def delete_all(test_id) do
-    if Application.fetch_env!(:funkyabx, :env) == :dev do
-      Local.delete_all(test_id)
-    else
-      Cloud.delete_all(test_id)
-    end
+    Application.fetch_env!(:funkyabx, :file_module)
+    |> Kernel.apply(:delete_all, [test_id])
   end
 
   # ---------- INTERNAL ----------
