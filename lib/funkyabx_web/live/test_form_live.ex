@@ -343,9 +343,9 @@ defmodule FunkyABXWeb.TestFormLive do
                         <% end %>
                       <% end %>
                     </div>
-                    <%= label :fp, :filename, "... Or download from url:", class: "col-sm-2 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                    <%= label :fp, :url, "... Or download from url:", class: "col-sm-2 col-form-label text-start text-md-end mt-2 mt-md-0" %>
                     <div class="col-sm-4">
-                      <%= text_input fp, :url, class: "form-control", disabled: !@test_updatable %>
+                      <%= url_input fp, :url, class: "form-control", disabled: !@test_updatable %>
                     </div>
                   </div>
                 <% end %>
@@ -939,7 +939,7 @@ defmodule FunkyABXWeb.TestFormLive do
     tracks =
       socket.assigns.changeset.changes.tracks
       |> Enum.map(fn
-        %{changes: changes, data: %{temp_id: temp_id} = track} = data
+        %{changes: changes, data: %{temp_id: temp_id} = track}
         when temp_id == track_id and
                ((is_map_key(changes, :title) and (changes.title == nil or changes.title == "")) or
                   is_map_key(changes, :title) == false) ->
