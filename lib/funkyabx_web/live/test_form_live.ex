@@ -13,6 +13,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
   # TODO Reduce duplicate code between "new" and "update"
 
+  # TODO Fix crash during submit when adding a track while one is marked for deletion
+
   @title_max_length 100
   @default_rounds 10
 
@@ -333,7 +335,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <div class="col-sm-1 col-form-label">&nbsp;</div>
                     <%= label :fp, :filename, "Upload file:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
                     <div class="col text-center">
-                      <%= live_file_input @uploads[String.to_atom("track" <> fp.data.temp_id)] %>
+                      <%= live_file_input @uploads[String.to_atom("track" <> fp.data.temp_id)], class: "file-track-#{fp.data.temp_id}" %>
                       <%= for entry <- @uploads[String.to_atom("track" <> fp.data.temp_id)].entries do %>
                         <progress value={entry.progress} max="100"> <%= entry.progress %>% </progress>
                         <%= for err <- upload_errors(@uploads[String.to_atom("track" <> fp.data.temp_id)], entry) do %>
@@ -351,7 +353,7 @@ defmodule FunkyABXWeb.TestFormLive do
             <% end %>
           </div>
           <div class="">
-            <button type="button" class={"btn btn-secondary mt-1#{if @test_updatable == false, do: " disabled"}"} phx-click="add_track"><i class="bi bi-plus-lg"></i> Add a track</button>
+            <button type="button" class={"btn btn-secondary mt-1#{if @test_updatable == false or @tracks_to_delete !== [], do: " disabled"}"} phx-click="add_track"><i class="bi bi-plus-lg"></i> Add a track</button>
           </div>
         </fieldset>
 
@@ -364,7 +366,7 @@ defmodule FunkyABXWeb.TestFormLive do
           <%= if @action == "save" do %>
             <%= submit("Create test", class: "btn btn-lg btn-primary") %>
           <% else %>
-            <%= submit("Update test", class: "btn btn-lg btn-primary", disabled: !@changeset.valid?) %>
+            <%= submit("Update test", class: "btn btn-lg btn-primary") %>
           <% end %>
         </div>
       </.form>
@@ -802,6 +804,15 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   @impl true
+  def handle_event(
+        "track_file_selected",
+        %{"track_id" => track_id, "filename" => filename},
+        socket
+      ) do
+    {:noreply, set_track_title_if_empty(socket, track_id, filename)}
+  end
+
+  @impl true
   def handle_event("toggle_description", _value, socket) do
     toggle = !socket.assigns.view_description
 
@@ -833,12 +844,11 @@ defmodule FunkyABXWeb.TestFormLive do
           nil ->
             track_map
 
-          id ->
-            if id == track_id do
-              %{track_map | delete: true}
-            else
-              track_map
-            end
+          id when id == track_id ->
+            %{track_map | delete: true}
+
+          _ ->
+            track_map
         end
       end)
 
@@ -884,6 +894,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
     socket
     |> assign(changeset: changeset)
+    |> push_event("trackAdded", %{track_id: temp_id})
     |> allow_upload(String.to_atom("track" <> temp_id),
       accept: ~w(.wav .mp3 .aac .flac),
       max_entries: 1,
@@ -921,6 +932,35 @@ defmodule FunkyABXWeb.TestFormLive do
       _ ->
         track
     end
+  end
+
+  defp set_track_title_if_empty(socket, track_id, filename)
+       when is_binary(track_id) and is_binary(filename) do
+    tracks =
+      socket.assigns.changeset.changes.tracks
+      |> Enum.map(fn
+        %{changes: changes, data: %{temp_id: temp_id} = track} = data
+        when temp_id == track_id and
+               ((is_map_key(changes, :title) and (changes.title == nil or changes.title == "")) or
+                  is_map_key(changes, :title) == false) ->
+          Track.changeset(track, %{title: filename_to_title(filename)})
+
+        track_changeset ->
+          track_changeset
+      end)
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:tracks, tracks)
+
+    assign(socket, %{changeset: changeset})
+  end
+
+  defp filename_to_title(filename) do
+    filename
+    |> String.replace_suffix(Path.extname(filename), "")
+    |> String.replace("_", " ")
+    |> :string.titlecase()
   end
 
   # ---------- FORM UTILS ----------
