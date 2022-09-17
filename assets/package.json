@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "bootstrap": "^5.2.0",
+    "bootstrap": "^5.2.1",
     "draw-wave": "^2.0.0",
     "eventemitter3": "^4.0.7",
     "phoenix": "file:../deps/phoenix",
@@ -12,9 +12,9 @@
     "phoenix_live_view": "file:../deps/phoenix_live_view"
   },
   "devDependencies": {
-    "esbuild": "^0.14.53",
-    "esbuild-sass-plugin": "^2.3.1",
-    "eslint": "^8.21.0",
+    "esbuild": "^0.14.54",
+    "esbuild-sass-plugin": "^2.3.2",
+    "eslint": "^8.23.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0"
   },
