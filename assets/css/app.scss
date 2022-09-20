@@ -66,7 +66,8 @@ body > div.container {
 .invalid-feedback {
   color: #a94442;
   display: block;
-  //margin: -1rem 0 2rem;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 /* LiveView specific classes for your customization */

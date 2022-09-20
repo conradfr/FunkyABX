@@ -279,8 +279,6 @@ defmodule FunkyABXWeb.TestFormLive do
             <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac.</div>
           <% end %>
 
-          <%= error_tag f, :tracks %>
-
           <fieldset class="form-group mb-3">
             <div class="form-unit p-3 rounded-3">
               <div class="form-check">
@@ -335,6 +333,8 @@ defmodule FunkyABXWeb.TestFormLive do
           </div>
         </div>
 
+        <%= error_tag f, :tracks %>
+
         <fieldset>
           <div class="mb-2">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
@@ -387,9 +387,9 @@ defmodule FunkyABXWeb.TestFormLive do
             </div>
           <% end %>
           <%= if @action == "save" do %>
-            <%= submit("Create test", class: "btn btn-lg btn-primary") %>
+            <%= submit("Create test", class: "btn btn-lg btn-primary", disabled: !@changeset.valid?) %>
           <% else %>
-            <%= submit("Update test", class: "btn btn-lg btn-primary") %>
+            <%= submit("Update test", class: "btn btn-lg btn-primary", disabled: !@changeset.valid?) %>
           <% end %>
         </div>
       </.form>
