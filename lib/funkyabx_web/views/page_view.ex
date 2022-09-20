@@ -22,9 +22,4 @@ defmodule FunkyABXWeb.PageView do
       text
     end
   end
-
-  defp format_date(datetime) do
-    {:ok, date_string} = Cldr.DateTime.to_string(datetime, format: :short)
-    date_string
-  end
 end

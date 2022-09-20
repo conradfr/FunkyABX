@@ -282,20 +282,6 @@ Hooks.TestForm = {
       toClipboard(params.text);
     });
 
-    // Allows us to auto-populate the track title based on the filename
-    // (only accessible by JS, not the LiveView event before uploading)
-    this.handleEvent('trackAdded', (params) => {
-      const fileInput = document.querySelector(`.file-track-${params.track_id}`);
-
-      if (fileInput) {
-        fileInput.addEventListener('change', (event) => {
-          if (event.target.files.length > 0) {
-            this.pushEvent('track_file_selected', {track_id: params.track_id, filename: event.target.files[0].name});
-          }
-        });
-      }
-    });
-
     this.handleEvent('saveTest', (params) => {
       if (params.test_author !== undefined && params.test_author !== null && params.test_author !== '') {
         cookies.set(COOKIE_TEST_AUTHOR, params.test_author);

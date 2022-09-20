@@ -39,6 +39,7 @@ defmodule FunkyABX.Test do
     field(:deleted_at, :naive_datetime)
     field(:normalization, :boolean)
     field(:email_notification, :boolean)
+    field(:upload_url, :string, virtual: true)
     timestamps()
     belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
@@ -68,7 +69,8 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
-      :email_notification
+      :email_notification,
+      :upload_url
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> cast_assoc(:user)
@@ -109,7 +111,8 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
-      :email_notification
+      :email_notification,
+      :upload_url
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> validate_general_type()
@@ -138,6 +141,11 @@ defmodule FunkyABX.Test do
       :access_key
     ])
     |> put_assoc(:user, attrs["user"])
+  end
+
+  def changeset_reset_upload_url(test) do
+    test
+    |> cast(%{upload_url: nil}, [:upload_url])
   end
 
   defp reclaim_slug_when_test_private(changeset) do

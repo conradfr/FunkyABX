@@ -5,11 +5,7 @@ defmodule FunkyABXWeb.TestFormLive do
   alias Ecto.UUID
   alias FunkyABX.Repo
   alias FunkyABX.Accounts
-  alias FunkyABX.Download
-  alias FunkyABX.Test
-  alias FunkyABX.Tests
-  alias FunkyABX.Track
-  alias FunkyABX.Files
+  alias FunkyABX.{Test, Tests, Track, Files, Download}
 
   # TODO Reduce duplicate code between "new" and "update"
 
@@ -224,7 +220,7 @@ defmodule FunkyABXWeb.TestFormLive do
         </fieldset>
 
         <div class="row">
-            <div class="col-md-6 col-sm-12 order-md-1 order-2">
+          <div class="col-md-6 col-sm-12 order-md-1 order-2">
 
             <fieldset class="form-group mb-3">
               <legend class="mt-1 header-typographica">Options</legend>
@@ -270,6 +266,7 @@ defmodule FunkyABXWeb.TestFormLive do
               </div>
 
             </fieldset>
+
           </div>
         </div>
 
@@ -297,30 +294,78 @@ defmodule FunkyABXWeb.TestFormLive do
               </div>
             </div>
           </fieldset>
+        </fieldset>
 
+        <div class="row">
+          <div class="col-md-6 col-sm-12 order-md-1 order-2">
+            <fieldset class="form-group mb-3">
+              <div class="form-unit p-3 pb-2 rounded-3">
+                <div class="row form-unit pb-1 rounded-3" phx-drop-target={@uploads.tracks.ref}>
+                  <%= label :f, :filename, "Select file(s) to upload:", class: "col-sm-4 col-form-label text-start text-md-end" %>
+                  <div class="col text-center pt-1">
+                    <%= live_file_input @uploads.tracks %>
+                  </div>
+                  <div class="col-1 text-center col-form-label d-none d-sm-block">
+                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" title="Or drag and drop files here"></i>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="col-md-6 col-sm-12 order-md-1 order-2">
+            <fieldset class="form-group mb-3">
+              <div class="form-unit p-3 pb-2 rounded-3">
+                <div class="row form-unit pb-1 rounded-3">
+                  <%= label :f, :upload_url, "Add file from url:", class: "col-sm-4 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                  <div class="col">
+                    <div class="input-group">
+                      <%= url_input f, :upload_url, class: "form-control" %>
+                      <div class="input-group-text">
+                        <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="left" title="The file will be downloaded, not served from the original url"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <button type="button" class={"btn btn-secondary mt-2 mt-sm-0 #{if get_field(@changeset, :upload_url) == nil or get_field(@changeset, :upload_url) == "", do: " disabled"}"} phx-click="add_url"><i class="bi bi-plus-lg"></i> Add</button>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <fieldset>
           <div class="mb-2">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
               <%= unless Enum.member?(@tracks_to_delete, fp.data.id) == true do %>
                 <div class={"row p-2 form-unit mx-0#{unless fp.data.id == nil, do: " mb-2"}"}>
+
                   <%= if fp.data.id != nil do %>
                     <%= hidden_input(fp, :id) %>
                     <%= hidden_input(fp, :delete) %>
                   <% else %>
                     <%= hidden_input(fp, :temp_id) %>
                   <% end %>
+
+                  <%= if fp.data.url != nil do %>
+                    <%= hidden_input(fp, :url) %>
+                  <% end %>
+
                   <label class="col-sm-1 col-form-label">Track #<%= i %></label>
                   <hr class="d-block d-sm-none mb-0">
                   <%= label :fp, :title, "Name:*", class: "col-sm-1 col-form-label text-start text-md-end" %>
                   <div class="col-sm-4">
                     <%= text_input fp, :title, class: "form-control", disabled: !@test_updatable, required: true %>
                   </div>
-                  <%= if fp.data.id != nil do %>
-                    <%= label :fp, :filename, "File:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
-                    <div class="col text-center w-100 text-truncate d-flex align-items-center">
-                      <div><%= fp.data.original_filename %></div>
-                    </div>
+                  <%= if get_upload_entry(fp.data.temp_id, @uploads.tracks.entries) != nil and get_upload_entry_progress(fp.data.temp_id, @uploads.tracks.entries) > 0 do %>
+                    <%= label :fp, :filename, "Upload:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                    <div class="col d-flex align-items-center"><progress value={get_upload_entry_progress(fp.data.temp_id, @uploads.tracks.entries)} max="100"> <%= get_upload_entry_progress(fp.data.temp_id, @uploads.tracks.entries) %>%</progress></div>
                   <% else %>
-                    <div class="col-sm-5">&nbsp;</div>
+                    <%= label :fp, :filename, "File:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                    <div class="col w-100 text-truncate d-flex align-items-center" title={fp.data.original_filename} >
+                      <%= fp.data.original_filename %>
+                    </div>
                   <% end %>
                   <div class="col-sm-1 d-flex flex-row-reverse" style="min-width: 62px">
                     <%= if fp.data.id != nil do %>
@@ -330,34 +375,12 @@ defmodule FunkyABXWeb.TestFormLive do
                     <% end %>
                   </div>
                 </div>
-                <%= if fp.data.id == nil do %>
-                  <div class="row mb-3 p-2 form-unit mx-0">
-                    <div class="col-sm-1 col-form-label">&nbsp;</div>
-                    <%= label :fp, :filename, "Upload file:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
-                    <div class="col text-center">
-                      <%= live_file_input @uploads[String.to_atom("track" <> fp.data.temp_id)], class: "file-track-#{fp.data.temp_id}" %>
-                      <%= for entry <- @uploads[String.to_atom("track" <> fp.data.temp_id)].entries do %>
-                        <progress value={entry.progress} max="100"> <%= entry.progress %>% </progress>
-                        <%= for err <- upload_errors(@uploads[String.to_atom("track" <> fp.data.temp_id)], entry) do %>
-                          <div class="alert alert-thin alert-danger"><%= error_to_string(err) %></div>
-                        <% end %>
-                      <% end %>
-                    </div>
-                    <%= label :fp, :url, "... Or download from url:", class: "col-sm-2 col-form-label text-start text-md-end mt-2 mt-md-0" %>
-                    <div class="col-sm-4">
-                      <%= url_input fp, :url, class: "form-control", disabled: !@test_updatable %>
-                    </div>
-                  </div>
-                <% end %>
               <% end %>
             <% end %>
           </div>
-          <div class="">
-            <button type="button" class={"btn btn-secondary mt-1#{if @test_updatable == false or @tracks_to_delete !== [], do: " disabled"}"} phx-click="add_track"><i class="bi bi-plus-lg"></i> Add a track</button>
-          </div>
         </fieldset>
 
-        <div class="mt-4 mt-md-4 text-center text-md-end d-flex flex-row justify-content-end align-items-center">
+        <div class="mt-3 text-center text-md-end d-flex flex-row justify-content-end align-items-center">
           <%= if @loading == true do %>
             <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
               <span class="visually-hidden">Loading...</span>
@@ -403,10 +426,14 @@ defmodule FunkyABXWeb.TestFormLive do
          changeset: changeset,
          test: test,
          view_description: false,
-         uploaded_files: [],
          tracks_to_delete: [],
          test_updatable: test_updatable
-       })}
+       })
+       |> allow_upload(:tracks,
+         accept: ~w(.wav .mp3 .aac .flac),
+         max_entries: 20,
+         max_file_size: 500_000_000
+       )}
     else
       _ ->
         {:ok, redirect(socket, to: Routes.test_new_path(socket, FunkyABXWeb.TestFormLive))}
@@ -437,6 +464,7 @@ defmodule FunkyABXWeb.TestFormLive do
       password_enabled: false,
       password_length: nil,
       description_markdown: false,
+      upload_url: nil,
       tracks: [],
       normalization: false,
       user: user,
@@ -463,12 +491,14 @@ defmodule FunkyABXWeb.TestFormLive do
        changeset: changeset,
        test: test,
        view_description: false,
-       uploaded_files: [],
        tracks_to_delete: [],
        test_updatable: true
      })
-     |> add_track()
-     |> add_track()}
+     |> allow_upload(:tracks,
+       accept: ~w(.wav .mp3 .aac .flac),
+       max_entries: 20,
+       max_file_size: 500_000_000
+     )}
   end
 
   # ---------- PUB/SUB EVENTS ----------
@@ -497,55 +527,54 @@ defmodule FunkyABXWeb.TestFormLive do
   # ---------- INDIRECT FORM EVENTS ----------
 
   def handle_info({"update", %{"test" => test_params}}, socket) do
+    normalization =
+      socket.assigns.test
+      |> Test.changeset_update(test_params)
+      |> get_field(:normalization)
+
     updated_tracks =
       test_params["tracks"]
       # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
-        unless Map.has_key?(t, "temp_id") == false do
-          normalization =
-            socket.assigns.test
-            |> Test.changeset_update(test_params)
-            |> get_field(:normalization)
+        upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
 
-          case uploaded_entries(socket, String.to_atom("track" <> t["temp_id"])) do
-            {[_ | _] = entries, []} ->
-              [{original_filename, filename}] =
-                for entry <- entries do
-                  consume_uploaded_entry(socket, entry, fn %{path: path} ->
-                    filename_dest = Files.get_destination_filename(entry.client_name)
+        upload_consumed =
+          unless upload_entry == nil do
+            consume_uploaded_entry(socket, upload_entry, fn %{path: path} ->
+              filename_dest = Files.get_destination_filename(upload_entry.client_name)
 
-                    final_filename_dest =
-                      Files.save(
-                        path,
-                        Path.join([socket.assigns.test.id, filename_dest]),
-                        normalization
-                      )
+              final_filename_dest =
+                Files.save(
+                  path,
+                  Path.join([socket.assigns.test.id, filename_dest]),
+                  normalization
+                )
 
-                    {:ok, {entry.client_name, final_filename_dest}}
-                  end)
-                end
-
-              updated_track =
-                Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
-
-              Map.put(acc, k, updated_track)
-
-            _ ->
-              Map.put(acc, k, t)
+              {:ok, {upload_entry.client_name, final_filename_dest}}
+            end)
+          else
+            nil
           end
-        else
-          Map.put(acc, k, t)
+
+        case upload_consumed do
+          {original_filename, filename} ->
+            updated_track =
+              Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
+
+            Map.put(acc, k, updated_track)
+
+          _ ->
+            Map.put(acc, k, t)
         end
       end)
       # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
-        case Map.has_key?(t, "id") == false and Map.has_key?(t, "filename") == false and
-               Map.has_key?(t, "url") do
-          true ->
-            t
-            |> import_track_url(socket.assigns.test)
-            |> (&Map.put(acc, k, &1)).()
-
+        with false <- Map.has_key?(t, "id"),
+             url when url != nil <- Map.get(t, "url") do
+          t
+          |> import_track_url(socket.assigns.test)
+          |> (&Map.put(acc, k, &1)).()
+        else
           _ ->
             Map.put(acc, k, t)
         end
@@ -617,22 +646,28 @@ defmodule FunkyABXWeb.TestFormLive do
       |> Map.get("tracks", %{})
       # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
+        upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
+
         upload_consumed =
-          consume_uploaded_entries(socket, String.to_atom("track" <> t["temp_id"]), fn %{
-                                                                                         path:
-                                                                                           path
-                                                                                       },
-                                                                                       entry ->
-            filename_dest = Files.get_destination_filename(entry.client_name)
+          unless upload_entry == nil do
+            consume_uploaded_entry(socket, upload_entry, fn %{path: path} ->
+              filename_dest = Files.get_destination_filename(upload_entry.client_name)
 
-            final_filename_dest =
-              Files.save(path, Path.join([socket.assigns.test.id, filename_dest]), normalization)
+              final_filename_dest =
+                Files.save(
+                  path,
+                  Path.join([socket.assigns.test.id, filename_dest]),
+                  normalization
+                )
 
-            {:ok, {entry.client_name, final_filename_dest}}
-          end)
+              {:ok, {upload_entry.client_name, final_filename_dest}}
+            end)
+          else
+            nil
+          end
 
         case upload_consumed do
-          [{original_filename, filename}] ->
+          {original_filename, filename} ->
             updated_track =
               Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
 
@@ -644,12 +679,12 @@ defmodule FunkyABXWeb.TestFormLive do
       end)
       # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
-        case Map.get(t, "filename") do
-          nil ->
-            t
-            |> import_track_url(socket.assigns.test)
-            |> (&Map.put(acc, k, &1)).()
-
+        with false <- Map.has_key?(t, "id"),
+             url when url != nil <- Map.get(t, "url") do
+          t
+          |> import_track_url(socket.assigns.test)
+          |> (&Map.put(acc, k, &1)).()
+        else
           _ ->
             Map.put(acc, k, t)
         end
@@ -738,11 +773,13 @@ defmodule FunkyABXWeb.TestFormLive do
     changeset =
       socket.assigns.test
       |> Test.changeset_update(updated_test_params)
+      |> build_upload_tracks(socket)
       |> update_action(socket.assigns.action)
 
     {:noreply,
      assign(socket,
        changeset: changeset,
+       upload_url: test_params["upload_url"],
        description: test_params["description"],
        description_markdown: test_params["description_markdown"] == "true"
      )}
@@ -822,42 +859,35 @@ defmodule FunkyABXWeb.TestFormLive do
   # ---------- TRACKS ----------
 
   @impl true
-  def handle_event("add_track", _value, socket) do
-    {:noreply, add_track(socket)}
+  def handle_event("add_url", _value, socket)
+      when is_binary(socket.assigns.upload_url) and socket.assigns.upload_url != "" do
+    {:noreply, add_track_from_url(socket, socket.assigns.upload_url)}
+  end
+
+  @impl true
+  def handle_event("add_url", _value, socket) do
+    {:noreply, socket}
   end
 
   # Persisted tracks
   @impl true
   def handle_event("delete_track", %{"id" => track_id}, socket) do
-    tracks =
+    deleted_track =
       socket.assigns.changeset.data.tracks
-      # map tracks to a "param" map, didn't find without that step
-      |> Enum.map(fn track ->
-        track_map = %{
-          id: track.id,
-          temp_id: track.temp_id,
-          title: track.title,
-          delete: nil
-        }
+      |> Enum.find(&(&1.id == track_id))
+      |> Map.put(:delete, true)
+      |> Track.changeset(%{})
 
-        case Map.get(track, :id, nil) do
-          nil ->
-            track_map
-
-          id when id == track_id ->
-            %{track_map | delete: true}
-
-          _ ->
-            track_map
-        end
-      end)
-
-    updated_tracks_to_delete = socket.assigns.tracks_to_delete ++ [track_id]
+    # done here instead at the end of the previous pipe to have the correct sort
+    tracks =
+      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
+      |> Enum.concat([deleted_track])
 
     changeset =
       socket.assigns.changeset
-      |> Ecto.Changeset.cast(%{"tracks" => tracks}, [])
-      |> Ecto.Changeset.cast_assoc(:tracks)
+      |> Ecto.Changeset.cast_assoc(:tracks, tracks)
+
+    updated_tracks_to_delete = socket.assigns.tracks_to_delete ++ [track_id]
 
     {:noreply,
      assign(socket, %{changeset: changeset, tracks_to_delete: updated_tracks_to_delete})}
@@ -876,30 +906,77 @@ defmodule FunkyABXWeb.TestFormLive do
       socket.assigns.changeset
       |> Ecto.Changeset.put_assoc(:tracks, tracks)
 
-    {:noreply, assign(socket, %{changeset: changeset})}
+    {:noreply,
+     socket
+     |> assign(%{changeset: changeset})
+     |> then(fn socket ->
+       # only cancel upload if entry is not from url
+       case get_upload_entry(track_id, socket.assigns.uploads.tracks.entries) do
+         nil ->
+           socket
+
+         entry ->
+           ref_to_cancel = Map.get(entry, :ref)
+           cancel_upload(socket, :tracks, ref_to_cancel)
+       end
+     end)}
   end
 
-  defp add_track(socket) do
+  defp build_upload_tracks(changeset, socket) do
+    existing_ids =
+      socket.assigns.changeset.changes
+      |> Map.get(:tracks, [])
+      |> Enum.map(& &1.data.temp_id)
+
+    new_tracks =
+      socket.assigns.uploads.tracks.entries
+      |> Enum.reject(fn e -> e.uuid in existing_ids end)
+      |> Enum.map(fn e ->
+        Track.changeset(
+          %Track{
+            test_id: socket.assigns.test.id,
+            temp_id: e.uuid,
+            title: filename_to_title(e.client_name),
+            original_filename: e.client_name
+          },
+          %{}
+        )
+      end)
+
+    # done here instead at the end of the previous pipe to have the correct sort
+    tracks =
+      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
+      |> Enum.concat(new_tracks)
+
+    changeset
+    |> Ecto.Changeset.put_assoc(:tracks, tracks)
+  end
+
+  defp add_track_from_url(socket, url) do
     temp_id = UUID.generate()
 
     tracks =
       Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
       |> Enum.concat([
-        Track.changeset(%Track{test_id: socket.assigns.test.id, temp_id: temp_id}, %{})
+        Track.changeset(
+          %Track{
+            test_id: socket.assigns.test.id,
+            temp_id: temp_id,
+            original_filename: url,
+            url: url,
+            title: url_to_title(url)
+          },
+          %{}
+        )
       ])
 
     changeset =
       socket.assigns.changeset
       |> Ecto.Changeset.put_assoc(:tracks, tracks)
+      |> Test.changeset_reset_upload_url()
 
     socket
-    |> assign(changeset: changeset)
-    |> push_event("trackAdded", %{track_id: temp_id})
-    |> allow_upload(String.to_atom("track" <> temp_id),
-      accept: ~w(.wav .mp3 .aac .flac),
-      max_entries: 1,
-      max_file_size: 500_000_000
-    )
+    |> assign(upload_url: nil, changeset: changeset)
   end
 
   def error_to_string(:too_large), do: "Too large"
@@ -956,7 +1033,16 @@ defmodule FunkyABXWeb.TestFormLive do
     assign(socket, %{changeset: changeset})
   end
 
-  defp filename_to_title(filename) do
+  defp url_to_title(url) when is_binary(url) do
+    url
+    |> URI.parse()
+    |> Map.get(:path)
+    |> URI.decode()
+    |> Path.basename()
+    |> filename_to_title()
+  end
+
+  defp filename_to_title(filename) when is_binary(filename) do
     filename
     |> String.replace_suffix(Path.extname(filename), "")
     |> String.replace("_", " ")
@@ -997,5 +1083,16 @@ defmodule FunkyABXWeb.TestFormLive do
 
   defp update_test_params(_target, test_params) do
     test_params
+  end
+
+  defp get_upload_entry(track_id, uploads) do
+    Enum.find(uploads, &(&1.uuid == track_id))
+  end
+
+  def get_upload_entry_progress(track_id, uploads) do
+    case get_upload_entry(track_id, uploads) do
+      nil -> nil
+      entry -> entry.progress
+    end
   end
 end

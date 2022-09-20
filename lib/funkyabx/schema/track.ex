@@ -15,6 +15,7 @@ defmodule FunkyABX.Track do
     field(:fake_id, :integer, virtual: true)
     field(:hash, :string, virtual: true)
     field(:width, :string, virtual: true)
+    field(:url, :string, virtual: true)
     belongs_to(:test, Test, type: :binary_id)
     has_many(:pick, Pick)
   end
