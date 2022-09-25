@@ -2,3 +2,14 @@
 .form-unit {
   background-color: $form-unit-bg-color;
 }
+
+.loading-spinner {
+  display: none;
+}
+
+.phx-submit-loading {
+  .loading-spinner {
+    display: block;
+  }
+}
+

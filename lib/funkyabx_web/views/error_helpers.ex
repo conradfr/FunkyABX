@@ -11,7 +11,8 @@ defmodule FunkyABXWeb.ErrorHelpers do
   def error_tag(form, field) do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
       content_tag(:div, class: "invalid-feedback mb-2", phx_feedback_for: input_name(form, field)) do
-        {:safe, ["<i class=\"bi bi-exclamation-circle-fill\"></i>&nbsp;&nbsp;", translate_error(error)]}
+        {:safe,
+         ["<i class=\"bi bi-exclamation-circle-fill\"></i>&nbsp;&nbsp;", translate_error(error)]}
       end
     end)
   end

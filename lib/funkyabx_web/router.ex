@@ -19,7 +19,13 @@ defmodule FunkyABXWeb.Router do
   end
 
   pipeline :api do
+    #    plug RemoteIp,
+    #      clients: ~w[10.0.2.2/32]
+    #
+    #    plug FunkyABXWeb.Plugs.Ip
+
     plug :accepts, ["json"]
+    plug FunkyABXWeb.Plugs.Auth
   end
 
   pipeline :test do
@@ -45,6 +51,12 @@ defmodule FunkyABXWeb.Router do
     pipe_through [:browser, :test]
 
     live "/results/:slug/:key", TestResultsLive, as: :test_results_private
+  end
+
+  scope "/", FunkyABXWeb do
+    pipe_through :api
+
+    post "/test_api", TestController, :test_api_new
   end
 
   scope "/", FunkyABXWeb do
@@ -129,6 +141,10 @@ defmodule FunkyABXWeb.Router do
     delete "/users/settings", UserSettingsController, :delete
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
+    get "/users/settings/api_key", UserSettingsApiKeyController, :index
+    post "/users/settings/api_key", UserSettingsApiKeyController, :generate
+    get "/users/settings/api_key/delete/:key", UserSettingsApiKeyController, :delete
+
     live "/edit/:slug", TestFormLive, as: :test_edit
     live "/user/tests", TestListLive, as: :test_list
   end
@@ -141,5 +157,18 @@ defmodule FunkyABXWeb.Router do
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :edit
     post "/users/confirm/:token", UserConfirmationController, :update
+  end
+
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :funkyabx, swagger_file: "swagger.json"
+  end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "FunkyABX"
+      }
+    }
   end
 end

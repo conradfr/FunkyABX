@@ -5,7 +5,7 @@ defmodule FunkyABX.Accounts do
 
   import Ecto.Query, warn: false
   alias FunkyABX.Repo
-  alias FunkyABX.Account
+  alias FunkyABX.{Account, ApiKey}
   alias FunkyABX.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
@@ -61,6 +61,15 @@ defmodule FunkyABX.Accounts do
   def get_user!(id), do: Repo.get!(User, id)
 
   ## User registration
+
+  def get_api_keys_of_user(%User{} = user) do
+    query =
+      from ak in ApiKey,
+        select: ak.id,
+        where: ak.user_id == ^user.id
+
+    Repo.all(query)
+  end
 
   @doc """
   Registers a user.

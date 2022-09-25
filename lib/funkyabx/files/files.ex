@@ -1,7 +1,4 @@
 defmodule FunkyABX.Files do
-  alias FunkyABX.Files.Cloud
-  alias FunkyABX.Files.Local
-
   @ext_to_flac [".wav"]
   @flac_ext ".flac"
 

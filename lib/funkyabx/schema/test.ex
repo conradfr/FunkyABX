@@ -8,9 +8,11 @@ defmodule FunkyABX.Test do
   alias FunkyABX.RankDetails
   alias FunkyABX.PickDetails
   alias FunkyABX.IdentificationDetails
+  alias __MODULE__
 
   @minimum_tracks 2
   @minimum_tracks_for_extremities_ranking 10
+  @default_rounds 10
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
@@ -48,6 +50,30 @@ defmodule FunkyABX.Test do
     has_many(:identification_details, IdentificationDetails)
   end
 
+  def new(user \\ nil) do
+    %Test{
+      id: UUID.generate(),
+      type: :regular,
+      rating: true,
+      regular_type: :pick,
+      ranking_only_extremities: false,
+      identification: false,
+      author: nil,
+      access_key: nil,
+      password_enabled: false,
+      password_length: nil,
+      description_markdown: false,
+      upload_url: nil,
+      tracks: [],
+      normalization: false,
+      user: user,
+      nb_of_rounds: @default_rounds,
+      anonymized_track_title: true,
+      email_notification: false,
+      ip_address: nil
+    }
+  end
+
   def changeset(test, attrs \\ %{}) do
     test
     |> cast(attrs, [
@@ -72,7 +98,7 @@ defmodule FunkyABX.Test do
       :email_notification,
       :upload_url
     ])
-    |> cast_assoc(:tracks, with: &Track.changeset/2)
+    |> cast_assoc(:tracks, with: &Track.changeset/2, required: true)
     |> cast_assoc(:user)
     |> validate_general_type()
     |> ensure_regular_type()
@@ -114,7 +140,7 @@ defmodule FunkyABX.Test do
       :email_notification,
       :upload_url
     ])
-    |> cast_assoc(:tracks, with: &Track.changeset/2)
+    |> cast_assoc(:tracks, with: &Track.changeset/2, required: true)
     |> validate_general_type()
     |> ensure_regular_type()
     |> ensure_not_public_when_password_and_encode()

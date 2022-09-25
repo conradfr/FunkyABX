@@ -3,8 +3,7 @@ defmodule FunkyABX.Tests do
   use Nebulex.Caching
 
   alias FunkyABX.Repo
-  alias FunkyABX.Cache
-  alias FunkyABX.Test
+  alias FunkyABX.{Cache, Test}
   alias FunkyABX.Accounts.User
 
   @min_test_created_minutes 15

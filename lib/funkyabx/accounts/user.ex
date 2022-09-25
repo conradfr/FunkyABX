@@ -3,6 +3,7 @@ defmodule FunkyABX.Accounts.User do
   import Ecto.Changeset
   alias FunkyABX.Test
   alias FunkyABX.Account
+  alias FunkyABX.ApiKey
 
   schema "users" do
     field :email, :string
@@ -12,6 +13,7 @@ defmodule FunkyABX.Accounts.User do
     field :confirmed_at, :naive_datetime
     has_one(:account, Account)
     has_many(:tests, Test)
+    has_many(:api_key, ApiKey)
     timestamps()
   end
 

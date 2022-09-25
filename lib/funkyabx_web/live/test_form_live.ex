@@ -5,14 +5,11 @@ defmodule FunkyABXWeb.TestFormLive do
   alias Ecto.UUID
   alias FunkyABX.Repo
   alias FunkyABX.Accounts
-  alias FunkyABX.{Test, Tests, Track, Files, Download}
+  alias FunkyABX.{Test, Tests, Track, Files, Tracks}
 
   # TODO Reduce duplicate code between "new" and "update"
 
-  # TODO Fix crash during submit when adding a track while one is marked for deletion
-
   @title_max_length 100
-  @default_rounds 10
 
   @impl true
   def render(assigns) do
@@ -99,7 +96,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <div class="row ms-4 mb-1">
                     <label for="inputEmail3" class="col-4 col-form-label ps-0">Number of rounds:</label>
                     <div class="col-2">
-                      <%= number_input(f, :nb_of_rounds, class: "form-control", required: f.data.type == :abx,
+                      <%= number_input(f, :nb_of_rounds, class: "form-control", required: input_value(f, :type) == :abx,
                         disabled: !@test_updatable or get_field(@changeset, :type) !== :abx) %>
                     </div>
                   </div>
@@ -131,28 +128,28 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="mb-3">
                   <label for="test_public_link" class="form-label">Test public page <span class="form-text">(share this link)</span></label>
                   <div class="input-group mb-3">
-                    <%= text_input(f, :public_link, class: "form-control", readonly: "readonly", value: Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)) %>
-                    <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)}>
+                    <%= text_input(f, :public_link, class: "form-control", readonly: "readonly", value: Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))) %>
+                    <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))}>
                       <i class="bi bi-clipboard"></i>
                     </button>
-                    <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
+                    <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
                   </div>
                 </div>
                 <div class="mb-3">
                   <label for="test_edit_link" class="form-label">Test edit page <span class="form-text">(this page)</span></label>
                   <div class="input-group mb-3">
                     <%= if @current_user do %>
-                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)) %>
-                      <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)}>
+                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))) %>
+                      <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}>
                         <i class="bi bi-clipboard"></i>
                       </button>
-                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% else %>
-                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.access_key)) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.access_key)}>
+                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))) %>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, f.data.slug, f.data.access_key)}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% end %>
                   </div>
                 </div>
@@ -161,17 +158,17 @@ defmodule FunkyABXWeb.TestFormLive do
                     <label for="" class="form-label">Test private results page</label>
                     <div class="input-group mb-3">
                       <%= if @current_user do %>
-                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)}>
+                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))) %>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug)}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% else %>
-                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.access_key)) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.access_key)}>
+                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))) %>
+                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, f.data.slug, f.data.access_key)}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% end %>
                     </div>
                   </div>
@@ -338,19 +335,22 @@ defmodule FunkyABXWeb.TestFormLive do
         <fieldset>
           <div class="mb-2">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
-              <%= unless Enum.member?(@tracks_to_delete, fp.data.id) == true do %>
-                <div class={"row p-2 form-unit mx-0#{unless fp.data.id == nil, do: " mb-2"}"}>
+              <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
+                <div class={"row p-2 form-unit mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
 
-                  <%= if fp.data.id != nil do %>
+                  <%= if input_value(fp, :id) != nil do %>
                     <%= hidden_input(fp, :id) %>
                     <%= hidden_input(fp, :delete) %>
                   <% else %>
                     <%= hidden_input(fp, :temp_id) %>
                   <% end %>
 
-                  <%= if fp.data.url != nil do %>
+                  <%= if input_value(fp, :url) != nil do %>
                     <%= hidden_input(fp, :url) %>
                   <% end %>
+
+                  <%= hidden_input(fp, :original_filename) %>
+                  <%= hidden_input(fp, :filename) %>
 
                   <label class="col-sm-1 col-form-label">Track #<%= i %></label>
                   <hr class="d-block d-sm-none mb-0">
@@ -358,20 +358,20 @@ defmodule FunkyABXWeb.TestFormLive do
                   <div class="col-sm-4">
                     <%= text_input fp, :title, class: "form-control", disabled: !@test_updatable, required: true %>
                   </div>
-                  <%= if get_upload_entry(fp.data.temp_id, @uploads.tracks.entries) != nil and get_upload_entry_progress(fp.data.temp_id, @uploads.tracks.entries) > 0 do %>
+                  <%= if get_upload_entry(input_value(fp, :temp_id), @uploads.tracks.entries) != nil and get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries) > 0 do %>
                     <%= label :fp, :filename, "Upload:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
-                    <div class="col d-flex align-items-center"><progress value={get_upload_entry_progress(fp.data.temp_id, @uploads.tracks.entries)} max="100"> <%= get_upload_entry_progress(fp.data.temp_id, @uploads.tracks.entries) %>%</progress></div>
+                    <div class="col d-flex align-items-center"><progress value={get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries)} max="100"> <%= get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries) %>%</progress></div>
                   <% else %>
                     <%= label :fp, :filename, "File:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
-                    <div class="col w-100 text-truncate d-flex align-items-center" title={fp.data.original_filename} >
-                      <%= fp.data.original_filename %>
+                    <div class="col w-100 text-truncate d-flex align-items-center" title={input_value(fp, :original_filename)} >
+                      <%= input_value(fp, :original_filename) %>
                     </div>
                   <% end %>
                   <div class="col-sm-1 d-flex flex-row-reverse" style="min-width: 62px">
-                    <%= if fp.data.id != nil do %>
-                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} data-confirm="Are you sure?" phx-click="delete_track" phx-value-id={fp.data.id}><i class="bi bi-trash text-danger"></i></button>
+                    <%= if input_value(fp, :id) != nil do %>
+                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} data-confirm="Are you sure?" phx-click="delete_track" phx-value-id={input_value(fp, :id)}><i class="bi bi-trash text-danger"></i></button>
                     <% else %>
-                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} phx-click="remove_track" phx-value-id={fp.data.temp_id}><i class="bi bi-trash text-danger"></i></button>
+                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} phx-click="remove_track" phx-value-id={input_value(fp, :temp_id)}><i class="bi bi-trash text-danger"></i></button>
                     <% end %>
                   </div>
                 </div>
@@ -381,11 +381,9 @@ defmodule FunkyABXWeb.TestFormLive do
         </fieldset>
 
         <div class="mt-3 text-center text-md-end d-flex flex-row justify-content-end align-items-center">
-          <%= if @loading == true do %>
-            <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          <% end %>
+          <div class="loading-spinner spinner-border spinner-border-sm text-primary me-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
           <%= if @action == "save" do %>
             <%= submit("Create test", class: "btn btn-lg btn-primary", disabled: !@changeset.valid?) %>
           <% else %>
@@ -422,7 +420,6 @@ defmodule FunkyABXWeb.TestFormLive do
        |> assign(%{
          page_title: "Edit test - " <> String.slice(test.title, 0..@title_max_length),
          action: "update",
-         loading: false,
          changeset: changeset,
          test: test,
          view_description: false,
@@ -452,29 +449,14 @@ defmodule FunkyABXWeb.TestFormLive do
     access_key = if user == nil, do: UUID.generate(), else: nil
     name = Map.get(session, "author")
 
-    test = %Test{
-      id: UUID.generate(),
-      type: :regular,
-      rating: true,
-      regular_type: :pick,
-      ranking_only_extremities: false,
-      identification: false,
-      author: name,
-      access_key: access_key,
-      password_enabled: false,
-      password_length: nil,
-      description_markdown: false,
-      upload_url: nil,
-      tracks: [],
-      normalization: false,
-      user: user,
-      nb_of_rounds: @default_rounds,
-      anonymized_track_title: true,
-      email_notification: false,
-      ip_address: Map.get(session, "visitor_ip", nil)
-    }
+    test = Test.new(user)
 
-    changeset = Test.changeset(test)
+    changeset =
+      Test.changeset(test, %{
+        access_key: access_key,
+        author: name,
+        ip_address: Map.get(session, "visitor_ip", nil)
+      })
 
     {:ok,
      socket
@@ -487,7 +469,6 @@ defmodule FunkyABXWeb.TestFormLive do
      |> assign(%{
        page_title: "Create test",
        action: "save",
-       loading: false,
        changeset: changeset,
        test: test,
        view_description: false,
@@ -572,7 +553,7 @@ defmodule FunkyABXWeb.TestFormLive do
         with false <- Map.has_key?(t, "id"),
              url when url != nil <- Map.get(t, "url") do
           t
-          |> import_track_url(socket.assigns.test)
+          |> Tracks.import_track_url(socket.assigns.test.id, normalization)
           |> (&Map.put(acc, k, &1)).()
         else
           _ ->
@@ -627,11 +608,11 @@ defmodule FunkyABXWeb.TestFormLive do
 
         {:noreply,
          socket
-         |> assign(test: test, loading: false)
+         |> assign(test: test)
          |> put_flash(:success, flash_text)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, loading: false, changeset: changeset, tracks_to_delete: [])}
+        {:noreply, assign(socket, changeset: changeset, tracks_to_delete: [])}
     end
   end
 
@@ -682,7 +663,7 @@ defmodule FunkyABXWeb.TestFormLive do
         with false <- Map.has_key?(t, "id"),
              url when url != nil <- Map.get(t, "url") do
           t
-          |> import_track_url(socket.assigns.test)
+          |> Tracks.import_track_url(socket.assigns.test.id, normalization)
           |> (&Map.put(acc, k, &1)).()
         else
           _ ->
@@ -739,7 +720,7 @@ defmodule FunkyABXWeb.TestFormLive do
         {
           :noreply,
           socket
-          |> assign(action: "update", loading: false, test: test, changeset: changeset)
+          |> assign(action: "update", test: test, changeset: changeset)
           |> push_event("saveTest", %{
             test_id: test.id,
             test_access_key: test.access_key,
@@ -750,7 +731,7 @@ defmodule FunkyABXWeb.TestFormLive do
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, loading: false, changeset: changeset)}
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 
@@ -769,12 +750,14 @@ defmodule FunkyABXWeb.TestFormLive do
       target
       |> List.last()
       |> update_test_params(test_params)
+      |> build_upload_tracks(socket)
 
     changeset =
       socket.assigns.test
       |> Test.changeset_update(updated_test_params)
-      |> build_upload_tracks(socket)
       |> update_action(socket.assigns.action)
+
+      IO.puts "#{inspect changeset.valid?}"
 
     {:noreply,
      assign(socket,
@@ -789,14 +772,14 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def handle_event("update", params, socket) do
     send(self(), {"update", params})
-    {:noreply, assign(socket, :loading, true)}
+    {:noreply, socket}
   end
 
   # New
   @impl true
   def handle_event("save", params, socket) do
     send(self(), {"save", params})
-    {:noreply, assign(socket, :loading, true)}
+    {:noreply, socket}
   end
 
   @impl true
@@ -922,34 +905,36 @@ defmodule FunkyABXWeb.TestFormLive do
      end)}
   end
 
-  defp build_upload_tracks(changeset, socket) do
+  defp build_upload_tracks(test_params, socket) do
     existing_ids =
-      socket.assigns.changeset.changes
-      |> Map.get(:tracks, [])
-      |> Enum.map(& &1.data.temp_id)
+      socket.assigns.changeset
+      |> get_field(:tracks)
+      |> Enum.map(&(&1.id || &1.temp_id))
 
     new_tracks =
       socket.assigns.uploads.tracks.entries
       |> Enum.reject(fn e -> e.uuid in existing_ids end)
       |> Enum.map(fn e ->
-        Track.changeset(
-          %Track{
-            test_id: socket.assigns.test.id,
-            temp_id: e.uuid,
-            title: filename_to_title(e.client_name),
-            original_filename: e.client_name
-          },
-          %{}
-        )
+        %{
+          "test_id" => socket.assigns.test.id,
+          "temp_id" => e.uuid,
+          "title" => Tracks.filename_to_title(e.client_name),
+          "original_filename" => e.client_name,
+          "filename" => e.client_name
+        }
       end)
 
-    # done here instead at the end of the previous pipe to have the correct sort
-    tracks =
-      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
-      |> Enum.concat(new_tracks)
+    existing_tracks =
+      test_params
+      |> Map.get("tracks", [])
+      |> Enum.flat_map(fn {_k, t} ->
+        case Enum.member?(existing_ids, Map.get(t, "id") || Map.get(t, "temp_id")) do
+          true -> [t]
+          false -> []
+        end
+      end)
 
-    changeset
-    |> Ecto.Changeset.put_assoc(:tracks, tracks)
+    Map.put(test_params, "tracks", existing_tracks ++ new_tracks)
   end
 
   defp add_track_from_url(socket, url) do
@@ -964,7 +949,7 @@ defmodule FunkyABXWeb.TestFormLive do
             temp_id: temp_id,
             original_filename: url,
             url: url,
-            title: url_to_title(url)
+            title: Tracks.url_to_title(url)
           },
           %{}
         )
@@ -985,32 +970,6 @@ defmodule FunkyABXWeb.TestFormLive do
 
   # ---
 
-  defp import_track_url(track, test) do
-    task = Task.Supervisor.async(FunkyABX.TaskSupervisor, Download, :from_url, [track["url"]])
-    result = Task.await(task)
-
-    case result do
-      {original_filename, download_path} ->
-        filename_dest =
-          track
-          |> Map.get("url")
-          |> Files.get_destination_filename()
-          |> (&Path.join([test.id, &1])).()
-
-        final_filename_dest = Files.save(download_path, filename_dest)
-        File.rm(download_path)
-
-        Map.merge(track, %{
-          "url" => track["url"],
-          "filename" => final_filename_dest,
-          "original_filename" => original_filename
-        })
-
-      _ ->
-        track
-    end
-  end
-
   defp set_track_title_if_empty(socket, track_id, filename)
        when is_binary(track_id) and is_binary(filename) do
     tracks =
@@ -1020,7 +979,7 @@ defmodule FunkyABXWeb.TestFormLive do
         when temp_id == track_id and
                ((is_map_key(changes, :title) and (changes.title == nil or changes.title == "")) or
                   is_map_key(changes, :title) == false) ->
-          Track.changeset(track, %{title: filename_to_title(filename)})
+          Track.changeset(track, %{title: Tracks.filename_to_title(filename)})
 
         track_changeset ->
           track_changeset
@@ -1031,22 +990,6 @@ defmodule FunkyABXWeb.TestFormLive do
       |> Ecto.Changeset.put_assoc(:tracks, tracks)
 
     assign(socket, %{changeset: changeset})
-  end
-
-  defp url_to_title(url) when is_binary(url) do
-    url
-    |> URI.parse()
-    |> Map.get(:path)
-    |> URI.decode()
-    |> Path.basename()
-    |> filename_to_title()
-  end
-
-  defp filename_to_title(filename) when is_binary(filename) do
-    filename
-    |> String.replace_suffix(Path.extname(filename), "")
-    |> String.replace("_", " ")
-    |> :string.titlecase()
   end
 
   # ---------- FORM UTILS ----------

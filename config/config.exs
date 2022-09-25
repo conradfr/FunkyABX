@@ -64,6 +64,19 @@ config :ex_cldr,
 config :funkyabx,
   file_module: FunkyABX.Files.Local
 
+config :phoenix_swagger,
+  json_library: Jason
+
+config :funkyabx, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      # phoenix routes will be converted to swagger paths
+      router: FunkyABXWeb.Router,
+      # (optional) endpoint config used to set host, port and https schemes.
+      endpoint: FunkyABXWeb.Endpoint
+    ]
+  }
+
 config :funkyabx, FunkyABX.Cache,
   # When using :shards as backend
   # backend: :shards,

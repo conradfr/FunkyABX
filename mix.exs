@@ -7,7 +7,7 @@ defmodule FunkyABX.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: Mix.compilers(),
+      compilers: Mix.compilers() ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
@@ -72,7 +72,9 @@ defmodule FunkyABX.MixProject do
       {:statistics, "~> 0.6.2"},
       {:nebulex, "~> 2.4"},
       {:decorator, "~> 1.4"},
-      {:mime, "~> 2.0"}
+      {:mime, "~> 2.0"},
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.5"}
     ]
   end
 
