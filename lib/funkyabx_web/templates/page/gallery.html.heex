@@ -30,4 +30,7 @@
       </div>
     </div>
   <% end %>
+  <%= if length(@tests) == 0 do %>
+  <div>No public tests yet :(</div>
+  <% end %>
 </div>
