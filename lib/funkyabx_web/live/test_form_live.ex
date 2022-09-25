@@ -7,8 +7,6 @@ defmodule FunkyABXWeb.TestFormLive do
   alias FunkyABX.Accounts
   alias FunkyABX.{Test, Tests, Track, Files, Tracks}
 
-  # TODO Reduce duplicate code between "new" and "update"
-
   @title_max_length 100
 
   @impl true
@@ -508,60 +506,7 @@ defmodule FunkyABXWeb.TestFormLive do
   # ---------- INDIRECT FORM EVENTS ----------
 
   def handle_info({"update", %{"test" => test_params}}, socket) do
-    normalization =
-      socket.assigns.test
-      |> Test.changeset_update(test_params)
-      |> get_field(:normalization)
-
-    updated_tracks =
-      test_params["tracks"]
-      # uploads
-      |> Enum.reduce(%{}, fn {k, t}, acc ->
-        upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
-
-        upload_consumed =
-          unless upload_entry == nil do
-            consume_uploaded_entry(socket, upload_entry, fn %{path: path} ->
-              filename_dest = Files.get_destination_filename(upload_entry.client_name)
-
-              final_filename_dest =
-                Files.save(
-                  path,
-                  Path.join([socket.assigns.test.id, filename_dest]),
-                  normalization
-                )
-
-              {:ok, {upload_entry.client_name, final_filename_dest}}
-            end)
-          else
-            nil
-          end
-
-        case upload_consumed do
-          {original_filename, filename} ->
-            updated_track =
-              Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
-
-            Map.put(acc, k, updated_track)
-
-          _ ->
-            Map.put(acc, k, t)
-        end
-      end)
-      # url download
-      |> Enum.reduce(%{}, fn {k, t}, acc ->
-        with false <- Map.has_key?(t, "id"),
-             url when url != nil <- Map.get(t, "url") do
-          t
-          |> Tracks.import_track_url(socket.assigns.test.id, normalization)
-          |> (&Map.put(acc, k, &1)).()
-        else
-          _ ->
-            Map.put(acc, k, t)
-        end
-      end)
-
-    updated_test_params = Map.put(test_params, "tracks", updated_tracks)
+    updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
 
     update =
       socket.assigns.test
@@ -617,61 +562,7 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   def handle_info({"save", %{"test" => test_params}}, socket) do
-    normalization =
-      socket.assigns.test
-      |> Test.changeset_update(test_params)
-      |> get_field(:normalization)
-
-    updated_tracks =
-      test_params
-      |> Map.get("tracks", %{})
-      # uploads
-      |> Enum.reduce(%{}, fn {k, t}, acc ->
-        upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
-
-        upload_consumed =
-          unless upload_entry == nil do
-            consume_uploaded_entry(socket, upload_entry, fn %{path: path} ->
-              filename_dest = Files.get_destination_filename(upload_entry.client_name)
-
-              final_filename_dest =
-                Files.save(
-                  path,
-                  Path.join([socket.assigns.test.id, filename_dest]),
-                  normalization
-                )
-
-              {:ok, {upload_entry.client_name, final_filename_dest}}
-            end)
-          else
-            nil
-          end
-
-        case upload_consumed do
-          {original_filename, filename} ->
-            updated_track =
-              Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
-
-            Map.put(acc, k, updated_track)
-
-          _ ->
-            Map.put(acc, k, t)
-        end
-      end)
-      # url download
-      |> Enum.reduce(%{}, fn {k, t}, acc ->
-        with false <- Map.has_key?(t, "id"),
-             url when url != nil <- Map.get(t, "url") do
-          t
-          |> Tracks.import_track_url(socket.assigns.test.id, normalization)
-          |> (&Map.put(acc, k, &1)).()
-        else
-          _ ->
-            Map.put(acc, k, t)
-        end
-      end)
-
-    updated_test_params = Map.put(test_params, "tracks", updated_tracks)
+    updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
 
     insert =
       socket.assigns.test
@@ -993,6 +884,64 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   # ---------- FORM UTILS ----------
+
+  defp consume_and_update_form_tracks_params(test_params, socket) do
+    normalization =
+      socket.assigns.test
+      |> Test.changeset_update(test_params)
+      |> get_field(:normalization)
+
+    updated_tracks =
+      test_params
+      |> Map.get("tracks", %{})
+        # uploads
+      |> Enum.reduce(%{}, fn {k, t}, acc ->
+        upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
+
+        upload_consumed =
+          unless upload_entry == nil do
+            consume_uploaded_entry(socket, upload_entry, fn %{path: path} ->
+              filename_dest = Files.get_destination_filename(upload_entry.client_name)
+
+              final_filename_dest =
+                Files.save(
+                  path,
+                  Path.join([socket.assigns.test.id, filename_dest]),
+                  normalization
+                )
+
+              {:ok, {upload_entry.client_name, final_filename_dest}}
+            end)
+          else
+            nil
+          end
+
+        case upload_consumed do
+          {original_filename, filename} ->
+            updated_track =
+              Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
+
+            Map.put(acc, k, updated_track)
+
+          _ ->
+            Map.put(acc, k, t)
+        end
+      end)
+        # url download
+      |> Enum.reduce(%{}, fn {k, t}, acc ->
+        with false <- Map.has_key?(t, "id"),
+             url when url != nil <- Map.get(t, "url") do
+          t
+          |> Tracks.import_track_url(socket.assigns.test.id, normalization)
+          |> (&Map.put(acc, k, &1)).()
+        else
+          _ ->
+            Map.put(acc, k, t)
+        end
+      end)
+
+    Map.put(test_params, "tracks", updated_tracks)
+  end
 
   defp update_action(changeset, "update") do
     Map.put(changeset, :action, :update)
