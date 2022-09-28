@@ -20,7 +20,7 @@
   <body class="d-flex flex-column h-100">
     <nav class="navbar navbar-dark navbar-expand-lg bg-primary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">FunkyABX&nbsp;<sup style="font-size: 0.75; font-family:Lato, Roboto, Arial">beta</sup></a>
+        <a class="navbar-brand" href="/">FunkyABX&nbsp;<sup style="font-size: 0.75em; font-family:Lato, Roboto, Arial, sans-serif">beta²</sup></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -37,6 +37,9 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href={Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive)}>New test</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={Routes.local_test_new_path(@conn, FunkyABXWeb.LocalTestFormLive)}>New local test</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href={Routes.page_path(@conn, :gallery)}>Gallery</a>

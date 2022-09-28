@@ -25,14 +25,18 @@ defmodule FunkyABXWeb.TestResultRankComponent do
           <%= for rank <- @ranks do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == rank.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => rank.track_id, "track_url" => Tracks.get_track_url(rank.track_id, @test)})}>
 
-              <TestResultTrackHeaderComponent.display playing={@play_track_id == rank.track_id} rank={rank.rank} title={rank.track_title} />
+              <TestResultTrackHeaderComponent.display playing={@play_track_id == rank.track_id} rank={rank.rank} test={@test} track_id={rank.track_id} title={rank.track_title} />
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <%= if Map.has_key?(@visitor_ranked, rank.track_id) == true do %>
+                <%= if @test.local == false and Map.has_key?(@visitor_ranked, rank.track_id) == true do %>
                   <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You ranked this track: #<%= @visitor_ranked[rank.track_id] %></small></div>
                 <% end %>
                 <div class="p-3 ps-0 text-end">
-                  <%= rank.count %> votes as #<%= rank.rank %>
+                  <%= if @test.local == false do %>
+                    <%= rank.count %> votes as #<%= rank.rank %>
+                  <% else %>
+                    <small>You ranked this track:</small> #<%= rank.rank %>
+                  <% end %>
                 </div>
               </div>
             </div>
@@ -47,6 +51,6 @@ defmodule FunkyABXWeb.TestResultRankComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:ranks, fn -> Ranks.get_ranks(assigns.test) end)}
+     |> assign_new(:ranks, fn -> Ranks.get_ranks(assigns.test, assigns.visitor_choices) end)}
   end
 end

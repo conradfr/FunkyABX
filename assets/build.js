@@ -23,7 +23,7 @@ const plugins = [
 let opts = {
   entryPoints: ['js/app.js'],
   bundle: true,
-  target: 'es2016',
+  target: 'es2018',
   outdir: '../priv/static/assets',
   logLevel: 'info',
   loader,

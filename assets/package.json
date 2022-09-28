@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "bootstrap": "^5.2.1",
+    "browser-fs-access": "^0.31.0",
     "draw-wave": "^2.0.0",
     "eventemitter3": "^4.0.7",
     "phoenix": "file:../deps/phoenix",

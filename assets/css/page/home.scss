@@ -18,3 +18,17 @@
     font-size: 0.813rem;
   }
 }
+
+.homepage-sublink {
+  color: $gray-600;
+
+  a {
+    color: $gray-600;
+    text-decoration: none;
+
+    &:hover {
+      color: $white;
+      text-decoration: underline;
+    }
+  }
+}

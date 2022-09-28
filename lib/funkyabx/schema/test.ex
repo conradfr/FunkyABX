@@ -4,10 +4,8 @@ defmodule FunkyABX.Test do
   alias Ecto.UUID
   alias FunkyABX.Accounts.User
   alias FunkyABX.Test.TitleSlug
-  alias FunkyABX.Track
-  alias FunkyABX.RankDetails
-  alias FunkyABX.PickDetails
-  alias FunkyABX.IdentificationDetails
+  alias FunkyABX.{Track, RankDetails, PickDetails, IdentificationDetails}
+  alias FunkyABX.Tests.Validators
   alias __MODULE__
 
   @minimum_tracks 2
@@ -42,6 +40,7 @@ defmodule FunkyABX.Test do
     field(:normalization, :boolean)
     field(:email_notification, :boolean)
     field(:upload_url, :string, virtual: true)
+    field(:local, :boolean, virtual: true, default: false)
     timestamps()
     belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
@@ -53,6 +52,7 @@ defmodule FunkyABX.Test do
   def new(user \\ nil) do
     %Test{
       id: UUID.generate(),
+      local: false,
       type: :regular,
       rating: true,
       regular_type: :pick,
@@ -71,6 +71,21 @@ defmodule FunkyABX.Test do
       anonymized_track_title: true,
       email_notification: false,
       ip_address: nil
+    }
+  end
+
+  def new_local() do
+    %Test{
+      id: UUID.generate(),
+      local: true,
+      title: "Local test",
+      type: :regular,
+      rating: true,
+      regular_type: :pick,
+      ranking_only_extremities: false,
+      identification: false,
+      nb_of_rounds: 1,
+      tracks: []
     }
   end
 
@@ -100,13 +115,13 @@ defmodule FunkyABX.Test do
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2, required: true)
     |> cast_assoc(:user)
-    |> validate_general_type()
-    |> ensure_regular_type()
-    |> ensure_not_public_when_password_and_encode()
-    |> ensure_no_notification_when_not_logged()
-    |> validate_ranking_extremities()
-    |> validate_nb_rounds()
-    |> validate_anonymized()
+    |> Validators.validate_general_type()
+    |> Validators.ensure_regular_type()
+    |> Validators.ensure_not_public_when_password_and_encode()
+    |> Validators.ensure_no_notification_when_not_logged()
+    |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
+    |> Validators.validate_nb_rounds()
+    |> Validators.validate_anonymized()
     |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
     |> validate_length(:tracks,
       min: @minimum_tracks,
@@ -141,13 +156,13 @@ defmodule FunkyABX.Test do
       :upload_url
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2, required: true)
-    |> validate_general_type()
-    |> ensure_regular_type()
-    |> ensure_not_public_when_password_and_encode()
-    |> ensure_no_notification_when_not_logged()
-    |> validate_ranking_extremities()
-    |> validate_nb_rounds()
-    |> validate_anonymized()
+    |> Validators.validate_general_type()
+    |> Validators.ensure_regular_type()
+    |> Validators.ensure_not_public_when_password_and_encode()
+    |> Validators.ensure_no_notification_when_not_logged()
+    |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
+    |> Validators.validate_nb_rounds()
+    |> Validators.validate_anonymized()
     |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
     |> validate_length(:tracks,
       min: @minimum_tracks,
@@ -174,6 +189,28 @@ defmodule FunkyABX.Test do
     |> cast(%{upload_url: nil}, [:upload_url])
   end
 
+  def changeset_local(test, attrs \\ %{}) do
+    test
+    |> cast(attrs, [
+      :type,
+      :rating,
+      :regular_type,
+      :ranking_only_extremities,
+      :identification
+    ])
+    |> cast_assoc(:tracks, with: &Track.changeset/2)
+    |> Validators.validate_general_type()
+    |> Validators.ensure_regular_type()
+    |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
+    |> validate_required([:type])
+    |> validate_length(:tracks,
+      min: @minimum_tracks,
+      message: "A test needs to have at least two tracks."
+    )
+  end
+
+  # ---------- DATA ----------
+
   defp reclaim_slug_when_test_private(changeset) do
     public = get_field(changeset, :public)
     slug = get_field(changeset, :slug)
@@ -181,125 +218,6 @@ defmodule FunkyABX.Test do
     case public do
       true -> changeset
       false -> put_change(changeset, :slug, slug <> "_" <> UUID.generate())
-    end
-  end
-
-  defp ensure_regular_type(changeset) do
-    rating = get_field(changeset, :rating)
-
-    case rating do
-      false -> put_change(changeset, :regular_type, nil)
-      _ -> changeset
-    end
-  end
-
-  defp ensure_not_public_when_password_and_encode(changeset) do
-    changeset
-    |> get_field(:password_enabled)
-    |> password_values(changeset)
-  end
-
-  defp password_values(password_enabled, changeset) when password_enabled == false do
-    changeset
-    |> put_change(:password_enabled, password_enabled)
-    |> put_change(:password_length, nil)
-    |> put_change(:password, nil)
-  end
-
-  defp password_values(password_enabled, changeset) do
-    current_password = get_field(changeset, :password_length)
-
-    password =
-      changeset
-      |> get_field(:password_input)
-      |> case do
-        nil -> nil
-        value -> String.trim(value)
-      end
-      |> case do
-        nil -> nil
-        "" -> nil
-        value -> value
-      end
-
-    case password do
-      nil when is_nil(current_password) ->
-        add_error(changeset, :password_input, "Password can't be empty")
-
-      nil ->
-        changeset
-
-      value ->
-        changeset
-        |> put_change(:password_length, String.length(value))
-        |> put_change(:password_enabled, password_enabled)
-        |> put_change(:password, Pbkdf2.hash_pwd_salt(value))
-        |> put_change(:public, false)
-    end
-  end
-
-  defp ensure_no_notification_when_not_logged(changeset) do
-    case changeset.data.user_id do
-      nil -> put_change(changeset, :email_notification, false)
-      _ -> changeset
-    end
-  end
-
-  defp validate_general_type(changeset) do
-    type = get_field(changeset, :type)
-
-    case type do
-      :regular ->
-        changeset
-        |> at_least_one_regular()
-
-      _ ->
-        changeset
-    end
-  end
-
-  defp validate_ranking_extremities(changeset) do
-    tracks = get_field(changeset, :tracks)
-    rating = get_field(changeset, :rating)
-    regular_type = get_field(changeset, :regular_type)
-    ranking_only_extremities = get_field(changeset, :ranking_only_extremities)
-
-    if rating == true and regular_type == :raking and
-         Kernel.length(tracks) < @minimum_tracks_for_extremities_ranking and
-         ranking_only_extremities == true do
-      add_error(changeset, :type, "Ranking only top/worst tracks is only allowed with 10+ tracks")
-    else
-      changeset
-    end
-  end
-
-  defp validate_anonymized(changeset) do
-    type = get_field(changeset, :type)
-
-    case type do
-      :regular -> put_change(changeset, :anonymized_track_title, true)
-      :listening -> put_change(changeset, :anonymized_track_title, false)
-      :abx -> changeset
-    end
-  end
-
-  defp validate_nb_rounds(changeset) do
-    type = get_field(changeset, :type)
-
-    case type do
-      :abx -> changeset
-      _ -> put_change(changeset, :nb_of_rounds, 1)
-    end
-  end
-
-  defp at_least_one_regular(changeset) do
-    rating = get_field(changeset, :rating)
-    identification = get_field(changeset, :identification)
-
-    unless rating == false and identification == false do
-      changeset
-    else
-      add_error(changeset, :type, "Select at least one option.")
     end
   end
 end

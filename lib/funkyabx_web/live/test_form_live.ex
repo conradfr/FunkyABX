@@ -5,6 +5,7 @@ defmodule FunkyABXWeb.TestFormLive do
   alias Ecto.UUID
   alias FunkyABX.Repo
   alias FunkyABX.Accounts
+  alias FunkyABX.Tests.FormUtils
   alias FunkyABX.{Test, Tests, Track, Files, Tracks}
 
   @title_max_length 100
@@ -331,10 +332,10 @@ defmodule FunkyABXWeb.TestFormLive do
         <%= error_tag f, :tracks %>
 
         <fieldset>
-          <div class="mb-2">
+          <div class="mb-2 rounded-3 form-unit">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
               <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
-                <div class={"row p-2 form-unit mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
+                <div class={"row p-2 mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
 
                   <%= if input_value(fp, :id) != nil do %>
                     <%= hidden_input(fp, :id) %>
@@ -450,11 +451,16 @@ defmodule FunkyABXWeb.TestFormLive do
     test = Test.new(user)
 
     changeset =
-      Test.changeset(test, %{
-        access_key: access_key,
-        author: name,
-        ip_address: Map.get(session, "visitor_ip", nil)
-      })
+      Test.changeset(test,
+        Map.merge(
+          %{
+            access_key: access_key,
+            author: name,
+            ip_address: Map.get(session, "visitor_ip", nil)
+          },
+          Tests.form_data_from_session(session)
+        )
+      )
 
     {:ok,
      socket
@@ -640,15 +646,13 @@ defmodule FunkyABXWeb.TestFormLive do
     updated_test_params =
       target
       |> List.last()
-      |> update_test_params(test_params)
+      |> FormUtils.update_test_params(test_params)
       |> build_upload_tracks(socket)
 
     changeset =
       socket.assigns.test
       |> Test.changeset_update(updated_test_params)
       |> update_action(socket.assigns.action)
-
-      IO.puts "#{inspect changeset.valid?}"
 
     {:noreply,
      assign(socket,
@@ -894,7 +898,7 @@ defmodule FunkyABXWeb.TestFormLive do
     updated_tracks =
       test_params
       |> Map.get("tracks", %{})
-        # uploads
+      # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
 
@@ -927,7 +931,7 @@ defmodule FunkyABXWeb.TestFormLive do
             Map.put(acc, k, t)
         end
       end)
-        # url download
+      # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         with false <- Map.has_key?(t, "id"),
              url when url != nil <- Map.get(t, "url") do
@@ -950,31 +954,6 @@ defmodule FunkyABXWeb.TestFormLive do
   defp update_action(changeset, _action) do
     #    Map.put(:action, :insert)
     changeset
-  end
-
-  defp update_test_params("ranking", %{"ranking" => ranking} = test_params)
-       when ranking == "true" do
-    test_params
-    |> Map.put("picking", false)
-    |> Map.put("starring", false)
-  end
-
-  defp update_test_params("picking", %{"picking" => picking} = test_params)
-       when picking == "true" do
-    test_params
-    |> Map.put("ranking", false)
-    |> Map.put("starring", false)
-  end
-
-  defp update_test_params("starring", %{"starring" => starring} = test_params)
-       when starring == "true" do
-    test_params
-    |> Map.put("ranking", false)
-    |> Map.put("picking", false)
-  end
-
-  defp update_test_params(_target, test_params) do
-    test_params
   end
 
   defp get_upload_entry(track_id, uploads) do

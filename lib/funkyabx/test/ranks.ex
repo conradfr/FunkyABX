@@ -6,7 +6,22 @@ defmodule FunkyABX.Ranks do
 
   # ---------- GET ----------
 
-  def get_ranks(%Test{} = test) do
+  def get_ranks(%Test{} = test, visitor_choices) when test.local == true do
+    test.tracks
+    |> Enum.map(fn t ->
+      %{
+        track_id: t.id,
+        track_title: t.title,
+        rank: Map.get(visitor_choices["rank"], t.id, 0),
+        count: (Map.get(visitor_choices["rank"], t.id, 0) != 0 && 1) || 0,
+        total_rank: Map.get(visitor_choices["rank"], t.id, 0)
+      }
+    end)
+    |> Enum.reject(&(&1.rank == 0))
+    |> Enum.sort(fn curr, prev -> curr.rank < prev.rank end)
+  end
+
+  def get_ranks(%Test{} = test, _visitor_choices) do
     query =
       from r in Rank,
         join: t in Track,

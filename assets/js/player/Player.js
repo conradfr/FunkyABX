@@ -7,8 +7,9 @@ import Track from './Track';
 import * as playerState from '../config/state';
 
 export default class {
-  constructor(tracks, rotateSeconds, rotate, loop, drawWaveform, ee) {
+  constructor(tracks, rotateSeconds, rotate, loop, drawWaveform, ee, audioFiles) {
     this.ee = ee;
+    this.audioFiles = audioFiles;
 
     this.rotateInterval = null;
     this.timeInterval = null;
@@ -89,9 +90,10 @@ export default class {
 
     this.loadPromises = trackList.map((trackInfo) => {
       const loader = LoaderFactory.createLoader(
-        trackInfo.url,
+        trackInfo,
         this.ac,
-        this.ee
+        this.ee,
+        this.audioFiles
       );
       return loader.load();
     });

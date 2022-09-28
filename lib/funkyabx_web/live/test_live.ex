@@ -2,9 +2,7 @@ defmodule FunkyABXWeb.TestLive do
   require Logger
   use FunkyABXWeb, :live_view
   alias Phoenix.LiveView.JS
-  alias FunkyABX.Test
-  alias FunkyABX.Tests
-  alias FunkyABX.Tracks
+  alias FunkyABX.{Test, Tests, Tracks}
 
   @title_max_length 100
 
@@ -20,10 +18,13 @@ defmodule FunkyABXWeb.TestLive do
             <h6 class="header-typographica">By <%= @test.author %></h6>
           <% end %>
         </div>
-        <div class="col-sm-6 text-start text-sm-end pt-1">
+        <%= if @test.local == false do %>
+          <div class="col-sm-6 text-start text-sm-end pt-1">
             <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
-          <.live_component module={TestFlagComponent} id="flag" test={@test} />
-        </div>
+
+            <.live_component module={TestFlagComponent} id="flag" test={@test} />
+          </div>
+        <% end %>
       </div>
 
       <%= if @test.description != nil do %>
@@ -80,7 +81,7 @@ defmodule FunkyABXWeb.TestLive do
             </div>
           <% end %>
         </div>
-        <%= if @test.nb_of_rounds > 1 do %>
+        <%= if @test.local == false and @test.nb_of_rounds > 1 do %>
           <div class="flex-grow-1 p-2 text-center">
             Round <%= @current_round %> / <%= @test.nb_of_rounds %>
           </div>
@@ -158,22 +159,80 @@ defmodule FunkyABXWeb.TestLive do
       <%= unless @test_params.has_choices == false do %>
         <div class="mt-3">
           <div class="d-flex flex-row align-items-center justify-content-between">
-            <%= unless @test_already_taken == true do %>
-              <div class="px-1">
-                <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>
-              </div>
-              <div class="text-end px-1 flex-fill">
-                <button phx-click="submit" class={"btn btn-primary#{unless (@valid == true) do " disabled" else "" end}"}>Submit my choices</button>
+              <%= if @test.local == true do %>
+                <div class="results-actions">
+                  <i class="bi bi-arrow-left color-action"></i>&nbsp;<%= live_redirect "Go back to the test form", to: Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data) %>
+                </div>
+                <div class="results-actions">
+                  <i class="bi bi-plus color-action"></i>&nbsp;<a class="color-action" href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)}>Create a new local test</a>
+                </div>
+              <% end %>
+              <%= unless @test_already_taken == true do %>
+                <%= unless @test.local == true do %>
+                  <div class="px-1">
+                    <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>
+                  </div>
+                <% end %>
+              <div class="text-end px-1 _flex-fill">
+                <button phx-click="submit" class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}>Submit my choices</button>
               </div>
             <% else %>
               <div class="text-end px-1 flex-fill">
-                <%= link "Check the results", to: Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug), class: "btn btn-primary" %>
+                <%= if @test.local == false do %>
+                  <%= link "Check the results", to: Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug), class: "btn btn-primary" %>
+                <% end %>
               </div>
             <% end %>
           </div>
         </div>
       <% end %>
     """
+  end
+
+  @impl true
+  def mount(%{"data" => data} = _params, _session, socket) do
+    test_data =
+      data
+      |> Base.url_decode64!()
+      |> Jason.decode!()
+
+    changeset =
+      Test.new_local()
+      |> Test.changeset_local(test_data)
+
+    {:ok, test} = Ecto.Changeset.apply_action(changeset, :update)
+
+    tracks =
+      test.tracks
+      |> Tracks.prep_tracks(test)
+      |> Tests.prep_tracks(test)
+
+    test_params = Tests.get_test_params(test)
+    choices_modules = Tests.get_choices_modules(test)
+
+    {:ok,
+     assign(socket, %{
+       page_title: "Local test",
+       test_data: data,
+       test: test,
+       tracks: tracks,
+       choices_modules: choices_modules,
+       test_params: test_params,
+       current_round: 1,
+       tracks_loaded: false,
+       current_track: nil,
+       loop: true,
+       rotate: true,
+       rotate_seconds: 5,
+       changeset: changeset,
+       choices_taken: %{},
+       playing: false,
+       playingTime: 0,
+       valid: false,
+       #       test_already_taken: Map.get(session, "test_taken_" <> slug, false),
+       test_already_taken: false,
+       view_tracklist: false
+     })}
   end
 
   @impl true
@@ -205,7 +264,7 @@ defmodule FunkyABXWeb.TestLive do
        current_track: nil,
        loop: true,
        rotate: true,
-       rotate_seconds: 7,
+       rotate_seconds: 5,
        changeset: changeset,
        choices_taken: %{},
        playing: false,
@@ -415,6 +474,40 @@ defmodule FunkyABXWeb.TestLive do
     end
   end
 
+  # Local test
+  @impl true
+  def handle_event("submit", _params, %{assigns: %{current_round: current_round}} = socket)
+      when socket.assigns.test.local == true do
+    with test <- socket.assigns.test,
+         tracks <- socket.assigns.tracks,
+         choices <- socket.assigns.choices_taken,
+         true <- Tests.is_valid?(test, current_round, choices) do
+      Logger.info("Local test taken")
+
+      choices_cleaned =
+        choices
+        |> Tests.clean_choices(tracks, test)
+        |> Jason.encode!()
+        |> Base.url_encode64()
+
+      {:noreply,
+       socket
+       |> push_redirect(
+         to:
+           Routes.local_test_results_path(
+             socket,
+             FunkyABXWeb.TestResultsLive,
+             socket.assigns.test_data,
+             choices_cleaned
+           ),
+         redirect: false
+       )}
+    else
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
   @impl true
   def handle_event("submit", _params, %{assigns: %{current_round: current_round}} = socket) do
     with test <- socket.assigns.test,
@@ -450,7 +543,8 @@ defmodule FunkyABXWeb.TestLive do
        # )
        |> put_flash(:success, "Your submission has been registered!")}
     else
-      _ -> {:noreply, socket}
+      _ ->
+        {:noreply, socket}
     end
   end
 

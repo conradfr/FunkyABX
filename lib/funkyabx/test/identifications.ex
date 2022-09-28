@@ -6,7 +6,26 @@ defmodule FunkyABX.Identifications do
 
   # ---------- GET ----------
 
-  def get_identification(%Test{} = test) do
+  def get_identification(%Test{} = test, _visitor_choices) when test.local == true do
+    test.tracks
+    |> Enum.map(fn t ->
+      %{
+        track_id: t.id,
+        title: t.title,
+        correct_count: 1,
+        total_guess: 1,
+        guesses: [
+          %{
+            "count" => 1,
+            "title" => t.id,
+            "track_guessed_id" => t.id
+          }
+        ]
+      }
+    end)
+  end
+
+  def get_identification(%Test{} = test, _visitor_choices) do
     query =
       from i in Identification,
         inner_join: t in Track,

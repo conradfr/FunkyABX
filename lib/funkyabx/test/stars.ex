@@ -5,7 +5,24 @@ defmodule FunkyABX.Stars do
 
   # ---------- GET ----------
 
-  def get_stars(%Test{} = test) do
+  def get_stars(%Test{} = test, visitor_choices) when test.local == true do
+    test.tracks
+    |> Enum.map(fn t ->
+      %{
+        track_id: t.id,
+        track_title: t.title,
+        rank: Map.get(visitor_choices["star"], t.id, 0),
+        total_star_5: (Map.get(visitor_choices["star"], t.id, 0) == 5 && 1) || 0,
+        total_star_4: (Map.get(visitor_choices["star"], t.id, 0) == 4 && 1) || 0,
+        total_star_3: (Map.get(visitor_choices["star"], t.id, 0) == 3 && 1) || 0,
+        total_star_2: (Map.get(visitor_choices["star"], t.id, 0) == 2 && 1) || 0,
+        total_star_1: (Map.get(visitor_choices["star"], t.id, 0) == 1 && 1) || 0
+      }
+    end)
+    |> Enum.sort_by(&Map.fetch(&1, :rank), :desc)
+  end
+
+  def get_stars(%Test{} = test, _visitor_choices) do
     query =
       from t in Track,
         join: s in Star,

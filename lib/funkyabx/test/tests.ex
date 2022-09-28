@@ -1,9 +1,9 @@
 defmodule FunkyABX.Tests do
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, dynamic: 2]
   use Nebulex.Caching
 
   alias FunkyABX.Repo
-  alias FunkyABX.{Cache, Test}
+  alias FunkyABX.{Cache, Test, Stats}
   alias FunkyABX.Accounts.User
 
   @min_test_created_minutes 15
@@ -165,6 +165,15 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:is_valid?, [test, round, choices])
   end
 
+  # TODO better generic code
+  def form_data_from_session(session) do
+    %{
+      identification: Map.get(session, "identification", false),
+      rating: Map.get(session, "rating", true),
+      regular_type: Map.get(session, "regular_type", :pick)
+    }
+  end
+
   # ---------- SAVE ----------
 
   def clean_choices(choices, tracks, %Test{} = test) when is_list(tracks) do
@@ -191,6 +200,17 @@ defmodule FunkyABX.Tests do
     test
     |> get_test_module()
     |> Kernel.apply(:get_how_many_taken, [test])
+  end
+
+  def increment_local_test_counter() do
+    # we insert a new entry or increase the counter if the name exists
+    on_conflict = [set: [counter: dynamic([s], fragment("? + ?", s.counter, 1))]]
+
+    {:ok, _updated} =
+      Repo.insert(%Stats{name: "local_test", counter: 1},
+        on_conflict: on_conflict,
+        conflict_target: :name
+      )
   end
 
   # ---------- UTILS ----------

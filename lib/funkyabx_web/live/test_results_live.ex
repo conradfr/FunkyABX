@@ -1,6 +1,6 @@
 defmodule FunkyABXWeb.TestResultsLive do
   use FunkyABXWeb, :live_view
-  alias FunkyABX.Tests
+  alias FunkyABX.{Tests, Test}
 
   @title_max_length 100
 
@@ -15,9 +15,11 @@ defmodule FunkyABXWeb.TestResultsLive do
             <h6 class="header-typographica">By <%= @test.author %></h6>
           <% end %>
         </div>
-        <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</span>
-        </div>
+        <%= unless @test.local == true do %>
+          <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
+            <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</span>
+          </div>
+        <% end %>
       </div>
 
       <%= if @test.description != nil do %>
@@ -33,7 +35,21 @@ defmodule FunkyABXWeb.TestResultsLive do
         <.live_component module={module} id={Atom.to_string(module)} test={@test} visitor_choices={@visitor_choices} play_track_id={@play_track_id} test_taken_times={@test_taken_times} />
       <% end %>
 
-      <%= if !is_nil(Application.fetch_env!(:funkyabx, :disqus_id)) do %>
+      <%= if @test.local == true do %>
+        <div class="mt-3 d-flex justify-content-between results-actions">
+          <div>
+            <i class="bi bi-arrow-left color-action"></i>&nbsp;<%= live_redirect "Go back to the test form", to: Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data) %>
+          </div>
+          <div>
+            <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<%= live_redirect "Take the test again", to: Routes.local_test_path(@socket, FunkyABXWeb.TestLive, @test_data) %>
+          </div>
+          <div>
+            <i class="bi bi-plus color-action"></i>&nbsp;<a class="color-action" href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)}>Create a new local test</a>
+          </div>
+        </div>
+      <% end %>
+
+      <%= if @test.local == false and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id)) do %>
         <div class="test-comments mt-5">
           <h5 class="header-neon">Comments</h5>
           <div phx-update="ignore" id="disqus_thread"></div>
@@ -53,6 +69,40 @@ defmodule FunkyABXWeb.TestResultsLive do
         </div>
       <% end %>
     """
+  end
+
+  # local test
+  @impl true
+  def mount(%{"data" => data, "choices" => choices} = _params, _session, socket) do
+    test_data =
+      data
+      |> Base.url_decode64!()
+      |> Jason.decode!()
+
+    choices_taken =
+      choices
+      |> Base.url_decode64!()
+      |> Jason.decode!()
+
+    {:ok, test} =
+      Test.new_local()
+      |> Test.changeset_local(test_data)
+      |> Ecto.Changeset.apply_action(:update)
+
+    result_modules = Tests.get_result_modules(test)
+
+    {:ok,
+     assign(socket, %{
+       page_title: "Local test results",
+       test: test,
+       result_modules: result_modules,
+       current_user_id: nil,
+       view_description: false,
+       visitor_choices: choices_taken,
+       play_track_id: nil,
+       test_taken_times: nil,
+       test_data: data
+     })}
   end
 
   @impl true

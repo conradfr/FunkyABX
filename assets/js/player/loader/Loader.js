@@ -4,11 +4,12 @@ export const STATE_DECODING = 2;
 export const STATE_FINISHED = 3;
 
 export default class {
-  constructor(src, ac, ee) {
+  constructor(src, ac, ee, audioFiles) {
     this.src = src;
     this.ac = ac;
     this.audioRequestState = STATE_UNINITIALIZED;
     this.ee = ee;
+    this.audioFiles = audioFiles;
   }
 
   setStateChange(state) {

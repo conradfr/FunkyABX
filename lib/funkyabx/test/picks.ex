@@ -6,7 +6,24 @@ defmodule FunkyABX.Picks do
 
   # ---------- GET ----------
 
-  def get_picks(%Test{} = test) do
+  def get_picks(%Test{} = test, visitor_choices) when test.local == true do
+    test.tracks
+    |> Enum.map(fn t ->
+      picked =
+        case Map.get(visitor_choices, "pick") do
+          pick when pick == t.id -> 1
+          _ -> 0
+        end
+
+      %{
+        track_id: t.id,
+        track_title: t.title,
+        picked: picked
+      }
+    end)
+  end
+
+  def get_picks(%Test{} = test, _visitor_choices) do
     query =
       from t in Track,
         left_join: p in Pick,

@@ -1,9 +1,19 @@
 import XHRLoader from './XHRLoader';
+// import IndexDBLoader from './IndexDBLoader';
+import StoredFileLoader from './StoredFileLoader';
 
 export default class {
-  static createLoader(src, ac, ee) {
-    if (typeof src === 'string') {
-      return new XHRLoader(src, ac, ee);
+  static createLoader(trackInfo, ac, ee, audioFiles) {
+    if (trackInfo.local === false && typeof trackInfo.url === 'string') {
+      return new XHRLoader(trackInfo.url, ac, ee);
+    }
+
+    /* if (trackInfo.local === true) {
+      return new IndexDBLoader(trackInfo.id, ac, ee, fileHandles);
+    } */
+
+    if (trackInfo.local === true) {
+      return new StoredFileLoader(trackInfo.id, ac, ee, audioFiles);
     }
 
     throw new Error('Unsupported src type');

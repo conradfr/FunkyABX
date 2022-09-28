@@ -24,20 +24,24 @@ import '../css/app.scss';
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import 'phoenix_html';
 // Establish Phoenix Socket and LiveView configuration.
-import { Socket } from 'phoenix';
-import { LiveSocket } from 'phoenix_live_view';
+import {Socket} from 'phoenix';
+import {LiveSocket} from 'phoenix_live_view';
 import topbar from '../vendor/topbar';
+import {fileOpen, directoryOpen} from 'browser-fs-access';
 
 const EventEmitter = require('eventemitter3');
 
 import Player from './player/Player';
-import { COOKIE_TEST_TAKEN, COOKIE_TEST_AUTHOR, COOKIE_TEST_WAVEFORM } from './config/config';
+import {COOKIE_TEST_TAKEN, COOKIE_TEST_AUTHOR, COOKIE_TEST_WAVEFORM} from './config/config';
 import cookies from './utils/cookies';
 
 const toClipboard = (text) => {
   navigator.clipboard.writeText(text);
 };
 
+const audioFiles = {};
+
+// TODO put each hook in its own file
 
 const Hooks = {};
 
@@ -46,7 +50,7 @@ const Hooks = {};
 Hooks.TestResults = {
   mounted() {
     const testId = this.el.dataset.testid;
-    let audio = null;
+    this.audio = null;
 
     // Send visitor test data to the result page
     if (localStorage[testId] !== undefined) {
@@ -58,38 +62,50 @@ Hooks.TestResults = {
     if (cookies.has(`${COOKIE_TEST_TAKEN}_${testId}`) === false
       && cookies.get(`${COOKIE_TEST_TAKEN}_${testId}`) !== 'true'
       && localStorage[`${testId}_taken`] === undefined
-        &&  localStorage.getItem(`${testId}_taken`) !== 'true') {
+      && localStorage.getItem(`${testId}_taken`) !== 'true') {
       this.pushEvent("test_not_taken", {});
     }
 
-    const play = (e) => {
-      const { track_id, track_url } = e.detail;
-      // pause currently playing track if any
-      if (audio !== null) {
-        audio.pause()
-        audio = null;
-      }
-      audio = new Audio(track_url);
-      audio.volume = 1;
-      audio.play();
+    this.play = async (e) => {
+      const opts = {mode: 'read'};
 
-      this.pushEvent('playing', { track_id });
+      const {test_local, track_id, track_url} = e.detail;
+      // pause currently playing track if any
+      if (this.audio !== null) {
+        this.audio.pause();
+        this.audio = null;
+      }
+
+      if (test_local === true) {
+        const file = audioFiles[track_id];
+        const fileUrl = URL.createObjectURL(file);
+
+        this.audio = new Audio(fileUrl);
+      } else {
+        this.audio = new Audio(track_url);
+      }
+
+      this.audio.volume = 1;
+      this.audio.play();
+
+      this.pushEvent('playing', {track_id});
     };
 
-    const stop = () => {
-      if (audio !== null) {
-        audio.pause()
-        audio = null;
+    this.stop = () => {
+      if (this.audio !== null) {
+        this.audio.pause();
+        this.audio = null;
         this.pushEvent('stopping');
       }
     };
 
-    window.addEventListener('play', play, false);
-    window.addEventListener('stop', stop, false);
+    window.addEventListener('play', this.play, false);
+    window.addEventListener('stop', this.stop, false);
   },
-  beforeDestroy() {
-    window.removeEventListener('play', play, false);
-    window.removeEventListener('stop', stop, false);
+  destroyed() {
+    this.stop();
+    window.removeEventListener('play', this.play, false);
+    window.removeEventListener('stop', this.stop, false);
   }
 };
 
@@ -101,9 +117,9 @@ Hooks.Test = {
 
     // ensure the visitor has not already taken the test, otherwise report to the LV
     if ((cookies.has(`${COOKIE_TEST_TAKEN}_${testId}`) &&
-      cookies.get(`${COOKIE_TEST_TAKEN}_${testId}`) === 'true')
-        || (localStorage[`${testId}_taken`] !== undefined
-          &&  localStorage.getItem(`${testId}_taken`) === 'true')) {
+        cookies.get(`${COOKIE_TEST_TAKEN}_${testId}`) === 'true')
+      || (localStorage[`${testId}_taken`] !== undefined
+        && localStorage.getItem(`${testId}_taken`) === 'true')) {
       this.pushEvent("test_already_taken", {});
     }
 
@@ -117,6 +133,13 @@ Hooks.Test = {
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}`, true);
       localStorage.setItem(`${testId}_taken`, true);
     });
+
+    this.handleEvent('store_params', (params) => {
+      console.log('salut');
+      params.forEach((param) => {
+        cookies.set(param.name, params.value);
+      })
+    });
   }
 };
 
@@ -124,7 +147,7 @@ Hooks.Player = {
   mounted() {
     // ---------- INIT ----------
 
-    const ee = new EventEmitter();
+    this.ee = new EventEmitter();
 
     const loadPlayer = (tracksJson) => {
       return new Player(
@@ -134,66 +157,64 @@ Hooks.Player = {
         this.el.dataset.rotate === 'true',
         this.el.dataset.loop === 'true',
         this.el.dataset.waveform === 'true'
-          && cookies.get(COOKIE_TEST_WAVEFORM, false) !== 'false',
-        ee
+        && cookies.get(COOKIE_TEST_WAVEFORM, false) !== 'false',
+        this.ee,
+        audioFiles
       );
     }
 
-    let player = loadPlayer(this.el.dataset.tracks);
+    this.player = loadPlayer(this.el.dataset.tracks);
 
-    const play = (e) => {
-      const { track_hash, start_time} = e.detail;
-      if (player !== null && player !== undefined) {
-        player.play(track_hash, start_time);
+    // ---------- JS EVENTS ----------
+
+    this.play = (e) => {
+      const {track_hash, start_time} = e.detail;
+      if (this.player !== null && this.player !== undefined) {
+        this.player.play(track_hash, start_time);
       }
     };
 
-    const stop = () => {
-      if (player !== null && player !== undefined) {
-        player.stop();
+    this.stop = () => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.stop();
       }
     };
 
-    const pause = () => {
-      if (player !== null && player !== undefined) {
-        player.pause();
+    this.pause = () => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.pause();
       }
     };
 
-    const back = () => {
-      if (player !== null && player !== undefined) {
-        player.back();
+    this.back = () => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.back();
       }
     };
 
-    window.addEventListener('play', play, false);
-    window.addEventListener('stop', stop, false);
-    window.addEventListener('pause', pause, false);
-    window.addEventListener('back', back, false);
-
-    document.addEventListener('keyup', (event) => {
-      if (player === null || player === undefined) {
+    this.keyup = (event) => {
+      if (this.player === null || this.player === undefined) {
         return;
       }
 
       const key = event.key
       switch (key) {
         case ' ':
-          player.togglePlay(event.ctrlKey);
+          this.player.togglePlay(event.ctrlKey);
           break;
 
         case 'w':
-          player.toggleDrawWaveform();
+          this.player.toggleDrawWaveform();
           break;
 
         case 'ArrowDown':
         case 'ArrowRight':
-          player.goToNext(event.ctrlKey);
+          this.player.goToNext(event.ctrlKey);
           break;
 
         case 'ArrowUp':
         case 'ArrowLeft':
-          player.goToPrev(event.ctrlKey);
+          this.player.goToPrev(event.ctrlKey);
           break;
 
         default:
@@ -202,51 +223,58 @@ Hooks.Player = {
             if (event.shiftKey === true || event.altKey) {
               toDigit += 10;
             }
-            player.goToTrack(toDigit, event.ctrlKey, event.shiftKey);
+            this.player.goToTrack(toDigit, event.ctrlKey, event.shiftKey);
           }
       }
-    });
+    }
 
-    this.handleEvent('loop', (params) => {
-      if (player !== null && player !== undefined) {
-        player.loop = params.loop === true;
-      }
-    });
-
-    this.handleEvent('rotate', (params) => {
-      if (player !== null && player !== undefined) {
-        player.rotate = params.rotate === true;
-        player.setRotate();
-      }
-    });
-
-    this.handleEvent('rotateSeconds', (params) => {
-      if (player !== null && player !== undefined) {
-        player.rotateSeconds = params.seconds * 1000;
-        player.setRotate();
-      }
-    });
+    window.addEventListener('play', this.play, false);
+    window.addEventListener('stop', this.stop, false);
+    window.addEventListener('pause', this.pause, false);
+    window.addEventListener('back', this.back, false);
+    document.addEventListener('keyup', this.keyup, false);
 
     // push events from other components
-    ee.on('push_event', (params) => {
+    this.ee.on('push_event', (params) => {
       const {event, data} = params;
       this.pushEvent(event, data);
     });
 
-    /* todo clean */
-    this.handleEvent('update_tracks', (params) => {
-      stop();
-      this.pushEvent('stopping');
-      player = null;
+    // ---------- SERVER EVENTS ----------
 
-      ee.removeAllListeners('waveform-click');
-      ee.removeAllListeners('playing');
-      ee.removeAllListeners('stopping');
-      ee.removeAllListeners('player_state');
-
-      player = loadPlayer(params.tracks);
+    this.handleEvent('loop', (params) => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.loop = params.loop === true;
+      }
     });
 
+    this.handleEvent('rotate', (params) => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.rotate = params.rotate === true;
+        this.player.setRotate();
+      }
+    });
+
+    this.handleEvent('rotateSeconds', (params) => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.rotateSeconds = params.seconds * 1000;
+        this.player.setRotate();
+      }
+    });
+
+    /* todo clean */
+    this.handleEvent('update_tracks', (params) => {
+      this.stop();
+      this.pushEvent('stopping');
+      this.player = null;
+
+      this.ee.removeAllListeners('waveform-click');
+      this.ee.removeAllListeners('playing');
+      this.ee.removeAllListeners('stopping');
+      this.ee.removeAllListeners('player_state');
+
+      this.player = loadPlayer(params.tracks);
+    });
 
     this.handleEvent('tracks_loaded', () => {
       const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -258,11 +286,13 @@ Hooks.Player = {
       });
     });
   },
-  beforeDestroy() {
-    window.removeEventListener('play', play, false);
-    window.removeEventListener('stop', stop, false);
-    window.removeEventListener('pause', pause, false);
-    window.removeEventListener('back', back, false);
+  destroyed() {
+    this.stop();
+    window.removeEventListener('play', this.play, false);
+    window.removeEventListener('stop', this.stop, false);
+    window.removeEventListener('pause', this.pause, false);
+    window.removeEventListener('back', this.back, false);
+    window.removeEventListener('keyup', this.back, false);
   }
   /* updated() {
     console.log("editor update...")
@@ -306,13 +336,111 @@ Hooks.TestForm = {
   }
 };
 
+// ---------- LOCAL TEST PAGE ----------
+
+Hooks.LocalTestForm = {
+  mounted() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    const isAllowedExt = (filename) => {
+      const arr = filename.split(".");
+      return ['wav', 'mp3', 'aac', 'flac'].indexOf(arr.pop()) !== -1;
+    }
+
+    this.handleEvent('store_params_and_redirect', ({url, params}) => {
+      params.forEach((param) => {
+        cookies.set(param.name, param.value);
+      });
+
+      this.pushEvent('redirect', {url});
+    });
+
+    // ---------- DRAG & DROP ----------
+
+    this.ondrop = async (event) => {
+      event.preventDefault();
+
+      for await (const item of event.dataTransfer.items) {
+        if (item.kind === 'file') {
+          const file = item.getAsFile();
+
+          if (isAllowedExt(file.name)) {
+            const id = self.crypto.randomUUID();
+            audioFiles[id] = file;
+
+            this.pushEvent('track_added', {id: id, filename: file.name});
+          }
+        }
+      }
+    };
+
+    this.dropElem = document.getElementById('local_files_drop_zone');
+
+    if (this.dropElem) {
+      this.dropElem.addEventListener('drop', this.ondrop, false);
+    }
+
+    // ---------- FILE PICKER ----------
+
+    this.fileButton = document.getElementById('local-file-picker');
+
+    this.fileClick = async () => {
+      const files = await fileOpen({
+        mimeTypes: ['audio/*'],
+        extensions: ['.wav', '.mp3', '.aac', '.flac'],
+        multiple: true,
+      });
+
+      files.forEach(async file => {
+        if (isAllowedExt(file.name)) {
+          const id = self.crypto.randomUUID();
+          audioFiles[id] = file;
+
+          this.pushEvent('track_added', {id: id, filename: file.name});
+        }
+      });
+    };
+
+    this.fileButton.addEventListener('click', this.fileClick, false);
+
+    // ---------- FOLDER PICKER ----------
+
+    this.folderButton = document.getElementById('local-folder-picker');
+
+    this.folderClick = async () => {
+      const folder = await directoryOpen();
+
+      folder.forEach(async file => {
+        if (isAllowedExt(file.name)) {
+          const id = self.crypto.randomUUID();
+          audioFiles[id] = file;
+
+          this.pushEvent('track_added', {id: id, filename: file.name});
+        }
+      });
+    }
+
+    this.folderButton.addEventListener('click', this.folderClick, false);
+  },
+  destroyed() {
+    this.fileButton.removeEventListener('click', this.fileClick, false);
+    this.folderButton.removeEventListener('click', this.folderClick, false);
+    if (this.dropElem) {
+      this.dropElem.removeEventListener('drop', this.ondrop, false);
+    }
+  }
+};
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');
 const liveSocket = new LiveSocket('/live', Socket, {
-  hooks: Hooks, params: { _csrf_token: csrfToken }
+  hooks: Hooks, params: {_csrf_token: csrfToken}
 });
 
 // Show progress bar on live navigation and form submits
-topbar.config({ barColors: { 0: '#29d' }, shadowColor: 'rgba(0, 0, 0, .3)' });
+topbar.config({barColors: {0: '#29d'}, shadowColor: 'rgba(0, 0, 0, .3)'});
 window.addEventListener('phx:page-loading-start', () => topbar.show());
 window.addEventListener('phx:page-loading-stop', () => topbar.hide());
 

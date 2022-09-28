@@ -7,10 +7,16 @@ defmodule FunkyABX.Tracks do
     tracks
     |> Enum.map(fn t ->
       %{
-        #        id: t.id,
+        id: t.id,
         url: get_media_url(t, test),
-        hash: t.hash
+        hash: t.hash,
+        local: t.local
       }
+      # keep id only for local tests (to avoid cheating)
+      |> Kernel.then(fn
+        t when t.local == true -> t
+        t -> Map.drop(t, [:id])
+      end)
     end)
     |> Jason.encode!()
   end

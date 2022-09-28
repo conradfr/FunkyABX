@@ -70,6 +70,9 @@ defmodule FunkyABXWeb.Router do
     get "/auth/:slug", TestController, :password
     post "/auth/:slug", TestController, :password_verify
     live "/info", FlashLive, as: :info
+
+    live "/local_test/results/:data/:choices", TestResultsLive, as: :local_test_results
+    live "/local_test/:data", TestLive, as: :local_test
   end
 
   scope "/", FunkyABXWeb do
@@ -77,6 +80,8 @@ defmodule FunkyABXWeb.Router do
 
     live "/edit/:slug/:key", TestFormLive, as: :test_edit_private
     live "/test", TestFormLive, as: :test_new
+    live "/local_test/edit/:data", LocalTestFormLive, as: :local_test_edit
+    live "/local_test", LocalTestFormLive, as: :local_test_new
   end
 
   # Other scopes may use custom stacks.

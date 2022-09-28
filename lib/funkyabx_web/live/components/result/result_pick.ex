@@ -8,6 +8,9 @@ defmodule FunkyABXWeb.TestResultPickComponent do
   def render(assigns) do
     assigns =
       case Map.get(assigns, :visitor_picked, nil) do
+        nil when assigns.test.local == true ->
+          assign(assigns, :visitor_picked, nil)
+
         nil ->
           assign(assigns, :visitor_picked, Map.get(assigns.visitor_choices, "pick", nil))
 
@@ -25,15 +28,23 @@ defmodule FunkyABXWeb.TestResultPickComponent do
           <%= for {pick, i} <- @picks |> Enum.with_index(1) do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == pick.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => pick.track_id, "track_url" => Tracks.get_track_url(pick.track_id, @test)})}>
 
-              <TestResultTrackHeaderComponent.display playing={@play_track_id == pick.track_id} rank={i} title={pick.track_title} />
+              <TestResultTrackHeaderComponent.display playing={@play_track_id == pick.track_id} rank={i} test={@test} track_id={pick.track_id} title={pick.track_title} trophy={@test.local == false} />
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-              <%= if @visitor_picked == pick.track_id do %>
-                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You picked this track</small></div>
-              <% end %>
-              <div class="p-3 ps-0 text-end">
-                Picked <%= pick.picked %> times
-              </div>
+                <%= if @test.local == true do %>
+                  <%= if pick.picked == 1 do %>
+                    <div class="p-3 ps-0 text-end">You picked this track</div>
+                  <% else %>
+                    <div class="p-3 ps-0"></div>
+                  <% end %>
+                <% else %>
+                  <%= if @visitor_picked == pick.track_id do %>
+                    <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You picked this track</small></div>
+                  <% end %>
+                  <div class="p-3 ps-0 text-end">
+                    Picked <%= pick.picked %> times
+                  </div>
+                <% end %>
               </div>
             </div>
           <% end %>
@@ -47,6 +58,6 @@ defmodule FunkyABXWeb.TestResultPickComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:picks, fn -> Picks.get_picks(assigns.test) end)}
+     |> assign_new(:picks, fn -> Picks.get_picks(assigns.test, assigns.visitor_choices) end)}
   end
 end

@@ -1,6 +1,5 @@
 defmodule FunkyABXWeb.TestResultIdentificationComponent do
   use FunkyABXWeb, :live_component
-  alias Phoenix.LiveView.JS
   alias FunkyABX.Tracks
   alias FunkyABX.Identifications
 
@@ -38,13 +37,15 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
               </div>
             <% end %>
           </div>
-          <div class="justify-content-end text-end pt-4">
-            <%= if @identification_detail == false do %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>View details&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
-            <% else %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>Hide details&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
-            <% end %>
-          </div>
+          <%= if @test.local == false do %>
+            <div class="justify-content-end text-end pt-4">
+              <%= if @identification_detail == false do %>
+                <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>View details&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
+              <% else %>
+                <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>Hide details&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
+              <% end %>
+            </div>
+          <% end %>
         </div>
 
         <div class="tracks track-results mb-2 results">
@@ -52,9 +53,9 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             <div class="alert alert-info alert-thin">No tracks guesses ... yet!</div>
           <% end %>
           <%= for {identification, i} <- @identifications |> Enum.with_index(1) do %>
-            <div class={"track my-1 #{if (i > 1), do: "mt-4"} d-flex flex-wrap align-items-center"} phx-click={JS.dispatch(if @play_track_id == identification.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => identification.track_id, "track_url" => Tracks.get_track_url(identification.track_id, @test)})}>
+            <div class={"track my-1 #{if (i > 1), do: "mt-4"} d-flex flex-wrap align-items-center"}>
 
-              <TestResultTrackHeaderComponent.display playing={@play_track_id == identification.track_id} rank={i} title={identification.title} />
+              <TestResultTrackHeaderComponent.display playing={@play_track_id == identification.track_id} rank={i} test={@test} track_id={identification.track_id} title={identification.title} />
 
               <div class="p-3 flex-grow-1 text-end text-truncate">
                 <%= if @visitor_identified != %{} do %>
@@ -71,22 +72,24 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
               </div>
             </div>
 
-            <%= for {guess, j} <- identification.guesses |> Enum.with_index() do %>
-              <%= if (j == 0) do %>
-                <div class="my-1 d-flex flex-wrap align-items-center justify-content-end">
-                  <div class="p-1 ps-0 text-end text-muted"><small>Mostly identified as</small></div>
-                  <div class="p-1 ps-0 text-end text-truncate"><i class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}}></i> <%= guess["title"]  %></div>
-                  <div class="p-1 ps-0 text-end text-muted"><small>at</small></div>
-                  <div class="p-2 ps-0 text-end"><%= percent_of(guess["count"], identification.total_guess) %>%</div>
-                </div>
-              <% else %>
-                <%= if @identification_detail == true do %>
-                  <div id={"#{i}_#{j}"} class="track-guess d-flex align-items-center justify-content-end">
-                    <div class="p-1 ps-0 text-end text-muted"><small>Identified as</small></div>
-                    <div class="p-1 ps-0 text-end text-truncate"><i class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}}></i><%= guess["title"] %></div>
+            <%= if @test.local == false do %>
+              <%= for {guess, j} <- identification.guesses |> Enum.with_index() do %>
+                <%= if (j == 0) do %>
+                  <div class="my-1 d-flex flex-wrap align-items-center justify-content-end">
+                    <div class="p-1 ps-0 text-end text-muted"><small>Mostly identified as</small></div>
+                    <div class="p-1 ps-0 text-end text-truncate"><i class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}}></i> <%= guess["title"]  %></div>
                     <div class="p-1 ps-0 text-end text-muted"><small>at</small></div>
                     <div class="p-2 ps-0 text-end"><%= percent_of(guess["count"], identification.total_guess) %>%</div>
                   </div>
+                <% else %>
+                  <%= if @identification_detail == true do %>
+                    <div id={"#{i}_#{j}"} class="track-guess d-flex align-items-center justify-content-end">
+                      <div class="p-1 ps-0 text-end text-muted"><small>Identified as</small></div>
+                      <div class="p-1 ps-0 text-end text-truncate"><i class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}}></i><%= guess["title"] %></div>
+                      <div class="p-1 ps-0 text-end text-muted"><small>at</small></div>
+                      <div class="p-2 ps-0 text-end"><%= percent_of(guess["count"], identification.total_guess) %>%</div>
+                    </div>
+                  <% end %>
                 <% end %>
               <% end %>
             <% end %>
@@ -101,7 +104,9 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:identifications, fn -> Identifications.get_identification(assigns.test) end)
+     |> assign_new(:identifications, fn ->
+       Identifications.get_identification(assigns.test, assigns.visitor_choices)
+     end)
      |> assign_new(:identification_detail, fn -> false end)}
   end
 

@@ -54,7 +54,7 @@ defmodule FunkyABX.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.2"},
-      {:jason, "~> 1.3"},
+      {:jason, "~> 1.4"},
       {:plug_cowboy, "~> 2.5"},
       {:ecto_autoslug_field, "~> 3.0"},
       {:earmark, "1.4.20"},
