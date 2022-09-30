@@ -17,8 +17,11 @@ defmodule FunkyABXWeb.Plugs.TestParams do
     end)
     |> then(fn conn ->
       case Map.get(conn.cookies, "identification", nil) do
-        value when value in ["true", "false"] -> put_session(conn, "identification", value == "true")
-        _ -> conn
+        value when value in ["true", "false"] ->
+          put_session(conn, "identification", value == "true")
+
+        _ ->
+          conn
       end
     end)
     |> then(fn conn ->

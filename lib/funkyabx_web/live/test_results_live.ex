@@ -49,7 +49,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         </div>
       <% end %>
 
-      <%= if @test.local == false and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id)) do %>
+      <%= if @test.local == false and @embed != true and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id)) do %>
         <div class="test-comments mt-5">
           <h5 class="header-neon">Comments</h5>
           <div phx-update="ignore" id="disqus_thread"></div>
@@ -71,7 +71,7 @@ defmodule FunkyABXWeb.TestResultsLive do
     """
   end
 
-  # local test
+  # Local test
   @impl true
   def mount(%{"data" => data, "choices" => choices} = _params, _session, socket) do
     test_data =
@@ -125,7 +125,8 @@ defmodule FunkyABXWeb.TestResultsLive do
          view_description: false,
          visitor_choices: %{},
          play_track_id: nil,
-         test_taken_times: Tests.get_how_many_taken(test)
+         test_taken_times: Tests.get_how_many_taken(test),
+         embed: Map.get(session, "embed", false)
        })}
     else
       _ ->

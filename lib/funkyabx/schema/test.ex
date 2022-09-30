@@ -41,6 +41,7 @@ defmodule FunkyABX.Test do
     field(:email_notification, :boolean)
     field(:upload_url, :string, virtual: true)
     field(:local, :boolean, virtual: true, default: false)
+    field(:embed, :boolean, virtual: true, default: false)
     timestamps()
     belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)

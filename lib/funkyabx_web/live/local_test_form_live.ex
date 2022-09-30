@@ -175,8 +175,8 @@ defmodule FunkyABXWeb.LocalTestFormLive do
   @impl true
   def handle_event("redirect", %{"url" => url}, socket) do
     {:noreply,
-      socket
-      |> push_redirect(to: url, replace: false)}
+     socket
+     |> push_redirect(to: url, replace: false)}
   end
 
   # ---------- FORM EVENTS ----------
@@ -226,7 +226,6 @@ defmodule FunkyABXWeb.LocalTestFormLive do
 
   @impl true
   def handle_event("save", %{"test" => test_params}, socket) do
-    IO.puts "#{inspect test_params}"
     test = Test.changeset_local(socket.assigns.test, test_params)
 
     case test.valid? do
@@ -247,7 +246,8 @@ defmodule FunkyABXWeb.LocalTestFormLive do
             test_encoded
           )
 
-        {:noreply,
+        {
+          :noreply,
           socket
           |> push_event("store_params_and_redirect", %{
             "url" => url,
@@ -266,7 +266,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
               }
             ]
           })
-#          |> push_redirect(to: url, redirect: false)
+          # |> push_redirect(to: url, redirect: false)
         }
 
       false ->

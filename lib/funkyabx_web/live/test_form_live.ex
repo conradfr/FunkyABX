@@ -125,10 +125,21 @@ defmodule FunkyABXWeb.TestFormLive do
               <legend class="header-typographica">Your test</legend>
               <div class="px-3 pt-2 pb-3 rounded-3" style="background-color: #583247;">
                 <div class="mb-3">
-                  <label for="test_public_link" class="form-label">Test public page <span class="form-text">(share this link)</span></label>
+                  <label for="test_public_link" class="form-label w-100">
+                  <div class="float-end">
+                    <%= checkbox(f, :embed, class: "form-check-input") %>&nbsp;&nbsp;Embed</div>
+                    Test public page <span class="form-text">(share this link)</span>
+                  </label>
+                    <% test_url =
+                        if input_value(f, :embed) == "true" do
+                          Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug), embed: "1")
+                        else
+                          Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))
+                        end
+                    %>
                   <div class="input-group mb-3">
-                    <%= text_input(f, :public_link, class: "form-control", readonly: "readonly", value: Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))) %>
-                    <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))}>
+                    <%= text_input(f, :public_link, class: "form-control", readonly: "readonly", value: test_url) %>
+                    <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={test_url}>
                       <i class="bi bi-clipboard"></i>
                     </button>
                     <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
@@ -451,7 +462,8 @@ defmodule FunkyABXWeb.TestFormLive do
     test = Test.new(user)
 
     changeset =
-      Test.changeset(test,
+      Test.changeset(
+        test,
         Map.merge(
           %{
             access_key: access_key,

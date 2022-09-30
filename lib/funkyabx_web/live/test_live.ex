@@ -189,6 +189,7 @@ defmodule FunkyABXWeb.TestLive do
     """
   end
 
+  # Local test
   @impl true
   def mount(%{"data" => data} = _params, _session, socket) do
     test_data =
@@ -273,7 +274,8 @@ defmodule FunkyABXWeb.TestLive do
        flag_display: false,
        test_taken_times: Tests.get_how_many_taken(test),
        test_already_taken: Map.get(session, "test_taken_" <> slug, false),
-       view_tracklist: test.description == nil
+       view_tracklist: test.description == nil,
+       embed: Map.get(session, "embed", false)
      })}
   end
 
@@ -328,10 +330,13 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_info({:redirect_results, url} = _payload, socket) do
+    # a bit hackish, for now
+    embed = if socket.assigns.embed == true, do: "?embed=1", else: ""
+
     {:noreply,
      socket
      |> put_flash(:success, "Your submission has been registered!")
-     |> redirect(to: url)}
+     |> redirect(to: url <> embed)}
   end
 
   @impl true

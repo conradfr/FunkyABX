@@ -16,6 +16,8 @@ defmodule FunkyABXWeb.Router do
       clients: ~w[10.0.2.2/32]
 
     plug FunkyABXWeb.Plugs.Ip
+
+    plug FunkyABXWeb.Plugs.Embed
   end
 
   pipeline :api do
