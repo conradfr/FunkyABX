@@ -140,6 +140,30 @@ Hooks.Test = {
         cookies.set(param.name, params.value);
       })
     });
+
+    this.warningReload = (e) => {
+      e.preventDefault();
+      // the text is useless
+      return 'Are you sure you want to leave/reload? Tracks will be lost.';
+    }
+
+    this.handleEvent('setWarningLocalTestReload', (params) => {
+      if (params.set === false && this.preventReloadSet === true) {
+        this.preventReloadSet = false;
+        window.removeEventListener('beforeunload', this.warningReload);
+        return;
+      }
+
+      if (this.preventReloadSet !== true) {
+        this.preventReloadSet = true;
+        window.addEventListener('beforeunload', this.warningReload);
+      }
+    });
+  },
+  destroyed() {
+    if (this.preventReloadSet === true) {
+      window.removeEventListener('beforeunload', this.warningReload);
+    }
   }
 };
 

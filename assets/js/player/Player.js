@@ -120,7 +120,10 @@ export default class {
           trackObj.drawTimeline();
           return trackObj;
         });
-      });
+      })
+      .catch((error) => {
+        this.ee.emit('push_event', { event: 'tracksError', data: {error} });
+    });
   }
 
   // ---------- UTILS ----------

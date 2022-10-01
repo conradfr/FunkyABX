@@ -12,7 +12,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
       <.form class="mb-2" let={f} for={@changeset} phx-change="validate" phx-submit={@action}>
         <div class="row">
           <div class="col-md-6 col-sm-12 order-md-1 order-2">
-            <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="LocalTestForm">Local test</h3>
+            <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="LocalTestForm">Local test <i class="bi bi-question-circle text-muted" style="font-size: 0.75rem" data-bs-toggle="tooltip" title="Local tests are ephemerous tests that can't be shared and are using your files locally."></i></h3>
           </div>
         </div>
 

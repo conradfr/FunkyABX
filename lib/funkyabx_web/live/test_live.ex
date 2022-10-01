@@ -161,7 +161,9 @@ defmodule FunkyABXWeb.TestLive do
           <div class="d-flex flex-row align-items-center justify-content-between">
               <%= if @test.local == true do %>
                 <div class="results-actions">
-                  <i class="bi bi-arrow-left color-action"></i>&nbsp;<%= live_redirect "Go back to the test form", to: Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data) %>
+                  <%= if @tracks_loaded == true do %>
+                    <i class="bi bi-arrow-left color-action"></i>&nbsp;<%= live_redirect "Go back to the test form", to: Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data) %>
+                  <% end %>
                 </div>
                 <div class="results-actions">
                   <i class="bi bi-plus color-action"></i>&nbsp;<a class="color-action" href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)}>Create a new local test</a>
@@ -212,7 +214,8 @@ defmodule FunkyABXWeb.TestLive do
     choices_modules = Tests.get_choices_modules(test)
 
     {:ok,
-     assign(socket, %{
+     socket
+     |> assign(%{
        page_title: "Local test",
        test_data: data,
        test: test,
@@ -233,7 +236,8 @@ defmodule FunkyABXWeb.TestLive do
        #       test_already_taken: Map.get(session, "test_taken_" <> slug, false),
        test_already_taken: false,
        view_tracklist: false
-     })}
+     })
+     |> push_event("setWarningLocalTestReload", %{})}
   end
 
   @impl true
@@ -367,6 +371,22 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> assign(tracks_loaded: true)
      |> push_event("tracks_loaded", %{})}
+  end
+
+  @impl true
+  def handle_event("tracksError", _params, socket) do
+    flash_text =
+      case socket.assigns.test.local do
+        true -> "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test."
+        false -> "One or more tracks couldn't be loaded. Please refresh the page to try again."
+      end
+
+    {:noreply,
+      socket
+      |> assign(tracks_loaded: false)
+      |> push_event("setWarningLocalTestReload", %{set: false})
+      |> put_flash(:error, flash_text)
+    }
   end
 
   @impl true
