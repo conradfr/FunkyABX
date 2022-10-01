@@ -1,5 +1,6 @@
 defmodule FunkyABX.Download do
   require Logger
+  alias Ecto.UUID
 
   @timeout 300_000
 
@@ -10,6 +11,8 @@ defmodule FunkyABX.Download do
     try do
       resp =
         url
+        |> URI.decode()
+        |> URI.encode()
         |> HTTPoison.get!(%{},
           stream_to: self(),
           async: :once,
@@ -67,6 +70,6 @@ defmodule FunkyABX.Download do
   defp local_path(url) when is_binary(url) do
     url
     |> Path.basename()
-    |> (&Path.join([Application.fetch_env!(:funkyabx, :temp_folder), &1])).()
+    |> (&Path.join([Application.fetch_env!(:funkyabx, :temp_folder), UUID.generate() <> &1])).()
   end
 end
