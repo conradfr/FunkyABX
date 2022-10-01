@@ -154,7 +154,7 @@ Hooks.Test = {
         return;
       }
 
-      if (this.preventReloadSet !== true) {
+      if (params.set === true && this.preventReloadSet !== true) {
         this.preventReloadSet = true;
         window.addEventListener('beforeunload', this.warningReload);
       }

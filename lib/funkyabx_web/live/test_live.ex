@@ -237,7 +237,7 @@ defmodule FunkyABXWeb.TestLive do
        test_already_taken: false,
        view_tracklist: false
      })
-     |> push_event("setWarningLocalTestReload", %{})}
+     |> push_event("setWarningLocalTestReload", %{set: true})}
   end
 
   @impl true
@@ -377,16 +377,18 @@ defmodule FunkyABXWeb.TestLive do
   def handle_event("tracksError", _params, socket) do
     flash_text =
       case socket.assigns.test.local do
-        true -> "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test."
-        false -> "One or more tracks couldn't be loaded. Please refresh the page to try again."
+        true ->
+          "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test."
+
+        false ->
+          "One or more tracks couldn't be loaded. Please refresh the page to try again."
       end
 
     {:noreply,
-      socket
-      |> assign(tracks_loaded: false)
-      |> push_event("setWarningLocalTestReload", %{set: false})
-      |> put_flash(:error, flash_text)
-    }
+     socket
+     |> assign(tracks_loaded: false)
+     |> push_event("setWarningLocalTestReload", %{set: false})
+     |> put_flash(:error, flash_text)}
   end
 
   @impl true
