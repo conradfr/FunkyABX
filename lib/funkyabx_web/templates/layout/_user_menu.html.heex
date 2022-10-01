@@ -2,7 +2,7 @@
   <a class={"nav-link dropdown-toggle#{if @current_user, do: " funkyabx-connected"}"} href="#" id="navbarDropdownUserMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <i class="bi bi-person-circle"></i>&nbsp;&nbsp;User
   </a>
-  <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdownUserMenuLink">
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUserMenuLink">
     <%= if @current_user do %>
       <li class="px-3 mb-2"><%= @current_user.email %></li>
       <li><hr class="dropdown-divider" style="background-color: white;"></li>
