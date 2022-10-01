@@ -1,0 +1,61 @@
+<h3 class="header-chemyretro">FAQ</h3>
+
+<div class="row">
+  <div class="col-12 col-sm-8">
+    <div class="mb-4 form-unit rounded-2 p-3 pb-1">
+      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;What is FunkyABX?</strong></p>
+      <p>
+        FunkyABX is a independent website to make audio blind tests with different ranking methods.
+      </p>
+    </div>
+
+    <div class="mb-4 form-unit rounded-2 p-3 pb-1">
+      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;Where are the audio files stored?</strong></p>
+      <p>
+        Audio files are uploaded to the cloud provider <a target="_blank" href="https://www.scaleway.com/fr/">Scaleway</a> in Paris, France. Files are deleted when a test is deleted.
+        <br>Files used for local tests are not transmitted to any servers.
+      </p>
+    </div>
+
+    <div class="mb-4 form-unit rounded-2 p-3 pb-1">
+      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;How much does it cost?</strong></p>
+      <p>
+        Everything is free, but you can help cover the hosting cost by donate your spare change <a href={Routes.page_path(@conn, :donate)}>here</a>.
+        <br>There's no ads and no usage data is collected and sold.</p>
+    </div>
+
+    <div class="mb-4 form-unit rounded-2 p-3 pb-1">
+      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;Do I need to create an account?</strong></p>
+      <p>We worked hard to make the experience the same with or without an account as much as possible.</p>
+      <p>Differences without an account:</p>
+      <ul>
+        <li>You can't get an email when someone takes one of your tests</li>
+        <li>Your list of tests is limited to the one created on the same device.</li>
+      </ul>
+    </div>
+
+    <div class="mb-4 form-unit rounded-2 p-3 pb-1">
+      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;Would you implement my great feature idea?</strong></p>
+      <p>Yes why not, maybe, it has been done before, try the <a href={Routes.page_path(@conn, :contact)}>contact form</a>.</p>
+      <p>Please not that as the site is developed for free and on our spare time we have to take into account the time, cost of development, testing and support of any new feature.</p>
+    </div>
+
+    <div class="mb-4 form-unit rounded-2 p-3 pb-1">
+      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;Can I use an alternative hosting provider for my audio files?</strong></p>
+      <p>Not currently but maybe in the future. One of the problem is the need to have a functioning CORS, which if you're a web developer know it's always tricky.</p>
+      <p>Alternatively you can host your own FunkyABX version by using the <a target="_blank" href="https://github.com/conradfr/FunkyABX">Github repo</a>. We do not currently offer docker file or support for it but may do in the near future.</p>
+    </div>
+
+    <div class="mb-4 form-unit rounded-2 p-3 pb-1">
+      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;Is there an API?</strong></p>
+      <p>There is an experimental REST API to create tests that has not been properly tested yet, so consider it alpha.</p>
+      <p>You'll need to:</p>
+      <ul>
+        <li>Create an account and be logged-in</li>
+        <li>Generates an API key <%= link "here", to: Routes.user_settings_api_key_path(@conn, :index) %></li>
+        <li>Check the <a href="/api/swagger/index.html">Swagger spec</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>

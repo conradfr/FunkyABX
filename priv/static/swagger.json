@@ -108,17 +108,54 @@
   "host": "localhost:4000",
   "info": {
     "title": "FunkyABX",
-    "version": "1.0"
+    "version": "0.2"
   },
   "paths": {
     "/test": {
       "post": {
         "description": "Submit new test",
         "operationId": "FunkyABXWeb.TestController.test_api_new",
-        "parameters": [],
+        "parameters": [
+          {
+            "description": "Test",
+            "in": "path",
+            "name": "test",
+            "required": true,
+            "type": "object"
+          },
+          {
+            "description": "Array of Tracks",
+            "in": "path",
+            "name": "tracks",
+            "required": true,
+            "type": {
+              "$ref": "#/definitions/Tracks"
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "schema": {
+              "properties": {
+                "_links": {
+                  "description": "Links to pages",
+                  "type": "array"
+                },
+                "id": {
+                  "description": "Test's id",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "OK",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
           }
         },
         "summary": "",

@@ -66,6 +66,8 @@ defmodule FunkyABXWeb.Router do
 
     get "/", PageController, :index
     get "/about", PageController, :about
+    get "/faq", PageController, :faq
+    get "/donate", PageController, :donate
     get "/gallery", PageController, :gallery
     get "/contact", PageController, :contact
     post "/contact", PageController, :contact_submit
@@ -173,7 +175,7 @@ defmodule FunkyABXWeb.Router do
   def swagger_info do
     %{
       info: %{
-        version: "1.0",
+        version: "0.2",
         title: "FunkyABX"
       }
     }

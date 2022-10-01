@@ -49,4 +49,12 @@ defmodule FunkyABXWeb.PageController do
   def about(conn, _params) do
     render(conn, "about.html")
   end
+
+  def faq(conn, _params) do
+    render(conn, "faq.html")
+  end
+
+  def donate(conn, _params) do
+    render(conn, "donate.html")
+  end
 end

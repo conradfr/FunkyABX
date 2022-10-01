@@ -51,8 +51,9 @@
                   More
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href={Routes.page_path(@conn, :faq)}>FAQ</a></li>
+                  <li><a class="dropdown-item" href={Routes.page_path(@conn, :donate)}>Support the site</a></li>
                   <li><a class="dropdown-item" href={Routes.page_path(@conn, :contact)}>Contact</a></li>
-                  <li><a class="dropdown-item" href={Routes.page_path(@conn, :about)}>About</a></li>
                 </ul>
               </li>
             </ul>
@@ -68,7 +69,7 @@
 
     <footer class="footer mt-auto">
         <div class="container text-center">
-          ©2021-<%= DateTime.utc_now.year %> <a target="_blank" href="http://www.funkybits.fr">FunkyBits</a>
+          ©2021-<%= DateTime.utc_now.year %> <a target="_blank" href="http://www.funkybits.fr">FunkyBits</a> - <a href={Routes.page_path(@conn, :about)}>About</a>
         </div>
     </footer>
 

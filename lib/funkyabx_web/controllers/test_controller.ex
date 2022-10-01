@@ -95,7 +95,21 @@ defmodule FunkyABXWeb.TestController do
   swagger_path :test_api_new do
     post("/test")
     description("Submit new test")
-    response(201, "Created")
+    parameters do
+      test :path, :object, "Test", required: true
+      tracks :path, :array, "Array of Tracks", required: true,
+        type: Schema.ref(:Tracks)
+    end
+    response(400, "Bad request")
+    response(201, "Created",
+      swagger_schema do
+        properties do
+          status(:string, "OK")
+          id(:string, "Test's id")
+          _links(:array, "Links to pages")
+        end
+      end
+    )
   end
 
   def test_api_new(conn, %{"test" => test_params, "tracks" => tracks_params} = _params) do
@@ -130,7 +144,7 @@ defmodule FunkyABXWeb.TestController do
           |> json(%{
             "status" => "OK",
             "id" => test_id,
-            "links" => %{
+            "_links" => %{
               "public" => Routes.test_public_url(conn, FunkyABXWeb.TestLive, test.slug),
               "public_embed" => Routes.test_public_url(conn, FunkyABXWeb.TestLive, test.slug, embed: "1"),
               "edit" => Routes.test_edit_url(conn, FunkyABXWeb.TestFormLive, test.id),
