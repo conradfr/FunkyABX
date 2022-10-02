@@ -67,8 +67,6 @@ Hooks.TestResults = {
     }
 
     this.play = async (e) => {
-      const opts = {mode: 'read'};
-
       const {test_local, track_id, track_url} = e.detail;
       // pause currently playing track if any
       if (this.audio !== null) {
@@ -132,13 +130,6 @@ Hooks.Test = {
     this.handleEvent('bypass_test', () => {
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}`, true);
       localStorage.setItem(`${testId}_taken`, true);
-    });
-
-    this.handleEvent('store_params', (params) => {
-      console.log('salut');
-      params.forEach((param) => {
-        cookies.set(param.name, params.value);
-      })
     });
 
     this.warningReload = (e) => {
@@ -357,6 +348,14 @@ Hooks.TestForm = {
 
       cookies.remove(`test_${params.test_id}`);
     });
+
+    this.handleEvent('store_params', ({params}) => {
+      params.forEach((param) => {
+        if (param.value !== null) {
+          cookies.set(param.name, param.value);
+        }
+      })
+    });
   }
 };
 
@@ -376,7 +375,9 @@ Hooks.LocalTestForm = {
 
     this.handleEvent('store_params_and_redirect', ({url, params}) => {
       params.forEach((param) => {
-        cookies.set(param.name, param.value);
+        if (param.value !== null) {
+          cookies.set(param.name, param.value);
+        }
       });
 
       this.pushEvent('redirect', {url});

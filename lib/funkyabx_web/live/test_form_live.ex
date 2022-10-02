@@ -635,6 +635,22 @@ defmodule FunkyABXWeb.TestFormLive do
             test_access_key: test.access_key,
             test_author: test.author
           })
+          |> push_event("store_params", %{
+            "params" => [
+              %{
+                "name" => "identification",
+                "value" => test_params["identification"]
+              },
+              %{
+                "name" => "rating",
+                "value" => test_params["rating"]
+              },
+              %{
+                "name" => "regular_type",
+                "value" => test_params["regular_type"]
+              }
+            ]
+          })
           |> put_flash(:success, flash_text)
           #         |> push_redirect(to: redirect, replace: true)
         }

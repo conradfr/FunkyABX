@@ -26,12 +26,12 @@ defmodule FunkyABX.Test do
     field(:password, :string)
     field(:password_length, :integer)
     field(:password_input, :string, virtual: true, default: nil)
-    field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
-    field(:regular_type, Ecto.Enum, values: [rank: 1, pick: 2, star: 3])
+    field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3], default: :regular)
+    field(:regular_type, Ecto.Enum, values: [rank: 1, pick: 2, star: 3], default: :pick)
     field(:anonymized_track_title, :boolean)
-    field(:rating, :boolean)
-    field(:ranking_only_extremities, :boolean)
-    field(:identification, :boolean)
+    field(:rating, :boolean, default: true)
+    field(:ranking_only_extremities, :boolean, default: false)
+    field(:identification, :boolean, default: false)
     field(:nb_of_rounds, :integer)
     field(:ip_address, :binary)
     field(:to_closed_at, :naive_datetime)
@@ -55,10 +55,6 @@ defmodule FunkyABX.Test do
       id: UUID.generate(),
       local: false,
       type: :regular,
-      rating: true,
-      regular_type: :pick,
-      ranking_only_extremities: false,
-      identification: false,
       author: nil,
       access_key: nil,
       password_length: nil,
@@ -77,11 +73,6 @@ defmodule FunkyABX.Test do
       id: UUID.generate(),
       local: true,
       title: "Local test",
-      type: :regular,
-      rating: true,
-      regular_type: :pick,
-      ranking_only_extremities: false,
-      identification: false,
       nb_of_rounds: 1,
       tracks: []
     }
