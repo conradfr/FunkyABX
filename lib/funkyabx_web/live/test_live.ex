@@ -154,7 +154,7 @@ defmodule FunkyABXWeb.TestLive do
             <div :if={@test.local == true} class="results-actions">
               <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}>Go back to the test form</.link>
             </div>
-            <div class="results-actions">
+            <div :if={@test.local == true} class="results-actions">
               <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action">Create a new local test</.link>
             </div>
             <%= unless @test_already_taken == true do %>
