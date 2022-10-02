@@ -32,8 +32,11 @@ defmodule FunkyABX.Tests.Validators do
       changeset
       |> get_field(:password_input)
       |> case do
-        nil -> nil
-        value -> String.trim(value)
+        nil ->
+          nil
+
+        value ->
+          String.trim(value)
       end
       |> case do
         nil -> nil
@@ -58,9 +61,12 @@ defmodule FunkyABX.Tests.Validators do
   end
 
   def ensure_no_notification_when_not_logged(changeset) do
-    case changeset.data.user_id do
-      nil -> put_change(changeset, :email_notification, false)
-      _ -> changeset
+    case get_field(changeset, :user) do
+      nil ->
+        put_change(changeset, :email_notification, false)
+
+      _ ->
+        changeset
     end
   end
 

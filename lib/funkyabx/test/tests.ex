@@ -22,18 +22,18 @@ defmodule FunkyABX.Tests do
   @decorate cacheable(cache: Cache, key: {Test, id}, opts: [ttl: @cache_test_ttl])
   def get(id) when is_binary(id) do
     Repo.get(Test, id)
-    |> Repo.preload([:tracks])
+    |> Repo.preload([:tracks, :user])
   end
 
   @decorate cacheable(cache: Cache, key: {Test, slug}, opts: [ttl: @cache_test_ttl])
   def get_by_slug(slug) when is_binary(slug) do
     Repo.get_by(Test, slug: slug)
-    |> Repo.preload([:tracks])
+    |> Repo.preload([:tracks, :user])
   end
 
   def get_edit(slug, key) when is_binary(slug) and is_binary(key) do
     Repo.get_by!(Test, slug: slug, password: key)
-    |> Repo.preload([:tracks])
+    |> Repo.preload([:tracks, :user])
   end
 
   # todo also use limit as key

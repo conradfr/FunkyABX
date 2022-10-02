@@ -93,7 +93,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   </label>
                   <div class="form-text mb-2">People will have to guess which track is cloned for n rounds</div>
                   <div class="row ms-4 mb-1">
-                    <label for="inputEmail3" class="col-4 col-form-label ps-0">Number of rounds:</label>
+                    <label for="test[nb_of_rounds]" class="col-4 col-form-label ps-0">Number of rounds:</label>
                     <div class="col-2">
                       <%= number_input(f, :nb_of_rounds, class: "form-control", required: input_value(f, :type) == :abx,
                         disabled: !@test_updatable or get_field(@changeset, :type) !== :abx) %>
@@ -245,14 +245,13 @@ defmodule FunkyABXWeb.TestFormLive do
                     <%= checkbox(f, :email_notification, class: "form-check-input", disabled: @test.user == nil) %>
                     &nbsp;&nbsp;Notify me by email when a test is taken
                   </label>
-                  <%= if @test.user == nil do %>
-                    <div class="form-text">Available only for logged in users</div>
-                  <% end %>
+                  <div :if={@test.user == nil} class="form-text">Available only for logged in users</div>
                 </div>
 
                 <div class="form-check mb-2">
                   <label class="form-check-label">
                     <%= checkbox(f, :password_enabled, class: "form-check-input") %>
+                    <%= hidden_input(f, :password) %>
                     &nbsp;&nbsp;Password protected
                   </label>
                   <div class="form-text">The test will require a password to be taken (public tests will be modified as private)</div>
@@ -580,7 +579,8 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   def handle_info({"save", %{"test" => test_params}}, socket) do
-    updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
+    updated_test_params =
+      consume_and_update_form_tracks_params(test_params, socket)
 
     insert =
       socket.assigns.test

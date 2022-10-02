@@ -18,14 +18,14 @@ defmodule FunkyABX.Test do
     field(:title, :string)
     field(:author, :string)
     field(:description, :string)
-    field(:description_markdown, :boolean)
+    field(:description_markdown, :boolean, default: false)
     field(:slug, TitleSlug.Type)
-    field(:public, :boolean)
+    field(:public, :boolean, default: false)
     field(:access_key, :string)
-    field(:password_enabled, :boolean)
+    field(:password_enabled, :boolean, default: false)
     field(:password, :string)
     field(:password_length, :integer)
-    field(:password_input, :string, virtual: true)
+    field(:password_input, :string, virtual: true, default: nil)
     field(:type, Ecto.Enum, values: [regular: 1, abx: 2, listening: 3])
     field(:regular_type, Ecto.Enum, values: [rank: 1, pick: 2, star: 3])
     field(:anonymized_track_title, :boolean)
@@ -38,7 +38,7 @@ defmodule FunkyABX.Test do
     field(:closed_at, :naive_datetime)
     field(:deleted_at, :naive_datetime)
     field(:normalization, :boolean)
-    field(:email_notification, :boolean)
+    field(:email_notification, :boolean, default: false)
     field(:upload_url, :string, virtual: true)
     field(:local, :boolean, virtual: true, default: false)
     field(:embed, :boolean, virtual: true, default: false)
@@ -61,16 +61,13 @@ defmodule FunkyABX.Test do
       identification: false,
       author: nil,
       access_key: nil,
-      password_enabled: false,
       password_length: nil,
-      description_markdown: false,
       upload_url: nil,
       tracks: [],
       normalization: false,
       user: user,
       nb_of_rounds: @default_rounds,
       anonymized_track_title: true,
-      email_notification: false,
       ip_address: nil
     }
   end
