@@ -308,7 +308,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="row form-unit pb-1 rounded-3" phx-drop-target={@uploads.tracks.ref}>
                   <%= label :f, :filename, "Select file(s) to upload:", class: "col-sm-4 col-form-label text-start text-md-end" %>
                   <div class="col text-center pt-1">
-                    <%= live_file_input @uploads.tracks %>
+                    <.live_file_input upload={@uploads.tracks} />
                   </div>
                   <div class="col-1 text-center col-form-label d-none d-sm-block">
                     <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" title="Or drag and drop files here"></i>

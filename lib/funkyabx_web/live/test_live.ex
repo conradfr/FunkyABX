@@ -14,22 +14,16 @@ defmodule FunkyABXWeb.TestLive do
           <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
             <%= @test.title %>
           </h3>
-          <%= if @test.author != nil do %>
-            <h6 class="header-typographica">By <%= @test.author %></h6>
-          <% end %>
+          <h6 :if={@test.author != nil} class="header-typographica">By <%= @test.author %></h6>
         </div>
-        <%= if @test.local == false do %>
-          <div class="col-sm-6 text-start text-sm-end pt-1">
-            <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
+        <div :if={@test.local == false} class="col-sm-6 text-start text-sm-end pt-1">
+          <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
 
-            <.live_component module={TestFlagComponent} id="flag" test={@test} />
-          </div>
-        <% end %>
+          <.live_component module={TestFlagComponent} id="flag" test={@test} />
+        </div>
       </div>
 
-      <%= if @test.description != nil do %>
-        <TestDescriptionComponent.format wrapper_class="mt-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
-      <% end %>
+      <TestDescriptionComponent.format :if={@test.description != nil} wrapper_class="mt-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
 
       <%= if @view_tracklist == false do %>
         <div class="fs-8 mt-2 mb-2 cursor-link text-muted" phx-click="toggle_tracklist">Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
@@ -81,11 +75,9 @@ defmodule FunkyABXWeb.TestLive do
             </div>
           <% end %>
         </div>
-        <%= if @test.local == false and @test.nb_of_rounds > 1 do %>
-          <div class="flex-grow-1 p-2 text-center">
-            Round <%= @current_round %> / <%= @test.nb_of_rounds %>
-          </div>
-        <% end %>
+        <div :if={@test.local == false and @test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
+          Round <%= @current_round %> / <%= @test.nb_of_rounds %>
+        </div>
         <div class="p-2">
           <fieldset class="form-group">
             <div class="form-check">
@@ -159,30 +151,24 @@ defmodule FunkyABXWeb.TestLive do
       <%= unless @test_params.has_choices == false do %>
         <div class="mt-3">
           <div class="d-flex flex-row align-items-center justify-content-between">
-              <%= if @test.local == true do %>
-                <div class="results-actions">
-                  <%= if @tracks_loaded == true do %>
-                    <i class="bi bi-arrow-left color-action"></i>&nbsp;<%= live_redirect "Go back to the test form", to: Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data) %>
-                  <% end %>
-                </div>
-                <div class="results-actions">
-                  <i class="bi bi-plus color-action"></i>&nbsp;<a class="color-action" href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)}>Create a new local test</a>
+            <div :if={@test.local == true} class="results-actions">
+              <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}>Go back to the test form</.link>
+            </div>
+            <div class="results-actions">
+              <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action">Create a new local test</.link>
+            </div>
+            <%= unless @test_already_taken == true do %>
+              <%= unless @test.local == true do %>
+                <div class="px-1">
+                  <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>
                 </div>
               <% end %>
-              <%= unless @test_already_taken == true do %>
-                <%= unless @test.local == true do %>
-                  <div class="px-1">
-                    <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>
-                  </div>
-                <% end %>
-              <div class="text-end px-1 _flex-fill">
-                <button phx-click="submit" class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}>Submit my choices</button>
-              </div>
+            <div class="text-end px-1 _flex-fill">
+              <button phx-click="submit" class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}>Submit my choices</button>
+            </div>
             <% else %>
               <div class="text-end px-1 flex-fill">
-                <%= if @test.local == false do %>
-                  <%= link "Check the results", to: Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug), class: "btn btn-primary" %>
-                <% end %>
+                <.link :if={@test.local == false} href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug)} class="btn btn-primary">Check the results</.link>
               </div>
             <% end %>
           </div>

@@ -22,9 +22,7 @@ defmodule FunkyABXWeb.TestResultPickComponent do
       <div>
         <h4 class="mt-3 header-neon">Picking</h4>
         <div class="tracks my-2 mb-4 track-results results">
-          <%= if Kernel.length(@picks) == 0 do %>
-            <div class="alert alert-info alert-thin">No track picked ... yet!</div>
-          <% end %>
+          <div :if={Kernel.length(@picks) == 0} class="alert alert-info alert-thin">No track picked ... yet!</div>
           <%= for {pick, i} <- @picks |> Enum.with_index(1) do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == pick.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => pick.track_id, "track_url" => Tracks.get_track_url(pick.track_id, @test)})}>
 
@@ -38,9 +36,7 @@ defmodule FunkyABXWeb.TestResultPickComponent do
                     <div class="p-3 ps-0"></div>
                   <% end %>
                 <% else %>
-                  <%= if @visitor_picked == pick.track_id do %>
-                    <div class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You picked this track</small></div>
-                  <% end %>
+                  <div :if={@visitor_picked == pick.track_id} class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You picked this track</small></div>
                   <div class="p-3 ps-0 text-end">
                     Picked <%= pick.picked %> times
                   </div>

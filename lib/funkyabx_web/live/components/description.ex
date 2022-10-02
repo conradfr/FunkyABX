@@ -2,9 +2,11 @@ defmodule TestDescriptionComponent do
   use Phoenix.Component
   use Phoenix.HTML
 
-  def format(assigns) do
-    assigns = assign_new(assigns, :wrapper_class, fn -> "" end)
+  attr :wrapper_class, :string, required: false, default: ""
+  attr :description_markdown, :boolean, required: false, default: false
+  attr :description, :string, required: true
 
+  def format(assigns) do
     ~H"""
       <div class={@wrapper_class}>
         <%= if @description_markdown == true do %>

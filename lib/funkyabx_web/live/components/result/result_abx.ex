@@ -18,19 +18,13 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
       <div>
         <h4 class="mt-3 header-neon">ABX</h4>
 
-        <%= if @visitor_guesses != nil do %>
-          <div class="mb-3">
-            Your score: <strong><%= @visitor_guesses %> / <%= @test.nb_of_rounds %></strong>
-            <%= if @visitor_guesses == @test.nb_of_rounds do %>
-              <i class="bi bi-hand-thumbs-up"></i>
-            <% end %>
-          </div>
-        <% end %>
+        <div :if={@visitor_guesses != nil} class="mb-3">
+          Your score: <strong><%= @visitor_guesses %> / <%= @test.nb_of_rounds %></strong>
+          <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
+        </div>
 
         <div class="tracks my-2 mb-1 track-results results">
-          <%= if Kernel.length(@abx) == 0 do %>
-            <div class="alert alert-info alert-thin">No test taken ... yet!</div>
-          <% end %>
+          <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin">No test taken ... yet!</div>
           <%= for {%{correct: guess, count: count, probability: probability}, i} <- @abx |> Enum.with_index(1) do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
               <div class="p-3">
@@ -45,24 +39,18 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
               </div>
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <%= if @visitor_guesses == guess do %>
-                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 small">Your score!</div>
-                <% end %>
+                <div :if={@visitor_guesses == guess} class="p-3 flex-grow-1 text-sm-end text-start pe-5 small">Your score!</div>
               </div>
-              <%= if Kernel.length(@test.tracks) == 2 do %>
-                <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                  <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small">Confidence that this result is better than chance: <%= probability %>%</div>
-                </div>
-              <% end %>
+              <div :if={Kernel.length(@test.tracks) == 2} class="d-flex flex-grow-1 justify-content-end align-items-center">
+                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small">Confidence that this result is better than chance: <%= probability %>%</div>
+              </div>
               <div class="p-3 ps-0 text-end">
                 <%= count %> times
               </div>
             </div>
           <% end %>
         </div>
-        <%= if Kernel.length(@test.tracks) == 2 do %>
-          <div class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;A 95% confidence level is commonly considered statistically significant (<a href="https://en.wikipedia.org/wiki/ABX_test#Confidence" class="text-muted">source</a>).</div>
-        <% end %>
+        <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;A 95% confidence level is commonly considered statistically significant (<a href="https://en.wikipedia.org/wiki/ABX_test#Confidence" class="text-muted">source</a>).</div>
       </div>
     """
   end

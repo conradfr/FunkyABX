@@ -11,9 +11,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         <div class="col-sm-6">
           <h3 class="mb-0 header-typographica" id="test-results-header" phx-hook="TestResults" data-testid={@test.id}>
           <%= @test.title %></h3>
-          <%= if @test.author != nil do %>
-            <h6 class="header-typographica">By <%= @test.author %></h6>
-          <% end %>
+          <h6 :if={@test.author != nil} class="header-typographica">By <%= @test.author %></h6>
         </div>
         <%= unless @test.local == true do %>
           <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
@@ -35,39 +33,35 @@ defmodule FunkyABXWeb.TestResultsLive do
         <.live_component module={module} id={Atom.to_string(module)} test={@test} visitor_choices={@visitor_choices} play_track_id={@play_track_id} test_taken_times={@test_taken_times} />
       <% end %>
 
-      <%= if @test.local == true do %>
-        <div class="mt-3 d-flex justify-content-between results-actions">
-          <div>
-            <i class="bi bi-arrow-left color-action"></i>&nbsp;<%= live_redirect "Go back to the test form", to: Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data) %>
-          </div>
-          <div>
-            <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<%= live_redirect "Take the test again", to: Routes.local_test_path(@socket, FunkyABXWeb.TestLive, @test_data) %>
-          </div>
-          <div>
-            <i class="bi bi-plus color-action"></i>&nbsp;<a class="color-action" href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)}>Create a new local test</a>
-          </div>
+      <div :if={@test.local == true} class="mt-3 d-flex justify-content-between results-actions">
+        <div>
+          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}>Go back to the test form</.link>
         </div>
-      <% end %>
+        <div>
+          <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link navigate={Routes.local_test_path(@socket, FunkyABXWeb.TestLive, @test_data)} replace={true}>Take the test again</.link>
+        </div>
+        <div>
+          <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action">Create a new local test</.link>
+        </div>
+      </div>
 
-      <%= if @test.local == false and @embed != true and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id)) do %>
-        <div class="test-comments mt-5">
-          <h5 class="header-neon">Comments</h5>
-          <div phx-update="ignore" id="disqus_thread"></div>
-            <script phx-update="ignore" id="disqus_thread_js">
-              var disqus_config = function () {
-              this.page.url = '<%= Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, @test.slug) %>';
-              this.page.identifier = '<%= NaiveDateTime.to_iso8601(@test.inserted_at) %>-<%= @test.slug %>';
-              };
-                (function() {
-                  var d = document, s = d.createElement('script');
-                  s.src = 'https://<%= Application.fetch_env!(:funkyabx, :disqus_id) %>.disqus.com/embed.js';
-                  s.setAttribute('data-timestamp', +new Date());
-                  (d.head || d.body).appendChild(s);
-                })();
-            </script>
-            <script id="dsq-count-scr" src={"//#{Application.fetch_env!(:funkyabx, :disqus_id)}.disqus.com/count.js"} async></script>
-        </div>
-      <% end %>
+      <div :if={@test.local == false and @embed != true and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id))} class="test-comments mt-5">
+        <h5 class="header-neon">Comments</h5>
+        <div phx-update="ignore" id="disqus_thread"></div>
+          <script phx-update="ignore" id="disqus_thread_js">
+            var disqus_config = function () {
+            this.page.url = '<%= Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, @test.slug) %>';
+            this.page.identifier = '<%= NaiveDateTime.to_iso8601(@test.inserted_at) %>-<%= @test.slug %>';
+            };
+              (function() {
+                var d = document, s = d.createElement('script');
+                s.src = 'https://<%= Application.fetch_env!(:funkyabx, :disqus_id) %>.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <script id="dsq-count-scr" src={"//#{Application.fetch_env!(:funkyabx, :disqus_id)}.disqus.com/count.js"} async></script>
+      </div>
     """
   end
 

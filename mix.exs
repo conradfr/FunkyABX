@@ -4,8 +4,8 @@ defmodule FunkyABX.MixProject do
   def project do
     [
       app: :funkyabx,
-      version: "0.1.0",
-      elixir: "~> 1.12",
+      version: "0.2.5",
+      elixir: "~> 1.13",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers() ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
@@ -46,7 +46,7 @@ defmodule FunkyABX.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.17.0"},
+      {:phoenix_live_view, "~> 0.18.0"},
       {:floki, ">= 0.33.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.6"},
       #      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
