@@ -3,7 +3,7 @@ defmodule FunkyABX.Notifier.Email do
 
   alias FunkyABXWeb.Router.Helpers, as: Routes
   alias FunkyABX.{Repo, Mailer}
-  alias FunkyABX.{Test, Contact}
+  alias FunkyABX.{Test, Contact, Invitation, Invitations}
 
   # todo queue etc
 
@@ -29,6 +29,53 @@ defmodule FunkyABX.Notifier.Email do
       FunkyABX
       """
     )
+  end
+
+  def test_invitation(%Invitation{} = invitation, socket_or_conn) do
+    with false <- Invitations.is_email_blacklisted?(invitation.name_or_email) do
+      test = Repo.preload(invitation.test, [:user])
+
+      test_url =
+        Routes.test_public_url(socket_or_conn, FunkyABXWeb.TestLive, invitation.test.slug, i: invitation.id)
+
+      blacklist_url = Routes.blacklist_url(socket_or_conn, :add, invitation.id)
+
+      deliver(
+        invitation.name_or_email,
+        "Blind test invitation : " <> test.title,
+        """
+        Hi #{invitation.name_or_email},
+
+        You have been invited by #{test.user.email} to take the blind audio test: #{test.title}
+
+        Click here to take the test: #{test_url}
+
+        Regards,
+        FunkyABX
+
+        If you don't want to receive email invitations from us, you can add your email to the blacklist here : #{blacklist_url}
+        """
+      )
+    end
+  end
+
+  def blacklist_confirmation(%Invitation{} = invitation, socket_or_conn) do
+      blacklist_url = Routes.blacklist_url(socket_or_conn, :remove, invitation.id)
+
+      deliver(
+        invitation.name_or_email,
+        "FunkyABX - Email blacklisted",
+        """
+        Hi #{invitation.name_or_email},
+
+        Your email has been successfully added to the blacklist.
+
+        If you want to revert your decision later, use this link: #{blacklist_url}
+
+        Regards,
+        FunkyABX
+        """
+      )
   end
 
   def contact(%Contact{} = contact) do

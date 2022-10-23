@@ -10,6 +10,18 @@
   font-size: 0.75rem;
 }
 
+.w-10 {
+  width: 10% !important;
+}
+
+.w-15 {
+  width: 15% !important;
+}
+
+.w-20 {
+  width: 20% !important;
+}
+
 .text-extra-muted {
   color: $dark;
 }
@@ -53,4 +65,12 @@
 a.test-link {
   font-weight: bold;
   text-decoration: none !important;
+}
+
+a.link-no-decoration {
+  text-decoration: none !important;
+
+/* &:hover {
+    text-decoration: underline !important;
+  } */
 }

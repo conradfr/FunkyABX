@@ -2,9 +2,10 @@ defmodule FunkyABXWeb.TestFormLive do
   import Ecto.Changeset
   require Logger
   use FunkyABXWeb, :live_view
+
   alias Ecto.UUID
-  alias FunkyABX.Repo
-  alias FunkyABX.Accounts
+  alias Phoenix.LiveView.JS
+  alias FunkyABX.{Repo, Accounts}
   alias FunkyABX.Tests.FormUtils
   alias FunkyABX.{Test, Tests, Track, Files, Tracks}
 
@@ -189,6 +190,10 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
               </div>
             </fieldset>
+            <div class="text-center mb-3">
+              <a href="#" class={"link-no-decoration #{if @current_user == nil, do: "disabled"}"} phx-click={JS.dispatch("open_modal", to: "body")}><i class="bi bi-envelope"></i> Send invitations</a>
+              <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;(Available only tests created by logged in users)</small></span>
+            </div>
             <% end %>
           </div>
         </div>
@@ -400,6 +405,19 @@ defmodule FunkyABXWeb.TestFormLive do
           <% end %>
         </div>
       </.form>
+
+      <.live_component
+        module={BsModalComponent}
+        id={"email-modal"}
+        title={"Send an email invitation"}
+      >
+        <.live_component
+          id={"email-modal-comp"}
+          module={InvitationComponent}
+          test={@test}
+          user={@current_user}
+        />
+      </.live_component>
     """
   end
 
@@ -408,7 +426,7 @@ defmodule FunkyABXWeb.TestFormLive do
   # Edit
   @impl true
   def mount(%{"slug" => slug} = params, session, socket) do
-    with test when not is_nil(test) <- Tests.get_by_slug(slug),
+    with test when not is_nil(test) <- Tests.get_edit(slug),
          nil <- test.deleted_at,
          true <-
            (params["key"] != nil and params["key"] == test.access_key) or
@@ -516,6 +534,20 @@ defmodule FunkyABXWeb.TestFormLive do
      |> push_redirect(to: url, redirect: true)}
   end
 
+  def handle_info(:invitations_updated, socket) do
+    Tests.clean_get_test_cache(socket.assigns.test)
+
+    test =
+      socket.assigns.test
+      |> Repo.preload([:invitations], force: true)
+
+    # We update the assigns of the modal component
+    # to avoid destroying the hook which manages the boostrap modal
+    send_update(InvitationComponent, id: "email-modal-comp", test: test)
+
+    {:noreply, socket}
+  end
+
   def handle_info(%{event: _event} = _payload, socket) do
     {:noreply, socket}
   end
@@ -579,8 +611,7 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   def handle_info({"save", %{"test" => test_params}}, socket) do
-    updated_test_params =
-      consume_and_update_form_tracks_params(test_params, socket)
+    updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
 
     insert =
       socket.assigns.test

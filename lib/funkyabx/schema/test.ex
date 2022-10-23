@@ -4,7 +4,7 @@ defmodule FunkyABX.Test do
   alias Ecto.UUID
   alias FunkyABX.Accounts.User
   alias FunkyABX.Test.TitleSlug
-  alias FunkyABX.{Track, RankDetails, PickDetails, IdentificationDetails}
+  alias FunkyABX.{Track, RankDetails, PickDetails, IdentificationDetails, Invitation}
   alias FunkyABX.Tests.Validators
   alias __MODULE__
 
@@ -42,12 +42,13 @@ defmodule FunkyABX.Test do
     field(:upload_url, :string, virtual: true)
     field(:local, :boolean, virtual: true, default: false)
     field(:embed, :boolean, virtual: true, default: false)
-    timestamps()
-    belongs_to(:user, User)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
+    has_many(:invitations, Invitation, on_replace: :delete_if_exists)
     has_many(:rank_details, RankDetails)
     has_many(:pick_details, PickDetails)
     has_many(:identification_details, IdentificationDetails)
+    belongs_to(:user, User)
+    timestamps()
   end
 
   def new(user \\ nil) do
@@ -64,7 +65,8 @@ defmodule FunkyABX.Test do
       user: user,
       nb_of_rounds: @default_rounds,
       anonymized_track_title: true,
-      ip_address: nil
+      ip_address: nil,
+      invitations: []
     }
   end
 

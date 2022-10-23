@@ -1,8 +1,9 @@
 defmodule FunkyABXWeb.TestLive do
   require Logger
   use FunkyABXWeb, :live_view
+
   alias Phoenix.LiveView.JS
-  alias FunkyABX.{Test, Tests, Tracks}
+  alias FunkyABX.{Test, Tests, Tracks, Invitations}
 
   @title_max_length 100
 
@@ -227,7 +228,7 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def mount(%{"slug" => slug} = _params, session, socket) do
+  def mount(%{"slug" => slug} = params, session, socket) do
     #    with false <- Map.get(session, "test_taken_" <> slug, false) do
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
@@ -241,6 +242,7 @@ defmodule FunkyABXWeb.TestLive do
     choices_modules = Tests.get_choices_modules(test)
 
     FunkyABXWeb.Endpoint.subscribe(test.id)
+    Invitations.invitation_clicked(Map.get(params, "i"), test)
 
     {:ok,
      assign(socket, %{
@@ -265,7 +267,8 @@ defmodule FunkyABXWeb.TestLive do
        test_taken_times: Tests.get_how_many_taken(test),
        test_already_taken: Map.get(session, "test_taken_" <> slug, false),
        view_tracklist: test.description == nil,
-       embed: Map.get(session, "embed", false)
+       embed: Map.get(session, "embed", false),
+       invitation_id: Map.get(params, "i")
      })}
   end
 
@@ -522,19 +525,32 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_event("submit", _params, %{assigns: %{current_round: current_round}} = socket) do
-    with test <- socket.assigns.test,
-         tracks <- socket.assigns.tracks,
-         choices <- socket.assigns.choices_taken,
-         true <- Tests.is_valid?(test, current_round, choices) do
+  def handle_event(
+        "submit",
+        _params,
+        %{
+          assigns: %{
+            current_round: current_round,
+            test: test,
+            tracks: tracks,
+            choices_taken: choices,
+            ip_address: ip_address,
+            invitation_id: invitation_id
+          }
+        } = socket
+      ) do
+    with true <- Tests.is_valid?(test, current_round, choices) do
       Logger.info("Test taken")
 
       choices_cleaned = Tests.clean_choices(choices, tracks, test)
 
-      Tests.submit(test, choices_cleaned, socket.assigns.ip_address)
+      Tests.submit(test, choices_cleaned, ip_address)
 
-      FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
-      FunkyABX.Notifier.Email.test_taken(test, socket)
+      spawn(fn ->
+        FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
+        FunkyABX.Notifier.Email.test_taken(test, socket)
+        Invitations.test_taken(invitation_id, test)
+      end)
 
       Process.send_after(
         self(),
