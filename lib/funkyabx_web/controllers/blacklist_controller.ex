@@ -1,6 +1,7 @@
 defmodule FunkyABXWeb.BlacklistController do
   use FunkyABXWeb, :controller
-  alias FunkyABX.{Repo, Invitation, EmailBlacklist, Invitations}
+  alias FunkyABX.Repo
+  alias FunkyABX.{Invitation, EmailBlacklist, Invitations}
   alias FunkyABX.Notifier.Email
 
   def add(conn, %{"invitation_id" => invitation_id} = _params) do

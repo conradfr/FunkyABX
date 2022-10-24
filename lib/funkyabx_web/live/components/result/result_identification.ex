@@ -1,7 +1,12 @@
 defmodule FunkyABXWeb.TestResultIdentificationComponent do
   use FunkyABXWeb, :live_component
-  alias FunkyABX.Tracks
-  alias FunkyABX.Identifications
+  alias FunkyABX.{Tracks, Identifications, Test}
+
+  attr :test, Test, required: true
+  attr :visitor_choices, :any, required: true
+  attr :is_another_session, :boolean, required: true
+  attr :track_id, :string, required: true
+  attr :test_taken_times, :integer, required: true
 
   @impl true
   def render(assigns) do
@@ -52,12 +57,22 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
               <div class="p-3 flex-grow-1 text-end text-truncate">
                 <%= if @visitor_identified != %{} do %>
                   <%= if identification.track_id == @visitor_identified[identification.track_id] do %>
-                    <i class="bi bi-check color-correct"></i> You identified this track correctly!
+                    <i class="bi bi-check color-correct"></i>&nbsp;
+                    <%= if @is_another_session == true do %>
+                      This track was identified correctly
+                    <% else %>
+                      You identified this track correctly!
+                    <% end %>
                   <% else %>
-                    <i class="bi bi-x color-incorrect"></i> You identified this track as <%= Tracks.find_track(@visitor_identified[identification.track_id], @test.tracks).title  %>
+                    <i class="bi bi-x color-incorrect"></i>&nbsp;
+                    <%= if @is_another_session == true do %>
+                      This track was identified as
+                    <% else %>
+                      You identified this track as
+                    <% end %>&nbsp;<%= Tracks.find_track(@visitor_identified[identification.track_id], @test.tracks).title  %>
                   <% end %>
                 <% else %>
-                  <small :if={i == 1} class="text-muted">You did not participate in this test</small>
+                  <small :if={i == 1 and @is_another_session == false} class="text-muted">You did not participate in this test</small>
                 <% end %>
               </div>
             </div>

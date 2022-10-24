@@ -152,11 +152,18 @@ defmodule FunkyABX.Tests.Regular do
   end
 
   @impl true
-  def submit(%Test{} = test, choices, ip_address) do
+  def submit(%Test{} = test, choices, session_id, ip_address) do
     test
     |> get_test_modules()
     |> Enum.reduce([], fn m, acc ->
-      [Kernel.apply(m, :submit, [test, choices, ip_address]) | acc]
+      [Kernel.apply(m, :submit, [test, choices, session_id, ip_address]) | acc]
     end)
   end
+
+  # ---------- RESULTS ----------
+
+  # not used, submodules are accessed directly
+
+  @impl true
+  def get_results(_test, _session_id), do: %{}
 end

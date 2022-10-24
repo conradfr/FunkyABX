@@ -65,7 +65,7 @@ defmodule FunkyABX.Picks do
 
   def clean_choices(choices, _tracks, _test), do: choices
 
-  def submit(test, %{pick: track_id} = _choices, ip_address) do
+  def submit(test, %{pick: track_id} = _choices, session_id, ip_address) do
     track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 
     # we insert a new entry or increase the count if this combination of test + track + rank exists
@@ -80,10 +80,29 @@ defmodule FunkyABX.Picks do
 
     %PickDetails{test: test, track: track}
     |> PickDetails.changeset(%{
+      session_id: session_id,
       ip_address: ip_address
     })
     |> Repo.insert()
 
     track_id
+  end
+
+  # ---------- RESULTS ----------
+
+  def get_results(%Test{} = test, session_id) when is_binary(session_id) do
+    query =
+      from pd in PickDetails,
+        where: pd.test_id == ^test.id and pd.session_id == ^session_id,
+        select: pd.track_id
+
+    result =
+      query
+      |> Repo.one()
+
+    case result do
+      nil -> %{}
+      _ -> %{"pick" => result}
+    end
   end
 end

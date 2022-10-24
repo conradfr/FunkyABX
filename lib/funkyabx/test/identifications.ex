@@ -100,7 +100,7 @@ defmodule FunkyABX.Identifications do
     Map.put(choices, :identification, identification_cleaned)
   end
 
-  def submit(%Test{} = test, %{identification: identification} = _choices, ip_address) do
+  def submit(%Test{} = test, %{identification: identification} = _choices, session_id, ip_address) do
     Enum.each(identification, fn {track_id, track_id_guess} ->
       track = Tracks.find_track(track_id, test.tracks)
       track_guessed = Tracks.find_track(track_id_guess, test.tracks)
@@ -120,8 +120,27 @@ defmodule FunkyABX.Identifications do
     %IdentificationDetails{test: test}
     |> IdentificationDetails.changeset(%{
       votes: identification,
+      session_id: session_id,
       ip_address: ip_address
     })
     |> Repo.insert()
+  end
+
+  # ---------- RESULTS ----------
+
+  def get_results(%Test{} = test, session_id) when is_binary(session_id) do
+    query =
+      from id in IdentificationDetails,
+        where: id.test_id == ^test.id and id.session_id == ^session_id,
+        select: id.votes
+
+    result =
+      query
+      |> Repo.one()
+
+    case result do
+      nil -> %{}
+      _ -> %{"identification" => result}
+    end
   end
 end

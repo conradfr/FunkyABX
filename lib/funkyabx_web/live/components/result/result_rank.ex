@@ -1,8 +1,14 @@
 defmodule FunkyABXWeb.TestResultRankComponent do
   use FunkyABXWeb, :live_component
+
   alias Phoenix.LiveView.JS
-  alias FunkyABX.Tracks
-  alias FunkyABX.Ranks
+  alias FunkyABX.{Tracks, Ranks, Test}
+
+  attr :test, Test, required: true
+  attr :visitor_choices, :any, required: true
+  attr :is_another_session, :boolean, required: true
+  attr :track_id, :string, required: true
+  attr :test_taken_times, :integer, required: true
 
   @impl true
   def render(assigns) do
@@ -26,7 +32,16 @@ defmodule FunkyABXWeb.TestResultRankComponent do
               <TestResultTrackHeaderComponent.display playing={@play_track_id == rank.track_id} rank={rank.rank} test={@test} track_id={rank.track_id} title={rank.track_title} />
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <div :if={@test.local == false and Map.has_key?(@visitor_ranked, rank.track_id) == true} class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You ranked this track: #<%= @visitor_ranked[rank.track_id] %></small></div>
+                <div :if={@test.local == false and Map.has_key?(@visitor_ranked, rank.track_id) == true} class="p-3 flex-grow-1 text-sm-end text-start pe-5">
+                  <small>
+                    <%= if @is_another_session == true do %>
+                      This track was ranked:
+                    <% else %>
+                      You ranked this track:
+                    <% end %>
+                    &nbsp;#<%= @visitor_ranked[rank.track_id] %>
+                  </small>
+                </div>
                 <div class="p-3 ps-0 text-end">
                   <%= if @test.local == false do %>
                     <%= rank.count %> votes as #<%= rank.rank %>

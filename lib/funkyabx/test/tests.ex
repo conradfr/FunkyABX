@@ -185,10 +185,10 @@ defmodule FunkyABX.Tests do
 
   # todo wrap everything in a transaction
 
-  def submit(%Test{} = test, choices, ip_address) do
+  def submit(%Test{} = test, choices, session_id, ip_address) do
     test
     |> get_test_module()
-    |> Kernel.apply(:submit, [test, choices, ip_address])
+    |> Kernel.apply(:submit, [test, choices, session_id, ip_address])
   end
 
   # ---------- TAKEN ----------
@@ -212,6 +212,16 @@ defmodule FunkyABX.Tests do
         on_conflict: on_conflict,
         conflict_target: :name
       )
+  end
+
+  # ---------- RESULTS ----------
+
+  def get_results_of_session(%Test{} = test, session_id) when is_binary(session_id) do
+    get_test_modules(test)
+    |> Enum.reduce(%{}, fn module, acc ->
+      Kernel.apply(module, :get_results, [test, session_id])
+      |> Map.merge(acc)
+    end)
   end
 
   # ---------- UTILS ----------

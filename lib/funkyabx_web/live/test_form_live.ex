@@ -5,9 +5,9 @@ defmodule FunkyABXWeb.TestFormLive do
 
   alias Ecto.UUID
   alias Phoenix.LiveView.JS
-  alias FunkyABX.{Repo, Accounts}
+  alias FunkyABX.Repo
   alias FunkyABX.Tests.FormUtils
-  alias FunkyABX.{Test, Tests, Track, Files, Tracks}
+  alias FunkyABX.{Accounts, Test, Tests, Track, Files, Tracks}
 
   @title_max_length 100
 

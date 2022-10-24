@@ -88,6 +88,12 @@ Hooks.TestResults = {
       this.pushEvent('results', results);
     }
 
+    if (localStorage[`${testId}_taken_session`] !== undefined) {
+      this.pushEvent('session_id', localStorage[`${testId}_taken_session`]);
+    } else if (cookies.has(`${COOKIE_TEST_TAKEN}_${testId}_session`) === true) {
+      this.pushEvent('session_id', cookies.get(`${COOKIE_TEST_TAKEN}_${testId}_session`));
+    }
+
     // ensure the visitor has not already taken the test, otherwise report to the LV
     if (cookies.has(`${COOKIE_TEST_TAKEN}_${testId}`) === false
       && cookies.get(`${COOKIE_TEST_TAKEN}_${testId}`) !== 'true'
@@ -152,9 +158,12 @@ Hooks.Test = {
     }
 
     this.handleEvent('store_test', (params) => {
+      const {choices, session_id} = params;
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}`, true);
-      localStorage.setItem(testId, JSON.stringify(params));
+      cookies.set(`${COOKIE_TEST_TAKEN}_${testId}_session`, session_id);
+      localStorage.setItem(testId, JSON.stringify(choices));
       localStorage.setItem(`${testId}_taken`, true);
+      localStorage.setItem(`${testId}_taken_session_id`, session_id);
     });
 
     this.handleEvent('bypass_test', () => {

@@ -2,7 +2,8 @@ defmodule FunkyABX.Invitations do
   require Logger
 
   alias Ecto.UUID
-  alias FunkyABX.{Repo, Test, Invitation, EmailBlacklist}
+  alias FunkyABX.Repo
+  alias FunkyABX.{Test, Invitation, EmailBlacklist}
   alias FunkyABX.Notifier.Email
 
   def add(%Test{} = test, name_or_email) when is_binary(name_or_email) do
@@ -52,6 +53,10 @@ defmodule FunkyABX.Invitations do
 
   def test_taken(_invitation_id, _test), do: false
 
+  def get_email_blacklist(email) when is_binary(email) do
+    Repo.get(EmailBlacklist, email)
+  end
+
   def is_email_blacklisted?(email) when is_binary(email) do
     Repo.get(EmailBlacklist, email) != nil
   end
@@ -60,13 +65,11 @@ defmodule FunkyABX.Invitations do
     Repo.get_by(Invitation, test_id: test.id, name_or_email: name_or_email) != nil
   end
 
+  def get_invitation(invitation_id) when invitation_id == nil, do: nil
+
   def get_invitation(invitation_id) do
     Invitation
     |> Repo.get(invitation_id)
     |> Repo.preload([:test])
-  end
-
-  def get_email_blacklist(email) when is_binary(email) do
-    Repo.get(EmailBlacklist, email)
   end
 end

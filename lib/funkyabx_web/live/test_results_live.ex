@@ -13,7 +13,7 @@ defmodule FunkyABXWeb.TestResultsLive do
           <%= @test.title %></h3>
           <h6 :if={@test.author != nil} class="header-typographica">By <%= @test.author %></h6>
         </div>
-        <%= unless @test.local == true do %>
+        <%= unless @test.type == :listening or @test.local == true do %>
           <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
             <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</span>
           </div>
@@ -29,8 +29,17 @@ defmodule FunkyABXWeb.TestResultsLive do
         <% end %>
       <% end %>
 
+      <div class="row" :if={@is_another_session == false and @session_id != nil}>
+        <div class="col-12 col-sm-3">
+          <h5 class="mt-3 header-neon">Your test:</h5>
+          <div class="your-test rounded p-2 mb-4">
+            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;Share: <a href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug, s: @session_id)}>link</a></div>
+          </div>
+        </div>
+      </div>
+
       <%= for module <- @result_modules do %>
-        <.live_component module={module} id={Atom.to_string(module)} test={@test} visitor_choices={@visitor_choices} play_track_id={@play_track_id} test_taken_times={@test_taken_times} />
+        <.live_component module={module} id={Atom.to_string(module)} test={@test} visitor_choices={@visitor_choices} is_another_session={@is_another_session} play_track_id={@play_track_id} test_taken_times={@test_taken_times} />
       <% end %>
 
       <div :if={@test.local == true} class="mt-3 d-flex justify-content-between results-actions">
@@ -110,6 +119,16 @@ defmodule FunkyABXWeb.TestResultsLive do
 
       FunkyABXWeb.Endpoint.subscribe(test.id)
 
+      {is_another_session, session_id, choices} =
+        case Map.get(params, "s") do
+          nil ->
+            {false, nil, %{}}
+
+          session_id ->
+            choices = Tests.get_results_of_session(test, session_id)
+            {true, session_id, choices}
+        end
+
       {:ok,
        assign(socket, %{
          page_title: "Test results - " <> String.slice(test.title, 0..@title_max_length),
@@ -117,9 +136,11 @@ defmodule FunkyABXWeb.TestResultsLive do
          result_modules: result_modules,
          current_user_id: Map.get(session, "current_user_id"),
          view_description: false,
-         visitor_choices: %{},
-         play_track_id: nil,
+         visitor_choices: choices,
+         session_id: session_id,
+         is_another_session: is_another_session,
          test_taken_times: Tests.get_how_many_taken(test),
+         play_track_id: nil,
          embed: Map.get(session, "embed", false)
        })}
     else
@@ -152,6 +173,11 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   # ---------- EVENTS ----------
 
+  # discard when when fetch another session
+  @impl true
+  def handle_event("results", _params, socket) when socket.assigns.is_another_session == true,
+    do: {:noreply, socket}
+
   @impl true
   def handle_event("results", params, socket) do
     {
@@ -163,6 +189,16 @@ defmodule FunkyABXWeb.TestResultsLive do
       #       calculate_identification_score(Map.get(params, "identification", %{}))
       #     )
     }
+  end
+
+  # discard when when fetch another session
+  @impl true
+  def handle_event("session_id", _params, socket) when socket.assigns.is_another_session == true,
+    do: {:noreply, socket}
+
+  @impl true
+  def handle_event("session_id", params, socket) do
+    {:noreply, assign(socket, :session_id, params)}
   end
 
   # ---------- PLAYER ----------

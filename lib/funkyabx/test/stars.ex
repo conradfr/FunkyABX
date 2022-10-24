@@ -86,7 +86,7 @@ defmodule FunkyABX.Stars do
 
   def clean_choices(choices, _tracks, _test), do: choices
 
-  def submit(%Test{} = test, %{star: stars} = _choices, ip_address) do
+  def submit(%Test{} = test, %{star: stars} = _choices, session_id, ip_address) do
     Enum.each(stars, fn {track_id, star} ->
       track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 
@@ -103,8 +103,27 @@ defmodule FunkyABX.Stars do
     %StarDetails{test: test}
     |> StarDetails.changeset(%{
       stars: stars,
+      session_id: session_id,
       ip_address: ip_address
     })
     |> Repo.insert()
+  end
+
+  # ---------- RESULTS ----------
+
+  def get_results(%Test{} = test, session_id) when is_binary(session_id) do
+    query =
+      from sd in StarDetails,
+        where: sd.test_id == ^test.id and sd.session_id == ^session_id,
+        select: sd.stars
+
+    result =
+      query
+      |> Repo.one()
+
+    case result do
+      nil -> %{}
+      _ -> %{"star" => result}
+    end
   end
 end

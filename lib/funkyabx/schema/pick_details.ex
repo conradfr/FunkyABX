@@ -5,6 +5,7 @@ defmodule FunkyABX.PickDetails do
   alias FunkyABX.Track
 
   schema "pick_details" do
+    field(:session_id, :binary_id)
     field(:ip_address, :binary)
     belongs_to(:track, Track, type: :binary_id)
     belongs_to(:test, Test, type: :binary_id)
@@ -12,7 +13,7 @@ defmodule FunkyABX.PickDetails do
 
   def changeset(rank, attrs \\ %{}) do
     rank
-    |> cast(attrs, [:ip_address])
+    |> cast(attrs, [:ip_address, :session_id])
     #    |> cast_assoc(:test)
     |> assoc_constraint(:test)
     |> assoc_constraint(:track)

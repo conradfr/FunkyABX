@@ -2,6 +2,7 @@ defmodule FunkyABXWeb.TestLive do
   require Logger
   use FunkyABXWeb, :live_view
 
+  alias Ecto.UUID
   alias Phoenix.LiveView.JS
   alias FunkyABX.{Test, Tests, Tracks, Invitations}
 
@@ -229,7 +230,6 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def mount(%{"slug" => slug} = params, session, socket) do
-    #    with false <- Map.get(session, "test_taken_" <> slug, false) do
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
     test_params = Tests.get_test_params(test)
@@ -242,7 +242,15 @@ defmodule FunkyABXWeb.TestLive do
     choices_modules = Tests.get_choices_modules(test)
 
     FunkyABXWeb.Endpoint.subscribe(test.id)
-    Invitations.invitation_clicked(Map.get(params, "i"), test)
+
+    test_already_taken =
+      case Invitations.get_invitation(Map.get(params, "i")) do
+        nil ->
+          Map.get(session, "test_taken_" <> slug, false)
+
+        invitation ->
+          invitation.test_taken == true
+      end
 
     {:ok,
      assign(socket, %{
@@ -252,6 +260,7 @@ defmodule FunkyABXWeb.TestLive do
        tracks: tracks,
        choices_modules: choices_modules,
        test_params: test_params,
+       session_id: Map.get(params, "i", UUID.generate()),
        current_round: 1,
        tracks_loaded: false,
        current_track: nil,
@@ -265,11 +274,22 @@ defmodule FunkyABXWeb.TestLive do
        valid: false,
        flag_display: false,
        test_taken_times: Tests.get_how_many_taken(test),
-       test_already_taken: Map.get(session, "test_taken_" <> slug, false),
+       test_already_taken: test_already_taken,
        view_tracklist: test.description == nil,
        embed: Map.get(session, "embed", false),
        invitation_id: Map.get(params, "i")
-     })}
+     })
+     |> then(fn s ->
+       if test_already_taken == true do
+         put_flash(
+           s,
+           :info,
+           "Your invitation has already been redeemed. <a href={Routes.test_public_path(socket, FunkyABXWeb.TestLive, test.slug)}>Take the test anonymously instead</a>."
+         )
+       else
+         s
+       end
+     end)}
   end
 
   # ---------- PUB/SUB EVENTS ----------
@@ -535,16 +555,19 @@ defmodule FunkyABXWeb.TestLive do
             tracks: tracks,
             choices_taken: choices,
             ip_address: ip_address,
-            invitation_id: invitation_id
+            invitation_id: invitation_id,
+            session_id: session_id
           }
         } = socket
       ) do
-    with true <- Tests.is_valid?(test, current_round, choices) do
+    with true <- Tests.is_valid?(test, current_round, choices),
+         invitation <- Invitations.get_invitation(session_id),
+         true <- invitation == nil or invitation.test_taken == false do
       Logger.info("Test taken")
 
       choices_cleaned = Tests.clean_choices(choices, tracks, test)
 
-      Tests.submit(test, choices_cleaned, ip_address)
+      Tests.submit(test, choices_cleaned, session_id, ip_address)
 
       spawn(fn ->
         FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
@@ -565,7 +588,7 @@ defmodule FunkyABXWeb.TestLive do
 
       {:noreply,
        socket
-       |> push_event("store_test", choices_cleaned)
+       |> push_event("store_test", %{choices: choices_cleaned, session_id: session_id})
        # |> push_redirect(
        #     to: Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, socket.assigns.test.slug),
        #     replace: true
@@ -573,7 +596,7 @@ defmodule FunkyABXWeb.TestLive do
        |> put_flash(:success, "Your submission has been registered!")}
     else
       _ ->
-        {:noreply, socket}
+        {:noreply, put_flash(socket, :error, "Your test can't be submitted. Please try again or reload the page")}
     end
   end
 

@@ -1,8 +1,13 @@
 defmodule FunkyABXWeb.TestResultPickComponent do
   use FunkyABXWeb, :live_component
   alias Phoenix.LiveView.JS
-  alias FunkyABX.Tracks
-  alias FunkyABX.Picks
+  alias FunkyABX.{Tracks, Picks, Test}
+
+  attr :test, Test, required: true
+  attr :visitor_choices, :any, required: true
+  attr :is_another_session, :boolean, required: true
+  attr :track_id, :string, required: true
+  attr :test_taken_times, :integer, required: true
 
   @impl true
   def render(assigns) do
@@ -36,7 +41,15 @@ defmodule FunkyABXWeb.TestResultPickComponent do
                     <div class="p-3 ps-0"></div>
                   <% end %>
                 <% else %>
-                  <div :if={@visitor_picked == pick.track_id} class="p-3 flex-grow-1 text-sm-end text-start pe-5"><small>You picked this track</small></div>
+                  <div :if={@visitor_picked == pick.track_id} class="p-3 flex-grow-1 text-sm-end text-start pe-5">
+                    <small>
+                      <%= if @is_another_session == true do %>
+                        This track was picked
+                      <% else %>
+                        You picked this track
+                      <% end %>
+                    </small>
+                  </div>
                   <div class="p-3 ps-0 text-end">
                     Picked <%= pick.picked %> times
                   </div>

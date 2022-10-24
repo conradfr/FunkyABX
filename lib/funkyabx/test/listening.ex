@@ -51,5 +51,10 @@ defmodule FunkyABX.Tests.Listening do
   def clean_choices(choices, _tracks, _test), do: choices
 
   @impl true
-  def submit(_test, _choices, _ip_address), do: :ok
+  def submit(_test, _choices, _session_id, _ip_address), do: :ok
+
+  # ---------- RESULTS ----------
+
+  @impl true
+  def get_results(_test, _session_id), do: %{}
 end

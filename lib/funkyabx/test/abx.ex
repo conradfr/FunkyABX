@@ -133,7 +133,7 @@ defmodule FunkyABX.Tests.Abx do
   end
 
   @impl true
-  def submit(%Test{} = test, choices, ip_address) do
+  def submit(%Test{} = test, choices, session_id, ip_address) do
     correct_guesses =
       choices
       |> Enum.count(fn {_track_id, round_result} ->
@@ -152,9 +152,29 @@ defmodule FunkyABX.Tests.Abx do
     %AbxDetails{test: test}
     |> AbxDetails.changeset(%{
       rounds: choices,
+      session_id: session_id,
       ip_address: ip_address
     })
     |> Repo.insert()
+  end
+
+  # ---------- RESULTS ----------
+
+  @impl true
+  def get_results(%Test{} = test, session_id) when is_binary(session_id) do
+    query =
+      from ad in AbxDetails,
+        where: ad.test_id == ^test.id and ad.session_id == ^session_id,
+        select: ad.rounds
+
+    result =
+      query
+      |> Repo.one()
+
+    case result do
+      nil -> %{}
+      _ -> result
+    end
   end
 
   # ---------- UTILS ----------

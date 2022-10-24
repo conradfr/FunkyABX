@@ -36,7 +36,9 @@ defmodule FunkyABX.Notifier.Email do
       test = Repo.preload(invitation.test, [:user])
 
       test_url =
-        Routes.test_public_url(socket_or_conn, FunkyABXWeb.TestLive, invitation.test.slug, i: invitation.id)
+        Routes.test_public_url(socket_or_conn, FunkyABXWeb.TestLive, invitation.test.slug,
+          i: invitation.id
+        )
 
       blacklist_url = Routes.blacklist_url(socket_or_conn, :add, invitation.id)
 
@@ -60,22 +62,22 @@ defmodule FunkyABX.Notifier.Email do
   end
 
   def blacklist_confirmation(%Invitation{} = invitation, socket_or_conn) do
-      blacklist_url = Routes.blacklist_url(socket_or_conn, :remove, invitation.id)
+    blacklist_url = Routes.blacklist_url(socket_or_conn, :remove, invitation.id)
 
-      deliver(
-        invitation.name_or_email,
-        "FunkyABX - Email blacklisted",
-        """
-        Hi #{invitation.name_or_email},
+    deliver(
+      invitation.name_or_email,
+      "FunkyABX - Email blacklisted",
+      """
+      Hi #{invitation.name_or_email},
 
-        Your email has been successfully added to the blacklist.
+      Your email has been successfully added to the blacklist.
 
-        If you want to revert your decision later, use this link: #{blacklist_url}
+      If you want to revert your decision later, use this link: #{blacklist_url}
 
-        Regards,
-        FunkyABX
-        """
-      )
+      Regards,
+      FunkyABX
+      """
+    )
   end
 
   def contact(%Contact{} = contact) do

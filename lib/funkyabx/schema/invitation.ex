@@ -17,6 +17,7 @@ defmodule FunkyABX.Invitation do
     |> cast(attrs, [:id, :name_or_email, :clicked, :test_taken])
     |> put_assoc(:test, attrs.test)
     |> validate_required([:name_or_email])
-#    |> validate_format(:name_or_email, ~r/@/)
+
+    #    |> validate_format(:name_or_email, ~r/@/)
   end
 end

@@ -1,8 +1,13 @@
 defmodule FunkyABXWeb.TestResultStarComponent do
   use FunkyABXWeb, :live_component
   alias Phoenix.LiveView.JS
-  alias FunkyABX.Tracks
-  alias FunkyABX.Stars
+  alias FunkyABX.{Tracks, Stars, Test}
+
+  attr :test, Test, required: true
+  attr :visitor_choices, :any, required: true
+  attr :is_another_session, :boolean, required: true
+  attr :track_id, :string, required: true
+  attr :test_taken_times, :integer, required: true
 
   @impl true
   def render(assigns) do
@@ -40,12 +45,22 @@ defmodule FunkyABXWeb.TestResultStarComponent do
               <div class="d-flex flex-grow-1 flex-no-wrap justify-content-between justify-content-sm-end align-items-center">
                   <div :if={@test.local == false and Map.has_key?(@visitor_starred, star.track_id) == true} class="p-3 text-sm-end text-start pe-2 pe-sm-4">
                     <div class="d-flex flex-wrap flex-grow-1">
-                      <div class="pe-2"><small>You rated this track:</small></div>
-                      <div><small>
+                      <div class="pe-2">
+                        <small>
+                          <%= if @is_another_session == true do %>
+                            This track was rated:
+                          <% else %>
+                            You rated this track:
+                          <% end %>
+                        </small>
+                      </div>
+                      <div>
+                        <small>
                         <%= for _star_nb <- 1..@visitor_starred[star.track_id] do %>
                           <i title={@visitor_starred[star.track_id]} class="bi bi-star-fill"></i>
                         <% end %>
-                      </small></div>
+                        </small>
+                      </div>
                     </div>
                   </div>
                 <div class="p-3 ps-0 text-end test-starring-result">

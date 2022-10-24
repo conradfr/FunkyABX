@@ -99,7 +99,7 @@ defmodule FunkyABX.Ranks do
 
   def clean_choices(choices, _tracks, _test), do: choices
 
-  def submit(%Test{} = test, %{rank: ranks} = _choices, ip_address) do
+  def submit(%Test{} = test, %{rank: ranks} = _choices, session_id, ip_address) do
     Enum.each(ranks, fn {track_id, rank} ->
       track = Enum.find(test.tracks, fn t -> t.id == track_id end)
 
@@ -117,8 +117,28 @@ defmodule FunkyABX.Ranks do
     %RankDetails{test: test}
     |> RankDetails.changeset(%{
       votes: ranks,
+      session_id: session_id,
       ip_address: ip_address
     })
     |> Repo.insert()
+  end
+
+  # ---------- RESULTS ----------
+
+  @impl true
+  def get_results(%Test{} = test, session_id) when is_binary(session_id) do
+    query =
+      from rd in RanksDetails,
+        where: rd.test_id == ^test.id and rd.session_id == ^session_id,
+        select: rd.votes
+
+    result =
+      query
+      |> Repo.one()
+
+    case result do
+      nil -> %{}
+      _ -> %{"rank" => result}
+    end
   end
 end

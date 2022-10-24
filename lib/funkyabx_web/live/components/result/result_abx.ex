@@ -1,7 +1,14 @@
 defmodule FunkyABXWeb.TestResultAbxComponent do
   use FunkyABXWeb, :live_component
+
+  alias FunkyABX.Test
   alias FunkyABX.Tests.Abx
-  alias FunkyABX.Tests.Abx
+
+  attr :test, Test, required: true
+  attr :visitor_choices, :any, required: true
+  attr :is_another_session, :boolean, required: true
+  attr :track_id, :string, required: true
+  attr :test_taken_times, :integer, required: true
 
   @impl true
   def render(assigns) do
@@ -39,7 +46,13 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
               </div>
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <div :if={@visitor_guesses == guess} class="p-3 flex-grow-1 text-sm-end text-start pe-5 small">Your score!</div>
+                <div :if={@visitor_guesses == guess} class="p-3 flex-grow-1 text-sm-end text-start pe-5 small">
+                  <%= if @is_another_session == true do %>
+                    Scored
+                  <% else %>
+                    Your score!
+                  <% end %>
+                </div>
               </div>
               <div :if={Kernel.length(@test.tracks) == 2} class="d-flex flex-grow-1 justify-content-end align-items-center">
                 <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small">Confidence that this result is better than chance: <%= probability %>%</div>

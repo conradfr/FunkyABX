@@ -1,4 +1,5 @@
 defmodule FunkyABX.Tests.Type do
+  alias Ecto.UUID
   alias FunkyABX.Test
 
   @doc """
@@ -46,5 +47,10 @@ defmodule FunkyABX.Tests.Type do
   @doc """
     Save the choices of the user
   """
-  @callback submit(test :: Test, map(), String.t()) :: any()
+  @callback submit(test :: Test, map(), session_id :: UUID.t(), ip_address :: String.t()) :: any()
+
+  @doc """
+    Get results of a specific visitor session
+  """
+  @callback get_results(test :: Test, session_id :: UUID.t()) :: map()
 end
