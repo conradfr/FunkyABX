@@ -409,7 +409,7 @@ defmodule FunkyABXWeb.TestFormLive do
       <.live_component
         module={BsModalComponent}
         id={"email-modal"}
-        title={"Send an email invitation"}
+        title={"Send an invitation"}
       >
         <.live_component
           id={"email-modal-comp"}
