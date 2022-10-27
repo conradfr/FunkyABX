@@ -1,6 +1,7 @@
 defmodule FunkyABXWeb.TestResultsLive do
   use FunkyABXWeb, :live_view
   alias FunkyABX.{Tests, Test}
+  alias FunkyABX.Tests.Image
 
   @title_max_length 100
 
@@ -33,7 +34,8 @@ defmodule FunkyABXWeb.TestResultsLive do
         <div class="col-12 col-sm-3">
           <h5 class="mt-3 header-neon">Your test:</h5>
           <div class="your-test rounded p-2 mb-4">
-            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;Share: <a href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug, s: @session_id)}>link</a></div>
+            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;Share: <a href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug, s: ShortUUID.encode!(@session_id))}>link to my results</a></div>
+            <div><i class="bi bi-image"></i>&nbsp;&nbsp;Image: <a target="_blank" href={Routes.test_path(@socket, :image, Image.get_filename(@session_id))}>my results</a></div>
           </div>
         </div>
       </div>
@@ -57,19 +59,19 @@ defmodule FunkyABXWeb.TestResultsLive do
       <div :if={@test.local == false and @embed != true and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id))} class="test-comments mt-5">
         <h5 class="header-neon">Comments</h5>
         <div phx-update="ignore" id="disqus_thread"></div>
-          <script phx-update="ignore" id="disqus_thread_js">
-            var disqus_config = function () {
-            this.page.url = '<%= Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, @test.slug) %>';
-            this.page.identifier = '<%= NaiveDateTime.to_iso8601(@test.inserted_at) %>-<%= @test.slug %>';
-            };
-              (function() {
-                var d = document, s = d.createElement('script');
-                s.src = 'https://<%= Application.fetch_env!(:funkyabx, :disqus_id) %>.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-              })();
-          </script>
-          <script id="dsq-count-scr" src={"//#{Application.fetch_env!(:funkyabx, :disqus_id)}.disqus.com/count.js"} async></script>
+        <script phx-update="ignore" id="disqus_thread_js">
+          var disqus_config = function () {
+          this.page.url = '<%= Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, @test.slug) %>';
+          this.page.identifier = '<%= NaiveDateTime.to_iso8601(@test.inserted_at) %>-<%= @test.slug %>';
+          };
+            (function() {
+              var d = document, s = d.createElement('script');
+              s.src = 'https://<%= Application.fetch_env!(:funkyabx, :disqus_id) %>.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <script id="dsq-count-scr" src={"//#{Application.fetch_env!(:funkyabx, :disqus_id)}.disqus.com/count.js"} async></script>
       </div>
     """
   end
@@ -120,7 +122,7 @@ defmodule FunkyABXWeb.TestResultsLive do
       FunkyABXWeb.Endpoint.subscribe(test.id)
 
       {is_another_session, session_id, choices} =
-        case Map.get(params, "s") do
+        case Tests.parse_session_id(Map.get(params, "s")) do
           nil ->
             {false, nil, %{}}
 

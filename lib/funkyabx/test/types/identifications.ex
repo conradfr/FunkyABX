@@ -2,6 +2,7 @@ defmodule FunkyABX.Identifications do
   import Ecto.Query, only: [dynamic: 2, from: 2]
 
   alias FunkyABX.Repo
+  alias FunkyABX.Tests.Image
   alias FunkyABX.{Test, Track, Tracks, Identification, IdentificationDetails}
 
   # ---------- GET ----------
@@ -141,6 +142,28 @@ defmodule FunkyABX.Identifications do
     case result do
       nil -> %{}
       _ -> %{"identification" => result}
+    end
+  end
+
+  def results_to_img(mogrify_params, %Test{} = test, session_id, choices)
+      when is_binary(session_id) do
+    with picked_id when picked_id != nil <- Map.get(choices, "identification", nil) do
+      {start, mogrify} = mogrify_params
+
+      {index, mogrify} =
+        mogrify
+        |> Image.type_title(start, "Identification")
+        |> then(fn mogrify ->
+          Enum.reduce(test.tracks, {1, mogrify}, fn t, acc ->
+            {index, mogrify} = acc
+            mogrify = Image.type_track(mogrify, start, index, "#{t.title}, identified as lolol")
+            {index + 1, mogrify}
+          end)
+        end)
+
+      {start + 24 + 16 * index, mogrify}
+    else
+      _ -> mogrify_params
     end
   end
 end

@@ -149,6 +149,7 @@ defmodule FunkyABX.Tracks do
       Files.save(
         temp_path,
         Path.join([test_id, filename_dest]),
+        [],
         normalization
       )
 

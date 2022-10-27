@@ -4,6 +4,7 @@ defmodule FunkyABX.Tests do
 
   alias FunkyABX.Repo
   alias FunkyABX.{Cache, Test, Stats}
+  alias FunkyABX.{PickDetails, StarDetails, RankDetails, IdentificationDetails, AbxDetails}
   alias FunkyABX.Accounts.User
 
   @min_test_created_minutes 15
@@ -90,6 +91,31 @@ defmodule FunkyABX.Tests do
 
     query
     |> Repo.all()
+  end
+
+  def find_from_session_id(session_id) when is_binary(session_id) do
+    query =
+      from(t in Test,
+        left_join: p in PickDetails,
+        on: t.id == p.test_id,
+        left_join: s in StarDetails,
+        on: t.id == s.test_id,
+        left_join: r in RankDetails,
+        on: t.id == r.test_id,
+        left_join: i in IdentificationDetails,
+        on: t.id == i.test_id,
+        left_join: a in AbxDetails,
+        on: t.id == a.test_id,
+        where:
+          p.session_id == ^session_id or s.session_id == ^session_id or
+            r.session_id == ^session_id or i.session_id == ^session_id or
+            a.session_id == ^session_id,
+        limit: 1,
+        select: t,
+        preload: [tracks: :test]
+      )
+
+    Repo.one(query)
   end
 
   # ---------- CACHE ----------
@@ -215,6 +241,16 @@ defmodule FunkyABX.Tests do
   end
 
   # ---------- RESULTS ----------
+
+  def parse_session_id(session_id) when session_id == nil, do: nil
+
+  def parse_session_id(session_id) when is_binary(session_id) do
+    unless String.contains?(session_id, "-") == true do
+      ShortUUID.decode!(session_id)
+    else
+      session_id
+    end
+  end
 
   def get_results_of_session(%Test{} = test, session_id) when is_binary(session_id) do
     get_test_modules(test)

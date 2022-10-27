@@ -75,6 +75,8 @@ defmodule FunkyABXWeb.Router do
     post "/auth/:slug", TestController, :password_verify
     live "/info", FlashLive, as: :info
 
+    get "/img/results/:filename", TestController, :image
+
     get "/blacklist/add/:invitation_id", BlacklistController, :add
     get "/blacklist/remove/:invitation_id", BlacklistController, :remove
 

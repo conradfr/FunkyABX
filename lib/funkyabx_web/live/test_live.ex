@@ -243,8 +243,20 @@ defmodule FunkyABXWeb.TestLive do
 
     FunkyABXWeb.Endpoint.subscribe(test.id)
 
+    invitation_id =
+      params
+      |> Map.get("i")
+      |> Tests.parse_session_id()
+
+    session_id =
+      if invitation_id == nil do
+        UUID.generate()
+      else
+        invitation_id
+      end
+
     test_already_taken =
-      case Invitations.get_invitation(Map.get(params, "i")) do
+      case Invitations.get_invitation(invitation_id) do
         nil ->
           Map.get(session, "test_taken_" <> slug, false)
 
@@ -260,7 +272,7 @@ defmodule FunkyABXWeb.TestLive do
        tracks: tracks,
        choices_modules: choices_modules,
        test_params: test_params,
-       session_id: Map.get(params, "i", UUID.generate()),
+       session_id: session_id,
        current_round: 1,
        tracks_loaded: false,
        current_track: nil,
@@ -277,7 +289,7 @@ defmodule FunkyABXWeb.TestLive do
        test_already_taken: test_already_taken,
        view_tracklist: test.description == nil,
        embed: Map.get(session, "embed", false),
-       invitation_id: Map.get(params, "i")
+       invitation_id: invitation_id
      })
      |> then(fn s ->
        if test_already_taken == true do
@@ -596,7 +608,12 @@ defmodule FunkyABXWeb.TestLive do
        |> put_flash(:success, "Your submission has been registered!")}
     else
       _ ->
-        {:noreply, put_flash(socket, :error, "Your test can't be submitted. Please try again or reload the page")}
+        {:noreply,
+         put_flash(
+           socket,
+           :error,
+           "Your test can't be submitted. Please try again or reload the page"
+         )}
     end
   end
 

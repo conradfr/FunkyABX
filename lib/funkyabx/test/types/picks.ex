@@ -2,6 +2,7 @@ defmodule FunkyABX.Picks do
   import Ecto.Query, only: [dynamic: 2, from: 2]
 
   alias FunkyABX.Repo
+  alias FunkyABX.Tests.Image
   alias FunkyABX.{Test, Track, Pick, PickDetails}
 
   # ---------- GET ----------
@@ -103,6 +104,28 @@ defmodule FunkyABX.Picks do
     case result do
       nil -> %{}
       _ -> %{"pick" => result}
+    end
+  end
+
+  def results_to_img(mogrify_params, %Test{} = test, session_id, choices)
+      when is_binary(session_id) do
+    with picked_id when picked_id != nil <- Map.get(choices, "pick", nil) do
+      {start, mogrify} = mogrify_params
+
+      picked_track_title =
+        test
+        |> Map.get(:tracks)
+        |> Enum.find(&(&1.id == picked_id))
+        |> Map.get(:title)
+
+      mogrify =
+        mogrify
+        |> Image.type_title(start, "Picks")
+        |> Image.type_track(start, 1, "Picked track: #{picked_track_title}")
+
+      {start + 46, mogrify}
+    else
+      _ -> mogrify_params
     end
   end
 end

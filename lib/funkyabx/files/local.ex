@@ -1,5 +1,14 @@
 defmodule FunkyABX.Files.Local do
-  def save(src_path, dest_path) when is_binary(src_path) and is_binary(dest_path) do
+  @behaviour FunkyABX.Files.Type
+
+  @impl true
+  def exists?(filename) when is_binary(filename) do
+    Path.join([:code.priv_dir(:funkyabx), "static", "uploads", filename])
+    |> File.exists?()
+  end
+
+  @impl true
+  def save(src_path, dest_path, _opts) when is_binary(src_path) and is_binary(dest_path) do
     local_dest_path = local_path(dest_path)
 
     local_dest_path
@@ -9,6 +18,7 @@ defmodule FunkyABX.Files.Local do
     File.cp!(src_path, local_dest_path)
   end
 
+  @impl true
   def delete_all(test_id) do
     test_id
     |> local_path()
@@ -16,8 +26,10 @@ defmodule FunkyABX.Files.Local do
   end
 
   # Delete a file or a list of files
+  @impl true
   def delete(filename, test_id)
 
+  @impl true
   def delete(filename, test_id) when is_list(filename) do
     filename
     |> Enum.map(fn file ->
@@ -26,6 +38,7 @@ defmodule FunkyABX.Files.Local do
     end)
   end
 
+  @impl true
   def delete(filename, test_id) when is_binary(filename) do
     test_id
     |> local_path()

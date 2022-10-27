@@ -37,7 +37,7 @@ defmodule FunkyABX.Notifier.Email do
 
       test_url =
         Routes.test_public_url(socket_or_conn, FunkyABXWeb.TestLive, invitation.test.slug,
-          i: invitation.id
+          i: ShortUUID.encode!(invitation.id)
         )
 
       blacklist_url = Routes.blacklist_url(socket_or_conn, :add, invitation.id)

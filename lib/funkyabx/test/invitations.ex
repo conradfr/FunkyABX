@@ -67,7 +67,15 @@ defmodule FunkyABX.Invitations do
 
   def get_invitation(invitation_id) when invitation_id == nil, do: nil
 
-  def get_invitation(invitation_id) do
+  def get_invitation(invitation_id) when is_binary(invitation_id) do
+    # Decode if short id
+    invitation_id =
+      unless String.contains?(invitation_id, "-") == true do
+        ShortUUID.decode!(invitation_id)
+      else
+        invitation_id
+      end
+
     Invitation
     |> Repo.get(invitation_id)
     |> Repo.preload([:test])

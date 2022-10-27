@@ -27,6 +27,7 @@ ARG EMAIL_FROM=${EMAIL_FROM}
 ARG EMAIL_TO=${EMAIL_TO}
 ARG ANALYTICS=${ANALYTICS}
 ARG DISQUS_ID=${DISQUS_ID}
+ARG IMG_RESULTS=${IMG_RESULTS}
 
 ENV DATABASE_URL=${DATABASE_URL} \
     PORT=${PORT} \
@@ -49,10 +50,11 @@ ENV DATABASE_URL=${DATABASE_URL} \
     EMAIL_FROM=${EMAIL_FROM} \
     EMAIL_TO=${EMAIL_TO} \
     ANALYTICS=${ANALYTICS} \
-    DISQUS_ID=${DISQUS_ID}
+    DISQUS_ID=${DISQUS_ID} \
+    IMG_RESULTS=${IMG_RESULTS}
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
-    ffmpeg curl
+    ffmpeg curl imagemagick
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
 

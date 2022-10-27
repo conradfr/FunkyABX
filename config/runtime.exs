@@ -23,7 +23,8 @@ if config_env() == :prod do
     analytics: System.get_env("ANALYTICS") || nil,
     bucket: System.get_env("S3_BUCKET") || "",
     flac_folder: System.get_env("FLAC_FOLDER"),
-    temp_folder: System.get_env("TEMP_FOLDER")
+    temp_folder: System.get_env("TEMP_FOLDER"),
+    img_results_path: System.get_env("IMG_RESULTS") || nil
 
   config :funkyabx, FunkyABX.Repo,
     # ssl: true,

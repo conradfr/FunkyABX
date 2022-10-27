@@ -970,6 +970,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 Files.save(
                   path,
                   Path.join([socket.assigns.test.id, filename_dest]),
+                  [],
                   normalization
                 )
 

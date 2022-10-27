@@ -1,6 +1,8 @@
 defmodule FunkyABX.Stars do
   import Ecto.Query, only: [dynamic: 2, from: 2]
+
   alias FunkyABX.Repo
+  alias FunkyABX.Tests.Image
   alias FunkyABX.{Test, Track, Star, StarDetails}
 
   # ---------- GET ----------
@@ -124,6 +126,38 @@ defmodule FunkyABX.Stars do
     case result do
       nil -> %{}
       _ -> %{"star" => result}
+    end
+  end
+
+  def results_to_img(mogrify_params, %Test{} = test, session_id, choices)
+      when is_binary(session_id) do
+    with stars when stars != nil <- Map.get(choices, "star", nil) do
+      {start, mogrify} = mogrify_params
+
+      {index, mogrify} =
+        mogrify
+        |> Image.type_title(start, "Rating")
+        |> then(fn mogrify ->
+          test.tracks
+          |> Enum.sort_by(
+            fn t ->
+              Map.get(stars, t.id)
+            end,
+            :desc
+          )
+          |> Enum.reduce({1, mogrify}, fn t, acc ->
+            {index, mogrify} = acc
+
+            stars_text = String.pad_leading("", Map.get(stars, t.id), "*")
+            mogrify = Image.type_track(mogrify, start, index, "#{t.title}: #{stars_text}")
+
+            {index + 1, mogrify}
+          end)
+        end)
+
+      {start + 24 + 16 * index, mogrify}
+    else
+      _ -> mogrify_params
     end
   end
 end

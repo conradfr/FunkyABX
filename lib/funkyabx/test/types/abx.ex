@@ -2,6 +2,7 @@ defmodule FunkyABX.Tests.Abx do
   import Ecto.Query, only: [dynamic: 2, from: 2]
 
   alias FunkyABX.Repo
+  alias FunkyABX.Tests.Image
   alias FunkyABX.{Test, Tracks, AbxDetails}
   alias FunkyABX.Abx, as: AbxSchema
 
@@ -175,6 +176,25 @@ defmodule FunkyABX.Tests.Abx do
       nil -> %{}
       _ -> result
     end
+  end
+
+  def results_to_img(mogrify_params, %Test{} = test, session_id, choices)
+      when is_binary(session_id) do
+    {start, mogrify} = mogrify_params
+
+    guessed =
+      choices
+      |> Map.values()
+      |> Enum.count(fn round_result ->
+        round_result
+      end)
+
+    mogrify =
+      mogrify
+      |> Image.type_title(start, "Abx")
+      |> Image.type_track(start, 1, "Correct guesses: #{guessed}/#{test.nb_of_rounds}")
+
+    {start + 46, mogrify}
   end
 
   # ---------- UTILS ----------

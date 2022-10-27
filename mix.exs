@@ -74,7 +74,9 @@ defmodule FunkyABX.MixProject do
       {:decorator, "~> 1.4"},
       {:mime, "~> 2.0"},
       {:phoenix_swagger, "~> 0.8"},
-      {:ex_json_schema, "~> 0.5"}
+      {:ex_json_schema, "~> 0.5"},
+      {:mogrify, "~> 0.9.2"},
+      {:shortuuid, "~> 2.1"}
     ]
   end
 

@@ -2,6 +2,7 @@ defmodule FunkyABX.Ranks do
   import Ecto.Query, only: [dynamic: 2, from: 2]
 
   alias FunkyABX.Repo
+  alias FunkyABX.Tests.Image
   alias FunkyABX.{Test, Track, Rank, RankDetails}
 
   # ---------- GET ----------
@@ -125,10 +126,9 @@ defmodule FunkyABX.Ranks do
 
   # ---------- RESULTS ----------
 
-  @impl true
   def get_results(%Test{} = test, session_id) when is_binary(session_id) do
     query =
-      from rd in RanksDetails,
+      from rd in RankDetails,
         where: rd.test_id == ^test.id and rd.session_id == ^session_id,
         select: rd.votes
 
@@ -139,6 +139,40 @@ defmodule FunkyABX.Ranks do
     case result do
       nil -> %{}
       _ -> %{"rank" => result}
+    end
+  end
+
+  def results_to_img(mogrify_params, %Test{} = test, session_id, choices)
+      when is_binary(session_id) do
+    with ranks when ranks != nil <- Map.get(choices, "rank", nil) do
+      {start, mogrify} = mogrify_params
+
+      {index, mogrify} =
+        mogrify
+        |> Image.type_title(start, "Ranking")
+        |> then(fn mogrify ->
+          test.tracks
+          |> Enum.sort_by(fn t ->
+            Map.get(ranks, t.id, length(test.tracks) / 2)
+          end)
+          |> Enum.reduce({1, mogrify}, fn t, acc ->
+            {index, mogrify} = acc
+
+            mogrify =
+              Image.type_track(
+                mogrify,
+                start,
+                index,
+                "##{Map.get(ranks, t.id, "-")} : #{t.title}"
+              )
+
+            {index + 1, mogrify}
+          end)
+        end)
+
+      {start + 24 + 16 * index, mogrify}
+    else
+      _ -> mogrify_params
     end
   end
 end

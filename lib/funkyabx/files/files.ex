@@ -2,7 +2,6 @@ defmodule FunkyABX.Files do
   @ext_to_flac [".wav"]
   @flac_ext ".flac"
 
-  # TODO dynamic module instead of if
   # TODO Move the encoding part to another file
 
   # ---------- PUBLIC API ----------
@@ -14,7 +13,7 @@ defmodule FunkyABX.Files do
       Path.extname(filename)
   end
 
-  def save(src_path, dest_path, normalization \\ false)
+  def save(src_path, dest_path, opts \\ [], normalization \\ false)
       when is_binary(src_path) and is_binary(dest_path) do
     {real_src_path, real_dest_path} =
       if Path.extname(dest_path) in @ext_to_flac do
@@ -43,11 +42,16 @@ defmodule FunkyABX.Files do
       end
 
     Application.fetch_env!(:funkyabx, :file_module)
-    |> Kernel.apply(:save, [real_src_path, real_dest_path])
+    |> Kernel.apply(:save, [real_src_path, real_dest_path, opts])
 
     if Path.extname(dest_path) in @ext_to_flac, do: delete_folder_of_file(real_src_path)
 
     Path.basename(real_dest_path)
+  end
+
+  def exists?(filename) when is_binary(filename) do
+    Application.fetch_env!(:funkyabx, :file_module)
+    |> Kernel.apply(:exists?, [filename])
   end
 
   def delete(filename, test_id) when is_binary(filename) or is_list(filename) do
