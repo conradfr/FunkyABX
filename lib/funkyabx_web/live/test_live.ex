@@ -489,9 +489,11 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_event("test_already_taken", _params, socket) do
+    results_url = Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, socket.assigns.test.slug)
+
     {:noreply,
      socket
-     |> put_flash(:info, "You have already taken this test.")
+     |> put_flash(:info, "You have already taken this test. <a href=\"#{results_url}\">Check the results</a>.")
      |> assign(test_already_taken: true)}
   end
 
