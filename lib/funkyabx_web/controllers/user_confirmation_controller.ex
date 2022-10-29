@@ -4,7 +4,7 @@ defmodule FunkyABXWeb.UserConfirmationController do
   alias FunkyABX.Accounts
 
   def new(conn, _params) do
-    render(conn, "new.html")
+    render(conn, :new)
   end
 
   def create(conn, %{"user" => %{"email" => email}}) do
@@ -26,7 +26,7 @@ defmodule FunkyABXWeb.UserConfirmationController do
   end
 
   def edit(conn, %{"token" => token}) do
-    render(conn, "edit.html", token: token)
+    render(conn, :edit, token: token)
   end
 
   # Do not log in the user after confirmation to avoid a

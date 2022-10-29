@@ -192,7 +192,7 @@ defmodule FunkyABXWeb.TestController do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
          false <- is_nil(test.password),
          nil <- test.deleted_at do
-      render(conn, "password.html", test: test)
+      render(conn, :password, test: test)
     else
       _ ->
         conn
@@ -216,7 +216,7 @@ defmodule FunkyABXWeb.TestController do
         |> put_resp_cookie(@cookie_prefix <> test.id, Base.encode64(test.password))
         |> redirect(to: referer)
       else
-        render(conn, "password.html", test: test, error_message: "Wrong password :(")
+        render(conn, :password, test: test, error_message: "Wrong password :(")
       end
     else
       _ ->

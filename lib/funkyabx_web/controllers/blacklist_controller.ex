@@ -11,9 +11,9 @@ defmodule FunkyABXWeb.BlacklistController do
            EmailBlacklist.changeset(%EmailBlacklist{}, %{email: invitation.name_or_email}),
          {:ok, _} <- Repo.insert(changeset) do
       Email.blacklist_confirmation(invitation, conn)
-      render(conn, "add.html", status: :ok, invitation_id: invitation_id)
+      render(conn, :add, status: :ok, invitation_id: invitation_id)
     else
-      _ -> render(conn, "add.html", status: :error)
+      _ -> render(conn, :add, status: :error)
     end
   end
 
@@ -22,9 +22,9 @@ defmodule FunkyABXWeb.BlacklistController do
          %EmailBlacklist{} = email_blacklist <-
            Invitations.get_email_blacklist(invitation.name_or_email),
          {:ok, _} <- Repo.delete(email_blacklist) do
-      render(conn, "remove.html", status: :ok)
+      render(conn, :remove, status: :ok)
     else
-      _ -> render(conn, "remove.html", status: :error)
+      _ -> render(conn, :remove, status: :error)
     end
   end
 end

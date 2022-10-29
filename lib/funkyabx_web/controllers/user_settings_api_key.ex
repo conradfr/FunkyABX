@@ -11,7 +11,7 @@ defmodule FunkyABXWeb.UserSettingsApiKeyController do
     api_keys = Accounts.get_api_keys_of_user(user)
     changeset = ApiKey.changeset(%ApiKey{}, %{})
 
-    render(conn, "index.html",
+    render(conn, :index,
       changeset: changeset,
       api_keys: api_keys
     )

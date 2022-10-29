@@ -6,19 +6,19 @@ defmodule FunkyABXWeb.PageController do
   def index(conn, _params) do
     tests_gallery = Tests.get_random()
 
-    render(conn, "index.html", tests_gallery: tests_gallery)
+    render(conn, :index, tests_gallery: tests_gallery)
   end
 
   def gallery(conn, _params) do
     tests = Tests.get_for_gallery()
 
-    render(conn, "gallery.html", tests: tests)
+    render(conn, :gallery, tests: tests)
   end
 
   def contact(conn, _params) do
     changeset = Contact.changeset(%Contact{})
 
-    render(conn, "contact.html", changeset: changeset)
+    render(conn, :contact, changeset: changeset)
   end
 
   def contact_submit(conn, %{"contact" => form_params} = _params) do
@@ -43,18 +43,18 @@ defmodule FunkyABXWeb.PageController do
 
     changeset = Contact.changeset(%Contact{})
 
-    render(conn, "contact.html", changeset: changeset)
+    render(conn, :contact, changeset: changeset)
   end
 
   def about(conn, _params) do
-    render(conn, "about.html")
+    render(conn, :about)
   end
 
   def faq(conn, _params) do
-    render(conn, "faq.html")
+    render(conn, :faq)
   end
 
   def donate(conn, _params) do
-    render(conn, "donate.html")
+    render(conn, :donate)
   end
 end
