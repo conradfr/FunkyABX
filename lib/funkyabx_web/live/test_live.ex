@@ -18,7 +18,7 @@ defmodule FunkyABXWeb.TestLive do
           </h3>
           <h6 :if={@test.author != nil} class="header-typographica">By <%= @test.author %></h6>
         </div>
-        <div :if={@test.local == false} class="col-sm-6 text-start text-sm-end pt-1">
+        <div :if={@test.local == false and @test.type != :listening} class="col-sm-6 text-start text-sm-end pt-1">
           <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
 
           <.live_component module={TestFlagComponent} id="flag" test={@test} />
