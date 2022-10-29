@@ -45,7 +45,7 @@ defmodule FunkyABXWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {FunkyABXWeb.LayoutView, "live.html"}
+        layout: {FunkyABXWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end
