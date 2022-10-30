@@ -39,78 +39,78 @@ defmodule FunkyABXWeb.TestLive do
       <% end %>
 
       <form phx-change="change_player_settings">
-      <div class="controls d-flex flex-wrap flex-row align-items-center"
-        id="player-controls"
-        phx-hook="Player"
-        data-tracks={Tracks.to_json(@tracks, @test)}
-        data-rotate-seconds={@rotate_seconds}
-        data-rotate={to_string(@rotate)}
-        data-loop={to_string(@loop)}
-        data-waveform={to_string(@test_params.draw_waveform)}>
-        <div class="p-2 me-auto d-flex align-items-center">
-          <button type="button" phx-click={JS.dispatch("back", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
-            <i class="bi bi-skip-start-fill"></i>
-          </button>
-          <%= if @playing == true do %>
-            <button type="button" phx-click={JS.dispatch("pause", to: "body")} class="btn btn-success me-1">
-              <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;Pause&nbsp;&nbsp;
+        <div class="controls d-flex flex-wrap flex-row align-items-center"
+          id="player-controls"
+          phx-hook="Player"
+          data-tracks={Tracks.to_json(@tracks, @test)}
+          data-rotate-seconds={@rotate_seconds}
+          data-rotate={to_string(@rotate)}
+          data-loop={to_string(@loop)}
+          data-waveform={to_string(@test_params.draw_waveform)}>
+          <div class="p-2 me-auto d-flex align-items-center">
+            <button type="button" phx-click={JS.dispatch("back", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
+              <i class="bi bi-skip-start-fill"></i>
             </button>
-          <% else %>
-            <button type="button" phx-click={JS.dispatch("play", to: "body")} class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}>
-              <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;Play&nbsp;&nbsp;
+            <%= if @playing == true do %>
+              <button type="button" phx-click={JS.dispatch("pause", to: "body")} class="btn btn-success me-1">
+                <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;Pause&nbsp;&nbsp;
+              </button>
+            <% else %>
+              <button type="button" phx-click={JS.dispatch("play", to: "body")} class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}>
+                <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;Play&nbsp;&nbsp;
+              </button>
+            <% end %>
+            <button type="button" phx-click={JS.dispatch("stop", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
+              <i class="bi bi-stop-fill"></i>
             </button>
-          <% end %>
-          <button type="button" phx-click={JS.dispatch("stop", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
-            <i class="bi bi-stop-fill"></i>
-          </button>
-          <%= if @tracks_loaded == false do %>
-            <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <span class="text-muted ms-2"><small>Loading tracks ...</small></span>
-          <% else %>
-            <div class="ms-2 text-muted" role="status">
-              <small><i class="bi bi-info-circle text-extra-muted" title="Player controls" role="button"
-                data-bs-toggle="popover" data-bs-placement="auto" data-bs-html="true"
-                data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>">
-              </i></small>
-            </div>
-          <% end %>
-        </div>
-        <div :if={@test.local == false and @test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
-          Round <%= @current_round %> / <%= @test.nb_of_rounds %>
-        </div>
-        <div class="p-2">
-          <fieldset class="form-group">
-            <div class="form-check">
-              <input class="form-check-input disabled" type="checkbox" id="inputLoopCheckbox" name="inputLoopCheckbox" checked={@loop}>
-              <label class="form-check-label" for="inputLoopCheckbox">
-                Loop
-              </label>
+            <%= if @tracks_loaded == false do %>
+              <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span class="text-muted ms-2"><small>Loading tracks ...</small></span>
+            <% else %>
+              <div class="ms-2 text-muted" role="status">
+                <small><i class="bi bi-info-circle text-extra-muted" title="Player controls" role="button"
+                  data-bs-toggle="popover" data-bs-placement="auto" data-bs-html="true"
+                  data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>">
+                </i></small>
+              </div>
+            <% end %>
           </div>
-          </fieldset>
-        </div>
-        <div class="p-2">
-          <div class="d-flex align-items-center">
-            <div class="p-2">
-              <fieldset class="form-group">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="inputRotateCheckbox" name="inputRotateCheckbox" checked={@rotate}>
-                  <label class="form-check-label" for="inputRotateCheckbox">
-                    Switch track every
-                  </label>
-                </div>
-              </fieldset>
+          <div :if={@test.local == false and @test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
+            Round <%= @current_round %> / <%= @test.nb_of_rounds %>
+          </div>
+          <div class="p-2">
+            <fieldset class="form-group">
+              <div class="form-check">
+                <input class="form-check-input disabled" type="checkbox" id="inputLoopCheckbox" name="inputLoopCheckbox" checked={@loop}>
+                <label class="form-check-label" for="inputLoopCheckbox">
+                  Loop
+                </label>
             </div>
-            <div class="p-2">
-              <input type="number" name="rotate-seconds" class="form-control form-control-sm" value={@rotate_seconds} style="width: 65px" min="3" max="3600">
-            </div>
-            <div class="p-2">
-              seconds
+            </fieldset>
+          </div>
+          <div class="p-2">
+            <div class="d-flex align-items-center">
+              <div class="p-2">
+                <fieldset class="form-group">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="inputRotateCheckbox" name="inputRotateCheckbox" checked={@rotate}>
+                    <label class="form-check-label" for="inputRotateCheckbox">
+                      Switch track every
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="p-2">
+                <input type="number" name="rotate-seconds" class="form-control form-control-sm" value={@rotate_seconds} style="width: 65px" min="3" max="3600">
+              </div>
+              <div class="p-2">
+                seconds
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </form>
 
       <div class="tracks my-2">
@@ -132,7 +132,7 @@ defmodule FunkyABXWeb.TestLive do
                   <%= track.title %>
                 </div>
               <% else %>
-                <div class="p-2 cursor-link" style="min-width: 100px" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
+                <div class="p-2 cursor-link" style={"min-width: #{if @test.type == :listening, do: "300", else: "100"}px"} phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
                   Track <%= i %>
                 </div>
               <% end %>
@@ -150,9 +150,9 @@ defmodule FunkyABXWeb.TestLive do
         <% end %>
       </div>
 
-      <%= unless @test_params.has_choices == false do %>
-        <div class="mt-3">
-          <div class="d-flex flex-row align-items-center justify-content-between">
+      <div class="mt-3">
+        <div class="d-flex flex-row align-items-center justify-content-between">
+          <%= unless @test_params.has_choices == false do %>
             <div :if={@test.local == true} class="results-actions">
               <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}>Go back to the test form</.link>
             </div>
@@ -173,9 +173,14 @@ defmodule FunkyABXWeb.TestLive do
                 <.link :if={@test.local == false} href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug)} class="btn btn-primary">Check the results</.link>
               </div>
             <% end %>
-          </div>
+          <% else %>
+            <div class="px-1">
+              <button :if={@test.anonymized_track_title == false} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark">Hide titles and shuffle tracks</button>
+              <button :if={@test.anonymized_track_title == true} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark">Reveal tracks' titles</button>
+            </div>
+          <% end %>
         </div>
-      <% end %>
+      </div>
     """
   end
 
@@ -485,15 +490,54 @@ defmodule FunkyABXWeb.TestLive do
      |> push_event("loop", %{loop: loop})}
   end
 
+  @impl true
+  def handle_event(
+        "hide_and_shuffle_tracks",
+        _params,
+        %{assigns: %{test: test, tracks: tracks}} = socket
+      )
+      when test.anonymized_track_title == false do
+    tracks = Enum.shuffle(tracks)
+    test = %{test | anonymized_track_title: true}
+
+    {:noreply,
+     socket
+     |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
+     |> assign(
+       test: test,
+       tracks: tracks,
+       current_track: nil,
+       tracks_loaded: false
+     )}
+  end
+
+  @impl true
+  def handle_event(
+        "hide_and_shuffle_tracks",
+        _params,
+        %{assigns: %{test: test}} = socket
+      ) do
+    test = %{test | anonymized_track_title: false}
+    {:noreply, assign(socket, test: test)}
+  end
+
   # ---------- TEST ----------
 
   @impl true
   def handle_event("test_already_taken", _params, socket) do
-    results_url = Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, socket.assigns.test.slug)
+    results_url =
+      Routes.test_results_public_path(
+        socket,
+        FunkyABXWeb.TestResultsLive,
+        socket.assigns.test.slug
+      )
 
     {:noreply,
      socket
-     |> put_flash(:info, "You have already taken this test. <a href=\"#{results_url}\">Check the results</a>.")
+     |> put_flash(
+       :info,
+       "You have already taken this test. <a href=\"#{results_url}\">Check the results</a>."
+     )
      |> assign(test_already_taken: true)}
   end
 
