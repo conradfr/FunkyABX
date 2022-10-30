@@ -28,7 +28,7 @@ defmodule FunkyABXWeb.TestFormLive do
             <fieldset class="form-group mb-3">
               <legend class="mt-1 header-typographica">Test type</legend>
                 <%= if @test_updatable == false do %>
-                  <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Test type can't be changed  once at least one person has taken the test.</div>
+                  <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Test type can't be changed once at least one person has taken the test.</div>
                 <% end %>
               <div class="form-unit px-3 py-3 rounded-3">
                 <div class="form-check">
@@ -285,7 +285,7 @@ defmodule FunkyABXWeb.TestFormLive do
           <legend class="header-typographica"><span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;Two tracks minimum</span>Tracks</legend>
 
           <%= if @test_updatable == false do %>
-            <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be modified once at least one person has taken the test.</div>
+            <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be added or removed once at least one person has taken the test.</div>
           <% else %>
             <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac.</div>
           <% end %>
@@ -370,7 +370,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <hr class="d-block d-sm-none mb-0">
                   <%= label :fp, :title, "Name:*", class: "col-sm-1 col-form-label text-start text-md-end" %>
                   <div class="col-sm-4">
-                    <%= text_input fp, :title, class: "form-control", disabled: !@test_updatable, required: true %>
+                    <%= text_input fp, :title, class: "form-control", required: true %>
                   </div>
                   <%= if get_upload_entry(input_value(fp, :temp_id), @uploads.tracks.entries) != nil and get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries) > 0 do %>
                     <%= label :fp, :filename, "Upload:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
