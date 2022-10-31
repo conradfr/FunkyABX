@@ -214,7 +214,7 @@ export default class {
           this.tracks.forEach((track) => {
             track.refreshTimeline();
           });
-        }, 250);
+        }, 25);
     }
   }
 
