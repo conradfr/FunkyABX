@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const BsModalHook = {
   mounted() {
     this.modal = null;
@@ -6,15 +7,14 @@ const BsModalHook = {
     this.open = () => {
       this.modal = new bootstrap.Modal(`#${id}`);
       this.modal.show();
-    }
+    };
 
     this.close = () => {
       this.modal.hide();
-    }
+    };
 
-    window.addEventListener(`open_modal`, this.open);
-    window.addEventListener(`close_modal`, this.close);
-
+    window.addEventListener('open_modal', this.open);
+    window.addEventListener('close_modal', this.close);
   },
   destroyed() {
     if (this.modal !== null) {

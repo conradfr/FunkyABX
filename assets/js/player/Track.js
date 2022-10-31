@@ -204,9 +204,8 @@ export default class {
     } else if (this.source !== null && this.lastPlayingStartedAt !== null) {
       currentPixel = ((((Date.now() - this.lastPlayingStartedAt) / 1000) + this.currentSeconds)
                         * canvasParentElem.offsetWidth) / this.tracksMaxDuration;
-    }
-    // player is probably playing farther this track's duration.
-    else if (this.playerState === playerState.PLAYER_PLAYING) {
+    } else if (this.playerState === playerState.PLAYER_PLAYING) {
+      // player is probably playing farther this track's duration.
       currentPixel = canvasParentElem.offsetWidth;
     } else if (this.pausedAt !== null && this.currentSeconds !== null) {
       currentPixel = (this.currentSeconds * canvasParentElem.offsetWidth) / this.tracksMaxDuration;
@@ -214,7 +213,7 @@ export default class {
       currentPixel = ((((this.pausedAt - this.lastPlayingStartedAt) / 1000))
         * canvasParentElem.offsetWidth) / this.tracksMaxDuration;
     } else {
-        currentPixel = canvasParentElem.offsetWidth;
+      currentPixel = canvasParentElem.offsetWidth;
     } /* else {
       currentPixel = 0;
     } */
@@ -241,6 +240,7 @@ export default class {
     // drawBuffer.canvas(canvasElem, this.buffer, '#383838');
 
     canvasElem.addEventListener('click', (e) => {
+      /* eslint-disable max-len */
       const time = Math.floor(((e.clientX - e.target.getBoundingClientRect().x) * this.tracksMaxDuration) / e.target.width);
       this.ee.emit('waveform-click', { track_hash: e.target.dataset.hash, time });
     });
@@ -256,6 +256,7 @@ export default class {
       ? '100' : (this.getDuration() * 100) / this.tracksMaxDuration;
 
     // this.waveform = new Waveform(canvasElem, this.buffer, trackWidthPercent);
+    /* eslint-disable max-len */
     this.waveform = new Timeline(canvasElem, this.drawWaveformUnder, this.buffer, trackWidthPercent);
   }
 }

@@ -3,6 +3,7 @@ import { COOKIE_TEST_TAKEN } from '../config/config';
 
 let audioFiles = null;
 
+/* eslint-disable no-undef */
 const TestResultsHook = {
   setAudioFiles(files) {
     audioFiles = files;
@@ -31,8 +32,9 @@ const TestResultsHook = {
       this.pushEvent('test_not_taken', {});
     }
 
+    /* eslint-disable camelcase */
     this.play = async (e) => {
-      const {test_local, track_id, track_url} = e.detail;
+      const { test_local, track_id, track_url } = e.detail;
       // pause currently playing track if any
       if (this.audio !== null) {
         this.audio.pause();
@@ -51,7 +53,7 @@ const TestResultsHook = {
       this.audio.volume = 1;
       this.audio.play();
 
-      this.pushEvent('playing', {track_id});
+      this.pushEvent('playing', { track_id });
     };
 
     this.stop = () => {
@@ -70,6 +72,6 @@ const TestResultsHook = {
     window.removeEventListener('play', this.play, false);
     window.removeEventListener('stop', this.stop, false);
   }
-}
+};
 
 export default TestResultsHook;

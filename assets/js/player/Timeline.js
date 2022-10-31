@@ -55,7 +55,6 @@ export default class {
       const ctxWaveform = this.canvasWaveform.getContext('2d');
       this.drawWaveform(currentPixel, active, ctxWaveform);
       ctx.drawImage(this.canvasWaveform, 0, 0);
-
     }
 
     ctx.clearRect(
@@ -115,7 +114,7 @@ export default class {
       );
     }
 
-    for(let i = clearXStart; i <= clearXEnd; i += 1) {
+    for (let i = clearXStart; i <= clearXEnd; i += 1) {
       const x = this.pixelData[i][0];
       if (x <= currentPixel) {
         ctx.fillStyle = active === true ? this.colorPastActive : this.colorPast;
@@ -139,7 +138,7 @@ export default class {
   generateData() {
     const pixelData = [];
 
-    for(let i = 0; i <= this.nbOfBars; i += 1) {
+    for (let i = 0; i <= this.nbOfBars; i += 1) {
       let min = 1.0;
       let max = -1.0;
       for (let j = 0; j < this.nbPointsPerBar; j += 1) {
@@ -193,7 +192,7 @@ export default class {
 
     let y = 5;
 
-    for(let i = 0; i <= this.seconds; i += 5) {
+    for (let i = 0; i <= this.seconds; i += 5) {
       // FizzBuzz!
       if (i % 30 === 0) {
         y = 7;
@@ -213,10 +212,10 @@ export default class {
       if (y === 7) {
         ctx.font = '10px serif';
         ctx.fillText(this.formatTime(i), i * this.nbPixelsPerSecond + 7, 8);
-      } /*else if (y === 15) {
+      } /* else if (y === 15) {
         ctx.font = '9px serif';
         ctx.fillText(this.formatTime(i), i * this.nbPixelsPerSecond - 4, 40);
-      }*/
+      } */
     }
   }
 
@@ -241,11 +240,12 @@ export default class {
     ctx.stroke();
   }
 
+  /* eslint-disable no-param-reassign */
   formatTime(seconds) {
-    const sec_num = parseInt(seconds, 10);
-    const hours = Math.floor(sec_num / 3600);
-    const minutes = Math.floor(sec_num / 60) % 60;
-    seconds = sec_num % 60;
+    const secNum = parseInt(seconds, 10);
+    const hours = Math.floor(secNum / 3600);
+    const minutes = Math.floor(secNum / 60) % 60;
+    seconds = secNum % 60;
 
     let text = '';
 

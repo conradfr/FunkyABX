@@ -2,12 +2,11 @@ import cookies from '../utils/cookies';
 import clipboard from '../utils/clipboard';
 import { COOKIE_TEST_AUTHOR } from '../config/config';
 
+/* eslint-disable no-undef */
 const TestFormHook = {
   mounted() {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
     this.handleEvent('clipboard', (params) => {
       clipboard.copy(params.text);
@@ -35,14 +34,14 @@ const TestFormHook = {
       cookies.remove(`test_${params.test_id}`);
     });
 
-    this.handleEvent('store_params', ({params}) => {
+    this.handleEvent('store_params', ({ params }) => {
       params.forEach((param) => {
         if (param.value !== null) {
           cookies.set(param.name, param.value);
         }
-      })
+      });
     });
   }
-}
+};
 
 export default TestFormHook;

@@ -38,17 +38,17 @@ export default class {
 
     // ---------- PLAYER EVENTS ----------
 
-    this.ee.on('playing', (trackHash) => {
+    this.ee.on('playing', (_trackHash) => {
       this.playing += 1;
       // playing is starting
       if (this.playing === 1) {
-        this.ee.emit('push_event', { event:'playing', data: {} });
+        this.ee.emit('push_event', { event: 'playing', data: {} });
         this.startTime = this.ac.currentTime;
         this.currentTime = this.ac.currentTime;
       }
     });
 
-    this.ee.on('stopping', (trackHash) => {
+    this.ee.on('stopping', (_trackHash) => {
       this.playing -= 1;
       if (this.playing === 0) {
         this.tracks.forEach((trackObj) => {
@@ -81,9 +81,10 @@ export default class {
       }
     });
 
+    /* eslint-disable camelcase */
     this.ee.on('waveform-click', (params) => {
       const { track_hash, time } = params;
-       this.play(track_hash, time);
+      this.play(track_hash, time);
     });
 
     // ---------- LOAD ----------
@@ -103,18 +104,20 @@ export default class {
         this.ee.emit('push_event', { event: 'tracksLoaded', data: {} });
 
         this.tracks = audioBuffers.map((audioBuffer, index) => {
+          /* eslint-disable max-len */
           return new Track(trackList[index], this.drawWaveform, audioBuffer, this.ac, this.ee, this.state);
         });
 
         // const durations = this.tracks.map((trackObj) => trackObj.getDuration());
 
-        let maxDurationTrack = this.tracks.reduce(
+        const maxDurationTrack = this.tracks.reduce(
           (acc, curr) => curr.getDuration() > acc.getDuration() ? curr : acc
         );
 
         // maxDuration = Math.max(durations);
         this.maxDuration = maxDurationTrack.getDuration();
 
+        /* eslint-disable no-param-reassign */
         this.tracks = this.tracks.map((trackObj) => {
           trackObj.tracksMaxDuration = this.maxDuration;
           trackObj.drawTimeline();
@@ -122,8 +125,8 @@ export default class {
         });
       })
       .catch((error) => {
-        this.ee.emit('push_event', { event: 'tracksError', data: {error} });
-    });
+        this.ee.emit('push_event', { event: 'tracksError', data: { error } });
+      });
   }
 
   // ---------- UTILS ----------
@@ -193,8 +196,10 @@ export default class {
       track.setActive(index === this.currentTrackIndex);
 
       if (index === this.currentTrackIndex) {
-        this.ee.emit('push_event', { event: 'currentTrackHash',
-          data: { track_hash: track.src.hash } });
+        this.ee.emit('push_event', {
+          event: 'currentTrackHash',
+          data: { track_hash: track.src.hash }
+        });
       }
 
       playoutPromises.push(
@@ -208,6 +213,7 @@ export default class {
 
     if (this.timeInterval === null) {
       // keep current play time updated
+      /* eslint-disable operator-linebreak */
       this.timeInterval =
         setInterval(() => {
           this.currentTime = this.ac.currentTime;
@@ -253,7 +259,7 @@ export default class {
   }
 
   goToTrack(trackNumber, goBack) {
-    if (trackNumber >  this.tracks.length) {
+    if (trackNumber > this.tracks.length) {
       return;
     }
 
@@ -317,8 +323,10 @@ export default class {
     this.tracks.forEach((track, index) => {
       track.setActive(index === nextTrackIndex);
       if (index === nextTrackIndex) {
-        this.ee.emit('push_event', { event: 'currentTrackHash',
-          data: { track_hash: track.src.hash } });
+        this.ee.emit('push_event', {
+          event: 'currentTrackHash',
+          data: { track_hash: track.src.hash }
+        });
       }
     });
 

@@ -6,6 +6,7 @@ export default class extends Loader {
    */
   load() {
     return new Promise((resolve, reject) => {
+      /* eslint-disable no-undef */
       const xhr = new XMLHttpRequest();
 
       xhr.open('GET', this.src, true);

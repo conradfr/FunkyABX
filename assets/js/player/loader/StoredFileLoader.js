@@ -14,6 +14,6 @@ export default class extends Loader {
     const audioData = await file.arrayBuffer();
 
     // formatted to suits the xhrloader response that was done first
-    return super.fileLoad({target: {response: audioData}});
+    return super.fileLoad({ target: { response: audioData } });
   }
 }

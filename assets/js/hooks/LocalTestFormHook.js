@@ -1,31 +1,31 @@
-import cookies from '../utils/cookies';
 import { directoryOpen, fileOpen } from 'browser-fs-access';
+import cookies from '../utils/cookies';
 
 let audioFiles = null;
 
+/* eslint-disable no-undef */
+/* eslint-disable no-restricted-globals */
 const LocalTestFormHook = {
   setAudioFiles(files) {
     audioFiles = files;
   },
   mounted() {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
     const isAllowedExt = (filename) => {
-      const arr = filename.split(".");
+      const arr = filename.split('.');
       return ['wav', 'mp3', 'aac', 'flac'].indexOf(arr.pop()) !== -1;
-    }
+    };
 
-    this.handleEvent('store_params_and_redirect', ({url, params}) => {
+    this.handleEvent('store_params_and_redirect', ({ url, params }) => {
       params.forEach((param) => {
         if (param.value !== null) {
           cookies.set(param.name, param.value);
         }
       });
 
-      this.pushEvent('redirect', {url});
+      this.pushEvent('redirect', { url });
     });
 
     // ---------- DRAG & DROP ----------
@@ -41,7 +41,7 @@ const LocalTestFormHook = {
             const id = self.crypto.randomUUID();
             audioFiles[id] = file;
 
-            this.pushEvent('track_added', {id: id, filename: file.name});
+            this.pushEvent('track_added', { id: id, filename: file.name });
           }
         }
       }
@@ -69,7 +69,7 @@ const LocalTestFormHook = {
           const id = self.crypto.randomUUID();
           audioFiles[id] = file;
 
-          this.pushEvent('track_added', {id: id, filename: file.name});
+          this.pushEvent('track_added', { id: id, filename: file.name });
         }
       });
     };
@@ -88,10 +88,10 @@ const LocalTestFormHook = {
           const id = self.crypto.randomUUID();
           audioFiles[id] = file;
 
-          this.pushEvent('track_added', {id: id, filename: file.name});
+          this.pushEvent('track_added', { id: id, filename: file.name });
         }
       });
-    }
+    };
 
     this.folderButton.addEventListener('click', this.folderClick, false);
   },
@@ -102,6 +102,6 @@ const LocalTestFormHook = {
       this.dropElem.removeEventListener('drop', this.ondrop, false);
     }
   }
-}
+};
 
 export default LocalTestFormHook;

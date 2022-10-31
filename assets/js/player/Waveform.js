@@ -50,7 +50,7 @@ export default class {
       this.canvas.height
     );
 
-    for(let i = clearXStart; i <= clearXEnd; i += 1) {
+    for (let i = clearXStart; i <= clearXEnd; i += 1) {
       const x = this.pixelData[i][0];
       if (x <= currentPixel) {
         ctx.fillStyle = active === true ? this.colorPastActive : this.colorPast;
@@ -73,7 +73,7 @@ export default class {
   generateData() {
     const pixelData = [];
 
-    for(let i = 0; i <= this.nbOfBars; i += 1) {
+    for (let i = 0; i <= this.nbOfBars; i += 1) {
       let min = 1.0;
       let max = -1.0;
       for (let j = 0; j < this.nbPointsPerBar; j += 1) {

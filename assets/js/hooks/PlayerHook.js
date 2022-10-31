@@ -1,10 +1,11 @@
 import EventEmitter from 'eventemitter3';
 import cookies from '../utils/cookies';
 import Player from '../player/Player';
-import {COOKIE_TEST_WAVEFORM} from '../config/config';
+import { COOKIE_TEST_WAVEFORM } from '../config/config';
 
 let audioFiles = null;
 
+/* eslint-disable no-undef */
 const PlayerHook = {
   setAudioFiles(files) {
     audioFiles = files;
@@ -26,14 +27,14 @@ const PlayerHook = {
         this.ee,
         audioFiles
       );
-    }
+    };
 
     this.player = loadPlayer(this.el.dataset.tracks);
 
     // ---------- JS EVENTS ----------
 
     this.play = (e) => {
-      const {track_hash, start_time} = e.detail;
+      const { track_hash, start_time } = e.detail;
       if (this.player !== null && this.player !== undefined) {
         this.player.play(track_hash, start_time);
       }
@@ -62,7 +63,7 @@ const PlayerHook = {
         return;
       }
 
-      const key = event.key
+      const key = event.key;
       switch (key) {
         case ' ':
           this.player.togglePlay(event.ctrlKey);
@@ -91,7 +92,7 @@ const PlayerHook = {
             this.player.goToTrack(toDigit, event.ctrlKey, event.shiftKey);
           }
       }
-    }
+    };
 
     window.addEventListener('play', this.play, false);
     window.addEventListener('stop', this.stop, false);
@@ -101,7 +102,7 @@ const PlayerHook = {
 
     // push events from other components
     this.ee.on('push_event', (params) => {
-      const {event, data} = params;
+      const { event, data } = params;
       this.pushEvent(event, data);
     });
 
@@ -142,12 +143,12 @@ const PlayerHook = {
     });
 
     this.handleEvent('tracks_loaded', () => {
-      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-      const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+      popoverTriggerList.map((popoverTriggerEl) => {
         return new bootstrap.Popover(popoverTriggerEl, {
           trigger: 'hover',
           // container: 'body'
-        })
+        });
       });
     });
   },
@@ -162,6 +163,6 @@ const PlayerHook = {
   /* updated() {
     console.log("editor update...")
   } */
-}
+};
 
 export default PlayerHook;
