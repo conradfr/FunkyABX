@@ -42,6 +42,7 @@ defmodule FunkyABX.Test do
     field(:upload_url, :string, virtual: true)
     field(:local, :boolean, virtual: true, default: false)
     field(:embed, :boolean, virtual: true, default: false)
+    field(:view_count, :integer, default: 0)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
     has_many(:invitations, Invitation, on_replace: :delete_if_exists)
     has_many(:rank_details, RankDetails)

@@ -239,14 +239,19 @@ defmodule FunkyABXWeb.TestLive do
     changeset = Test.changeset(test)
     test_params = Tests.get_test_params(test)
 
+    if connected?(socket) do
+      spawn(fn ->
+        FunkyABXWeb.Endpoint.subscribe(test.id)
+        Tests.increment_view_counter(test)
+      end)
+    end
+
     tracks =
       test.tracks
       |> Tracks.prep_tracks(test)
       |> Tests.prep_tracks(test)
 
     choices_modules = Tests.get_choices_modules(test)
-
-    FunkyABXWeb.Endpoint.subscribe(test.id)
 
     invitation_id =
       params

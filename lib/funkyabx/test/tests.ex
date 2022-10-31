@@ -2,6 +2,7 @@ defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2, dynamic: 2]
   use Nebulex.Caching
 
+  alias Ecto.UUID
   alias FunkyABX.Repo
   alias FunkyABX.{Cache, Test, Stats}
   alias FunkyABX.{PickDetails, StarDetails, RankDetails, IdentificationDetails, AbxDetails}
@@ -9,7 +10,7 @@ defmodule FunkyABX.Tests do
 
   @min_test_created_minutes 15
 
-  @cache_test_ttl :timer.hours(1)
+  @cache_test_ttl :timer.minutes(15)
   @cache_user_ttl :timer.minutes(5)
   @cache_gallery_ttl :timer.minutes(5)
   @cache_gallery_home_ttl :timer.minutes(1)
@@ -215,6 +216,19 @@ defmodule FunkyABX.Tests do
     test
     |> get_test_module()
     |> Kernel.apply(:submit, [test, choices, session_id, ip_address])
+  end
+
+  # ---------- VIEWED ----------
+
+  # we don't update old tests with no view counter
+  def increment_view_counter(%Test{} = test) when test.view_count == nil, do: :ok
+
+  def increment_view_counter(%Test{} = test) do
+    Ecto.Adapters.SQL.query!(
+      Repo,
+      "UPDATE test SET view_count = view_count+1 where id = $1",
+      [UUID.dump!(test.id)]
+    )
   end
 
   # ---------- TAKEN ----------

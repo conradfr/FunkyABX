@@ -13,7 +13,8 @@ defmodule FunkyABXWeb.TestListLive do
           <tr>
             <th scope="col" class="text-center w-50">Title</th>
             <th scope="col" class="text-center w-25">Created</th>
-            <th scope="col" class="text-center">Taken</th>
+            <th scope="col" class="text-center">Views</th>
+            <!-- <th scope="col" class="text-center">Taken</th> -->
             <th scope="col" class="text-center">Results</th>
             <th scope="col" class="text-center">Actions</th>
           </tr>
@@ -23,12 +24,20 @@ defmodule FunkyABXWeb.TestListLive do
               <tr>
                 <td><.link href={Routes.test_public_path(@socket, FunkyABXWeb.TestLive, test.slug)} class="test-link"><%= test.title %></.link></td>
                 <td class="text-center"><%= format_date(test.inserted_at) %></td>
-                <%= unless test.type == :listening do %>
-                  <td class="text-center"></td>
-                  <td class="text-center"><.link href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, test.slug)}>results</.link></td>
-                <% else %>
-                  <td colspan="2"></td>
-                <% end %>
+                <td class="text-center">
+                  <%= unless test.view_count == nil do %>
+                    <%= test.view_count %>
+                  <% else %>
+                    -
+                  <% end %>
+                </td>
+                  <%= unless test.type == :listening do %>
+                    <!-- <td class="text-center">-</td> -->
+                    <td class="text-center"><.link href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, test.slug)}>results</.link></td>
+                  <% else %>
+                    <!-- <td class="text-center">-</td> -->
+                    <td class="text-center">-</td>
+                  <% end %>
                 <td class="text-center"><.link href={Routes.test_edit_path(@socket, FunkyABXWeb.TestFormLive, test.slug)}>edit / delete</.link></td>
               </tr>
             <% end %>

@@ -2,11 +2,18 @@
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTestsMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     My tests
   </a>
-  <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdownTestsMenuLink">
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownTestsMenuLink">
     <%= for test <- get_tests(@conn) do %>
       <li class="navbar-tests">
         <div class="d-flex w-100">
           <div class="px-3 flex-grow-1 text-truncate" style="width: 250px"><%= link test.title, to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, test.slug) %></div>
+          <div class="text-center" style="width: 100px">
+            <%= if test.view_count != nil do %>
+              <i class="bi bi-eye"></i>&nbsp;&nbsp;<%= test.view_count %>
+            <% else %>
+            <span class="text-muted">-</span>
+            <% end %>
+          </div>
           <div class="d-flex text-end navbar-tests-actions">
             <%= if @current_user do %>
               <div class="px-1"><%= link "edit", to: Routes.test_edit_path(@conn, FunkyABXWeb.TestFormLive, test.slug) %></div>
@@ -23,7 +30,6 @@
     <% end %>
     <%= if Kernel.length(get_tests(@conn)) == 0 do %>
       <li class="navbar-tests px-2 text-center"><small class="text-muted">No tests (yet !)</small></li>
-
     <% else %>
       <%= if @current_user do %>
         <li><hr class="dropdown-divider" style="background-color: white;"></li>
