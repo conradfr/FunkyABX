@@ -30,7 +30,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         <% end %>
       <% end %>
 
-      <div class="row" :if={@is_another_session == false and @session_id != nil}>
+      <div class="row" :if={@test.local == false and @is_another_session == false and @session_id != nil}>
         <div class="col-12 col-sm-3">
           <h5 class="mt-3 header-neon">Your test:</h5>
           <div class="your-test rounded p-2 mb-4">
@@ -106,7 +106,8 @@ defmodule FunkyABXWeb.TestResultsLive do
        visitor_choices: choices_taken,
        play_track_id: nil,
        test_taken_times: nil,
-       test_data: data
+       test_data: data,
+       is_another_session: false
      })}
   end
 
