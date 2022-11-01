@@ -76,7 +76,8 @@ defmodule FunkyABX.MixProject do
       {:phoenix_swagger, "~> 0.8"},
       {:ex_json_schema, "~> 0.5"},
       {:mogrify, "~> 0.9.2"},
-      {:shortuuid, "~> 2.1"}
+      {:shortuuid, "~> 2.1"},
+      {:ex_machina, "~> 2.7.0", only: [:test]}
     ]
   end
 
