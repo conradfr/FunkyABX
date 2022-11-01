@@ -45,7 +45,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     Enable rating
                   </label>
 
-                  <div class="form-check mt-2 ms-1">
+                  <div class="form-check mt-2 ms-1 form-test-example" data-target="example-picking">
                     <label class="form-check-label">
                       <%= radio_button(f, :regular_type, "pick",
                         class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
@@ -54,7 +54,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <div class="form-text mb-2">People will have to pick their preferred track</div>
                   </div>
 
-                  <div class="form-check ms-1">
+                  <div class="form-check ms-1 form-test-example" data-target="example-stars">
                     <label class="form-check-label">
                       <%= radio_button(f, :regular_type, "star",
                         class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
@@ -63,7 +63,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <div class="form-text mb-2">Each track will have a 1-5 star rating (usually NOT the best choice !)</div>
                   </div>
 
-                  <div class="form-check ms-1">
+                  <div class="form-check ms-1 form-test-example" data-target="example-ranking">
                     <label class="form-check-label">
                       <%= radio_button(f, :regular_type, "rank", class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
                       Ranking
@@ -79,7 +79,7 @@ defmodule FunkyABXWeb.TestFormLive do
                       </div>
                   </div>
                 </div>
-                <div class="form-check ms-4">
+                <div class="form-check ms-4 form-test-example" data-target="example-identification">
                   <label class="form-check-label">
                     <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
                     Recognition test
@@ -87,7 +87,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <div class="form-text mb-2">People will have to identify the anonymized tracks</div>
                 </div>
 
-                <div class="form-check disabled mt-4 mb-2">
+                <div class="form-check disabled mt-4 mb-2 form-test-example" data-target="example-abx">
                   <label class="form-check-label">
                     <%= radio_button(f, :type, "abx", class: "form-check-input", disabled: !@test_updatable) %>
                     ABX test
@@ -194,6 +194,14 @@ defmodule FunkyABXWeb.TestFormLive do
               <a href="#" class={"link-no-decoration #{if @current_user == nil, do: "disabled"}"} phx-click={JS.dispatch("open_modal", to: "body")}><i class="bi bi-envelope"></i> Send invitations</a>
               <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;(Available only tests created by logged in users)</small></span>
             </div>
+            <% else %>
+              <div class="w-100 text-center d-none d-sm-block" style="padding-top: 200px;">
+                <div class="form-example rounded-1 d-none" id="example-picking"><img title="Picking example" src={Routes.static_path(@socket, "/images/example-picking.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-stars"><img title="Stars example" src={Routes.static_path(@socket, "/images/example-stars.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-ranking"><img title="Ranking example" src={Routes.static_path(@socket, "/images/example-ranking.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-identification"><img title="Identification example" src={Routes.static_path(@socket, "/images/example-identification.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-abx"><img title="Abx example" src={Routes.static_path(@socket, "/images/example-abx.png")}></div>
+              </div>
             <% end %>
           </div>
         </div>
