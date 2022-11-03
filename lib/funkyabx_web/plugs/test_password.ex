@@ -46,6 +46,7 @@ defmodule FunkyABXWeb.Plugs.TestPassword do
       _ ->
         conn
         |> Phoenix.Controller.redirect(to: Routes.test_path(conn, :password, test.slug))
+        |> halt()
     end
   end
 end
