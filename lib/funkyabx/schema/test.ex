@@ -103,7 +103,8 @@ defmodule FunkyABX.Test do
       :identification,
       :normalization,
       :email_notification,
-      :upload_url
+      :upload_url,
+      :ip_address
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2, required: true)
     |> cast_assoc(:user)
