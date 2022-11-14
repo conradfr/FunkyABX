@@ -44,7 +44,7 @@ defmodule FunkyABXWeb.UserRegistrationController do
 
     query =
       from(t in Test,
-        where: t.id in ^test_ids and t.password in ^password_ids and is_nil(t.deleted_at),
+        where: t.id in ^test_ids and t.access_key in ^password_ids and is_nil(t.deleted_at),
         select: t
       )
 
