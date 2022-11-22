@@ -407,9 +407,9 @@ defmodule FunkyABXWeb.TestFormLive do
             <span class="visually-hidden">Loading...</span>
           </div>
           <%= if @action == "save" do %>
-            <%= submit("Create test", class: "btn btn-lg btn-primary", disabled: !@changeset.valid?) %>
+            <button type="submit" class="btn btn-lg btn-primary" phx-disable-with="Saving..." disabled={!@changeset.valid? or @test_submittable == false}>Save test</button>
           <% else %>
-            <%= submit("Update test", class: "btn btn-lg btn-primary", disabled: !@changeset.valid?) %>
+            <button type="submit" class="btn btn-lg btn-primary" phx-disable-with="Updating ..." disabled={!@changeset.valid? or @test_submittable == false}>Update test</button>
           <% end %>
         </div>
       </.form>
@@ -459,7 +459,8 @@ defmodule FunkyABXWeb.TestFormLive do
          test: test,
          view_description: false,
          tracks_to_delete: [],
-         test_updatable: test_updatable
+         test_updatable: test_updatable,
+         test_submittable: true
        })
        |> allow_upload(:tracks,
          accept: ~w(.wav .mp3 .aac .flac),
@@ -514,7 +515,8 @@ defmodule FunkyABXWeb.TestFormLive do
        test: test,
        view_description: false,
        tracks_to_delete: [],
-       test_updatable: true
+       test_updatable: true,
+       test_submittable: true
      })
      |> allow_upload(:tracks,
        accept: ~w(.wav .mp3 .aac .flac),
@@ -731,17 +733,29 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   # Edit
+
   @impl true
-  def handle_event("update", params, socket) do
-    send(self(), {"update", params})
+  def handle_event("update", params, socket) when socket.assigns.test_submittable == false do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("update", params, socket) do
+    send(self(), {"update", params})
+    {:noreply, assign(socket, test_submittable: false)}
+  end
+
   # New
+
+  @impl true
+  def handle_event("save", params, socket) when socket.assigns.test_submittable == false do
+    {:noreply, socket}
+  end
+
   @impl true
   def handle_event("save", params, socket) do
     send(self(), {"save", params})
-    {:noreply, socket}
+   {:noreply, assign(socket, test_submittable: false)}
   end
 
   @impl true
