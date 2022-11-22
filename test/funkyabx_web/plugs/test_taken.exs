@@ -21,6 +21,7 @@ defmodule FunkyABXWeb.Plugs.IpTest do
 
     test "test exists and taken", %{conn: conn} do
       test = insert(:test, tracks: [])
+
       conn =
         conn
         |> put_req_cookie("funkyabx_test_taken_" <> test.id, "true")

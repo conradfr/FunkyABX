@@ -8,7 +8,7 @@ defmodule FunkyABXWeb.TestController do
 
   alias Ecto.UUID
   alias FunkyABX.Repo
-  alias FunkyABX.{Tests, Test, Files, Tracks}
+  alias FunkyABX.{Tests, Test, Files, Tracks, Utils}
   alias FunkyABX.Tests.Image
   alias FunkyABX.Accounts.User
 
@@ -102,7 +102,7 @@ defmodule FunkyABXWeb.TestController do
 
       tracks(:path, :array, "Array of Tracks",
         required: true,
-        type: Schema.ref(:Tracks)
+        type: Schema.ref(:Track)
       )
     end
 
@@ -123,23 +123,19 @@ defmodule FunkyABXWeb.TestController do
 
   def test_api_new(conn, %{"test" => test_params, "tracks" => tracks_params} = _params) do
     with %User{} = user <- Map.get(conn.private, :user) do
-      request_ip = fetch_session(conn, "visitor_ip") || nil
       test_id = UUID.generate()
+      request_ip = Utils.get_ip_as_binary(conn.remote_ip)
       normalization = Map.get(test_params, "normalization", false)
 
       tracks_parsed =
         tracks_params
         |> Enum.map(fn t -> Tracks.parse_and_import_tracks_from_api(t, test_id, normalization) end)
 
-      test_params_updated =
-        test_params
-        |> Map.put("tracks", tracks_parsed)
-        |> Map.merge(%{
-          "ip_address" => request_ip
-        })
+      test_params_updated = Map.put(test_params, "tracks", tracks_parsed)
 
       test_changeset =
-        Test.new(user)
+        %{user: user, ip_address: request_ip}
+        |> Test.new()
         |> Test.changeset(test_params_updated)
 
       case test_changeset.valid? do

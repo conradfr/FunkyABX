@@ -20,5 +20,4 @@ defmodule FunkyABX.Factory do
       original_filename: sequence(:original_filename, &"original_filename_#{&1}.mp3")
     }
   end
-
 end

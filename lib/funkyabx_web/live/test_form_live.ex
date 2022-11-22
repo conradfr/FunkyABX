@@ -485,17 +485,19 @@ defmodule FunkyABXWeb.TestFormLive do
     access_key = if user == nil, do: UUID.generate(), else: nil
     name = Map.get(session, "author")
 
-    test = Test.new(user)
+    test =
+      Test.new(%{
+        user: user,
+        access_key: access_key,
+        author: name,
+        ip_address: Map.get(session, "visitor_ip", nil)
+      })
 
     changeset =
       Test.changeset(
         test,
         Map.merge(
-          %{
-            access_key: access_key,
-            author: name,
-            ip_address: Map.get(session, "visitor_ip", nil)
-          },
+          %{},
           Tests.form_data_from_session(session)
         )
       )
@@ -755,7 +757,7 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def handle_event("save", params, socket) do
     send(self(), {"save", params})
-   {:noreply, assign(socket, test_submittable: false)}
+    {:noreply, assign(socket, test_submittable: false)}
   end
 
   @impl true

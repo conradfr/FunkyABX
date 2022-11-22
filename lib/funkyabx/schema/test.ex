@@ -52,21 +52,21 @@ defmodule FunkyABX.Test do
     timestamps()
   end
 
-  def new(user \\ nil) do
+  def new(params \\ %{}) do
     %Test{
       id: UUID.generate(),
       local: false,
       type: :regular,
-      author: nil,
-      access_key: nil,
+      author: Map.get(params, :author, nil),
+      access_key: Map.get(params, :access_key, nil),
       password_length: nil,
       upload_url: nil,
       tracks: [],
       normalization: false,
-      user: user,
+      user: Map.get(params, :user, nil),
       nb_of_rounds: @default_rounds,
       anonymized_track_title: true,
-      ip_address: nil,
+      ip_address: Map.get(params, :ip_address, nil),
       invitations: []
     }
   end
