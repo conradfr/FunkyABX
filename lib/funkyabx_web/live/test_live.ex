@@ -223,6 +223,7 @@ defmodule FunkyABXWeb.TestLive do
        rotate_seconds: 5,
        changeset: changeset,
        choices_taken: %{},
+       played: false,
        playing: false,
        playingTime: 0,
        valid: false,
@@ -239,12 +240,7 @@ defmodule FunkyABXWeb.TestLive do
     changeset = Test.changeset(test)
     test_params = Tests.get_test_params(test)
 
-    if connected?(socket) do
-      spawn(fn ->
-        FunkyABXWeb.Endpoint.subscribe(test.id)
-        Tests.increment_view_counter(test)
-      end)
-    end
+    if connected?(socket), do: FunkyABXWeb.Endpoint.subscribe(test.id)
 
     tracks =
       test.tracks
@@ -291,6 +287,7 @@ defmodule FunkyABXWeb.TestLive do
        rotate_seconds: 5,
        changeset: changeset,
        choices_taken: %{},
+       played: false,
        playing: false,
        playingTime: 0,
        valid: false,
@@ -423,8 +420,12 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_event("playing", _params, socket) do
-    {:noreply, assign(socket, playing: true)}
+  def handle_event("playing", _params, %{assigns: %{test: test, played: played }} = socket) do
+    spawn(fn ->
+      if played == false, do: Tests.increment_view_counter(test)
+    end)
+
+    {:noreply, assign(socket, playing: true, played: true)}
   end
 
   @impl true

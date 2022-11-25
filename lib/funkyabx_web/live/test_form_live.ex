@@ -737,7 +737,7 @@ defmodule FunkyABXWeb.TestFormLive do
   # Edit
 
   @impl true
-  def handle_event("update", params, socket) when socket.assigns.test_submittable == false do
+  def handle_event("update", _params, socket) when socket.assigns.test_submittable == false do
     {:noreply, socket}
   end
 
@@ -750,7 +750,7 @@ defmodule FunkyABXWeb.TestFormLive do
   # New
 
   @impl true
-  def handle_event("save", params, socket) when socket.assigns.test_submittable == false do
+  def handle_event("save", _params, socket) when socket.assigns.test_submittable == false do
     {:noreply, socket}
   end
 
