@@ -13,8 +13,8 @@ defmodule TestFlagComponent do
         <div :if={@flag_display} class="input-group mt-1">
           <input type="text" class="form-control w-25" placeholder="Enter the reason" aria-label="Enter the reason" aria-describedby="button-flag" phx-keyup="flag_text" phx-target={@myself}>
           <button class={"btn btn-secondary#{if @flag_text == "", do: " disabled"}"} type="button" id="button-flag" phx-target={@myself} phx-click="flag_submit" >Flag</button>
+        </div>
       </div>
-    </div>
     """
   end
 

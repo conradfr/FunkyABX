@@ -181,6 +181,8 @@ defmodule FunkyABXWeb.TestLive do
           <% end %>
         </div>
       </div>
+
+      <.live_component module={DisqusComponent} :if={@test.type == :listening and @test.local == false and @embed != true} id="disqus" test={@test} />
     """
   end
 
