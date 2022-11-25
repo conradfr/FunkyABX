@@ -56,7 +56,7 @@ export default class {
     return this.buffer.duration;
   }
 
-  cleanSource() {
+  cleanSource(fromEnding) {
     this.sourceCtrl = null;
 
     if (this.gainNode !== null) {
@@ -67,7 +67,7 @@ export default class {
     if (this.source !== null) {
       this.source.disconnect();
       this.source = null;
-      this.ee.emit('stopping', this.src.hash);
+      this.ee.emit('stopping', this.src.hash, fromEnding);
     }
   }
 
@@ -102,7 +102,7 @@ export default class {
         if (this.source === null || control !== this.sourceCtrl) {
           e.preventDefault();
         } else {
-          this.cleanSource();
+          this.cleanSource(true);
         }
         resolve();
       };

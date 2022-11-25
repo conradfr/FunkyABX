@@ -13,7 +13,6 @@ export default class {
 
     this.rotateInterval = null;
     this.timeInterval = null;
-    this.loopTimeout = null;
 
     // state is the UI state
     this.state = playerState.PLAYER_STOPPED;
@@ -48,14 +47,14 @@ export default class {
       }
     });
 
-    this.ee.on('stopping', (_trackHash) => {
+    this.ee.on('stopping', (_trackHash, fromEnding) => {
       this.playing -= 1;
       if (this.playing === 0) {
         this.tracks.forEach((trackObj) => {
           trackObj.refreshTimeline();
         });
 
-        if (this.rotateInterval !== null) {
+        if (this.rotateInterval !== null && (fromEnding !== true || this.loop === false)) {
           clearInterval(this.rotateInterval);
           this.rotateInterval = null;
         }
@@ -209,7 +208,9 @@ export default class {
 
     Promise.all(playoutPromises);
 
-    this.setRotate();
+    if (this.rotateInterval === null) {
+      this.setRotate();
+    }
 
     if (this.timeInterval === null) {
       // keep current play time updated
