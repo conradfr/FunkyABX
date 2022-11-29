@@ -4,7 +4,7 @@ defmodule FunkyABX.Test do
   alias Ecto.UUID
   alias FunkyABX.Accounts.User
   alias FunkyABX.Test.TitleSlug
-  alias FunkyABX.{Track, RankDetails, PickDetails, IdentificationDetails, Invitation}
+  alias FunkyABX.{Tests, Track, RankDetails, PickDetails, IdentificationDetails, Invitation}
   alias FunkyABX.Tests.Validators
   alias __MODULE__
 
@@ -161,6 +161,17 @@ defmodule FunkyABX.Test do
       min: @minimum_tracks,
       message: "A test needs to have at least two tracks."
     )
+  end
+
+  def changeset_close(test, _attrs \\ %{}) do
+    value =
+      case Tests.is_closed?(test) do
+        true -> nil
+        false -> NaiveDateTime.utc_now()
+      end
+
+    test
+    |> cast(%{"closed_at" => value}, [:closed_at])
   end
 
   def changeset_delete(test, _attrs \\ %{}) do

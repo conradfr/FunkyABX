@@ -17,6 +17,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         <%= unless @test.type == :listening or @test.local == true do %>
           <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
             <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</span>
+            <time :if={Tests.is_closed?(@test)} class="header-texgyreadventor text-muted" title={@test.closed_at} datetime={@test.closed_at}><br><small>(test is closed)</small></time>
           </div>
         <% end %>
       </div>
@@ -99,7 +100,8 @@ defmodule FunkyABXWeb.TestResultsLive do
   def mount(%{"slug" => slug} = params, session, socket) do
     with test when not is_nil(test) <- Tests.get_by_slug(slug),
          true <-
-           Map.get(session, "test_taken_" <> slug, false) or
+           Tests.is_closed?(test) or
+             Map.get(session, "test_taken_" <> slug, false) or
              ((Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) or
                 (Map.get(params, "key") != nil and Map.get(params, "key") == test.access_key)) do
       result_modules = Tests.get_result_modules(test)

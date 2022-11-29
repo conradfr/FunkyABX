@@ -186,13 +186,23 @@ defmodule FunkyABXWeb.TestFormLive do
                 <% end %>
                 <div class="text-center">
                   <hr>
-                  <button type="button" class="btn btn-danger" data-confirm="Are you sure?" phx-click="delete_test"><i class="bi bi-trash"></i> Delete test</button>
+                  <div class="d-flex justify-content-evenly">
+                    <button :if={Tests.is_closed?(@test) == false} type="button" class="btn btn-info" data-confirm="Are you sure?" phx-click="close_test">
+                      <i class="bi bi-x-circle"></i> Close the test
+                    </button>
+                    <button :if={Tests.is_closed?(@test)} type="button" class="btn btn-warning" data-confirm="Are you sure?" phx-click="close_test">
+                      <i class="bi bi-check-circle"></i> Reopen the test
+                    </button>
+                    <button type="button" class="btn btn-danger" data-confirm="Are you sure?" phx-click="delete_test">
+                      <i class="bi bi-trash"></i> Delete the test
+                    </button>
+                  </div>
                 </div>
               </div>
             </fieldset>
             <div class="text-center mb-3">
               <a href="#" class={"link-no-decoration #{if @current_user == nil, do: "disabled"}"} phx-click={JS.dispatch("open_modal", to: "body")}><i class="bi bi-envelope"></i> Send invitations</a>
-              <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;(Available only tests created by logged in users)</small></span>
+              <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;(Available only for tests created by logged in users)</small></span>
             </div>
             <% else %>
               <div class="w-100 text-center d-none d-sm-block" style="padding-top: 200px;">
@@ -758,6 +768,55 @@ defmodule FunkyABXWeb.TestFormLive do
   def handle_event("save", params, socket) do
     send(self(), {"save", params})
     {:noreply, assign(socket, test_submittable: false)}
+  end
+
+  @impl true
+  def handle_event("close_test", _params, socket) do
+    test =
+      socket.assigns.test
+      |> Repo.preload(:user)
+
+    test
+    |> Test.changeset_close()
+    |> Repo.update()
+
+    Tests.clean_get_test_cache(test)
+
+    # (value has not been locally updated)
+    case Tests.is_closed?(test) do
+      true -> FunkyABXWeb.Endpoint.broadcast!(test.id, "test_opened", nil)
+      false -> FunkyABXWeb.Endpoint.broadcast!(test.id, "test_closed", nil)
+    end
+
+    # logged or not
+    redirect =
+      unless test.password == nil do
+        Routes.test_edit_private_path(
+          FunkyABXWeb.Endpoint,
+          FunkyABXWeb.TestFormLive,
+          test.slug,
+          test.password
+        )
+      else
+        Routes.test_edit_path(
+          FunkyABXWeb.Endpoint,
+          FunkyABXWeb.TestFormLive,
+          test.slug
+        )
+      end
+
+    flash_text = "Your test has been successfully updated."
+
+    Process.send_after(
+      self(),
+      {:redirect, redirect, flash_text},
+      1000
+    )
+
+    {:noreply,
+     socket
+     |> assign(test: test)
+     |> put_flash(:success, flash_text)}
   end
 
   @impl true

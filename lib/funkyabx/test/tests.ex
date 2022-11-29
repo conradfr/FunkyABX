@@ -58,7 +58,7 @@ defmodule FunkyABX.Tests do
     query =
       from t in Test,
         where:
-          t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
+          t.public == true and is_nil(t.deleted_at) and
             t.inserted_at < ago(@min_test_created_minutes, "minute"),
         order_by: [desc: t.inserted_at],
         select: t,
@@ -275,6 +275,16 @@ defmodule FunkyABX.Tests do
   end
 
   # ---------- UTILS ----------
+
+  def is_closed?(%Test{} = test) when test.closed_at == nil, do: false
+
+  def is_closed?(%Test{} = test) do
+    compare =
+      NaiveDateTime.utc_now()
+      |> NaiveDateTime.compare(test.closed_at)
+
+    compare != :lt
+  end
 
   def assign_new(choices, round, key, default \\ %{}) do
     case is_map_key(choices, round) do

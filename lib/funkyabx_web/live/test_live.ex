@@ -159,7 +159,7 @@ defmodule FunkyABXWeb.TestLive do
             <div :if={@test.local == true} class="results-actions">
               <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action">Create a new local test</.link>
             </div>
-            <%= unless @test_already_taken == true do %>
+            <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
               <%= unless @test.local == true do %>
                 <div class="px-1">
                   <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>
@@ -301,11 +301,22 @@ defmodule FunkyABXWeb.TestLive do
        invitation_id: invitation_id
      })
      |> then(fn s ->
+       if Tests.is_closed?(test) == true do
+         put_flash(
+           s,
+           :info,
+           "This test has been closed. <a href=\"#{Routes.test_results_public_path(s, FunkyABXWeb.TestResultsLive, s.assigns.test.slug)}\">Check the results</a>"
+         )
+       else
+         s
+       end
+     end)
+     |> then(fn s ->
        if test_already_taken == true do
          put_flash(
            s,
            :info,
-           "Your invitation has already been redeemed. <a href={Routes.test_public_path(socket, FunkyABXWeb.TestLive, test.slug)}>Take the test anonymously instead</a>."
+           "Your invitation has already been redeemed. <a href=\"#{Routes.test_public_path(socket, FunkyABXWeb.TestLive, test.slug)}\">Take the test anonymously instead</a>."
          )
        else
          s
@@ -324,6 +335,46 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def handle_info(%{event: "test_taken"} = _payload, socket) do
     {:noreply, assign(socket, :test_taken_times, socket.assigns.test_taken_times + 1)}
+  end
+
+  @impl true
+  def handle_info(%{event: "test_opened"} = _payload, socket) do
+    {:noreply,
+     socket
+     |> put_flash(:info, "This test has been reopened.")
+     |> redirect(
+       to:
+         Routes.test_public_path(
+           socket,
+           FunkyABXWeb.TestLive,
+           socket.assigns.test.slug
+         )
+     )}
+  end
+
+  @impl true
+  def handle_info(%{event: "test_closed"} = _payload, socket) do
+    results_url =
+      Routes.test_results_public_path(
+        socket,
+        FunkyABXWeb.TestResultsLive,
+        socket.assigns.test.slug
+      )
+
+    {:noreply,
+     socket
+     |> put_flash(
+       :info,
+       "This test has been closed. <a href=\"#{results_url}\">Check the results</a>"
+     )
+     |> redirect(
+       to:
+         Routes.test_public_path(
+           socket,
+           FunkyABXWeb.TestLive,
+           socket.assigns.test.slug
+         )
+     )}
   end
 
   @impl true
