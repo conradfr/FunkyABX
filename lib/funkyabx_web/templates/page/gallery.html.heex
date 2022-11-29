@@ -21,7 +21,7 @@
         </div>
       <% end %>
       <div class="mt-auto">
-        <div class="py-1 text-center gallery-test-taken">
+        <div :if={test.type != :listening} class="py-1 text-center gallery-test-taken">
           Test taken <%= test.taken %> times
         </div>
         <div class="py-1 text-center gallery-test-link">
