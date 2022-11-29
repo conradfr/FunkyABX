@@ -23,7 +23,18 @@ defmodule FunkyABXWeb.TestResultRankComponent do
 
     ~H"""
       <div>
-        <h4 class="mt-3 header-neon">Ranking</h4>
+        <div class="d-flex flex-row align-items-end">
+          <div class="me-auto">
+            <h4 class="mt-3 header-neon">Ranking</h4>
+          </div>
+          <div :if={@test.local == false} class="justify-content-end text-end pt-4">
+            <%= if @ranks_detail == false do %>
+              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>View details&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
+            <% else %>
+              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>Hide details&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
+            <% end %>
+          </div>
+        </div>
         <div class="tracks my-2 mb-4 track-results results">
           <div :if={Kernel.length(@ranks) == 0} class="alert alert-info alert-thin">No ranking done ... yet!</div>
           <%= for rank <- @ranks do %>
@@ -51,6 +62,20 @@ defmodule FunkyABXWeb.TestResultRankComponent do
                 </div>
               </div>
             </div>
+
+            <%= if @ranks_detail == true do %>
+              <div class="mb-3">
+                <%= if Map.get(rank, :other_ranks, nil) == nil do %>
+                  <div class="my-2 text-end text-muted"><small>No other ranking</small></div>
+                <% else %>
+                  <%= for other_rank <- Map.get(rank, :other_ranks, []) do %>
+                    <div class="my-2 d-flex flex-wrap align-items-center justify-content-end">
+                      <small><%= other_rank.count %> votes as #<%= other_rank.rank %></small>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -62,6 +87,14 @@ defmodule FunkyABXWeb.TestResultRankComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:ranks, fn -> Ranks.get_ranks(assigns.test, assigns.visitor_choices) end)}
+     |> assign_new(:ranks, fn -> Ranks.get_ranks(assigns.test, assigns.visitor_choices) end)
+     |> assign_new(:ranks_detail, fn -> false end)}
+  end
+
+  @impl true
+  def handle_event("toggle_detail", _value, socket) do
+    toggle = !socket.assigns.ranks_detail
+
+    {:noreply, assign(socket, ranks_detail: toggle)}
   end
 end

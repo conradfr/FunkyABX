@@ -22,6 +22,7 @@ defmodule FunkyABX.Ranks do
     |> Enum.sort(fn curr, prev -> curr.rank < prev.rank end)
   end
 
+  # todo: maybe revisit the query since adding the details
   def get_ranks(%Test{} = test, _visitor_choices) do
     query =
       from r in Rank,
@@ -49,7 +50,7 @@ defmodule FunkyABX.Ranks do
       with true <-
              already_has_rank?(r.rank, acc) or
                already_has_track?(r.track_id, acc) do
-        acc
+        add_to_rank_details(r, acc)
       else
         _ -> [r | acc]
       end
@@ -57,14 +58,24 @@ defmodule FunkyABX.Ranks do
     |> Enum.sort(fn curr, prev -> curr.rank < prev.rank end)
   end
 
-  defp already_has_rank?(rank, acc) do
-    acc
-    |> Enum.any?(fn r -> r.rank == rank end)
-  end
+  defp already_has_rank?(rank, acc), do: Enum.any?(acc, fn r -> r.rank == rank end)
 
-  defp already_has_track?(track_id, acc) do
-    acc
-    |> Enum.any?(fn t -> t.track_id == track_id end)
+  defp already_has_track?(track_id, acc), do: Enum.any?(acc, fn r -> r.track_id == track_id end)
+
+  defp add_to_rank_details(rank, acc) do
+    Enum.reduce(acc, [], fn
+      r, acc when r.track_id != rank.track_id ->
+        [r | acc]
+
+      r, acc ->
+        other_ranks =
+          [rank | Map.get(r, :other_ranks, [])]
+          |> Enum.sort(fn curr, prev -> curr.count < prev.count end)
+
+        rank_updated = Map.put(r, :other_ranks, other_ranks)
+
+        [rank_updated | acc]
+    end)
   end
 
   def get_how_many_taken(%Test{} = test) do

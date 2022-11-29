@@ -422,7 +422,7 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_event("playing", _params, %{assigns: %{test: test, played: played }} = socket) do
+  def handle_event("playing", _params, %{assigns: %{test: test, played: played}} = socket) do
     spawn(fn ->
       if played == false, do: Tests.increment_view_counter(test)
     end)
