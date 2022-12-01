@@ -20,6 +20,9 @@ defmodule FunkyABXWeb.TestLive do
         </div>
         <div :if={@test.local == false and @test.type != :listening} class="col-sm-6 text-start text-sm-end pt-1">
           <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
+          <div :if={@test.local == false and @test.to_close_at_enabled == true and Tests.is_closed?(@test) == false} class="fs-7 text-muted header-texgyreadventor">
+            <small>Test closing on <time datetime={@test.to_close_at}><%= format_date(@test.to_close_at, @timezone) %></time></small>
+          </div>
 
           <.live_component module={TestFlagComponent} id="flag" test={@test} />
         </div>
@@ -241,6 +244,11 @@ defmodule FunkyABXWeb.TestLive do
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
     test_params = Tests.get_test_params(test)
+    timezone =
+      case get_connect_params(socket) do
+        nil -> "Etc/UTC"
+        params -> Map.get(params, "timezone", "Etc/UTC")
+      end
 
     if connected?(socket), do: FunkyABXWeb.Endpoint.subscribe(test.id)
 
@@ -275,6 +283,7 @@ defmodule FunkyABXWeb.TestLive do
     {:ok,
      assign(socket, %{
        page_title: String.slice(test.title, 0..@title_max_length),
+       timezone: timezone,
        ip_address: Map.get(session, "visitor_ip", nil),
        test: test,
        tracks: tracks,
@@ -744,5 +753,14 @@ defmodule FunkyABXWeb.TestLive do
     toggle = !socket.assigns.view_tracklist
 
     {:noreply, assign(socket, view_tracklist: toggle)}
+  end
+
+  defp format_date(datetime, _timezone) when datetime == nil, do: ""
+
+  defp format_date(datetime, timezone) do
+    datetime
+    |> DateTime.from_naive!("Etc/UTC")
+    |> DateTime.shift_zone!(timezone)
+    |> Cldr.DateTime.to_string!(format: :medium)
   end
 end

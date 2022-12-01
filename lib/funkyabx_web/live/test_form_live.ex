@@ -311,8 +311,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <div class="form-text">The test won't be able to be taken after this date/time, but results will still be available</div>
                 </div>
                 <div class="form-check mt-2 mb-1">
-                  <%= datetime_local_input(f, :to_close_at, class: "form-control",
-                    min: NaiveDateTime.local_now() |> NaiveDateTime.add(3600, :second) |> NaiveDateTime.to_string()) %>
+                  <%= datetime_local_input(f, :to_close_at, class: "form-control") %>
                   <%= error_tag f, :to_close_at %>
                 </div>
               </div>

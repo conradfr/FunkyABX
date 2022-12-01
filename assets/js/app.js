@@ -56,7 +56,12 @@ Hooks.TestResults.setAudioFiles(audioFiles);
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');
 const liveSocket = new LiveSocket('/live', Socket, {
-  hooks: Hooks, params: { _csrf_token: csrfToken }
+  hooks: Hooks,
+  params: {
+    _csrf_token: csrfToken,
+    locale: Intl.NumberFormat().resolvedOptions().locale,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  }
 });
 
 // Show progress bar on live navigation and form submits
