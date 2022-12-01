@@ -218,6 +218,10 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:submit, [test, choices, session_id, ip_address])
   end
 
+  def update_close_at(%Test{} = test)
+      when test.to_close_at_enabled == false or test.to_close_at == nil do
+  end
+
   # ---------- VIEWED ----------
 
   # we don't update old tests with no view counter

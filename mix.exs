@@ -77,7 +77,9 @@ defmodule FunkyABX.MixProject do
       {:ex_json_schema, "~> 0.5"},
       {:mogrify, "~> 0.9.2"},
       {:shortuuid, "~> 2.1"},
-      {:ex_machina, "~> 2.7.0", only: [:test]}
+      {:ex_machina, "~> 2.7.0", only: [:test]},
+      {:oban, "~> 2.13"},
+      {:tzdata, "~> 1.1"}
     ]
   end
 

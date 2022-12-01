@@ -16,6 +16,7 @@ defmodule FunkyABX.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: FunkyABX.PubSub},
       {Task.Supervisor, name: FunkyABX.TaskSupervisor},
+      {Oban, Application.fetch_env!(:funkyabx, Oban)},
       # Start the Endpoint (http/https)
       FunkyABXWeb.Endpoint
       # Start a worker by calling: FunkyABX.Worker.start_link(arg)

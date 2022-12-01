@@ -25,6 +25,8 @@ config :mime, :types, %{
   "audio/flac" => ["flac"]
 }
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
@@ -90,6 +92,11 @@ config :funkyabx, FunkyABX.Cache,
   gc_cleanup_min_timeout: :timer.seconds(10),
   # GC min timeout: 10 min
   gc_cleanup_max_timeout: :timer.minutes(10)
+
+config :funkyabx, Oban,
+  repo: FunkyABX.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [default: 2, closing: 2]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

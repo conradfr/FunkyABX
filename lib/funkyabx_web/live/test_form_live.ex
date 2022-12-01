@@ -7,7 +7,7 @@ defmodule FunkyABXWeb.TestFormLive do
   alias Phoenix.LiveView.JS
   alias FunkyABX.Repo
   alias FunkyABX.Tests.FormUtils
-  alias FunkyABX.{Accounts, Test, Tests, Track, Files, Tracks}
+  alias FunkyABX.{Accounts, Test, Tests, Track, Files, Tracks, TestClosing}
 
   @title_max_length 100
 
@@ -28,7 +28,9 @@ defmodule FunkyABXWeb.TestFormLive do
             <fieldset class="form-group mb-3">
               <legend class="mt-1 header-typographica">Test type</legend>
                 <%= if @test_updatable == false do %>
-                  <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Test type can't be changed once at least one person has taken the test.</div>
+                  <div class="alert alert-warning alert-thin">
+                    <i class="bi bi-x-circle"></i>&nbsp;&nbsp;Test type can't be changed once at least one person has taken the test.
+                  </div>
                 <% end %>
               <div class="form-unit px-3 py-3 rounded-3">
                 <div class="form-check">
@@ -94,8 +96,8 @@ defmodule FunkyABXWeb.TestFormLive do
                   </label>
                   <div class="form-text mb-2">People will have to guess which track is cloned for n rounds</div>
                   <div class="row ms-4 mb-1">
-                    <label for="test[nb_of_rounds]" class="col-4 col-form-label ps-0">Number of rounds:</label>
-                    <div class="col-2">
+                    <label for="test[nb_of_rounds]" class="col-6 col-sm-4 col-form-label ps-0">Number of rounds:</label>
+                    <div class="col-6 col-sm-2">
                       <%= number_input(f, :nb_of_rounds, class: "form-control", required: input_value(f, :type) == :abx,
                         disabled: !@test_updatable or get_field(@changeset, :type) !== :abx) %>
                     </div>
@@ -200,9 +202,13 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
               </div>
             </fieldset>
-            <div class="text-center mb-3">
-              <a href="#" class={"link-no-decoration #{if @current_user == nil, do: "disabled"}"} phx-click={JS.dispatch("open_modal", to: "body")}><i class="bi bi-envelope"></i> Send invitations</a>
-              <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;(Available only for tests created by logged in users)</small></span>
+            <div class="text-center mb-4">
+              <%= if @current_user == nil do %>
+                <span class="text-muted"><i class="bi bi-envelope"></i> Send invitations</span>
+                <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;(available only for tests created by logged in users)</small></span>
+              <% else %>
+                <a href="#" class="link-no-decoration" phx-click={JS.dispatch("open_modal", to: "body")}><i class="bi bi-envelope"></i> Send invitations</a>
+              <% end %>
             </div>
             <% else %>
               <div class="w-100 text-center d-none d-sm-block" style="padding-top: 200px;">
@@ -249,29 +255,32 @@ defmodule FunkyABXWeb.TestFormLive do
           </div>
         </fieldset>
 
-        <div class="row">
-          <div class="col-md-6 col-sm-12 order-md-1 order-2">
-
-            <fieldset class="form-group mb-3">
-              <legend class="mt-1 header-typographica">Options</legend>
-              <div class="form-unit p-3 pb-1 rounded-3">
-                <div class="form-check mb-3">
+        <fieldset class="form-group mb-3">
+          <legend class="mt-1 header-typographica">Options</legend>
+          <div class="form-unit p-3 rounded-3">
+            <div class="row mb-4">
+              <div class="col-12 col-md-6">
+                <div class="form-check">
                   <label class="form-check-label">
                     <%= checkbox(f, :public, class: "form-check-input") %>
                     &nbsp;&nbsp;The test is public
                   </label>
                   <div class="form-text">It will be published in the gallery 15 minutes after its creation</div>
                 </div>
-
-                <div class="form-check mb-3">
+              </div>
+              <div class="col-12 col-md-6 pt-3 pt-md-0">
+                <div class="form-check">
                   <label class="form-check-label">
                     <%= checkbox(f, :email_notification, class: "form-check-input", disabled: @test.user == nil) %>
                     &nbsp;&nbsp;Notify me by email when a test is taken
                   </label>
                   <div :if={@test.user == nil} class="form-text">Available only for logged in users</div>
                 </div>
-
-                <div class="form-check mb-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-6 mb-4 mb-sm-0">
+                <div class="form-check">
                   <label class="form-check-label">
                     <%= checkbox(f, :password_enabled, class: "form-check-input") %>
                     <%= hidden_input(f, :password) %>
@@ -288,24 +297,43 @@ defmodule FunkyABXWeb.TestFormLive do
                     <% end %>
                   </div>
                 <% end %>
-                <div class="form-check mt-2 mb-3">
+                <div class="form-check mt-2 mb-1">
                   <%= password_input(f, :password_input, class: "form-control", placeholder: "Enter new password") %>
                   <%= error_tag f, :password_input %>
                 </div>
               </div>
-
-            </fieldset>
-
+              <div class="col-12 col-md-6">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <%= checkbox(f, :to_close_at_enabled, class: "form-check-input") %>
+                    &nbsp;&nbsp;Close the test at date/time
+                  </label>
+                  <div class="form-text">The test won't be able to be taken after this date/time, but results will still be available</div>
+                </div>
+                <div class="form-check mt-2 mb-1">
+                  <%= datetime_local_input(f, :to_close_at, class: "form-control",
+                    min: NaiveDateTime.local_now() |> NaiveDateTime.add(3600, :second) |> NaiveDateTime.to_string()) %>
+                  <%= error_tag f, :to_close_at %>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </fieldset>
 
         <fieldset>
-          <legend class="header-typographica"><span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;Two tracks minimum</span>Tracks</legend>
+          <legend class="header-typographica">
+            <span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;Two tracks minimum</span>
+            Tracks
+          </legend>
 
           <%= if @test_updatable == false do %>
-            <div class="alert alert-warning alert-thin"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be added or removed once at least one person has taken the test.</div>
+            <div class="alert alert-warning alert-thin">
+              <i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be added or removed once at least one person has taken the test.
+            </div>
           <% else %>
-            <div class="alert alert-info alert-thin"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac.</div>
+            <div class="alert alert-info alert-thin">
+              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac.
+            </div>
           <% end %>
 
           <fieldset class="form-group mb-3">
@@ -316,7 +344,9 @@ defmodule FunkyABXWeb.TestFormLive do
                     <%= checkbox(f, :normalization, class: "form-check-input") %>
                     &nbsp;&nbsp;Apply EBU R128 loudness normalization during upload (wav files only)
                   </label>
-                  <div class="text-muted text-end"><small><i class="bi bi-info-circle"></i>&nbsp; True Peak -1dB, target -24dB, </small></div>
+                  <div class="text-muted text-end">
+                    <small><i class="bi bi-info-circle"></i>&nbsp; True Peak -1dB, target -24dB, </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -365,7 +395,7 @@ defmodule FunkyABXWeb.TestFormLive do
         <%= error_tag f, :tracks %>
 
         <fieldset>
-          <div class="mb-2 rounded-3 form-unit">
+          <div class="mb-2 py-1 rounded-3 form-unit">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
               <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
                 <div class={"row p-2 mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
@@ -578,11 +608,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
   def handle_info({"update", %{"test" => test_params}}, socket) do
     updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
-
-    update =
-      socket.assigns.test
-      |> Test.changeset_update(updated_test_params)
-      |> Repo.update()
+    update_changeset = Test.changeset_update(socket.assigns.test, updated_test_params)
+    update = Repo.update(update_changeset)
 
     case update do
       {:ok, test} ->
@@ -590,6 +617,14 @@ defmodule FunkyABXWeb.TestFormLive do
 
         Tests.clean_get_test_cache(socket.assigns.test)
         FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_updated", nil)
+
+        if Ecto.Changeset.fetch_change(update_changeset, :to_close_at_enabled) !== :error or
+             Ecto.Changeset.fetch_change(update_changeset, :to_close_at) !== :error do
+          case test.to_close_at_enabled do
+            true -> TestClosing.insert_test_to_closing_queue(test)
+            false -> TestClosing.remove_test_from_closing_queue(test)
+          end
+        end
 
         # Delete files from removed tracks
         socket.assigns.test.tracks
@@ -642,6 +677,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
     case insert do
       {:ok, test} ->
+        if test.to_close_at_enabled == true, do: TestClosing.insert_test_to_closing_queue(test)
+
         # logged or not
         redirect =
           unless test.password == nil do
@@ -768,6 +805,12 @@ defmodule FunkyABXWeb.TestFormLive do
   def handle_event("save", params, socket) do
     send(self(), {"save", params})
     {:noreply, assign(socket, test_submittable: false)}
+  end
+
+  @impl true
+  def handle_event("local-timezone", %{"local_timezone" => local_timezone} = _params, socket) do
+    test = Map.put(socket.assigns.test, :to_close_at_timezone, local_timezone)
+    {:noreply, assign(socket, test: test)}
   end
 
   @impl true

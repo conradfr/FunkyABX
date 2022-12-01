@@ -12,7 +12,9 @@ defmodule FunkyABXWeb.LocalTestFormLive do
       <.form class="mb-2" let={f} for={@changeset} phx-change="validate" phx-submit={@action}>
         <div class="row">
           <div class="col-md-6 col-sm-12 order-md-1 order-2">
-            <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="LocalTestForm">Local test <i class="bi bi-question-circle text-muted" style="font-size: 0.75rem" data-bs-toggle="tooltip" title="Local tests are ephemerous tests that can't be shared and are using your files locally."></i></h3>
+            <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="LocalTestForm">
+              Local test <i class="bi bi-question-circle text-muted" style="font-size: 0.75rem" data-bs-toggle="tooltip" title="Local tests are ephemerous tests that can't be shared and are using your files locally."></i>
+            </h3>
           </div>
         </div>
 
@@ -22,7 +24,9 @@ defmodule FunkyABXWeb.LocalTestFormLive do
             <fieldset class="form-group mb-3">
               <%= hidden_input(f, :type) %>
               <div class="form-unit px-3 py-3 rounded-3">
-                <div class="fs-8 mb-2 text-muted mb-1"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option</div>
+                <div class="fs-8 mb-2 text-muted mb-1">
+                  <i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option
+                </div>
                 <div class="form-check">
                   <label class="form-check-label">
                     <%= checkbox(f, :rating, class: "form-check-input") %>
@@ -83,10 +87,14 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 <div class="row form-unit pb-1 rounded-3">
                   <%= label :f, :filename, "Add file(s):", class: "col-sm-4 col-form-label text-start text-md-end" %>
                   <div class="col text-center">
-                    <button id="local-file-picker" type="button" class="btn btn-info"><i class="bi bi-file-earmark-music"></i>&nbsp;&nbsp;Select files</button>
+                    <button id="local-file-picker" type="button" class="btn btn-info">
+                      <i class="bi bi-file-earmark-music"></i>&nbsp;&nbsp;Select files
+                    </button>
                   </div>
                   <div class="col text-center">
-                    <button id="local-folder-picker" type="button" class="btn btn-secondary"><i class="bi bi-folder-plus"></i>&nbsp;&nbsp;Select folder</button>
+                    <button id="local-folder-picker" type="button" class="btn btn-secondary">
+                      <i class="bi bi-folder-plus"></i>&nbsp;&nbsp;Select folder
+                    </button>
                   </div>
                   <div class="col-1 text-center col-form-label d-none d-sm-block">
                     <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" title="Or drag and drop files here"></i>

@@ -28,4 +28,6 @@ config :logger, level: :warn
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
+config :funkyabx, Oban, testing: :inline
+
 import_config "test.secret.exs"

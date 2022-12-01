@@ -98,7 +98,7 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @impl true
   def mount(%{"slug" => slug} = params, session, socket) do
-    with test when not is_nil(test) <- Tests.get_by_slug(slug),
+    with %Test{} = test <- Tests.get_by_slug(slug),
          true <-
            Tests.is_closed?(test) or
              Map.get(session, "test_taken_" <> slug, false) or

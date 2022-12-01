@@ -34,7 +34,9 @@ defmodule FunkyABX.Test do
     field(:identification, :boolean, default: false)
     field(:nb_of_rounds, :integer)
     field(:ip_address, :binary)
-    field(:to_closed_at, :naive_datetime)
+    field(:to_close_at_enabled, :boolean, default: false)
+    field(:to_close_at, :naive_datetime)
+    field(:to_close_at_timezone, :string, virtual: true, default: "Etc/UTC")
     field(:closed_at, :naive_datetime)
     field(:deleted_at, :naive_datetime)
     field(:normalization, :boolean)
@@ -102,6 +104,8 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
+      :to_close_at_enabled,
+      :to_close_at,
       :email_notification,
       :upload_url,
       :ip_address
@@ -145,6 +149,8 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
+      :to_close_at_enabled,
+      :to_close_at,
       :email_notification,
       :upload_url
     ])
