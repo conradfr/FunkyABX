@@ -495,7 +495,7 @@ defmodule FunkyABXWeb.TestFormLive do
          page_title: "Edit test - " <> String.slice(test.title, 0..@title_max_length),
          action: "update",
          changeset: changeset,
-         test: test,
+         test: Map.put(test, :to_close_at_timezone, get_timezone(socket)),
          view_description: false,
          tracks_to_delete: [],
          test_updatable: test_updatable,
@@ -529,7 +529,8 @@ defmodule FunkyABXWeb.TestFormLive do
         user: user,
         access_key: access_key,
         author: name,
-        ip_address: Map.get(session, "visitor_ip", nil)
+        ip_address: Map.get(session, "visitor_ip", nil),
+        to_close_at_timezone: get_timezone(socket)
       })
 
     changeset =
@@ -807,12 +808,6 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   @impl true
-  def handle_event("local-timezone", %{"local_timezone" => local_timezone} = _params, socket) do
-    test = Map.put(socket.assigns.test, :to_close_at_timezone, local_timezone)
-    {:noreply, assign(socket, test: test)}
-  end
-
-  @impl true
   def handle_event("close_test", _params, socket) do
     test =
       socket.assigns.test
@@ -873,6 +868,7 @@ defmodule FunkyABXWeb.TestFormLive do
     |> Test.changeset_delete()
     |> Repo.update()
 
+    TestClosing.remove_test_from_closing_queue(test)
     Tests.clean_get_test_cache(test)
     # Refresh user test list if logged
     unless test.user == nil or test.user.id == nil do
@@ -1145,10 +1141,17 @@ defmodule FunkyABXWeb.TestFormLive do
     Enum.find(uploads, &(&1.uuid == track_id))
   end
 
-  def get_upload_entry_progress(track_id, uploads) do
+  defp get_upload_entry_progress(track_id, uploads) do
     case get_upload_entry(track_id, uploads) do
       nil -> nil
       entry -> entry.progress
+    end
+  end
+
+  defp get_timezone(socket) do
+    case get_connect_params(socket) do
+      nil -> "Etc/UTC"
+      params -> Map.get(params, "timezone", "Etc/UTC")
     end
   end
 end

@@ -8,9 +8,6 @@ const TestFormHook = {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
-    const localTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    this.pushEvent('local-timezone', {local_timezone: localTz});
-
     // Examples display
     // (because LiveView has no phx-[mouse-events] support ...)
 

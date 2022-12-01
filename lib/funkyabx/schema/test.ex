@@ -69,6 +69,7 @@ defmodule FunkyABX.Test do
       nb_of_rounds: @default_rounds,
       anonymized_track_title: true,
       ip_address: Map.get(params, :ip_address, nil),
+      to_close_at_timezone: Map.get(params, :to_close_at_timezone, nil),
       invitations: []
     }
   end
