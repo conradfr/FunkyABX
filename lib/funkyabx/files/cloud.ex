@@ -68,14 +68,22 @@ defmodule FunkyABX.Files.Cloud do
 
   @impl true
   def delete(filename, test_id) when is_binary(filename) do
-    object =
+    key = test_id <> "/" <> filename
+
+    # we could probably just called delete with the object_key
+    # without verifying that it exists
+    object_key =
       Application.fetch_env!(:funkyabx, :bucket)
       |> ExAws.S3.list_objects_v2(prefix: test_id)
-      |> ExAws.request!()
+      |> ExAws.stream!()
+      |> Enum.find(%{}, & &1.key == key)
+      |> Map.get(:key, nil)
 
-    Application.fetch_env!(:funkyabx, :bucket)
-    |> ExAws.S3.delete_object(object)
-    |> ExAws.request()
+    unless object_key == nil do
+      Application.fetch_env!(:funkyabx, :bucket)
+      |> ExAws.S3.delete_object(object_key)
+      |> ExAws.request()
+    end
 
     filename
   end
