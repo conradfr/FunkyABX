@@ -14,7 +14,7 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <.form class="mb-2" let={f} for={@changeset} phx-change="validate" phx-submit={@action}>
+      <.form class="mb-2" :let={f} for={@changeset} phx-change="validate" phx-submit={@action}>
         <%= hidden_input(f, :access_key) %>
         <div class="row">
           <div class="col-md-6 col-sm-12 order-md-1 order-2">
@@ -393,7 +393,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
         <%= error_tag f, :tracks %>
 
-        <fieldset>
+        <fieldset :if={track_count(inputs_for(f, :tracks), @tracks_to_delete) > 0}>
           <div class="mb-2 py-1 rounded-3 form-unit">
             <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
               <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
@@ -1153,5 +1153,13 @@ defmodule FunkyABXWeb.TestFormLive do
       nil -> "Etc/UTC"
       params -> Map.get(params, "timezone", "Etc/UTC")
     end
+  end
+
+  defp track_count(track_inputs, tracks_to_delete) do
+    track_inputs
+    |> Enum.filter(fn i ->
+      Enum.member?(tracks_to_delete, input_value(i, :id)) == false
+    end)
+    |> Kernel.length()
   end
 end

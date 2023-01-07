@@ -9,7 +9,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <.form class="mb-2" let={f} for={@changeset} phx-change="validate" phx-submit={@action}>
+      <.form class="mb-2" :let={f} for={@changeset} phx-change="validate" phx-submit={@action}>
         <div class="row">
           <div class="col-md-6 col-sm-12 order-md-1 order-2">
             <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="LocalTestForm">
