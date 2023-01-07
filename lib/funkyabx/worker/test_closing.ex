@@ -23,6 +23,11 @@ defmodule FunkyABX.TestClosing do
     end
   end
 
+  # can't close a listening test
+  def insert_test_to_closing_queue(%Test{} = test) when test.type == :listening do
+    # nothing
+  end
+
   def insert_test_to_closing_queue(%Test{} = test) do
     remove_test_from_closing_queue(test)
     scheduled_at = DateTime.from_naive!(test.to_close_at, test.to_close_at_timezone)

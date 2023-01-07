@@ -189,7 +189,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="text-center">
                   <hr>
                   <div class="d-flex justify-content-evenly">
-                    <button :if={Tests.is_closed?(@test) == false} type="button" class="btn btn-info" data-confirm={gettext("Are you sure?")} phx-click="close_test">
+                    <button :if={@test.type !== :listening and Tests.is_closed?(@test) == false} type="button" class="btn btn-info" data-confirm={gettext("Are you sure?")} phx-click="close_test">
                       <i class="bi bi-x-circle"></i> <%= gettext "Close the test" %>
                     </button>
                     <button :if={Tests.is_closed?(@test)} type="button" class="btn btn-warning" data-confirm="Are you sure?" phx-click="close_test">
@@ -303,17 +303,19 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
               </div>
               <div class="col-12 col-md-6">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <%= checkbox(f, :to_close_at_enabled, class: "form-check-input") %>
-                    &nbsp;&nbsp;<%= gettext "Close the test at date/time" %>
-                  </label>
-                  <div class="form-text"><%= gettext "The test won't be able to be taken after this date/time, but results will still be available" %></div>
-                </div>
-                <div class="form-check mt-2 mb-1">
-                  <%= datetime_local_input(f, :to_close_at, class: "form-control") %>
-                  <%= error_tag f, :to_close_at %>
-                </div>
+                <%= if get_field(@changeset, :type) != :listening do %>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <%= checkbox(f, :to_close_at_enabled, class: "form-check-input") %>
+                      &nbsp;&nbsp;<%= gettext "Close the test at date/time" %>
+                    </label>
+                    <div class="form-text"><%= gettext "The test won't be able to be taken after this date/time, but results will still be available" %></div>
+                  </div>
+                  <div class="form-check mt-2 mb-1">
+                    <%= datetime_local_input(f, :to_close_at, class: "form-control") %>
+                    <%= error_tag f, :to_close_at %>
+                  </div>
+                <% end %>
               </div>
             </div>
           </div>
