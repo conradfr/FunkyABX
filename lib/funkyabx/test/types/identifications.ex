@@ -147,7 +147,7 @@ defmodule FunkyABX.Identifications do
 
   def results_to_img(mogrify_params, %Test{} = test, session_id, choices)
       when is_binary(session_id) do
-    with picked_id when picked_id != nil <- Map.get(choices, "identification", nil) do
+    with picked_ids when picked_ids != nil <- Map.get(choices, "identification", nil) do
       {start, mogrify} = mogrify_params
 
       {index, mogrify} =
@@ -156,7 +156,12 @@ defmodule FunkyABX.Identifications do
         |> then(fn mogrify ->
           Enum.reduce(test.tracks, {1, mogrify}, fn t, acc ->
             {index, mogrify} = acc
-            mogrify = Image.type_track(mogrify, start, index, "#{t.title}, identified as lolol")
+            identified_as =
+              picked_ids
+              |> Map.get(t.id)
+              |> Tracks.find_track(test.tracks)
+
+            mogrify = Image.type_track(mogrify, start, index, "#{t.title}, identified as #{identified_as.title}")
             {index + 1, mogrify}
           end)
         end)
