@@ -12,12 +12,13 @@ const TestFormHook = {
     // (because LiveView has no phx-[mouse-events] support ...)
 
     this.mouseEventToggle = async (event) => {
-      console.log(event);
       event.preventDefault();
       if (event.target.dataset.target !== undefined) {
         const elem = document.getElementById(event.target.dataset.target);
-        elem.classList.toggle('d-none');
-        elem.classList.toggle('d-block');
+        if (elem !== null) {
+          elem.classList.toggle('d-none');
+          elem.classList.toggle('d-block');
+        }
       }
     };
 

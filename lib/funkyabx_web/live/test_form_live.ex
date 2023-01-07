@@ -145,7 +145,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <button class="btn btn-info" type="button" title={gettext("Copy to clipboard")} phx-click="clipboard" phx-value-text={test_url}>
                       <i class="bi bi-clipboard"></i>
                     </button>
-                    <a class="btn btn-light" type="button" target="_blank" title={gettext("Open in a new tab")} href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
+                    <a class="btn btn-light" type="button" target="_blank" title={gettext("Open in a new tab")} href={test_url}><i class="bi bi-box-arrow-up-right"></i></a>
                   </div>
                 </div>
                 <div class="mb-3">
