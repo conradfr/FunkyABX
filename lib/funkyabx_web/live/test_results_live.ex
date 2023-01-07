@@ -12,31 +12,31 @@ defmodule FunkyABXWeb.TestResultsLive do
         <div class="col-sm-6">
           <h3 class="mb-0 header-typographica" id="test-results-header" phx-hook="TestResults" data-testid={@test.id}>
           <%= @test.title %></h3>
-          <h6 :if={@test.author != nil} class="header-typographica">By <%= @test.author %></h6>
+          <h6 :if={@test.author != nil} class="header-typographica"><%= gettext "By %{author}", author: @test.author %></h6>
         </div>
         <%= unless @test.type == :listening or @test.local == true do %>
           <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-            <span class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</span>
-            <time :if={Tests.is_closed?(@test)} class="header-texgyreadventor text-muted" title={@test.closed_at} datetime={@test.closed_at}><br><small>(test is closed)</small></time>
+            <span class="fs-7 text-muted header-texgyreadventor"><%= gettext("Test taken <strong>%{test_taken_times}</strong> times", test_taken_times: @test_taken_times) |> raw() %></span>
+            <time :if={Tests.is_closed?(@test)} class="header-texgyreadventor text-muted" title={@test.closed_at} datetime={@test.closed_at}><br><small><%= gettext "(test is closed)" %></small></time>
           </div>
         <% end %>
       </div>
 
       <%= if @test.description != nil do %>
         <%= if @view_description == false do %>
-          <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">View description&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
+          <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description"><%= gettext "View description" %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
         <% else %>
-          <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">Hide description&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></div>
+          <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description"><%= gettext "Hide description" %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></div>
           <TestDescriptionComponent.format wrapper_class="my-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
         <% end %>
       <% end %>
 
       <div class="row" :if={@test.local == false and @is_another_session == false and @session_id != nil}>
         <div class="col-12 col-sm-3">
-          <h5 class="mt-3 header-neon">Your test:</h5>
+          <h5 class="mt-3 header-neon"><%= gettext "Your test:" %></h5>
           <div class="your-test rounded p-2 mb-4">
-            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;Share: <a href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug, s: ShortUUID.encode!(@session_id))}>link to my results</a></div>
-            <div><i class="bi bi-image"></i>&nbsp;&nbsp;Image: <a target="_blank" href={Routes.test_path(@socket, :image, Image.get_filename(@session_id))}>my results</a></div>
+            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;<%= gettext "Share:" %> <a href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug, s: ShortUUID.encode!(@session_id))}><%= gettext "link to my results" %></a></div>
+            <div><i class="bi bi-image"></i>&nbsp;&nbsp;<%= gettext "Image:" %> <a target="_blank" href={Routes.test_path(@socket, :image, Image.get_filename(@session_id))}><%= gettext "my results" %></a></div>
           </div>
         </div>
       </div>
@@ -47,13 +47,13 @@ defmodule FunkyABXWeb.TestResultsLive do
 
       <div :if={@test.local == true} class="mt-3 d-flex justify-content-between results-actions">
         <div>
-          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}>Go back to the test form</.link>
+          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}><%= gettext "Go back to the test form" %></.link>
         </div>
         <div>
-          <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link navigate={Routes.local_test_path(@socket, FunkyABXWeb.TestLive, @test_data)} replace={true}>Take the test again</.link>
+          <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link navigate={Routes.local_test_path(@socket, FunkyABXWeb.TestLive, @test_data)} replace={true}><%= gettext "Take the test again" %></.link>
         </div>
         <div>
-          <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action">Create a new local test</.link>
+          <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action"><%= gettext "Create a new local test" %></.link>
         </div>
       </div>
 
@@ -120,7 +120,7 @@ defmodule FunkyABXWeb.TestResultsLive do
 
       {:ok,
        assign(socket, %{
-         page_title: "Test results - " <> String.slice(test.title, 0..@title_max_length),
+         page_title: gettext("Test results - %{test_title}", test_title: String.slice(test.title, 0..@title_max_length)),
          test: test,
          result_modules: result_modules,
          current_user_id: Map.get(session, "current_user_id"),
@@ -136,7 +136,7 @@ defmodule FunkyABXWeb.TestResultsLive do
       _ ->
         {:ok,
          socket
-         |> put_flash(:info, "Please take the test before checking the results.")
+         |> put_flash(:info, gettext("Please take the test before checking the results."))
          |> assign(test_already_taken: false)
          |> redirect(to: Routes.test_public_path(socket, FunkyABXWeb.TestLive, slug))}
     end

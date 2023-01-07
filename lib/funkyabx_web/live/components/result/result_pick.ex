@@ -25,9 +25,9 @@ defmodule FunkyABXWeb.TestResultPickComponent do
 
     ~H"""
       <div>
-        <h4 class="mt-3 header-neon">Picking</h4>
+        <h4 class="mt-3 header-neon"><%= gettext "Picking" %></h4>
         <div class="tracks my-2 mb-4 track-results results">
-          <div :if={Kernel.length(@picks) == 0} class="alert alert-info alert-thin">No track picked ... yet!</div>
+          <div :if={Kernel.length(@picks) == 0} class="alert alert-info alert-thin"><%= gettext "No track picked ... yet!" %></div>
           <%= for {pick, i} <- @picks |> Enum.with_index(1) do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == pick.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => pick.track_id, "track_url" => Tracks.get_track_url(pick.track_id, @test)})}>
 
@@ -36,7 +36,7 @@ defmodule FunkyABXWeb.TestResultPickComponent do
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
                 <%= if @test.local == true do %>
                   <%= if pick.picked == 1 do %>
-                    <div class="p-3 ps-0 text-end">You picked this track</div>
+                    <div class="p-3 ps-0 text-end"><%= gettext "You picked this track" %></div>
                   <% else %>
                     <div class="p-3 ps-0"></div>
                   <% end %>
@@ -44,14 +44,14 @@ defmodule FunkyABXWeb.TestResultPickComponent do
                   <div :if={@visitor_picked == pick.track_id} class="p-3 flex-grow-1 text-sm-end text-start pe-5">
                     <small>
                       <%= if @is_another_session == true do %>
-                        This track was picked
+                        <%= gettext "This track was picked" %>
                       <% else %>
-                        You picked this track
+                        <%= gettext "You picked this track" %>
                       <% end %>
                     </small>
                   </div>
                   <div class="p-3 ps-0 text-end">
-                    Picked <%= pick.picked %> times
+                    <%= gettext "Picked %{picked} times", picked: pick.picked %>
                   </div>
                 <% end %>
               </div>

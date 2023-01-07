@@ -12,7 +12,7 @@ defmodule FunkyABXWeb.TestTrackStarComponent do
     ~H"""
       <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0 test-starring">
           <div class="me-auto flex-grow-1 flex-md-grow-0">
-            <span class="me-3 text-muted small">I rate this track ...</span>
+            <span class="me-3 text-muted small"><%= gettext "I rate this track ..." %></span>
           </div>
           <div class=" p-0 p-md-3 flex-fill">
             <%= for star <- 1..5 do %>

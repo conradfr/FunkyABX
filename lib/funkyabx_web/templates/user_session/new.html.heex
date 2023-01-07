@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-12 col-sm-6">
-    <.form let={f} for={@conn} action={Routes.user_session_path(@conn, :create)} as={:user}>
+    <.form :let={f} for={@conn} action={Routes.user_session_path(@conn, :create)} as={:user}>
       <%= if @error_message do %>
         <div class="alert alert-danger">
           <i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= @error_message %>

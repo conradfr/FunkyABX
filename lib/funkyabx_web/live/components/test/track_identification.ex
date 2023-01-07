@@ -13,7 +13,7 @@ defmodule FunkyABXWeb.TestTrackIdentificationComponent do
     ~H"""
       <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
         <div class="me-auto ms-0 ms-md-3 flex-fill text-start text-md-end">
-          <span class="me-2 text-muted small">I think this is ...</span>
+          <span class="me-2 text-muted small"><%= gettext "I think this is ..." %></span>
         </div>
         <div class="me-auto p-0 p-md-3 ps-0 flex-grow-1 flex-md-grow-0">
           <form phx-change="change_identification" phx-target={@myself}>

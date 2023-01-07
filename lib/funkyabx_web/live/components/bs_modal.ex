@@ -16,13 +16,13 @@ defmodule BsModalComponent do
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title"><%= @title %></h5>
-            <button type="button" class="btn-close" phx-click={JS.dispatch("close_modal", to: "body")} aria-label="Close"></button>
+            <button type="button" class="btn-close" phx-click={JS.dispatch("close_modal", to: "body")} aria-label={gettext("Close")}></button>
           </div>
           <div class="modal-body">
             <%= render_slot(@inner_block) %>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" phx-click={JS.dispatch("close_modal", to: "body")}>Close</button>
+            <button type="button" class="btn btn-primary" phx-click={JS.dispatch("close_modal", to: "body")}><%= gettext "Close" %></button>
           </div>
         </div>
       </div>

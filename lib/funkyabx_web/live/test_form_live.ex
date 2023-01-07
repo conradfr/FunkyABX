@@ -20,23 +20,23 @@ defmodule FunkyABXWeb.TestFormLive do
           <div class="col-md-6 col-sm-12 order-md-1 order-2">
             <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="TestForm">
               <%= if @action == "save" do %>
-                Create a new test
+                <%= gettext "Create a new test" %>
               <% else %>
-                Edit a test
+                <%= gettext "Edit a test" %>
               <% end %>
             </h3>
             <fieldset class="form-group mb-3">
-              <legend class="mt-1 header-typographica">Test type</legend>
+              <legend class="mt-1 header-typographica"><%= gettext "Test type" %></legend>
                 <%= if @test_updatable == false do %>
                   <div class="alert alert-warning alert-thin">
-                    <i class="bi bi-x-circle"></i>&nbsp;&nbsp;Test type can't be changed once at least one person has taken the test.
+                    <i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= gettext "Test type can't be changed once at least one person has taken the test." %>
                   </div>
                 <% end %>
               <div class="form-unit px-3 py-3 rounded-3">
                 <div class="form-check">
                   <label class="form-check-label">
                     <%= radio_button(f, :type, "regular", class: "form-check-input", disabled: !@test_updatable) %>
-                    Blind test
+                    <%= gettext "Blind test" %>
                   </label>
                   <%= error_tag f, :type %>
                 </div>
@@ -44,7 +44,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="form-check ms-4">
                   <label class="form-check-label">
                     <%= checkbox(f, :rating, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
-                    Enable rating
+                    <%= gettext "Enable rating" %>
                   </label>
 
                   <div class="form-check mt-2 ms-1 form-test-example" data-target="example-picking">
@@ -53,7 +53,7 @@ defmodule FunkyABXWeb.TestFormLive do
                         class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
                       Picking
                     </label>
-                    <div class="form-text mb-2">People will have to pick their preferred track</div>
+                    <div class="form-text mb-2"><%= gettext "People will have to pick their preferred track" %></div>
                   </div>
 
                   <div class="form-check ms-1 form-test-example" data-target="example-stars">
@@ -62,41 +62,41 @@ defmodule FunkyABXWeb.TestFormLive do
                         class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
                       Stars
                     </label>
-                    <div class="form-text mb-2">Each track will have a 1-5 star rating (usually NOT the best choice !)</div>
+                    <div class="form-text mb-2"><%= gettext "Each track will have a 1-5 star rating (usually NOT the best choice !)" %></div>
                   </div>
 
                   <div class="form-check ms-1 form-test-example" data-target="example-ranking">
                     <label class="form-check-label">
                       <%= radio_button(f, :regular_type, "rank", class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or get_field(@changeset, :rating) !== true) %>
-                      Ranking
+                      <%= gettext "Ranking" %>
                     </label>
-                    <div class="form-text mb-2">People will be asked to rank the tracks</div>
+                    <div class="form-text mb-2"><%= gettext "People will be asked to rank the tracks" %></div>
                       <div class="form-check ms-4">
                         <label class="form-check-label">
                           <%= checkbox(f, :ranking_only_extremities,
                             class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular or Kernel.length(get_field(@changeset, :tracks)) < 10) %>
-                        Only rank the top/bottom three tracks
+                        <%= gettext "Only rank the top/bottom three tracks" %>
                         </label>
-                        <div class="form-text mb-2">Only for tests with 10+ tracks</div>
+                        <div class="form-text mb-2"><%= gettext "Only for tests with 10+ tracks" %></div>
                       </div>
                   </div>
                 </div>
                 <div class="form-check ms-4 form-test-example" data-target="example-identification">
                   <label class="form-check-label">
                     <%= checkbox(f, :identification, class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :regular) %>
-                    Recognition test
+                    <%= gettext "Recognition test" %>
                   </label>
-                  <div class="form-text mb-2">People will have to identify the anonymized tracks</div>
+                  <div class="form-text mb-2"><%= gettext "People will have to identify the anonymized tracks" %></div>
                 </div>
 
                 <div class="form-check disabled mt-4 mb-2 form-test-example" data-target="example-abx">
                   <label class="form-check-label">
                     <%= radio_button(f, :type, "abx", class: "form-check-input", disabled: !@test_updatable) %>
-                    ABX test
+                    <%= gettext "ABX test" %>
                   </label>
-                  <div class="form-text mb-2">People will have to guess which track is cloned for n rounds</div>
+                  <div class="form-text mb-2"><%= gettext "People will have to guess which track is cloned for n rounds" %></div>
                   <div class="row ms-4 mb-1">
-                    <label for="test[nb_of_rounds]" class="col-6 col-sm-4 col-form-label ps-0">Number of rounds:</label>
+                    <label for="test[nb_of_rounds]" class="col-6 col-sm-4 col-form-label ps-0"><%= gettext "Number of rounds:" %></label>
                     <div class="col-6 col-sm-2">
                       <%= number_input(f, :nb_of_rounds, class: "form-control", required: input_value(f, :type) == :abx,
                         disabled: !@test_updatable or get_field(@changeset, :type) !== :abx) %>
@@ -106,7 +106,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <label class="form-check-label">
                       <%= checkbox(f, :anonymized_track_title,
                         class: "form-check-input", disabled: !@test_updatable or get_field(@changeset, :type) !== :abx) %>
-                      Hide tracks' title
+                      <%= gettext "Hide tracks' title" %>
                     </label>
                   </div>
                 </div>
@@ -114,7 +114,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="form-check disabled mt-4">
                   <label class="form-check-label">
                     <%= radio_button(f, :type, "listening", class: "form-check-input", disabled: !@test_updatable) %>
-                    No test, only listening
+                    <%= gettext "No test, only listening" %>
                   </label>
                 </div>
 
@@ -125,13 +125,13 @@ defmodule FunkyABXWeb.TestFormLive do
           <div class="offset-md-1 col-md-5 col-m-12 order-1 order-md-2">
             <%= if @action == "update" do %>
             <fieldset class="form-group mb-3">
-              <legend class="header-typographica"><div class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;">Viewed <strong><%= @test.view_count %></strong> times</div>Your test</legend>
+              <legend class="header-typographica"><div class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><%= gettext("Viewed <strong>%{view_count}</strong> times", view_count: @test.view_count) |> raw() %></div><%= gettext "Your test" %></legend>
               <div class="px-3 pt-2 pb-3 rounded-3" style="background-color: #583247;">
                 <div class="mb-3">
                   <label for="test_public_link" class="form-label w-100">
                   <div class="float-end">
                     <%= checkbox(f, :embed, class: "form-check-input") %>&nbsp;&nbsp;Embed</div>
-                    Test public page <span class="form-text">(share this link)</span>
+                    <%= gettext "Test public page" %> <span class="form-text"><%= gettext "(share this link)" %></span>
                   </label>
                     <% test_url =
                         if input_value(f, :embed) == "true" do
@@ -142,46 +142,46 @@ defmodule FunkyABXWeb.TestFormLive do
                     %>
                   <div class="input-group mb-3">
                     <%= text_input(f, :public_link, class: "form-control", readonly: "readonly", value: test_url) %>
-                    <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={test_url}>
+                    <button class="btn btn-info" type="button" title={gettext("Copy to clipboard")} phx-click="clipboard" phx-value-text={test_url}>
                       <i class="bi bi-clipboard"></i>
                     </button>
-                    <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
+                    <a class="btn btn-light" type="button" target="_blank" title={gettext("Open in a new tab")} href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label for="test_edit_link" class="form-label">Test edit page <span class="form-text">(this page)</span></label>
+                  <label for="test_edit_link" class="form-label"><%= gettext "Test edit page" %> <span class="form-text"><%= gettext "(this page)" %></span></label>
                   <div class="input-group mb-3">
                     <%= if @current_user do %>
                       <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))) %>
-                      <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}>
+                      <button class="btn btn-info" type="button" title={gettext("Copy to clipboard")} phx-click="clipboard" phx-value-text={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}>
                         <i class="bi bi-clipboard"></i>
                       </button>
-                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title={gettext("Open in a new tab")} href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% else %>
                       <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}>
+                        <button class="btn btn-info" type="button" title={ gettext("Copy to clipboard") } phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                      <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title={gettext("Open in a new tab")} href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% end %>
                   </div>
                 </div>
                 <%= unless @test.type == :listening do %>
                   <div class="mb-3">
-                    <label for="" class="form-label">Test private results page</label>
+                    <label for="" class="form-label"><%= gettext "Test private results page" %></label>
                     <div class="input-group mb-3">
                       <%= if @current_user do %>
                         <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}>
+                        <button class="btn btn-info" type="button" title={gettext("Copy to clipboard")} phx-click="clipboard" phx-value-text={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title={gettext("Open in a new tab")} href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% else %>
                         <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))) %>
-                        <button class="btn btn-info" type="button" title="Copy to clipboard" phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}>
+                        <button class="btn btn-info" type="button" title={gettext("Copy to clipboard")} phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" title="Open in a new tab" href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title={gettext("Open in a new tab")} href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% end %>
                     </div>
                   </div>
@@ -189,14 +189,14 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="text-center">
                   <hr>
                   <div class="d-flex justify-content-evenly">
-                    <button :if={Tests.is_closed?(@test) == false} type="button" class="btn btn-info" data-confirm="Are you sure?" phx-click="close_test">
-                      <i class="bi bi-x-circle"></i> Close the test
+                    <button :if={Tests.is_closed?(@test) == false} type="button" class="btn btn-info" data-confirm={gettext("Are you sure?")} phx-click="close_test">
+                      <i class="bi bi-x-circle"></i> <%= gettext "Close the test" %>
                     </button>
                     <button :if={Tests.is_closed?(@test)} type="button" class="btn btn-warning" data-confirm="Are you sure?" phx-click="close_test">
-                      <i class="bi bi-check-circle"></i> Reopen the test
+                      <i class="bi bi-check-circle"></i> <%= gettext "Reopen the test" %>
                     </button>
-                    <button type="button" class="btn btn-danger" data-confirm="Are you sure?" phx-click="delete_test">
-                      <i class="bi bi-trash"></i> Delete the test
+                    <button type="button" class="btn btn-danger" data-confirm={gettext("Are you sure?")} phx-click="delete_test">
+                      <i class="bi bi-trash"></i> <%= gettext "Delete the test" %>
                     </button>
                   </div>
                 </div>
@@ -204,36 +204,36 @@ defmodule FunkyABXWeb.TestFormLive do
             </fieldset>
             <div class="text-center mb-4">
               <%= if @current_user == nil do %>
-                <span class="text-muted"><i class="bi bi-envelope"></i> Send invitations</span>
-                <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;(available only for tests created by logged in users)</small></span>
+                <span class="text-muted"><i class="bi bi-envelope"></i> <%= gettext "Send invitations" %></span>
+                <span :if={@current_user == nil} class="text-muted"><br><small>&nbsp;<%= gettext "(available only for tests created by logged in users)" %></small></span>
               <% else %>
-                <a href="#" class="link-no-decoration" phx-click={JS.dispatch("open_modal", to: "body")}><i class="bi bi-envelope"></i> Send invitations</a>
+                <a href="#" class="link-no-decoration" phx-click={JS.dispatch("open_modal", to: "body")}><i class="bi bi-envelope"></i> <%= gettext "Send invitations" %></a>
               <% end %>
             </div>
             <% else %>
               <div class="w-100 text-center d-none d-sm-block" style="padding-top: 200px;">
-                <div class="form-example rounded-1 d-none" id="example-picking"><img title="Picking example" src={Routes.static_path(@socket, "/images/example-picking.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-stars"><img title="Stars example" src={Routes.static_path(@socket, "/images/example-stars.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-ranking"><img title="Ranking example" src={Routes.static_path(@socket, "/images/example-ranking.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-identification"><img title="Identification example" src={Routes.static_path(@socket, "/images/example-identification.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-abx"><img title="Abx example" src={Routes.static_path(@socket, "/images/example-abx.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-picking"><img title={gettext("Picking example")} src={Routes.static_path(@socket, "/images/example-picking.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-stars"><img title={gettext("Stars example")} src={Routes.static_path(@socket, "/images/example-stars.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-ranking"><img title={gettext("Ranking example")} src={Routes.static_path(@socket, "/images/example-ranking.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-identification"><img title={gettext("Identification example")} src={Routes.static_path(@socket, "/images/example-identification.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-abx"><img title={gettext("Abx example")} src={Routes.static_path(@socket, "/images/example-abx.png")}></div>
               </div>
             <% end %>
           </div>
         </div>
 
         <fieldset class="form-group mb-3">
-          <legend class="mt-1 header-typographica">Infos</legend>
+          <legend class="mt-1 header-typographica"><%= gettext "Infos" %></legend>
           <div class="form-unit p-3 pb-2 rounded-3">
             <div class="row mb-3">
               <div class="col-12 col-md-6">
-                <%= label :f, :title, "Title*", class: "form-label" %>
+                <%= label :f, :title, gettext("Title*"), class: "form-label" %>
                 <%= text_input(f, :title, class: "form-control", placeholder: "Mandatory", required: true) %>
                 <%= error_tag f, :title %>
               </div>
               <div class="col-12 col-md-6 pt-3 pt-md-0">
-                <%= label :f, :author, "Created by", class: "form-label" %>
-                <%= text_input(f, :author, class: "form-control", placeholder: "Optional") %>
+                <%= label :f, :author, gettext("Created by"), class: "form-label" %>
+                <%= text_input(f, :author, class: "form-control", placeholder: gettext("Optional")) %>
               </div>
             </div>
             <div class="mb-2">
@@ -241,12 +241,12 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="form-check ms-4 float-end">
                   <label class="form-check-label">
                     <%= checkbox(f, :description_markdown, class: "form-check-input") %>
-                    Use <a target="_blank" href="https://www.markdownguide.org/cheat-sheet/">Markdown</a>&nbsp;&nbsp;<small><i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="left" title="<br> supported for line breaks"></i></small>
+                    Use <a target="_blank" href="https://www.markdownguide.org/cheat-sheet/"><%= gettext "Markdown" %></a>&nbsp;&nbsp;<small><i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="left" title={gettext("<br> supported for line breaks")}></i></small>
                   </label>
                 </div>
                 Description
               <% end %>
-              <%= textarea(f, :description, class: "form-control", rows: "5", placeholder: "Optional") %>
+              <%= textarea(f, :description, class: "form-control", rows: "5", placeholder: gettext("Optional")) %>
               <div class="fs-8 mt-2 mb-1 cursor-link" phx-click="toggle_description">Preview&nbsp;&nbsp;<i class={"bi bi-arrow-#{if @view_description == true do "down" else "right" end}-circle"}></i></div>
               <%= if @view_description == true do %>
                 <TestDescriptionComponent.format description_markdown={get_field(@changeset, :description_markdown)} description={get_field(@changeset, :description)} />
@@ -256,25 +256,25 @@ defmodule FunkyABXWeb.TestFormLive do
         </fieldset>
 
         <fieldset class="form-group mb-3">
-          <legend class="mt-1 header-typographica">Options</legend>
+          <legend class="mt-1 header-typographica"><%= gettext "Options" %></legend>
           <div class="form-unit p-3 rounded-3">
             <div class="row mb-4">
               <div class="col-12 col-md-6">
                 <div class="form-check">
                   <label class="form-check-label">
                     <%= checkbox(f, :public, class: "form-check-input") %>
-                    &nbsp;&nbsp;The test is public
+                    &nbsp;&nbsp;<%= gettext "The test is public" %>
                   </label>
-                  <div class="form-text">It will be published in the gallery 15 minutes after its creation</div>
+                  <div class="form-text"><%= gettext "It will be published in the gallery 15 minutes after its creation" %></div>
                 </div>
               </div>
               <div class="col-12 col-md-6 pt-3 pt-md-0">
                 <div class="form-check">
                   <label class="form-check-label">
                     <%= checkbox(f, :email_notification, class: "form-check-input", disabled: @test.user == nil) %>
-                    &nbsp;&nbsp;Notify me by email when a test is taken
+                    &nbsp;&nbsp;<%= gettext "Notify me by email when a test is taken" %>
                   </label>
-                  <div :if={@test.user == nil} class="form-text">Available only for logged in users</div>
+                  <div :if={@test.user == nil} class="form-text"><%= gettext "Available only for logged in users" %></div>
                 </div>
               </div>
             </div>
@@ -284,21 +284,21 @@ defmodule FunkyABXWeb.TestFormLive do
                   <label class="form-check-label">
                     <%= checkbox(f, :password_enabled, class: "form-check-input") %>
                     <%= hidden_input(f, :password) %>
-                    &nbsp;&nbsp;Password protected
+                    &nbsp;&nbsp;<%= gettext "Password protected" %>
                   </label>
-                  <div class="form-text">The test will require a password to be taken (public tests will be modified as private)</div>
+                  <div class="form-text"><%= gettext "The test will require a password to be taken (public tests will be modified as private)" %></div>
                 </div>
                 <%= hidden_input(f, :password_length) %>
                 <%= if @test.password_enabled == true and @test.password_length != nil do %>
                   <div class="form-check mt-2 mb-3">
-                    Current:&nbsp;
+                    <%= gettext "Current:" %>&nbsp;
                     <%= for _star <- 1..@test.password_length do %>
                       *
                     <% end %>
                   </div>
                 <% end %>
                 <div class="form-check mt-2 mb-1">
-                  <%= password_input(f, :password_input, class: "form-control", placeholder: "Enter new password") %>
+                  <%= password_input(f, :password_input, class: "form-control", placeholder: gettext("Enter new password")) %>
                   <%= error_tag f, :password_input %>
                 </div>
               </div>
@@ -306,9 +306,9 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="form-check">
                   <label class="form-check-label">
                     <%= checkbox(f, :to_close_at_enabled, class: "form-check-input") %>
-                    &nbsp;&nbsp;Close the test at date/time
+                    &nbsp;&nbsp;<%= gettext "Close the test at date/time" %>
                   </label>
-                  <div class="form-text">The test won't be able to be taken after this date/time, but results will still be available</div>
+                  <div class="form-text"><%= gettext "The test won't be able to be taken after this date/time, but results will still be available" %></div>
                 </div>
                 <div class="form-check mt-2 mb-1">
                   <%= datetime_local_input(f, :to_close_at, class: "form-control") %>
@@ -321,17 +321,17 @@ defmodule FunkyABXWeb.TestFormLive do
 
         <fieldset>
           <legend class="header-typographica">
-            <span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;Two tracks minimum</span>
+            <span class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><i class="bi bi-info-circle"></i>&nbsp;<%= gettext "Two tracks minimum" %></span>
             Tracks
           </legend>
 
           <%= if @test_updatable == false do %>
             <div class="alert alert-warning alert-thin">
-              <i class="bi bi-x-circle"></i>&nbsp;&nbsp;Tracks can't be added or removed once at least one person has taken the test.
+              <i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= gettext "Tracks can't be added or removed once at least one person has taken the test." %>
             </div>
           <% else %>
             <div class="alert alert-info alert-thin">
-              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;Supported formats: wav, mp3, aac, flac ... <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. Wav files are converted to flac.
+              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= gettext "Supported formats: wav, mp3, aac, flac ... "%> <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. <%= gettext "Wav files are converted to flac." %>
             </div>
           <% end %>
 
@@ -341,10 +341,10 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="d-flex justify-content-between">
                   <label class="form-check-label">
                     <%= checkbox(f, :normalization, class: "form-check-input") %>
-                    &nbsp;&nbsp;Apply EBU R128 loudness normalization during upload (wav files only)
+                    &nbsp;&nbsp;<%= gettext "Apply EBU R128 loudness normalization during upload (wav files only)" %>
                   </label>
                   <div class="text-muted text-end">
-                    <small><i class="bi bi-info-circle"></i>&nbsp; True Peak -1dB, target -24dB, </small>
+                    <small><i class="bi bi-info-circle"></i>&nbsp; <%= gettext "True Peak -1dB, target -24dB" %> </small>
                   </div>
                 </div>
               </div>
@@ -362,7 +362,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <.live_file_input upload={@uploads.tracks} />
                   </div>
                   <div class="col-1 text-center col-form-label d-none d-sm-block">
-                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" title="Or drag and drop files here"></i>
+                    <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" title={gettext("Or drag and drop files here")}></i>
                   </div>
                 </div>
               </div>
@@ -373,17 +373,17 @@ defmodule FunkyABXWeb.TestFormLive do
             <fieldset class="form-group mb-3">
               <div class="form-unit p-3 pb-2 rounded-3">
                 <div class="row form-unit pb-1 rounded-3">
-                  <%= label :f, :upload_url, "Add file from url:", class: "col-sm-4 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                  <%= label :f, :upload_url, gettext("Add file from url:"), class: "col-sm-4 col-form-label text-start text-md-end mt-2 mt-md-0" %>
                   <div class="col">
                     <div class="input-group">
                       <%= url_input f, :upload_url, class: "form-control" %>
                       <div class="input-group-text">
-                        <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="left" title="The file will be downloaded, not served from the original url"></i>
+                        <i class="bi bi-info-circle text-muted" data-bs-toggle="tooltip" data-bs-placement="left" title={gettext("The file will be downloaded, not served from the original url")}></i>
                       </div>
                     </div>
                   </div>
                   <div class="col-sm-2">
-                    <button type="button" class={"btn btn-secondary mt-2 mt-sm-0 #{if get_field(@changeset, :upload_url) == nil or get_field(@changeset, :upload_url) == "", do: " disabled"}"} phx-click="add_url"><i class="bi bi-plus-lg"></i> Add</button>
+                    <button type="button" class={"btn btn-secondary mt-2 mt-sm-0 #{if get_field(@changeset, :upload_url) == nil or get_field(@changeset, :upload_url) == "", do: " disabled"}"} phx-click="add_url"><i class="bi bi-plus-lg"></i> <%= gettext "Add" %></button>
                   </div>
                 </div>
               </div>
@@ -413,14 +413,14 @@ defmodule FunkyABXWeb.TestFormLive do
                   <%= hidden_input(fp, :original_filename) %>
                   <%= hidden_input(fp, :filename) %>
 
-                  <label class="col-sm-1 col-form-label">Track #<%= i %></label>
+                  <label class="col-sm-1 col-form-label"><%= gettext "Track #%{track_index}", track_index: i %></label>
                   <hr class="d-block d-sm-none mb-0">
-                  <%= label :fp, :title, "Name:*", class: "col-sm-1 col-form-label text-start text-md-end" %>
+                  <%= label :fp, :title, gettext("Name:*"), class: "col-sm-1 col-form-label text-start text-md-end" %>
                   <div class="col-sm-4">
                     <%= text_input fp, :title, class: "form-control", required: true %>
                   </div>
                   <%= if get_upload_entry(input_value(fp, :temp_id), @uploads.tracks.entries) != nil and get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries) > 0 do %>
-                    <%= label :fp, :filename, "Upload:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
+                    <%= label :fp, :filename, gettext("Upload:"), class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
                     <div class="col d-flex align-items-center"><progress value={get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries)} max="100"> <%= get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries) %>%</progress></div>
                   <% else %>
                     <%= label :fp, :filename, "File:", class: "col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0" %>
@@ -430,7 +430,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <% end %>
                   <div class="col-sm-1 d-flex flex-row-reverse" style="min-width: 62px">
                     <%= if input_value(fp, :id) != nil do %>
-                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} data-confirm="Are you sure?" phx-click="delete_track" phx-value-id={input_value(fp, :id)}><i class="bi bi-trash text-danger"></i></button>
+                      <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} data-confirm={gettext("Are you sure?")} phx-click="delete_track" phx-value-id={input_value(fp, :id)}><i class="bi bi-trash text-danger"></i></button>
                     <% else %>
                       <button type="button" class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"} phx-click="remove_track" phx-value-id={input_value(fp, :temp_id)}><i class="bi bi-trash text-danger"></i></button>
                     <% end %>
@@ -443,12 +443,12 @@ defmodule FunkyABXWeb.TestFormLive do
 
         <div class="mt-3 text-center text-md-end d-flex flex-row justify-content-end align-items-center">
           <div class="loading-spinner spinner-border spinner-border-sm text-primary me-2" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden"><%= gettext "Loading..." %></span>
           </div>
           <%= if @action == "save" do %>
-            <button type="submit" class="btn btn-lg btn-primary" phx-disable-with="Saving..." disabled={!@changeset.valid? or @test_submittable == false}>Save test</button>
+            <button type="submit" class="btn btn-lg btn-primary" phx-disable-with="Saving..." disabled={!@changeset.valid? or @test_submittable == false}><%= gettext "Save test" %></button>
           <% else %>
-            <button type="submit" class="btn btn-lg btn-primary" phx-disable-with="Updating ..." disabled={!@changeset.valid? or @test_submittable == false}>Update test</button>
+            <button type="submit" class="btn btn-lg btn-primary" phx-disable-with={gettext("Updating ...")} disabled={!@changeset.valid? or @test_submittable == false}><%= gettext "Update test" %></button>
           <% end %>
         </div>
       </.form>
@@ -456,7 +456,7 @@ defmodule FunkyABXWeb.TestFormLive do
       <.live_component
         module={BsModalComponent}
         id={"email-modal"}
-        title={"Send an invitation"}
+        title={gettext("Send an invitation")}
       >
         <.live_component
           id={"email-modal-comp"}
@@ -492,7 +492,7 @@ defmodule FunkyABXWeb.TestFormLive do
          end
        end)
        |> assign(%{
-         page_title: "Edit test - " <> String.slice(test.title, 0..@title_max_length),
+         page_title: gettext("Edit test - %{title}", title: String.slice(test.title, 0..@title_max_length)),
          action: "update",
          changeset: changeset,
          test: Map.put(test, :to_close_at_timezone, get_timezone(socket)),
@@ -551,7 +551,7 @@ defmodule FunkyABXWeb.TestFormLive do
        end
      end)
      |> assign(%{
-       page_title: "Create test",
+       page_title: gettext("Create test"),
        action: "save",
        changeset: changeset,
        test: test,
@@ -649,7 +649,7 @@ defmodule FunkyABXWeb.TestFormLive do
             )
           end
 
-        flash_text = "Your test has been successfully updated."
+        flash_text = gettext("Your test has been successfully updated.")
 
         Process.send_after(
           self(),
@@ -696,10 +696,9 @@ defmodule FunkyABXWeb.TestFormLive do
             )
           end
 
+        link = Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug)
         flash_text =
-          "Your test has been successfully created !<br><br>You can now share the <a href=\"" <>
-            Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug) <>
-            "\">test's public link</a> for people to take it."
+          gettext("Your test has been successfully created !<br><br>You can now share the <a href=\"%{link}\">test's public link</a> for people to take it.", link: link) |> raw()
 
         Process.send_after(
           self(),
@@ -877,7 +876,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
     FunkyABXWeb.Endpoint.broadcast!(test.id, "test_deleted", nil)
 
-    flash_text = "Your test has been successfully deleted."
+    flash_text = gettext("Your test has been successfully deleted.")
 
     Process.send_after(
       self(),
@@ -1039,9 +1038,9 @@ defmodule FunkyABXWeb.TestFormLive do
     |> assign(upload_url: nil, changeset: changeset)
   end
 
-  def error_to_string(:too_large), do: "Too large"
-  def error_to_string(:too_many_files), do: "You have selected too many files"
-  def error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+  def error_to_string(:too_large), do: gettext("Too large")
+  def error_to_string(:too_many_files), do: gettext("You have selected too many files")
+  def error_to_string(:not_accepted), do: gettext("You have selected an unacceptable file type")
 
   # ---
 

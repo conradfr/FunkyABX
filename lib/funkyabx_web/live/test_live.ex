@@ -16,12 +16,12 @@ defmodule FunkyABXWeb.TestLive do
           <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
             <%= @test.title %>
           </h3>
-          <h6 :if={@test.author != nil} class="header-typographica">By <%= @test.author %></h6>
+          <h6 :if={@test.author != nil} class="header-typographica"><%= gettext "By %{author}", author: @test.author %></h6>
         </div>
         <div :if={@test.local == false and @test.type != :listening} class="col-sm-6 text-start text-sm-end pt-1">
-          <div class="fs-7 text-muted header-texgyreadventor">Test taken <strong><%= @test_taken_times %></strong> times</div>
+          <div class="fs-7 text-muted header-texgyreadventor"><%= gettext("Test taken <strong>%{test_taken_times}</strong> times", test_taken_times: @test_taken_times) |> raw() %></div>
           <div :if={@test.local == false and @test.to_close_at_enabled == true and Tests.is_closed?(@test) == false} class="fs-7 text-muted header-texgyreadventor">
-            <small>Test closing on <time datetime={@test.to_close_at}><%= format_date(@test.to_close_at, @timezone) %></time></small>
+            <small><%= gettext("Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>", to_close_at: @test.to_close_at, to_close_at_format: format_date(@test.to_close_at, @timezone)) |> raw() %></small>
           </div>
 
           <.live_component module={TestFlagComponent} id="flag" test={@test} />
@@ -56,11 +56,11 @@ defmodule FunkyABXWeb.TestLive do
             </button>
             <%= if @playing == true do %>
               <button type="button" phx-click={JS.dispatch("pause", to: "body")} class="btn btn-success me-1">
-                <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;Pause&nbsp;&nbsp;
+                <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;<%= gettext "Pause" %>&nbsp;&nbsp;
               </button>
             <% else %>
               <button type="button" phx-click={JS.dispatch("play", to: "body")} class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}>
-                <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;Play&nbsp;&nbsp;
+                <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;<%= gettext "Play" %>&nbsp;&nbsp;
               </button>
             <% end %>
             <button type="button" phx-click={JS.dispatch("stop", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
@@ -68,12 +68,12 @@ defmodule FunkyABXWeb.TestLive do
             </button>
             <%= if @tracks_loaded == false do %>
               <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden"><%= gettext "Loading..." %></span>
               </div>
-              <span class="text-muted ms-2"><small>Loading tracks ...</small></span>
+              <span class="text-muted ms-2"><small><%= gettext "Loading tracks ..." %></small></span>
             <% else %>
               <div class="ms-2 text-muted" role="status">
-                <small><i class="bi bi-info-circle text-extra-muted" title="Player controls" role="button"
+                <small><i class="bi bi-info-circle text-extra-muted" title={gettext("Player controls")} role="button"
                   data-bs-toggle="popover" data-bs-placement="auto" data-bs-html="true"
                   data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>">
                 </i></small>
@@ -81,7 +81,7 @@ defmodule FunkyABXWeb.TestLive do
             <% end %>
           </div>
           <div :if={@test.local == false and @test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
-            Round <%= @current_round %> / <%= @test.nb_of_rounds %>
+            <%= gettext "Round %{current_round} / %{nb_of_rounds}", current_round: @current_round, nb_of_rounds: @test.nb_of_rounds %>
           </div>
           <div class="p-2">
             <fieldset class="form-group">
@@ -100,7 +100,7 @@ defmodule FunkyABXWeb.TestLive do
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="inputRotateCheckbox" name="inputRotateCheckbox" checked={@rotate}>
                     <label class="form-check-label" for="inputRotateCheckbox">
-                      Switch track every
+                      <%= gettext "Switch track every" %>
                     </label>
                   </div>
                 </fieldset>
@@ -136,7 +136,7 @@ defmodule FunkyABXWeb.TestLive do
                 </div>
               <% else %>
                 <div class="p-2 cursor-link" style={"min-width: #{if @test.type == :listening, do: "300", else: "100"}px"} phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
-                  Track <%= i %>
+                  <%= gettext "Track %{track_index}", track_index: i %>
                 </div>
               <% end %>
             <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px" id={"waveform-#{Tracks.get_track_hash(track)}"}>
@@ -157,29 +157,29 @@ defmodule FunkyABXWeb.TestLive do
         <div class="d-flex flex-row align-items-center justify-content-between">
           <%= unless @test_params.has_choices == false do %>
             <div :if={@test.local == true} class="results-actions">
-              <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}>Go back to the test form</.link>
+              <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}><%= gettext "Go back to the test form" %></.link>
             </div>
             <div :if={@test.local == true} class="results-actions">
-              <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action">Create a new local test</.link>
+              <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action"><%= gettext "Create a new local test" %></.link>
             </div>
             <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
               <%= unless @test.local == true do %>
                 <div class="px-1">
-                  <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm="Are you sure you want to check the results? You won't be able to participate afterwards.">Check the results without participating</button>
+                  <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm={gettext("Are you sure you want to check the results? You won't be able to participate afterwards.")}><%= gettext "Check the results without participating" %></button>
                 </div>
               <% end %>
             <div class="text-end px-1 _flex-fill">
-              <button phx-click="submit" class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}>Submit my choices</button>
+              <button phx-click="submit" class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}><%= gettext "Submit my choices" %></button>
             </div>
             <% else %>
               <div class="text-end px-1 flex-fill">
-                <.link :if={@test.local == false} href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug)} class="btn btn-primary">Check the results</.link>
+                <.link :if={@test.local == false} href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug)} class="btn btn-primary"><%= gettext "Check the results" %></.link>
               </div>
             <% end %>
           <% else %>
             <div class="px-1">
-              <button :if={@test.anonymized_track_title == false} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark">Hide titles and shuffle tracks</button>
-              <button :if={@test.anonymized_track_title == true} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark">Reveal tracks' titles</button>
+              <button :if={@test.anonymized_track_title == false} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark"><%= gettext "Hide titles and shuffle tracks" %></button>
+              <button :if={@test.anonymized_track_title == true} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark"><%= gettext "Reveal tracks' titles" %></button>
             </div>
           <% end %>
         </div>
@@ -311,10 +311,11 @@ defmodule FunkyABXWeb.TestLive do
      })
      |> then(fn s ->
        if Tests.is_closed?(test) == true do
+         link = Routes.test_results_public_path(s, FunkyABXWeb.TestResultsLive, s.assigns.test.slug)
          put_flash(
            s,
            :info,
-           "This test has been closed. <a href=\"#{Routes.test_results_public_path(s, FunkyABXWeb.TestResultsLive, s.assigns.test.slug)}\">Check the results</a>"
+           gettext("This test has been closed. <a href=\"%{link}\">Check the results</a>", link: link) |> raw()
          )
        else
          s
@@ -322,10 +323,11 @@ defmodule FunkyABXWeb.TestLive do
      end)
      |> then(fn s ->
        if test_already_taken == true do
+         link = Routes.test_public_path(socket, FunkyABXWeb.TestLive, test.slug)
          put_flash(
            s,
            :info,
-           "Your invitation has already been redeemed. <a href=\"#{Routes.test_public_path(socket, FunkyABXWeb.TestLive, test.slug)}\">Take the test anonymously instead</a>."
+           gettext("Your invitation has already been redeemed. <a href=\"%{link}\">Take the test anonymously instead</a>.", link: link) |> raw()
          )
        else
          s
@@ -374,7 +376,7 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> put_flash(
        :info,
-       "This test has been closed. <a href=\"#{results_url}\">Check the results</a>"
+       gettext("This test has been closed. <a href=\"%{results_url}\">Check the results</a>", results_url: results_url) |> raw()
      )
      |> redirect(
        to:
@@ -390,7 +392,7 @@ defmodule FunkyABXWeb.TestLive do
   def handle_info(%{event: "test_deleted"} = _payload, socket) do
     {:noreply,
      socket
-     |> put_flash(:error, "This test has been deleted :(")
+     |> put_flash(:error, gettext("This test has been deleted :("))
      |> redirect(
        to:
          Routes.info_path(
@@ -404,7 +406,7 @@ defmodule FunkyABXWeb.TestLive do
   def handle_info(%{event: "test_updated"} = _payload, socket) do
     {:noreply,
      socket
-     |> put_flash(:info, "Test has been updated by its creator, so the page has been reloaded.")
+     |> put_flash(:info, gettext("Test has been updated by its creator, so the page has been reloaded."))
      |> redirect(
        to:
          Routes.test_public_path(
@@ -429,7 +431,7 @@ defmodule FunkyABXWeb.TestLive do
 
     {:noreply,
      socket
-     |> put_flash(:success, "Your submission has been registered!")
+     |> put_flash(:success, gettext("Your submission has been registered!"))
      |> redirect(to: url <> embed)}
   end
 
@@ -468,10 +470,10 @@ defmodule FunkyABXWeb.TestLive do
     flash_text =
       case socket.assigns.test.local do
         true ->
-          "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test."
+          gettext("One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test.")
 
         false ->
-          "One or more tracks couldn't be loaded. Please refresh the page to try again."
+          gettext("One or more tracks couldn't be loaded. Please refresh the page to try again.")
       end
 
     {:noreply,
@@ -604,7 +606,7 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> put_flash(
        :info,
-       "You have already taken this test. <a href=\"#{results_url}\">Check the results</a>."
+       gettext("You have already taken this test. <a href=\"%{results_url}\">Check the results</a>.", results_url: results_url) |> raw()
      )
      |> assign(test_already_taken: true)}
   end
@@ -719,14 +721,14 @@ defmodule FunkyABXWeb.TestLive do
        #     to: Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, socket.assigns.test.slug),
        #     replace: true
        # )
-       |> put_flash(:success, "Your submission has been registered!")}
+       |> put_flash(:success, gettext("Your submission has been registered!"))}
     else
       _ ->
         {:noreply,
          put_flash(
            socket,
            :error,
-           "Your test can't be submitted. Please try again or reload the page"
+           gettext("Your test can't be submitted. Please try again or reload the page")
          )}
     end
   end

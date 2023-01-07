@@ -9,10 +9,10 @@ defmodule TestFlagComponent do
   def render(assigns) do
     ~H"""
       <div class="text-end">
-        <span class="fs-9 text-muted cursor-link" phx-target={@myself} phx-click="flag_toggle" title="Flag this test"><i class="bi bi-flag"></i></span>
+        <span class="fs-9 text-muted cursor-link" phx-target={@myself} phx-click="flag_toggle" title={gettext("Flag this test")}><i class="bi bi-flag"></i></span>
         <div :if={@flag_display} class="input-group mt-1">
-          <input type="text" class="form-control w-25" placeholder="Enter the reason" aria-label="Enter the reason" aria-describedby="button-flag" phx-keyup="flag_text" phx-target={@myself}>
-          <button class={"btn btn-secondary#{if @flag_text == "", do: " disabled"}"} type="button" id="button-flag" phx-target={@myself} phx-click="flag_submit" >Flag</button>
+          <input type="text" class="form-control w-25" placeholder={gettext("Enter the reason")} aria-label={gettext("Enter the reason")} aria-describedby="button-flag" phx-keyup="flag_text" phx-target={@myself}>
+          <button class={"btn btn-secondary#{if @flag_text == "", do: " disabled"}"} type="button" id="button-flag" phx-target={@myself} phx-click="flag_submit" ><%= gettext "Flag" %></button>
         </div>
       </div>
     """
@@ -42,8 +42,8 @@ defmodule TestFlagComponent do
       |> Repo.insert()
 
     case insert do
-      {:ok, _} -> send(self(), {:flash, {:success, "You have flagged this test."}})
-      _ -> send(self(), {:flash, {:error, "An error occurred, please try again later."}})
+      {:ok, _} -> send(self(), {:flash, {:success, gettext("You have flagged this test.")}})
+      _ -> send(self(), {:flash, {:error, gettext("An error occurred, please try again later.")}})
     end
 
     {:noreply, assign(socket, %{flag_display: !socket.assigns.flag_display, flag_text: ""})}

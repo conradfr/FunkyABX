@@ -23,15 +23,15 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
 
     ~H"""
       <div>
-        <h4 class="mt-3 header-neon">ABX</h4>
+        <h4 class="mt-3 header-neon"><%= gettext "ABX" %></h4>
 
         <div :if={@visitor_guesses != nil} class="mb-3">
-          Your score: <strong><%= @visitor_guesses %> / <%= @test.nb_of_rounds %></strong>
+          <%= gettext("Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>", visitor_guesses: @visitor_guesses, nb_of_rounds: @test.nb_of_rounds) |> raw() %>
           <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
         </div>
 
         <div class="tracks my-2 mb-1 track-results results">
-          <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin">No test taken ... yet!</div>
+          <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin"><%= gettext "No test taken ... yet!" %></div>
           <%= for {%{correct: guess, count: count, probability: probability}, i} <- @abx |> Enum.with_index(1) do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
               <div class="p-3">
@@ -42,28 +42,28 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
                 <% end %>
               </div>
               <div class="p-3 ps-1 text-end">
-                Correct guesses: <%= guess %> / <%= @test.nb_of_rounds %>
+                <%= gettext("Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>", guess: guess, nb_of_rounds: @test.nb_of_rounds) |> raw() %>
               </div>
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
                 <div :if={@visitor_guesses == guess} class="p-3 flex-grow-1 text-sm-end text-start pe-5 small">
                   <%= if @is_another_session == true do %>
-                    Scored
+                    <%= gettext "Scored" %>
                   <% else %>
-                    Your score!
+                    <%= gettext "Your score!" %>
                   <% end %>
                 </div>
               </div>
               <div :if={Kernel.length(@test.tracks) == 2} class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small">Confidence that this result is better than chance: <%= probability %>%</div>
+                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small"><%= gettext "Confidence that this result is better than chance: %{probability}%", probability: probability %></div>
               </div>
               <div class="p-3 ps-0 text-end">
-                <%= count %> times
+                <%= gettext "%{count} times", count: count %>
               </div>
             </div>
           <% end %>
         </div>
-        <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;A 95% confidence level is commonly considered statistically significant (<a href="https://en.wikipedia.org/wiki/ABX_test#Confidence" class="text-muted">source</a>).</div>
+        <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= gettext("A 95% confidence level is commonly considered statistically significant (<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-muted\">source</a>).") |> raw() %></div>
       </div>
     """
   end

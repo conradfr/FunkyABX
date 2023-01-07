@@ -25,18 +25,18 @@ defmodule FunkyABXWeb.TestResultRankComponent do
       <div>
         <div class="d-flex flex-row align-items-end">
           <div class="me-auto">
-            <h4 class="mt-3 header-neon">Ranking</h4>
+            <h4 class="mt-3 header-neon"><%= gettext "Ranking" %></h4>
           </div>
           <div :if={@test.local == false} class="justify-content-end text-end pt-4">
             <%= if @ranks_detail == false do %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>View details&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
+              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}><%= gettext "View details" %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
             <% else %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}>Hide details&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
+              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}><%= gettext "Hide details" %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
             <% end %>
           </div>
         </div>
         <div class="tracks my-2 mb-4 track-results results">
-          <div :if={Kernel.length(@ranks) == 0} class="alert alert-info alert-thin">No ranking done ... yet!</div>
+          <div :if={Kernel.length(@ranks) == 0} class="alert alert-info alert-thin"><%= gettext "No ranking done ... yet!" %></div>
           <%= for rank <- @ranks do %>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == rank.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => rank.track_id, "track_url" => Tracks.get_track_url(rank.track_id, @test)})}>
 
@@ -46,9 +46,9 @@ defmodule FunkyABXWeb.TestResultRankComponent do
                 <div :if={@test.local == false and Map.has_key?(@visitor_ranked, rank.track_id) == true} class="p-3 flex-grow-1 text-sm-end text-start pe-5">
                   <small>
                     <%= if @is_another_session == true do %>
-                      This track was ranked:
+                      <%= gettext "This track was ranked:" %>
                     <% else %>
-                      You ranked this track:
+                      <%= gettext "You ranked this track:" %>
                     <% end %>
                     &nbsp;#<%= @visitor_ranked[rank.track_id] %>
                   </small>
@@ -56,8 +56,10 @@ defmodule FunkyABXWeb.TestResultRankComponent do
                 <div class="p-3 ps-0 text-end">
                   <%= if @test.local == false do %>
                     <%= rank.count %> votes as #<%= rank.rank %>
+                    <%= gettext "%{count}votes as %{rank}", count: rank.count, rank: rank.rank %>
                   <% else %>
                     <small>You ranked this track:</small> #<%= rank.rank %>
+                    <%= gettext("<small>You ranked this track:</small> %{rank}", rank: rank.rank) |> raw() %>
                   <% end %>
                 </div>
               </div>
@@ -66,11 +68,11 @@ defmodule FunkyABXWeb.TestResultRankComponent do
             <%= if @ranks_detail == true do %>
               <div class="mb-3">
                 <%= if Map.get(rank, :other_ranks, nil) == nil do %>
-                  <div class="my-2 text-end text-muted"><small>No other ranking</small></div>
+                  <div class="my-2 text-end text-muted"><small><%= gettext "No other ranking" %></small></div>
                 <% else %>
                   <%= for other_rank <- Map.get(rank, :other_ranks, []) do %>
                     <div class="my-2 d-flex flex-wrap align-items-center justify-content-end">
-                      <small><%= other_rank.count %> votes as #<%= other_rank.rank %></small>
+                      <small><%= gettext "%{count} votes as #%{rank}", count: other_rank.count, rank: other_rank.rank %></small>
                     </div>
                   <% end %>
                 <% end %>
