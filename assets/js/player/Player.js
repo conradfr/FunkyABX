@@ -100,7 +100,7 @@ export default class {
 
     Promise.all(this.loadPromises)
       .then((audioBuffers) => {
-        this.ee.emit('push_event', { event: 'tracksLoaded', data: {} });
+        this.ee.emit('push_event', { event: 'tracks_loaded', data: {} });
 
         this.tracks = audioBuffers.map((audioBuffer, index) => {
           /* eslint-disable max-len */
@@ -124,7 +124,7 @@ export default class {
         });
       })
       .catch((error) => {
-        this.ee.emit('push_event', { event: 'tracksError', data: { error } });
+        this.ee.emit('push_event', { event: 'tracks_error', data: { error } });
       });
   }
 
@@ -196,7 +196,7 @@ export default class {
 
       if (index === this.currentTrackIndex) {
         this.ee.emit('push_event', {
-          event: 'currentTrackHash',
+          event: 'current_track_hash',
           data: { track_hash: track.src.hash }
         });
       }
@@ -325,7 +325,7 @@ export default class {
       track.setActive(index === nextTrackIndex);
       if (index === nextTrackIndex) {
         this.ee.emit('push_event', {
-          event: 'currentTrackHash',
+          event: 'current_track_hash',
           data: { track_hash: track.src.hash }
         });
       }

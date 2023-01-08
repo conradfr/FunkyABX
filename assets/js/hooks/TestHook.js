@@ -34,7 +34,7 @@ const TestHook = {
       return 'Are you sure you want to leave/reload? Tracks will be lost.';
     };
 
-    this.handleEvent('setWarningLocalTestReload', (params) => {
+    this.handleEvent('set_warning_local_test_reload', (params) => {
       if (params.set === false && this.preventReloadSet === true) {
         this.preventReloadSet = false;
         window.removeEventListener('beforeunload', this.warningReload);

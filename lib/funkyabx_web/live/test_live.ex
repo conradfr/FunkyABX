@@ -236,7 +236,7 @@ defmodule FunkyABXWeb.TestLive do
        test_already_taken: false,
        view_tracklist: false
      })
-     |> push_event("setWarningLocalTestReload", %{set: true})}
+     |> push_event("set_warning_local_test_reload", %{set: true})}
   end
 
   @impl true
@@ -458,7 +458,7 @@ defmodule FunkyABXWeb.TestLive do
   # ---------- PLAYER CLIENT ----------
 
   @impl true
-  def handle_event("tracksLoaded", _params, socket) do
+  def handle_event("tracks_loaded", _params, socket) do
     {:noreply,
      socket
      |> assign(tracks_loaded: true)
@@ -466,7 +466,7 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_event("tracksError", _params, socket) do
+  def handle_event("tracks_error", _params, socket) do
     flash_text =
       case socket.assigns.test.local do
         true ->
@@ -479,7 +479,7 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply,
      socket
      |> assign(tracks_loaded: false)
-     |> push_event("setWarningLocalTestReload", %{set: false})
+     |> push_event("set_warning_local_test_reload", %{set: false})
      |> put_flash(:error, flash_text)}
   end
 
@@ -498,18 +498,13 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_event("currentTrackHash", %{"track_hash" => track_hash} = _params, socket) do
+  def handle_event("current_track_hash", %{"track_hash" => track_hash} = _params, socket) do
     {:noreply, assign(socket, current_track: track_hash)}
   end
 
   @impl true
-  def handle_event("currentTrackHash", _params, socket) do
+  def handle_event("current_track_hash", _params, socket) do
     {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("updatePlayerTime", %{"time" => playing_time} = _params, socket) do
-    {:noreply, assign(socket, playingTime: playing_time)}
   end
 
   # Restore custom setting of visitor when player is loaded
@@ -521,7 +516,7 @@ defmodule FunkyABXWeb.TestLive do
       {:noreply,
         socket
         |> assign(rotate_seconds: rotate_seconds)
-        |> push_event("rotateSeconds", %{seconds: seconds})}
+        |> push_event("rotate_seconds", %{seconds: seconds})}
     else
       _ ->
         {:noreply, socket}
@@ -541,7 +536,7 @@ defmodule FunkyABXWeb.TestLive do
       {:noreply,
        socket
        |> assign(rotate_seconds: rotate_seconds)
-       |> push_event("rotateSeconds", %{seconds: seconds})}
+       |> push_event("rotate_seconds", %{seconds: seconds})}
     else
       _ ->
         {:noreply, socket}

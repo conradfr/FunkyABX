@@ -125,7 +125,7 @@ const PlayerHook = {
       }
     });
 
-    this.handleEvent('rotateSeconds', (params) => {
+    this.handleEvent('rotate_seconds', (params) => {
       if (this.player !== null && this.player !== undefined) {
         this.player.rotateSeconds = params.seconds * 1000;
         this.player.setRotate();
