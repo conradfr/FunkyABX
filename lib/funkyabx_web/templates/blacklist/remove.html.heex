@@ -1,16 +1,16 @@
-<h3 class="header-chemyretro">Remove from blacklist</h3>
+<h3 class="header-chemyretro"><%= dgettext "blacklist", "Remove from blacklist" %></h3>
 
 <div class="row">
   <div class="col-12 col-sm-8 pt-3">
     <%= if @status == :ok do %>
     <div class="alert alert-success show" role="alert">
       <i class="bi bi-check-circle"></i>&nbsp
-      Your email has been removed from the blacklist.
+      <%= dgettext "blacklist", "Your email has been removed from the blacklist." %>
     </div>
     <% else %>
     <div class="alert alert-danger show" role="alert">
       <i class="bi bi-check-circle"></i>&nbsp
-      An error occurred, sorry. Please try again.
+      <%= dgettext "blacklist", "An error occurred, sorry. Please try again." %>
     </div>
     <% end %>
   </div>

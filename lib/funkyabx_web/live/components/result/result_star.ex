@@ -24,18 +24,18 @@ defmodule FunkyABXWeb.TestResultStarComponent do
       <div>
         <div class="d-flex flex-row align-items-end">
           <div class="me-auto">
-            <h4 class="mt-3 header-neon"><%= gettext "Rating" %></h4>
+            <h4 class="mt-3 header-neon"><%= dgettext "test", "Rating" %></h4>
           </div>
           <div :if={@test.local == false} class="justify-content-end text-end pt-4">
             <%= if @star_detail == false do %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}><%= gettext "View details" %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
+              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}><%= dgettext "test", "View details" %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></span>
             <% else %>
-              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}><%= gettext "Hide details" %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
+              <span class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_detail" phx-target={@myself}><%= dgettext "test", "Hide details" %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></span>
             <% end %>
           </div>
         </div>
         <div class="tracks my-1 mb-4 track-results results">
-          <div :if={Kernel.length(@stars) == 0} class="alert alert-info alert-thin"><%= gettext "No rating done ... yet!" %></div>
+          <div :if={Kernel.length(@stars) == 0} class="alert alert-info alert-thin"><%= dgettext "test", "No rating done ... yet!" %></div>
           <%= for {star, i} <- @stars |> Enum.with_index(1) do %>
           <div class={"#{if @star_detail == true, do: "mb-3"}"}>
             <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center" phx-click={JS.dispatch(if @play_track_id == star.track_id do "stop" else "play" end, to: "body", detail: %{"track_id" => star.track_id, "track_url" => Tracks.get_track_url(star.track_id, @test)})}>
@@ -48,9 +48,9 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                       <div class="pe-2">
                         <small>
                           <%= if @is_another_session == true do %>
-                            <%= gettext "This track was rated:" %>
+                            <%= dgettext "test", "This track was rated:" %>
                           <% else %>
-                            <%= gettext "You rated this track:" %>
+                            <%= dgettext "test", "You rated this track:" %>
                           <% end %>
                         </small>
                       </div>
@@ -83,7 +83,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                   </div>
                   <div class="p-1 ps-2 text-end text-muted">
                     <small>
-                      <%= ngettext "%{count} time", "%{count} times", star[String.to_atom("total_star_#{star_nb_sub}")] %>
+                      <%= dngettext "test", "%{count} time", "%{count} times", star[String.to_atom("total_star_#{star_nb_sub}")] %>
                     </small>
                   </div>
                 </div>

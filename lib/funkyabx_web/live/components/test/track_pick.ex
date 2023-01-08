@@ -12,9 +12,9 @@ defmodule FunkyABXWeb.TestTrackPickComponent do
     ~H"""
       <div class="p-2 text-center flex-grow-1 flex-sm-grow-0" style="min-width: 220px">
         <%= if @picked == @track.id do %>
-          <span class="test-pick-chosen"><i class="bi bi-check-lg"></i>&nbsp;&nbsp;<%= gettext "This track is my favorite" %></span>
+          <span class="test-pick-chosen"><i class="bi bi-check-lg"></i>&nbsp;&nbsp;<%= dgettext "test", "This track is my favorite" %></span>
         <% else %>
-          <button class="btn btn-secondary" name="pick" phx-click="pick_track" phx-value-track_id={@track.id} phx-target={@myself}><%= gettext "Pick this track as favorite" %></button>
+          <button class="btn btn-secondary" name="pick" phx-click="pick_track" phx-value-track_id={@track.id} phx-target={@myself}><%= dgettext "test", "Pick this track as favorite" %></button>
         <% end %>
       </div>
     """

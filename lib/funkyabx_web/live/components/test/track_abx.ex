@@ -7,7 +7,7 @@ defmodule FunkyABXWeb.TestTrackAbxComponent do
       assign_new(assigns, :guessed, fn ->
         case Map.get(assigns.choices_taken, :abx, {"", false}) do
           {"", _guessed} -> ""
-          {guess, _guessed} -> gettext("Track %{guess}", guess: guess)
+          {guess, _guessed} -> dgettext("test", "Track %{guess}", guess: guess)
         end
       end)
 
@@ -15,7 +15,7 @@ defmodule FunkyABXWeb.TestTrackAbxComponent do
       <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
         <%= if Map.get(@track, :to_guess, false) do %>
           <div class="me-auto flex-grow-1 flex-md-grow-0">
-            <span class="me-3 text-muted small"><%= gettext "I think this is ..." %></span>
+            <span class="me-3 text-muted small"><%= dgettext "test", "I think this is ..." %></span>
           </div>
           <div class=" p-0 p-md-3 flex-fill">
             <form phx-change="change_guess" phx-target={@myself}>
@@ -65,7 +65,7 @@ defmodule FunkyABXWeb.TestTrackAbxComponent do
     ([""] ++ Enum.to_list(1..Kernel.length(test.tracks)))
     |> Enum.map(fn choice ->
       case choice do
-        choice when is_integer(choice) -> {gettext("Track %{choice}", choice: Integer.to_string(choice)), choice}
+        choice when is_integer(choice) -> {dgettext("site", "Track %{choice}", choice: Integer.to_string(choice)), choice}
         choice -> choice
       end
     end)

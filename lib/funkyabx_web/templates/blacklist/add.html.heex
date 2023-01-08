@@ -1,17 +1,17 @@
-<h3 class="header-chemyretro">Add to blacklist</h3>
+<h3 class="header-chemyretro"><%= dgettext "blacklist", "Add to blacklist" %></h3>
 
 <div class="row">
   <div class="col-12 col-sm-8 pt-3">
     <%= if @status == :ok do %>
       <div class="alert alert-success show" role="alert">
         <i class="bi bi-check-circle"></i>&nbsp
-        Your email has been added to the blacklist.
+        <%= dgettext "blacklist", "Your email has been added to the blacklist." %>
       </div>
-      <p><a href={Routes.blacklist_url(@conn, :remove, @invitation_id)}>Remove my email from the blacklist</a></p>
+      <p><a href={Routes.blacklist_url(@conn, :remove, @invitation_id)}><%= dgettext "blacklist", "Remove my email from the blacklist" %></a></p>
     <% else %>
       <div class="alert alert-danger show" role="alert">
         <i class="bi bi-check-circle"></i>&nbsp
-        An error occurred, sorry. Please try again.
+        <%= dgettext "blacklist", "An error occurred, sorry. Please try again." %>
       </div>
     <% end %>
   </div>

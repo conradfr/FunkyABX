@@ -11,12 +11,12 @@ defmodule FunkyABXWeb.TestListLive do
         <table class="table">
           <thead>
           <tr>
-            <th scope="col" class="text-center w-50"><%= gettext "Title" %></th>
-            <th scope="col" class="text-center w-25"><%= gettext "Created" %></th>
-            <th scope="col" class="text-center"><%= gettext "Views" %></th>
-            <!-- <th scope="col" class="text-center"><%= gettext "Taken" %></th> -->
-            <th scope="col" class="text-center"><%= gettext "Results" %></th>
-            <th scope="col" class="text-center"><%= gettext "Actions" %></th>
+            <th scope="col" class="text-center w-50"><%= dgettext "test", "Title" %></th>
+            <th scope="col" class="text-center w-25"><%= dgettext "test", "Created" %></th>
+            <th scope="col" class="text-center"><%= dgettext "test", "Views" %></th>
+            <!-- <th scope="col" class="text-center"><%= dgettext "test", "Taken" %></th> -->
+            <th scope="col" class="text-center"><%= dgettext "test", "Results" %></th>
+            <th scope="col" class="text-center"><%= dgettext "test", "Actions" %></th>
           </tr>
           </thead>
           <tbody class="table-striped">
@@ -38,7 +38,7 @@ defmodule FunkyABXWeb.TestListLive do
                     <!-- <td class="text-center">-</td> -->
                     <td class="text-center">-</td>
                   <% end %>
-                <td class="text-center"><.link href={Routes.test_edit_path(@socket, FunkyABXWeb.TestFormLive, test.slug)}><%= gettext "edit / delete" %></.link></td>
+                <td class="text-center"><.link href={Routes.test_edit_path(@socket, FunkyABXWeb.TestFormLive, test.slug)}><%= dgettext "test", "edit / delete" %></.link></td>
               </tr>
             <% end %>
           </tbody>
@@ -57,7 +57,7 @@ defmodule FunkyABXWeb.TestListLive do
        assign(
          socket,
          %{
-           page_title: gettext("My tests"),
+           page_title: dgettext("test", "My tests"),
            tests: tests
          }
        )}

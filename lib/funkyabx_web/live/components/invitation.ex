@@ -13,20 +13,20 @@ defmodule InvitationComponent do
     ~H"""
     <div>
       <div class="input-group mt-1">
-        <input type="text" class="form-control w-25" placeholder={gettext("Name or email")} aria-label={gettext("Send to this email")} aria-describedby="button--name_or_email"
+        <input type="text" class="form-control w-25" placeholder={dgettext("site", "Name or email")} aria-label={dgettext("site", "Send to this email")} aria-describedby="button--name_or_email"
           phx-keyup="name_or_email_text" phx-target={@myself}>
         <button class={"btn btn-secondary#{if @name_or_email == "", do: " disabled"}"} id="button-name_or_email" type="button"
-          phx-click="name_or_email_submit" phx-target={@myself}><%= gettext "Send" %></button>
+          phx-click="name_or_email_submit" phx-target={@myself}><%= dgettext "test", "Send" %></button>
       </div>
-      <div class="form-text"><%= gettext "An email will be sent if you enter a valid address, otherwise an invitation link will be generated. Use \",`\" to separate multiple names/addresses." %></div>
+      <div class="form-text"><%= dgettext "test", "An email will be sent if you enter a valid address, otherwise an invitation link will be generated. Use \",`\" to separate multiple names/addresses." %></div>
       <hr>
       <table class="table table-sm table-borderless" :if={length(@test.invitations) > 0}>
         <thead class="text-center">
           <tr>
-            <th><%= gettext "Name or email" %></th>
-            <th class="w-15"><%= gettext "Link" %></th>
-            <th class="w-15"><%= gettext "Clicked" %></th>
-            <th :if={@test.type != :listening} class="w-15"><%= gettext "Taken" %></th>
+            <th><%= dgettext "test", "Name or email" %></th>
+            <th class="w-15"><%= dgettext "test", "Link" %></th>
+            <th class="w-15"><%= dgettext "test", "Clicked" %></th>
+            <th :if={@test.type != :listening} class="w-15"><%= dgettext "test", "Taken" %></th>
           </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -54,7 +54,7 @@ defmodule InvitationComponent do
           </tr>
         </tbody>
       </table>
-      <div :if={length(@test.invitations) == 0}><%= gettext "No invitation sent yet." %></div>
+      <div :if={length(@test.invitations) == 0}><%= dgettext "test", "No invitation sent yet." %></div>
     </div>
     """
   end

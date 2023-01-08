@@ -1,4 +1,4 @@
-<h3 class="header-chemyretro">Log in</h3>
+<h3 class="header-chemyretro"><%= dgettext "user", "Log in" %></h3>
 
 <div class="row">
   <div class="col-12 col-sm-6">
@@ -10,30 +10,30 @@
       <% end %>
 
       <div class="mb-3">
-        <%= label f, :email, class: "form-label" %>
+        <%= label f, :email, dgettext("user", "Email"), class: "form-label" %>
         <%= email_input f, :email, required: true, class: "form-control" %>
         <%= error_tag f, :email %>
       </div>
 
       <div class="mb-3">
-        <%= label f, :password %>
+        <%= label f, :password, dgettext("user", "Password") %>
         <%= password_input f, :password, required: true, class: "form-label", class: "form-control" %>
         <%= error_tag f, :password %>
       </div>
 
       <div class="form-check mb-3">
         <%= checkbox f, :remember_me, class: "form-check-input" %>
-        <%= label f, :remember_me, "Remember me", class: "form-check-label" %>
+        <%= label f, :remember_me, dgettext("user", "Remember me"), class: "form-check-label" %>
       </div>
 
       <div>
-        <%= submit "Log in", class: "btn btn-primary" %>
+        <%= submit dgettext("user", "Log in"), class: "btn btn-primary" %>
       </div>
     </.form>
 
     <p class="mt-3">
-      <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-      <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
+      <%= link dgettext("user", "Register"), to: Routes.user_registration_path(@conn, :new) %> |
+      <%= link dgettext("user", "Forgot your password?"), to: Routes.user_reset_password_path(@conn, :new) %>
     </p>
   </div>
 </div>

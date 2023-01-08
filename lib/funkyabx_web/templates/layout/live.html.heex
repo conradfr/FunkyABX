@@ -3,7 +3,7 @@
     <div class="alert alert-info alert-dismissible fade show" role="alert"
       phx-click="lv:clear-flash"
       phx-value-key="info"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw message %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label={gettext("Close")}></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label={dgettext("site", "Close")}></button>
     </div>
   <% end %>
 
@@ -11,7 +11,7 @@
     <div class="alert alert-success alert-dismissible fade show" role="alert"
       phx-click="lv:clear-flash"
       phx-value-key="success"><i class="bi bi-check-circle"></i>&nbsp;&nbsp;<%= raw message %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label={gettext("Close")}></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label={dgettext("site", "Close")}></button>
     </div>
   <% end %>
 
@@ -19,7 +19,7 @@
     <div class="alert alert-danger alert-dismissible fade show" role="alert"
       phx-click="lv:clear-flash"
       phx-value-key="error"><i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= message %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label={gettext("Close")}></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label={dgettext("site", "Close")}></button>
     </div>
   <% end %>
   <%= @inner_content %>
