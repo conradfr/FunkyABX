@@ -8,7 +8,7 @@
   <div class="col-12 order-1 order-sm-2 col-sm-6 text-sm-start text-center px-4">
     <div class="d-flex flex-wrap justify-content-between">
       <h1 class="display-5 fw-bold lh-1 mb-4 header-barqish align-self-end flex-grow-1 text-start">FunkyABX</h1>
-      <p class="fs-4 header-chemyretro align-self-end text-end flex-grow-1"><% dgettext "site", "Groovy blind tests!" %></p>
+      <p class="fs-4 header-chemyretro align-self-end text-end flex-grow-1"><%= dgettext "site", "Groovy blind tests!" %></p>
     </div>
     <p class="lead mb-4"><%= dgettext "site", "Create tests to rank and identify your favorite compressors, saturation plugins, microphones, instruments, etc ... or even whole mixes!" %></p>
     <div class="d-flex align-items-end mb-3">
@@ -28,7 +28,7 @@
   <div class="col-lg-4">
     <img class="rounded-circle" src={Routes.static_path(@conn, "/images/home_testtype.png")}>
     <h3 class="fw-normal mt-2"><%= dgettext "site", "Test type" %></h3>
-    <p><%= dgettext "site", "Choose the best kind of test for you:<br>stars, ranking, recognition, abx..." %></p>
+    <p><%= raw dgettext "site", "Choose the best kind of test for you:<br>stars, ranking, recognition, abx..." %></p>
     <p class="mb-4"><a class="btn btn-secondary" href={Routes.test_new_path(@conn, FunkyABXWeb.TestFormLive)}><%= dgettext "site", "Create a test »" %></a></p>
   </div><!-- /.col-lg-4 -->
   <div class="col-lg-4">
