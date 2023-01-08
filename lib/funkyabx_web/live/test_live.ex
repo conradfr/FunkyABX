@@ -512,6 +512,22 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply, assign(socket, playingTime: playing_time)}
   end
 
+  # Restore custom setting of visitor when player is loaded
+  # (duplicated code from below)
+  @impl true
+  def handle_event("update_rotate_seconds", %{"seconds" => rotate_seconds} = _params, socket) do
+    with true <- is_binary(rotate_seconds) and rotate_seconds != "",
+         seconds <- String.to_integer(rotate_seconds) do
+      {:noreply,
+        socket
+        |> assign(rotate_seconds: rotate_seconds)
+        |> push_event("rotateSeconds", %{seconds: seconds})}
+    else
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
   # ---------- PLAYER SETTINGS ----------
 
   @impl true

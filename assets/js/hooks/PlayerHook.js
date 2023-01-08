@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import cookies from '../utils/cookies';
 import Player from '../player/Player';
-import { COOKIE_TEST_WAVEFORM } from '../config/config';
+import { COOKIE_TEST_WAVEFORM, COOKIE_TEST_ROTATE_SECONDS } from '../config/config';
 
 let audioFiles = null;
 
@@ -28,6 +28,10 @@ const PlayerHook = {
         audioFiles
       );
     };
+
+    if (cookies.has(COOKIE_TEST_ROTATE_SECONDS)) {
+      this.pushEvent('update_rotate_seconds', { seconds: cookies.get(COOKIE_TEST_ROTATE_SECONDS) });
+    }
 
     this.player = loadPlayer(this.el.dataset.tracks);
 
@@ -125,6 +129,7 @@ const PlayerHook = {
       if (this.player !== null && this.player !== undefined) {
         this.player.rotateSeconds = params.seconds * 1000;
         this.player.setRotate();
+        cookies.set(COOKIE_TEST_ROTATE_SECONDS, params.seconds);
       }
     });
 
