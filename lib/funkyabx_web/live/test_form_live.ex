@@ -125,7 +125,11 @@ defmodule FunkyABXWeb.TestFormLive do
           <div class="offset-md-1 col-md-5 col-m-12 order-1 order-md-2">
             <%= if @action == "update" do %>
             <fieldset class="form-group mb-3">
-              <legend class="header-typographica"><div class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"><%= raw ngettext "Viewed <strong>%{count}</strong> time", "Viewed <strong>%{count}</strong> times", @test.view_count %></div><%= gettext "Your test" %></legend>
+                <%= unless @test.view_count == nil do %>
+                  <legend class="header-typographica"><div class="float-end fs-8 text-muted" style="font-family: var(--bs-font-sans-serif); padding-top: 12px;">
+                    <%= raw ngettext "Viewed <strong>%{count}</strong> time", "Viewed <strong>%{count}</strong> times", @test.view_count %></div><%= gettext "Your test" %>
+                  </legend>
+                <% end %>
               <div class="px-3 pt-2 pb-3 rounded-3" style="background-color: #583247;">
                 <div class="mb-3">
                   <label for="test_public_link" class="form-label w-100">
