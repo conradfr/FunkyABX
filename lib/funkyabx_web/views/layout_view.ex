@@ -9,6 +9,8 @@ defmodule FunkyABXWeb.LayoutView do
   # so we instruct Elixir to not warn if the dashboard route is missing.
   @compile {:no_warn_undefined, {Routes, :live_dashboard_path, 2}}
 
+  @release_version_env "RELEASE_ID"
+
   @limit 11
 
   defp get_tests(%{assigns: %{current_user: current_user}} = _conn)
@@ -39,5 +41,17 @@ defmodule FunkyABXWeb.LayoutView do
       )
 
     Repo.all(query)
+  end
+
+  defp get_release_version_query_string() do
+    with release_version when is_binary(release_version) <- get_release_version() do
+      "?v=#{release_version}"
+    else
+      _ -> ""
+    end
+  end
+
+  defp get_release_version() do
+    System.get_env(@release_version_env)
   end
 end
