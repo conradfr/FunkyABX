@@ -34,7 +34,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
           <div class="me-auto">
             <h4 class="mt-3 header-neon"><%= gettext "Identification" %></h4>
             <div :if={@visitor_identification_score != nil} class="mb-3">
-              <%= gettext("Your score: <strong>%{score}/%{count}</strong>", score: Kernel.elem(@visitor_identification_score, 0), count: length(@identifications)) |> raw() %>
+              <%= raw gettext "Your score: <strong>%{score}/%{count}</strong>", score: Kernel.elem(@visitor_identification_score, 0), count: length(@identifications) %>
               <i :if={Kernel.elem(@visitor_identification_score, 0) == length(@identifications)} class="bi bi-hand-thumbs-up"></i>
             </div>
           </div>

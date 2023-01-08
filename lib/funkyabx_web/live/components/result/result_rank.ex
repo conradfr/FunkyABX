@@ -59,7 +59,7 @@ defmodule FunkyABXWeb.TestResultRankComponent do
                     <%= gettext "%{count}votes as %{rank}", count: rank.count, rank: rank.rank %>
                   <% else %>
                     <small>You ranked this track:</small> #<%= rank.rank %>
-                    <%= gettext("<small>You ranked this track:</small> %{rank}", rank: rank.rank) |> raw() %>
+                    <%= raw gettext "<small>You ranked this track:</small> %{rank}", rank: rank.rank %>
                   <% end %>
                 </div>
               </div>

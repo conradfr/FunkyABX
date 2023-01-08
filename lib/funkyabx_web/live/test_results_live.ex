@@ -16,7 +16,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         </div>
         <%= unless @test.type == :listening or @test.local == true do %>
           <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-            <span class="fs-7 text-muted header-texgyreadventor"><%= gettext("Test taken <strong>%{test_taken_times}</strong> times", test_taken_times: @test_taken_times) |> raw() %></span>
+            <span class="fs-7 text-muted header-texgyreadventor"><%= raw ngettext "Test taken <strong>%{count}</strong> time", "Test taken <strong>%{count}</strong> times", @test_taken_times %></span>
             <time :if={Tests.is_closed?(@test)} class="header-texgyreadventor text-muted" title={@test.closed_at} datetime={@test.closed_at}><br><small><%= gettext "(test is closed)" %></small></time>
           </div>
         <% end %>

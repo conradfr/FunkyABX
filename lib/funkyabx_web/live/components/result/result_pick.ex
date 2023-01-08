@@ -51,7 +51,7 @@ defmodule FunkyABXWeb.TestResultPickComponent do
                     </small>
                   </div>
                   <div class="p-3 ps-0 text-end">
-                    <%= gettext "Picked %{picked} times", picked: pick.picked %>
+                    <%= ngettext "Picked %{count} time", "Picked %{count} times", pick.picked %>
                   </div>
                 <% end %>
               </div>

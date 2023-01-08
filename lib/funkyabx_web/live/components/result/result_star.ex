@@ -83,7 +83,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                   </div>
                   <div class="p-1 ps-2 text-end text-muted">
                     <small>
-                      <%= gettext "%{stars} times", stars: star[String.to_atom("total_star_#{star_nb_sub}")] %>
+                      <%= ngettext "%{count} time", "%{count} times", star[String.to_atom("total_star_#{star_nb_sub}")] %>
                     </small>
                   </div>
                 </div>

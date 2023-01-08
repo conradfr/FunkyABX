@@ -22,7 +22,7 @@
       <% end %>
       <div class="mt-auto">
         <div :if={test.type != :listening} class="py-1 text-center gallery-test-taken">
-          <%= gettext "Test taken %{times} times", times: test.taken %>
+          <%= ngettext "Test taken %{count} time", "Test taken %{count} times", test.taken %>
         </div>
         <div class="py-1 text-center gallery-test-link">
           <%= link gettext("View"), to: Routes.test_public_path(@conn, FunkyABXWeb.TestLive, test.slug) %>

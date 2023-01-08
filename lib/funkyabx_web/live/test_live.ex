@@ -19,9 +19,9 @@ defmodule FunkyABXWeb.TestLive do
           <h6 :if={@test.author != nil} class="header-typographica"><%= gettext "By %{author}", author: @test.author %></h6>
         </div>
         <div :if={@test.local == false and @test.type != :listening} class="col-sm-6 text-start text-sm-end pt-1">
-          <div class="fs-7 text-muted header-texgyreadventor"><%= gettext("Test taken <strong>%{test_taken_times}</strong> times", test_taken_times: @test_taken_times) |> raw() %></div>
+          <div class="fs-7 text-muted header-texgyreadventor"><%= raw ngettext "Test taken <strong>%{count}</strong> time", "Test taken <strong>%{count}</strong> times", @test_taken_times %></div>
           <div :if={@test.local == false and @test.to_close_at_enabled == true and Tests.is_closed?(@test) == false} class="fs-7 text-muted header-texgyreadventor">
-            <small><%= gettext("Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>", to_close_at: @test.to_close_at, to_close_at_format: format_date(@test.to_close_at, @timezone)) |> raw() %></small>
+            <small><%= raw gettext "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>", to_close_at: @test.to_close_at, to_close_at_format: format_date(@test.to_close_at, @timezone) %></small>
           </div>
 
           <.live_component module={TestFlagComponent} id="flag" test={@test} />

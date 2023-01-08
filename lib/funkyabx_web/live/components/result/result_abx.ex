@@ -26,7 +26,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
         <h4 class="mt-3 header-neon"><%= gettext "ABX" %></h4>
 
         <div :if={@visitor_guesses != nil} class="mb-3">
-          <%= gettext("Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>", visitor_guesses: @visitor_guesses, nb_of_rounds: @test.nb_of_rounds) |> raw() %>
+          <%= raw gettext "Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>", visitor_guesses: @visitor_guesses, nb_of_rounds: @test.nb_of_rounds %>
           <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
         </div>
 
@@ -42,7 +42,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
                 <% end %>
               </div>
               <div class="p-3 ps-1 text-end">
-                <%= gettext("Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>", guess: guess, nb_of_rounds: @test.nb_of_rounds) |> raw() %>
+                <%= raw gettext "Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>", guess: guess, nb_of_rounds: @test.nb_of_rounds %>
               </div>
 
               <div class="d-flex flex-grow-1 justify-content-end align-items-center">
@@ -58,12 +58,12 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
                 <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small"><%= gettext "Confidence that this result is better than chance: %{probability}%", probability: probability %></div>
               </div>
               <div class="p-3 ps-0 text-end">
-                <%= gettext "%{count} times", count: count %>
+                <%= ngettext "%{count} time", "%{count} times", count %>
               </div>
             </div>
           <% end %>
         </div>
-        <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= gettext("A 95% confidence level is commonly considered statistically significant (<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-muted\">source</a>).") |> raw() %></div>
+        <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw gettext "A 95% confidence level is commonly considered statistically significant (<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-muted\">source</a>)." %></div>
       </div>
     """
   end
