@@ -38,7 +38,7 @@ defmodule FunkyABXWeb.TestListLive do
                     <!-- <td class="text-center">-</td> -->
                     <td class="text-center">-</td>
                   <% end %>
-                <td class="text-center"><.link href={Routes.test_edit_path(@socket, FunkyABXWeb.TestFormLive, test.slug)}><%= gettext "dit / delete" %></.link></td>
+                <td class="text-center"><.link href={Routes.test_edit_path(@socket, FunkyABXWeb.TestFormLive, test.slug)}><%= gettext "edit / delete" %></.link></td>
               </tr>
             <% end %>
           </tbody>
