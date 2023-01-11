@@ -66,4 +66,23 @@ defmodule FunkyABX.Files.Cloud do
 
     filename
   end
+
+  # util, clean online storage of orphaned folders (from dev, bugs ...)
+  def clean_folders() do
+    Application.fetch_env!(:funkyabx, :bucket)
+    |> ExAws.S3.list_objects_v2(delimiter: "/")
+    |> ExAws.request!()
+    |> Map.get(:body)
+    |> Map.get(:common_prefixes)
+    |> Enum.each(fn %{prefix: prefix} ->
+      with folder <- prefix |> String.split("/") |> List.first(),
+           true <- String.contains?(folder, "-"),
+           test when is_nil(test) or is_nil(test.deleted_at) == false <- FunkyABX.Tests.get(folder) do
+        IO.puts "delete #{folder}"
+        delete_all(folder)
+      else
+        _ -> IO.puts "skipped #{prefix}"
+      end
+    end)
+  end
 end
