@@ -75,7 +75,7 @@ defmodule FunkyABXWeb.TestLive do
               <div class="ms-2 text-muted" role="status">
                 <small><i class="bi bi-info-circle text-extra-muted" title={dgettext("test", "Player controls")} role="button"
                   data-bs-toggle="popover" data-bs-placement="auto" data-bs-html="true"
-                  data-bs-content="<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>">
+                  data-bs-content={dgettext("test", "<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>")}>
                 </i></small>
               </div>
             <% end %>
@@ -244,6 +244,7 @@ defmodule FunkyABXWeb.TestLive do
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
     test_params = Tests.get_test_params(test)
+
     timezone =
       case get_connect_params(socket) do
         nil -> "Etc/UTC"
@@ -311,11 +312,18 @@ defmodule FunkyABXWeb.TestLive do
      })
      |> then(fn s ->
        if Tests.is_closed?(test) == true do
-         link = Routes.test_results_public_path(s, FunkyABXWeb.TestResultsLive, s.assigns.test.slug)
+         link =
+           Routes.test_results_public_path(s, FunkyABXWeb.TestResultsLive, s.assigns.test.slug)
+
          put_flash(
            s,
            :info,
-           dgettext("test", "This test has been closed. <a href=\"%{link}\">Check the results</a>", link: link) |> raw()
+           dgettext(
+             "test",
+             "This test has been closed. <a href=\"%{link}\">Check the results</a>",
+             link: link
+           )
+           |> raw()
          )
        else
          s
@@ -324,10 +332,16 @@ defmodule FunkyABXWeb.TestLive do
      |> then(fn s ->
        if test_already_taken == true do
          link = Routes.test_public_path(socket, FunkyABXWeb.TestLive, test.slug)
+
          put_flash(
            s,
            :info,
-           dgettext("test", "Your invitation has already been redeemed. <a href=\"%{link}\">Take the test anonymously instead</a>.", link: link) |> raw()
+           dgettext(
+             "test",
+             "Your invitation has already been redeemed. <a href=\"%{link}\">Take the test anonymously instead</a>.",
+             link: link
+           )
+           |> raw()
          )
        else
          s
@@ -376,7 +390,12 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> put_flash(
        :info,
-       dgettext("test", "This test has been closed. <a href=\"%{results_url}\">Check the results</a>", results_url: results_url) |> raw()
+       dgettext(
+         "test",
+         "This test has been closed. <a href=\"%{results_url}\">Check the results</a>",
+         results_url: results_url
+       )
+       |> raw()
      )
      |> redirect(
        to:
@@ -406,7 +425,10 @@ defmodule FunkyABXWeb.TestLive do
   def handle_info(%{event: "test_updated"} = _payload, socket) do
     {:noreply,
      socket
-     |> put_flash(:info, dgettext("test", "Test has been updated by its creator, so the page has been reloaded."))
+     |> put_flash(
+       :info,
+       dgettext("test", "Test has been updated by its creator, so the page has been reloaded.")
+     )
      |> redirect(
        to:
          Routes.test_public_path(
@@ -470,10 +492,16 @@ defmodule FunkyABXWeb.TestLive do
     flash_text =
       case socket.assigns.test.local do
         true ->
-          dgettext("test", "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test.")
+          dgettext(
+            "test",
+            "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test."
+          )
 
         false ->
-          dgettext("test", "One or more tracks couldn't be loaded. Please refresh the page to try again.")
+          dgettext(
+            "test",
+            "One or more tracks couldn't be loaded. Please refresh the page to try again."
+          )
       end
 
     {:noreply,
@@ -514,9 +542,9 @@ defmodule FunkyABXWeb.TestLive do
     with true <- is_binary(rotate_seconds) and rotate_seconds != "",
          seconds <- String.to_integer(rotate_seconds) do
       {:noreply,
-        socket
-        |> assign(rotate_seconds: rotate_seconds)
-        |> push_event("rotate_seconds", %{seconds: seconds})}
+       socket
+       |> assign(rotate_seconds: rotate_seconds)
+       |> push_event("rotate_seconds", %{seconds: seconds})}
     else
       _ ->
         {:noreply, socket}
@@ -617,7 +645,12 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> put_flash(
        :info,
-       dgettext("test", "You have already taken this test. <a href=\"%{results_url}\">Check the results</a>.", results_url: results_url) |> raw()
+       dgettext(
+         "test",
+         "You have already taken this test. <a href=\"%{results_url}\">Check the results</a>.",
+         results_url: results_url
+       )
+       |> raw()
      )
      |> assign(test_already_taken: true)}
   end

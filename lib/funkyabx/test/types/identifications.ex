@@ -156,12 +156,20 @@ defmodule FunkyABX.Identifications do
         |> then(fn mogrify ->
           Enum.reduce(test.tracks, {1, mogrify}, fn t, acc ->
             {index, mogrify} = acc
+
             identified_as =
               picked_ids
               |> Map.get(t.id)
               |> Tracks.find_track(test.tracks)
 
-            mogrify = Image.type_track(mogrify, start, index, "#{t.title}, identified as #{identified_as.title}")
+            mogrify =
+              Image.type_track(
+                mogrify,
+                start,
+                index,
+                "#{t.title}, identified as #{identified_as.title}"
+              )
+
             {index + 1, mogrify}
           end)
         end)

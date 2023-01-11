@@ -27,7 +27,8 @@ defmodule FunkyABX.Tests.Validators do
         |> put_change(:to_close_at_enabled, false)
         |> put_change(:to_close_at, nil)
 
-      _ -> changeset
+      _ ->
+        changeset
     end
   end
 

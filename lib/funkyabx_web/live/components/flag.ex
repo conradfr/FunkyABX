@@ -42,8 +42,14 @@ defmodule TestFlagComponent do
       |> Repo.insert()
 
     case insert do
-      {:ok, _} -> send(self(), {:flash, {:success, dgettext("test", "You have flagged this test.")}})
-      _ -> send(self(), {:flash, {:error, dgettext("test", "An error occurred, please try again later.")}})
+      {:ok, _} ->
+        send(self(), {:flash, {:success, dgettext("test", "You have flagged this test.")}})
+
+      _ ->
+        send(
+          self(),
+          {:flash, {:error, dgettext("test", "An error occurred, please try again later.")}}
+        )
     end
 
     {:noreply, assign(socket, %{flag_display: !socket.assigns.flag_display, flag_text: ""})}

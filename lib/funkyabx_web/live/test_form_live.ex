@@ -337,7 +337,7 @@ defmodule FunkyABXWeb.TestFormLive do
             </div>
           <% else %>
             <div class="alert alert-info alert-thin">
-              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= dgettext "test", "Supported formats: wav, mp3, aac, flac ... "%> <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. <%= dgettext "test", "Wav files are converted to flac." %>
+              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= dgettext "test", "Supported formats: wav, mp3, aac, flac ... "%> <a href="https://en.wikipedia.org/wiki/HTML5_audio#Supported_audio_coding_formats" target="_blank">(html5 audio)</a>. <%= dgettext "test", "Wav files are converted to flac (16bits 48k)." %>
             </div>
           <% end %>
 
@@ -498,7 +498,10 @@ defmodule FunkyABXWeb.TestFormLive do
          end
        end)
        |> assign(%{
-         page_title: dgettext("test", "Edit test - %{title}", title: String.slice(test.title, 0..@title_max_length)),
+         page_title:
+           dgettext("test", "Edit test - %{title}",
+             title: String.slice(test.title, 0..@title_max_length)
+           ),
          action: "update",
          changeset: changeset,
          test: Map.put(test, :to_close_at_timezone, get_timezone(socket)),
@@ -703,8 +706,13 @@ defmodule FunkyABXWeb.TestFormLive do
           end
 
         link = Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug)
+
         flash_text =
-          gettext("Your test has been successfully created !<br><br>You can now share the <a href=\"%{link}\">test's public link</a> for people to take it.", link: link) |> raw()
+          gettext(
+            "Your test has been successfully created !<br><br>You can now share the <a href=\"%{link}\">test's public link</a> for people to take it.",
+            link: link
+          )
+          |> raw()
 
         Process.send_after(
           self(),
@@ -1046,7 +1054,9 @@ defmodule FunkyABXWeb.TestFormLive do
 
   def error_to_string(:too_large), do: dgettext("test", "Too large")
   def error_to_string(:too_many_files), do: dgettext("test", "You have selected too many files")
-  def error_to_string(:not_accepted), do: dgettext("test", "You have selected an unacceptable file type")
+
+  def error_to_string(:not_accepted),
+    do: dgettext("test", "You have selected an unacceptable file type")
 
   # ---
 

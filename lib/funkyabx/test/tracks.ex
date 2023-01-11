@@ -110,10 +110,11 @@ defmodule FunkyABX.Tracks do
         filename_dest =
           track
           |> Map.get("url")
+          |> Download.clean_url()
           |> Files.get_destination_filename()
           |> (&Path.join([test_id, &1])).()
 
-        final_filename_dest = Files.save(download_path, filename_dest, normalization)
+        final_filename_dest = Files.save(download_path, filename_dest, [], normalization)
         File.rm(download_path)
 
         Map.merge(track, %{

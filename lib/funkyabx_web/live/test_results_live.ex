@@ -120,7 +120,10 @@ defmodule FunkyABXWeb.TestResultsLive do
 
       {:ok,
        assign(socket, %{
-         page_title: dgettext("test", "Test results - %{test_title}", test_title: String.slice(test.title, 0..@title_max_length)),
+         page_title:
+           dgettext("test", "Test results - %{test_title}",
+             test_title: String.slice(test.title, 0..@title_max_length)
+           ),
          test: test,
          result_modules: result_modules,
          current_user_id: Map.get(session, "current_user_id"),
@@ -136,7 +139,10 @@ defmodule FunkyABXWeb.TestResultsLive do
       _ ->
         {:ok,
          socket
-         |> put_flash(:info, dgettext("test", "Please take the test before checking the results."))
+         |> put_flash(
+           :info,
+           dgettext("test", "Please take the test before checking the results.")
+         )
          |> assign(test_already_taken: false)
          |> redirect(to: Routes.test_public_path(socket, FunkyABXWeb.TestLive, slug))}
     end

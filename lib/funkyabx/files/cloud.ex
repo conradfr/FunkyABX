@@ -18,27 +18,6 @@ defmodule FunkyABX.Files.Cloud do
     |> ExAws.request!()
   end
 
-  {
-    :error,
-    {
-      :http_error,
-      404,
-      %{
-        body:
-          "<?xml version='1.0' encoding='UTF-8'?>\n<Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><RequestId>txbad292a7010642cbbed05-00635bd575</RequestId><Key>0641d264-8c0a-4c3d-8588-c02606473e55/165167472
-9_1988197E85E9693364D0B7E714C8689439C8DD99.flazc</Key></Error>",
-        headers: [
-          {"x-amz-id-2", "txbad292a7010642cbbed05-00635bd575"},
-          {"x-amz-request-id", "txbad292a7010642cbbed05-00635bd575"},
-          {"content-type", "application/xml"},
-          {"date", "Fri, 28 Oct 2022 13:13:25 GMT"},
-          {"transfer-encoding", "chunked"}
-        ],
-        status_code: 404
-      }
-    }
-  }
-
   # Delete all from test
   @impl true
   def delete_all(test_id) do
@@ -76,7 +55,7 @@ defmodule FunkyABX.Files.Cloud do
       Application.fetch_env!(:funkyabx, :bucket)
       |> ExAws.S3.list_objects_v2(prefix: test_id)
       |> ExAws.stream!()
-      |> Enum.find(%{}, & &1.key == key)
+      |> Enum.find(%{}, &(&1.key == key))
       |> Map.get(:key, nil)
 
     unless object_key == nil do

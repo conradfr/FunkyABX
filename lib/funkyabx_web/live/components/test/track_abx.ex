@@ -65,8 +65,11 @@ defmodule FunkyABXWeb.TestTrackAbxComponent do
     ([""] ++ Enum.to_list(1..Kernel.length(test.tracks)))
     |> Enum.map(fn choice ->
       case choice do
-        choice when is_integer(choice) -> {dgettext("site", "Track %{choice}", choice: Integer.to_string(choice)), choice}
-        choice -> choice
+        choice when is_integer(choice) ->
+          {dgettext("site", "Track %{choice}", choice: Integer.to_string(choice)), choice}
+
+        choice ->
+          choice
       end
     end)
   end
