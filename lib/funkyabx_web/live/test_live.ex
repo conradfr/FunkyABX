@@ -130,18 +130,28 @@ defmodule FunkyABXWeb.TestLive do
                 </button>
               <% end %>
             </div>
-              <%= if @test.anonymized_track_title == false do %>
-                <div class="p-2 text-truncate cursor-link" style="width: 300px;" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
-                  <%= track.title %>
-                </div>
-              <% else %>
-                <div class="p-2 cursor-link" style={"min-width: #{if @test.type == :listening, do: "300", else: "100"}px"} phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
-                  <%= dgettext "test", "Track %{track_index}", track_index: i %>
-                </div>
-              <% end %>
-            <div class="flex-grow-1 px-2 px-md-3" style="min-width: 100px" id={"waveform-#{Tracks.get_track_hash(track)}"}>
-              <div phx-update="ignore" id={"waveform-wrapper-#{Tracks.get_track_hash(track)}"} class="waveform-wrapper">
+            <%= if @test.anonymized_track_title == false do %>
+              <div class="p-2 text-truncate cursor-link" style="width: 300px;" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
+                <%= track.title %>
               </div>
+            <% else %>
+              <div class="p-2 cursor-link" style={"min-width: #{if @test.type == :listening, do: "300", else: "100"}px"} phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
+                <%= dgettext "test", "Track %{track_index}", track_index: i %>
+              </div>
+            <% end %>
+
+            <div class="flex-grow-1 px-2 px-md-3 " style="position: relative; min-width: 100px" id={"waveform-#{Tracks.get_track_hash(track)}"}>
+              <div :if={@test.local == false and @tracks_loaded == false} class="track-loading-indicator text-muted">
+                <small :if={get_track_state(track.hash, @tracks_state) == :loading}><%= dgettext "test", "Loading ... %{progress}%", progress: get_track_progress(track.hash, @tracks_loading) %></small>
+                <small :if={get_track_state(track.hash, @tracks_state) == :decoding}><%= dgettext "test", "Decoding..." %>
+                  <div class="spinner-grow spinner-grow-sm ms-2 text-muted" role="status">
+                    <span class="visually-hidden"><%= dgettext "test", "Decoding..." %></span>
+                  </div>
+                </small>
+                <small :if={get_track_state(track.hash, @tracks_state) == :finished}><%= dgettext "test", "Done " %> <i class="bi bi-check"></i></small>
+                <small :if={get_track_state(track.hash, @tracks_state) == :error}><%= dgettext "test", "Error" %> <i class="bi bi-x-circle"></i></small>
+              </div>
+              <div phx-update="ignore" id={"waveform-wrapper-#{Tracks.get_track_hash(track)}"} class="waveform-wrapper"></div>
             </div>
 
             <%= unless @test_already_taken == true do %>
@@ -218,10 +228,12 @@ defmodule FunkyABXWeb.TestLive do
        test_data: data,
        test: test,
        tracks: tracks,
+       tracks_state: %{},
+       tracks_loading: %{},
+       tracks_loaded: false,
        choices_modules: choices_modules,
        test_params: test_params,
        current_round: 1,
-       tracks_loaded: false,
        current_track: nil,
        loop: true,
        rotate: true,
@@ -288,11 +300,13 @@ defmodule FunkyABXWeb.TestLive do
        ip_address: Map.get(session, "visitor_ip", nil),
        test: test,
        tracks: tracks,
+       tracks_state: %{},
+       tracks_loading: %{},
+       tracks_loaded: false,
        choices_modules: choices_modules,
        test_params: test_params,
        session_id: session_id,
        current_round: 1,
-       tracks_loaded: false,
        current_track: nil,
        loop: true,
        rotate: true,
@@ -509,6 +523,28 @@ defmodule FunkyABXWeb.TestLive do
      |> assign(tracks_loaded: false)
      |> push_event("set_warning_local_test_reload", %{set: false})
      |> put_flash(:error, flash_text)}
+  end
+
+  @impl true
+  def handle_event("track_state", %{"track_hash" => track_hash, "state" => status} = _params, socket) do
+    tracks_state=
+      socket.assigns.tracks_state
+      |> Map.put(track_hash, String.to_atom(status))
+
+    {:noreply,
+      socket
+      |> assign(tracks_state: tracks_state)}
+  end
+
+  @impl true
+  def handle_event("track_progress", %{"track_hash" => track_hash, "progress" => progress} = _params, socket) do
+    tracks_loading =
+      socket.assigns.tracks_loading
+      |> Map.put(track_hash, progress)
+
+    {:noreply,
+      socket
+      |> assign(tracks_loading: tracks_loading)}
   end
 
   @impl true
@@ -809,4 +845,19 @@ defmodule FunkyABXWeb.TestLive do
     |> DateTime.shift_zone!(timezone)
     |> Cldr.DateTime.to_string!(format: :medium)
   end
+
+  defp get_track_state(track_hash, tracks_state) when is_map_key(tracks_state, track_hash) do
+    tracks_state
+    |> Map.get(track_hash)
+  end
+
+  defp get_track_state(_track_hash, _tracks_loading), do: :loading
+
+  defp get_track_progress(track_hash, tracks_loading) when is_map_key(tracks_loading, track_hash) do
+    tracks_loading
+    |> Map.get(track_hash)
+    |> Kernel.round()
+  end
+
+  defp get_track_progress(_track_hash, _tracks_loading), do: 0
 end

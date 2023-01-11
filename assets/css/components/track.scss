@@ -7,6 +7,12 @@
 
     background-color: $track-bg-color;
 
+    .track-loading-indicator {
+      position: absolute;
+      top: 10px;
+      min-width: 100px;
+    }
+
     &.track-active {
       background-color: $track-active-bg-color;
 

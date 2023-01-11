@@ -1,10 +1,12 @@
-export const STATE_UNINITIALIZED = 0;
-export const STATE_LOADING = 1;
-export const STATE_DECODING = 2;
-export const STATE_FINISHED = 3;
+export const STATE_UNINITIALIZED = 'loading';
+export const STATE_LOADING = 'loading';
+export const STATE_DECODING = 'decoding';
+export const STATE_FINISHED = 'finished';
+export const STATE_ERROR = 'error';
 
 export default class {
-  constructor(src, ac, ee, audioFiles) {
+  constructor(hash, src, ac, ee, audioFiles) {
+    this.hash = hash;
     this.src = src;
     this.ac = ac;
     this.audioRequestState = STATE_UNINITIALIZED;
@@ -14,7 +16,10 @@ export default class {
 
   setStateChange(state) {
     this.audioRequestState = state;
-    this.ee.emit('audiorequeststatechange', this.audioRequestState, this.src);
+    this.ee.emit('audiorequeststatechange', {
+      track_hash: this.hash,
+      state: this.audioRequestState
+    });
   }
 
   fileProgress(e) {
@@ -28,7 +33,7 @@ export default class {
       percentComplete = (e.loaded / e.total) * 100;
     }
 
-    this.ee.emit('loadprogress', percentComplete, this.src);
+    this.ee.emit('loadprogress', {track_hash: this.hash, progress: percentComplete});
   }
 
   fileLoad(e) {
@@ -46,6 +51,7 @@ export default class {
           resolve(audioBuffer);
         },
         (err) => {
+          this.setStateChange(STATE_ERROR);
           if (err === null) {
             // Safari issues with null error
             reject(Error('MediaDecodeAudioDataUnknownContentType'));

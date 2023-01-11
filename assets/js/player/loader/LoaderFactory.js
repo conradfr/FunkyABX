@@ -5,7 +5,7 @@ import StoredFileLoader from './StoredFileLoader';
 export default class {
   static createLoader(trackInfo, ac, ee, audioFiles) {
     if (trackInfo.local === false && typeof trackInfo.url === 'string') {
-      return new XHRLoader(trackInfo.url, ac, ee);
+      return new XHRLoader(trackInfo.hash, trackInfo.url, ac, ee);
     }
 
     /* if (trackInfo.local === true) {
@@ -13,7 +13,7 @@ export default class {
     } */
 
     if (trackInfo.local === true) {
-      return new StoredFileLoader(trackInfo.id, ac, ee, audioFiles);
+      return new StoredFileLoader(trackInfo.hash, trackInfo.id, ac, ee, audioFiles);
     }
 
     throw new Error('Unsupported src type');

@@ -80,6 +80,26 @@ export default class {
       }
     });
 
+    this.ee.on('audiorequeststatechange', ({ track_hash, state }) => {
+      this.ee.emit('push_event', {
+        event: 'track_state',
+        data: {
+          track_hash: track_hash,
+          state: state
+        }
+      });
+    });
+
+    this.ee.on('loadprogress', ({ track_hash, progress }) => {
+      this.ee.emit('push_event', {
+        event: 'track_progress',
+        data: {
+          track_hash: track_hash,
+          progress: progress
+        }
+      });
+    });
+
     /* eslint-disable camelcase */
     this.ee.on('waveform-click', (params) => {
       const { track_hash, time } = params;
@@ -229,7 +249,9 @@ export default class {
     this.setState(playerState.PLAYER_STOPPED);
 
     this.tracks.forEach((track) => {
-      track.stop();
+      if (typeof track.stop === 'function') {
+        track.stop();
+      }
     });
   }
 
@@ -237,7 +259,9 @@ export default class {
     this.setState(playerState.PLAYER_PAUSED);
 
     this.tracks.forEach((track) => {
-      track.pause();
+      if (typeof track.pause === 'function') {
+        track.pause();
+      }
     });
   }
 
