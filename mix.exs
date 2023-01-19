@@ -79,7 +79,8 @@ defmodule FunkyABX.MixProject do
       {:shortuuid, "~> 2.1"},
       {:ex_machina, "~> 2.7.0", only: [:test]},
       {:oban, "~> 2.13"},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:ex_cldr_plugs, "~> 1.2.0"}
     ]
   end
 
