@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.14.2-erlang-25.1.2-ubuntu-bionic-20210930
+FROM hexpm/elixir:1.14.3-erlang-25.2.1-ubuntu-bionic-20221130
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
