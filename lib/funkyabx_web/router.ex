@@ -6,6 +6,13 @@ defmodule FunkyABXWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
+
+    plug Cldr.Plug.PutLocale,
+      apps: [:cldr, :gettext],
+      from: [:accept_language, :cookie, :session, :query],
+      gettext: FunkyABXWeb.Gettext,
+      cldr: FunkyABX.Cldr
+
     plug :fetch_live_flash
     plug :put_root_layout, {FunkyABXWeb.LayoutView, :root}
     plug :protect_from_forgery

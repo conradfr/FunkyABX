@@ -59,6 +59,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :funkyabx, FunkyABXWeb.Gettext,
+  default_locale: "en",
+  locales: ~w(en fr)
+
 config :ex_cldr,
   default_locale: "en",
   default_backend: FunkyABX.Cldr
