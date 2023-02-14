@@ -24,9 +24,6 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
         _ ->
           assigns
       end
-      |> assign_new(:visitor_identification_score, fn ->
-        {666, 1020}
-      end)
 
     ~H"""
       <div>
