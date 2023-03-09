@@ -8,7 +8,7 @@ defmodule TestDescriptionComponent do
 
   def format(assigns) do
     ~H"""
-      <div class={@wrapper_class}>
+      <div class={@wrapper_class} :if={@description != nil}>
         <%= if @description_markdown == true do %>
           <%= raw(Earmark.as_html!(@description, escape: false, inner_html: true)) %>
         <% else %>
