@@ -170,7 +170,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <% end %>
                   </div>
                 </div>
-                <%= unless @test.type == :listening do %>
+                <%= unless get_field(@changeset, :type) == :listening do %>
                   <div class="mb-3">
                     <label for="" class="form-label"><%= dgettext "test", "Test private results page" %></label>
                     <div class="input-group mb-3">
@@ -395,6 +395,17 @@ defmodule FunkyABXWeb.TestFormLive do
               </div>
             </fieldset>
           </div>
+        </div>
+
+        <div :if={get_field(@changeset, :type) != :listening and track_count(inputs_for(f, :tracks), @tracks_to_delete) > 0} class="alert alert-warning alert-thin">
+          <i class="bi bi-info-circle"></i>&nbsp;&nbsp;
+          <%= raw dgettext "test", "Please use descriptive names to have relevant results. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page (as seen on the <a target=\"_blank\" href=\"/test/demo\">demo</a>)." %>
+        </div>
+
+        <div :if={get_field(@changeset, :type) == :listening and get_field(@changeset, :public) == true and track_count(inputs_for(f, :tracks), @tracks_to_delete) > 0}
+            class="alert alert-warning alert-thin">
+          <i class="bi bi-info-circle"></i>&nbsp;&nbsp;
+          <%= raw dgettext "test", "Please use descriptive names." %>
         </div>
 
         <%= error_tag f, :tracks %>
