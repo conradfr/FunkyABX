@@ -2,6 +2,7 @@ defmodule FunkyABXWeb.UserResetPasswordController do
   use FunkyABXWeb, :controller
 
   alias FunkyABX.Accounts
+  alias FunkyABXWeb.Router.Helpers, as: Routes
 
   plug :get_user_by_reset_password_token when action in [:edit, :update]
 

@@ -13,7 +13,7 @@ defmodule DisqusComponent do
           <div phx-update="ignore" id="disqus_thread"></div>
           <script phx-update="ignore" id="disqus_thread_js">
             var disqus_config = function () {
-            this.page.url = '<%= Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, @test.slug) %>';
+            this.page.url = '<%= url(~p"/results/#{@test.slug}") %>';
             this.page.identifier = '<%= NaiveDateTime.to_iso8601(@test.inserted_at) %>-<%= @test.slug %>';
             };
               (function() {

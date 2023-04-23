@@ -35,8 +35,8 @@ defmodule FunkyABXWeb.TestResultsLive do
         <div class="col-12 col-sm-3">
           <h5 class="mt-3 header-neon"><%= dgettext "test", "Your test:" %></h5>
           <div class="your-test rounded p-2 mb-4">
-            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;<%= dgettext "test", "Share:" %> <a href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug, s: ShortUUID.encode!(@session_id))}><%= dgettext "test", "link to my results" %></a></div>
-            <div><i class="bi bi-image"></i>&nbsp;&nbsp;<%= dgettext "test", "Image:" %> <a target="_blank" href={Routes.test_path(@socket, :image, Image.get_filename(@session_id))}><%= dgettext "test", "my results" %></a></div>
+            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;<%= dgettext "test", "Share:" %> <a href={url(~p"/results/#{@test.slug}?s=#{ShortUUID.encode!(@session_id)}")}><%= dgettext "test", "link to my results" %></a></div>
+            <div><i class="bi bi-image"></i>&nbsp;&nbsp;<%= dgettext "test", "Image:" %> <a target="_blank" href={url(~p"/img/results/#{Image.get_filename(@session_id)}")}><%= dgettext "test", "my results" %></a></div>
           </div>
         </div>
       </div>
@@ -47,13 +47,13 @@ defmodule FunkyABXWeb.TestResultsLive do
 
       <div :if={@test.local == true} class="mt-3 d-flex justify-content-between results-actions">
         <div>
-          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}><%= dgettext "test", "Go back to the test form" %></.link>
+          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={~p"/local_test/edit/#{@test_data}"} replace={true}><%= dgettext "test", "Go back to the test form" %></.link>
         </div>
         <div>
-          <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link navigate={Routes.local_test_path(@socket, FunkyABXWeb.TestLive, @test_data)} replace={true}><%= dgettext "test", "Take the test again" %></.link>
+          <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link navigate={~p"/local_test/#{@test_data}"} replace={true}><%= dgettext "test", "Take the test again" %></.link>
         </div>
         <div>
-          <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action"><%= dgettext "test", "Create a new local test" %></.link>
+          <i class="bi bi-plus color-action"></i>&nbsp;<.link href={~p"/local_test"} class="color-action"><%= dgettext "test", "Create a new local test" %></.link>
         </div>
       </div>
 
@@ -144,7 +144,7 @@ defmodule FunkyABXWeb.TestResultsLive do
            dgettext("test", "Please take the test before checking the results.")
          )
          |> assign(test_already_taken: false)
-         |> redirect(to: Routes.test_public_path(socket, FunkyABXWeb.TestLive, slug))}
+         |> redirect(to: ~p"/test/#{slug}")}
     end
   end
 
@@ -154,13 +154,8 @@ defmodule FunkyABXWeb.TestResultsLive do
       {:noreply,
        socket
        |> redirect(
-         to:
-           Routes.test_public_path(
-             socket,
-             FunkyABXWeb.TestLive,
-             socket.assigns.test.slug
-           )
-       )}
+         to: ~p"/test/#{socket.assigns.test.slug}")
+      }
     else
       _ -> {:noreply, socket}
     end
@@ -251,12 +246,8 @@ defmodule FunkyABXWeb.TestResultsLive do
      socket
      |> put_flash(:error, "This test has been deleted :(")
      |> redirect(
-       to:
-         Routes.info_path(
-           socket,
-           FunkyABXWeb.FlashLive
-         )
-     )}
+       to: ~p"/info")
+    }
   end
 
   @impl true

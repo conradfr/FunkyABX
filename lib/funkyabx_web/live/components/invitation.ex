@@ -33,7 +33,7 @@ defmodule InvitationComponent do
           <tr :for={invitation <- @test.invitations}>
             <td><%= invitation.name_or_email %></td>
             <td class="text-center">
-              <a href={Routes.test_public_url(@socket, FunkyABXWeb.TestLive, @test.slug, i: ShortUUID.encode!(invitation.id))}><i class="bi bi-share"></i></a>
+              <a href={~p"/test/#{@test.slug}?i=#{ShortUUID.encode!(invitation.id)}"}><i class="bi bi-share"></i></a>
             </td>
             <td class="text-center">
               <%= if invitation.clicked == true do %>
@@ -44,7 +44,7 @@ defmodule InvitationComponent do
             </td>
             <td :if={@test.type != :listening} class="text-center">
               <%= if invitation.test_taken == true do %>
-                <a target="_blank" href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug, s: invitation.id)}>
+                <a target="_blank" href={~p"/results/#{@test.slug}?s=#{invitation.id}"}>
                   <i class="bi bi-eye"></i>
                 </a>
               <% else %>

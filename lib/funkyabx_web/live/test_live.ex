@@ -167,10 +167,10 @@ defmodule FunkyABXWeb.TestLive do
         <div class="d-flex flex-row align-items-center justify-content-between">
           <%= unless @test_params.has_choices == false do %>
             <div :if={@test.local == true} class="results-actions">
-              <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={Routes.local_test_edit_path(@socket, FunkyABXWeb.LocalTestFormLive, @test_data)} replace={true}><%= dgettext "test", "Go back to the test form" %></.link>
+              <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={~p"/local_test/edit/#{@test_data}"} replace={true}><%= dgettext "test", "Go back to the test form" %></.link>
             </div>
             <div :if={@test.local == true} class="results-actions">
-              <i class="bi bi-plus color-action"></i>&nbsp;<.link href={Routes.local_test_new_path(@socket, FunkyABXWeb.LocalTestFormLive)} class="color-action"><%= dgettext "test", "Create a new local test" %></.link>
+              <i class="bi bi-plus color-action"></i>&nbsp;<.link href={~p"/local_test"} class="color-action"><%= dgettext "test", "Create a new local test" %></.link>
             </div>
             <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
               <%= unless @test.local == true do %>
@@ -183,7 +183,7 @@ defmodule FunkyABXWeb.TestLive do
             </div>
             <% else %>
               <div class="text-end px-1 flex-fill">
-                <.link :if={@test.local == false} href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, @test.slug)} class="btn btn-primary"><%= dgettext "test", "Check the results" %></.link>
+                <.link :if={@test.local == false} href={~p"/results/#{@test.slug}"} class="btn btn-primary"><%= dgettext "test", "Check the results" %></.link>
               </div>
             <% end %>
           <% else %>
@@ -345,15 +345,13 @@ defmodule FunkyABXWeb.TestLive do
      end)
      |> then(fn s ->
        if test_already_taken == true do
-         link = Routes.test_public_path(socket, FunkyABXWeb.TestLive, test.slug)
-
          put_flash(
            s,
            :info,
            dgettext(
              "test",
              "Your invitation has already been redeemed. <a href=\"%{link}\">Take the test anonymously instead</a>.",
-             link: link
+             link: ~p"/test/#{test.slug}"
            )
            |> raw()
          )
@@ -382,24 +380,12 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> put_flash(:info, "This test has been reopened.")
      |> redirect(
-       to:
-         Routes.test_public_path(
-           socket,
-           FunkyABXWeb.TestLive,
-           socket.assigns.test.slug
-         )
+       to: ~p"/test/#{socket.assigns.test.slug}"
      )}
   end
 
   @impl true
   def handle_info(%{event: "test_closed"} = _payload, socket) do
-    results_url =
-      Routes.test_results_public_path(
-        socket,
-        FunkyABXWeb.TestResultsLive,
-        socket.assigns.test.slug
-      )
-
     {:noreply,
      socket
      |> put_flash(
@@ -407,17 +393,12 @@ defmodule FunkyABXWeb.TestLive do
        dgettext(
          "test",
          "This test has been closed. <a href=\"%{results_url}\">Check the results</a>",
-         results_url: results_url
+         results_url: ~p"/results/#{socket.assigns.test.slug}"
        )
        |> raw()
      )
      |> redirect(
-       to:
-         Routes.test_public_path(
-           socket,
-           FunkyABXWeb.TestLive,
-           socket.assigns.test.slug
-         )
+       to: ~p"/test/#{socket.assigns.test.slug}"
      )}
   end
 
@@ -427,11 +408,7 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> put_flash(:error, dgettext("test", "This test has been deleted :("))
      |> redirect(
-       to:
-         Routes.info_path(
-           socket,
-           FunkyABXWeb.FlashLive
-         )
+       to: ~p"/info"
      )}
   end
 
@@ -444,12 +421,7 @@ defmodule FunkyABXWeb.TestLive do
        dgettext("test", "Test has been updated by its creator, so the page has been reloaded.")
      )
      |> redirect(
-       to:
-         Routes.test_public_path(
-           socket,
-           FunkyABXWeb.TestLive,
-           socket.assigns.test.slug
-         )
+       to: ~p"/test/#{socket.assigns.test.slug}"
      )}
   end
 
@@ -670,12 +642,7 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_event("test_already_taken", _params, socket) do
-    results_url =
-      Routes.test_results_public_path(
-        socket,
-        FunkyABXWeb.TestResultsLive,
-        socket.assigns.test.slug
-      )
+    results_url = ~p"/results/#{socket.assigns.test.slug}"
 
     {:noreply,
      socket
@@ -737,13 +704,7 @@ defmodule FunkyABXWeb.TestLive do
       {:noreply,
        socket
        |> push_redirect(
-         to:
-           Routes.local_test_results_path(
-             socket,
-             FunkyABXWeb.TestResultsLive,
-             socket.assigns.test_data,
-             choices_cleaned
-           ),
+         to: ~p"/local_test/results/#{socket.assigns.test_data}/#{choices_cleaned}",
          redirect: false
        )}
     else
@@ -785,22 +746,13 @@ defmodule FunkyABXWeb.TestLive do
 
       Process.send_after(
         self(),
-        {:redirect_results,
-         Routes.test_results_public_path(
-           socket,
-           FunkyABXWeb.TestResultsLive,
-           test.slug
-         )},
+        {:redirect_results, ~p"/results/#{socket.assigns.test.slug}"},
         1000
       )
 
       {:noreply,
        socket
        |> push_event("store_test", %{choices: choices_cleaned, session_id: session_id})
-       # |> push_redirect(
-       #     to: Routes.test_results_public_path(socket, FunkyABXWeb.TestResultsLive, socket.assigns.test.slug),
-       #     replace: true
-       # )
        |> put_flash(:success, dgettext("test", "Your submission has been registered!"))}
     else
       _ ->
@@ -817,12 +769,7 @@ defmodule FunkyABXWeb.TestLive do
   def handle_event("no_participate", _params, socket) do
     Process.send_after(
       self(),
-      {:skip_to_results,
-       Routes.test_results_public_path(
-         socket,
-         FunkyABXWeb.TestResultsLive,
-         socket.assigns.test.slug
-       )},
+      {:skip_to_results, ~p"/results/#{socket.assigns.test.slug}"},
       1000
     )
 

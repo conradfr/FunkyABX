@@ -9,12 +9,14 @@ defmodule FunkyABX.Application do
   def start(_type, _args) do
     children = [
       FunkyABX.Cache,
-      # Start the Ecto repository
-      FunkyABX.Repo,
       # Start the Telemetry supervisor
       FunkyABXWeb.Telemetry,
+      # Start the Ecto repository
+      FunkyABX.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: FunkyABX.PubSub},
+      # Start Finch
+      {Finch, name: FunkyABX.Finch},
       {Task.Supervisor, name: FunkyABX.TaskSupervisor},
       {Oban, Application.fetch_env!(:funkyabx, Oban)},
       # Start the Endpoint (http/https)

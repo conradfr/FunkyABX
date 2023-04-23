@@ -1,0 +1,36 @@
+<h3 class="mb-4 mt-0 header-chemyretro" id="test-form-header"><%= dgettext "test", "Gallery" %></h3>
+<div class="d-flex flex-wrap justify-content-center">
+  <%= for test <- @tests do %>
+    <div class="gallery-test align-self-stretch rounded me-2 mb-2 d-flex flex-column">
+      <div class="gallery-test-title text-center p-2 px-3">
+        <%= link test.title, to: ~p"/test/#{test.slug}", class: "header-typographica" %>
+      </div>
+      <%= unless test.author == nil do %>
+        <div class="gallery-test-by p-2 px-3 text-center">
+          <h7 class="mb-0 header-neon text-truncate"><%= dgettext "test", "By %{author}", author: test.author %></h7>
+        </div>
+      <% end %>
+      <%= unless test.description == nil do %>
+        <TestDescriptionComponent.format wrapper_class="flex-fill gallery-test-description p-2 px-3" description_markdown={test.description_markdown} description={test.description} />
+      <% else %>
+        <div class="test-tracklist mt-2 mb-4 p-3 py-2">
+          <p><strong>Tracks:</strong></p>
+          <%= for {track, i} <- test.tracks |> Enum.with_index(1) do %>
+          <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
+          <% end %>
+        </div>
+      <% end %>
+      <div class="mt-auto">
+        <div :if={test.type != :listening} class="py-1 text-center gallery-test-taken">
+          <%= dngettext "test", "Test taken %{count} time", "Test taken %{count} times", test.taken %>
+        </div>
+        <div class="py-1 text-center gallery-test-link">
+          <%= link dgettext("test", "View"), to: ~p"/test/#{test.slug}" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <%= if length(@tests) == 0 do %>
+  <div><%= dgettext "test", "No public tests yet :(" %></div>
+  <% end %>
+</div>

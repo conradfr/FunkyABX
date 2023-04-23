@@ -4,19 +4,12 @@ defmodule FunkyABX.MixProject do
   def project do
     [
       app: :funkyabx,
-      version: "0.2.5",
-      elixir: "~> 1.13",
+      version: "0.1.0",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: Mix.compilers() ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
-      releases: [
-        prod: [
-          include_executables_for: [:unix],
-          applications: [runtime_tools: :permanent]
-        ]
-      ]
+      deps: deps()
     ]
   end
 
@@ -39,22 +32,23 @@ defmodule FunkyABX.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:pbkdf2_elixir, "~> 2.0"},
-      {:phoenix, "~> 1.6.0"},
+      {:phoenix, "~> 1.7.1"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 3.0"},
+      {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.18.0"},
-      {:floki, ">= 0.33.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.6"},
-      #      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.7"},
+      {:phoenix_live_view, "~> 0.18.16"},
+      {:floki, ">= 0.30.0", only: :test},
+      {:phoenix_live_dashboard, "~> 0.7.2"},
+#      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+#      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
+      {:swoosh, "~> 1.3"},
+      {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.2"},
-      {:jason, "~> 1.4"},
+      {:gettext, "~> 0.20"},
+      {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:ecto_autoslug_field, "~> 3.0"},
       {:earmark, "1.4.20"},
@@ -80,7 +74,8 @@ defmodule FunkyABX.MixProject do
       {:ex_machina, "~> 2.7.0", only: [:test]},
       {:oban, "~> 2.13"},
       {:tzdata, "~> 1.1"},
-      {:ex_cldr_plugs, "~> 1.2.0"}
+      {:ex_cldr_plugs, "~> 1.2.0"},
+      {:pbkdf2_elixir, "~> 2.0"},
     ]
   end
 
@@ -92,7 +87,7 @@ defmodule FunkyABX.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "cmd --cd assets npm install"],
+      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],

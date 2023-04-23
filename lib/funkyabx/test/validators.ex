@@ -18,6 +18,19 @@ defmodule FunkyABX.Tests.Validators do
     |> password_values(changeset)
   end
 
+  def ensure_not_public_when_listening(changeset) do
+    type = get_field(changeset, :type)
+
+    case type do
+      :listening ->
+        changeset
+        |> put_change(:public, false)
+
+      _ ->
+        changeset
+    end
+  end
+
   def ensure_no_to_close_at_when_listening(changeset) do
     type = get_field(changeset, :type)
 
@@ -141,6 +154,16 @@ defmodule FunkyABX.Tests.Validators do
     case type do
       :abx -> changeset
       _ -> put_change(changeset, :nb_of_rounds, 1)
+    end
+  end
+
+  def validate_nb_tracks(changeset, min) do
+    tracks = get_field(changeset, :tracks)
+
+    if length(tracks) < min do
+      add_error(changeset, :type, "A test needs to have at least two tracks.")
+    else
+      changeset
     end
   end
 end

@@ -16,9 +16,31 @@ config :funkyabx,
 # Configures the endpoint
 config :funkyabx, FunkyABXWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: FunkyABXWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [
+    formats: [html: FunkyABXWeb.ErrorHTML, json: FunkyABXWeb.ErrorJSON],
+    layout: false
+  ],
   pubsub_server: FunkyABX.PubSub,
-  live_view: [signing_salt: "bNwuWfzu"]
+  live_view: [signing_salt: "6XEXEKnK"]
+
+# Configures the mailer
+#
+# By default it uses the "Local" adapter which stores the emails
+# locally. You can see the emails in your browser, at "/dev/mailbox".
+#
+# For production it's recommended to configure a different adapter
+# at the `config/runtime.exs`.
+config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
+
+# Configure esbuild (the version is required)
+#config :esbuild,
+#  version: "0.14.41",
+#  default: [
+#    args:
+#      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+#    cd: Path.expand("../assets", __DIR__),
+#    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+#  ]
 
 config :mime, :types, %{
   #  "audio/ogg" => ["ogg"]
@@ -54,7 +76,7 @@ config :swoosh, :api_client, false
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id, :user_id]
+  metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
@@ -88,13 +110,13 @@ config :funkyabx, FunkyABX.Cache,
   # backend: :shards,
   # GC interval for pushing new generation: 12 hrs
   gc_interval: :timer.hours(12),
-  # Max 1 million entries in cache
+   # Max 1 million entries in cache
   max_size: 1_00_000,
-  # Max 2 GB of memory
+   # Max 2 GB of memory
   allocated_memory: 2_000_000_000,
-  # GC min timeout: 10 sec
+   # GC min timeout: 10 sec
   gc_cleanup_min_timeout: :timer.seconds(10),
-  # GC min timeout: 10 min
+   # GC min timeout: 10 min
   gc_cleanup_max_timeout: :timer.minutes(10)
 
 config :funkyabx, Oban,

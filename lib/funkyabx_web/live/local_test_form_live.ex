@@ -1,5 +1,6 @@
 defmodule FunkyABXWeb.LocalTestFormLive do
   import Ecto.Changeset
+
   require Logger
   use FunkyABXWeb, :live_view
 
@@ -247,18 +248,11 @@ defmodule FunkyABXWeb.LocalTestFormLive do
           |> Jason.encode!()
           |> Base.url_encode64()
 
-        url =
-          Routes.local_test_path(
-            FunkyABXWeb.Endpoint,
-            FunkyABXWeb.TestLive,
-            test_encoded
-          )
-
         {
           :noreply,
           socket
           |> push_event("store_params_and_redirect", %{
-            "url" => url,
+            "url" =>  ~p"/local_test/#{test_encoded}",
             "params" => [
               %{
                 "name" => "identification",

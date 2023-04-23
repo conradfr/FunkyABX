@@ -7,11 +7,11 @@ defmodule FunkyABXWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_funkyabx_key",
-    signing_salt: "dLpZhLVv"
+    signing_salt: "4WY4WK0b",
+    same_site: "Lax"
   ]
 
-  socket "/live", Phoenix.LiveView.Socket,
-    websocket: [connect_info: [:peer_data, session: @session_options]]
+  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -22,6 +22,7 @@ defmodule FunkyABXWeb.Endpoint do
     from: :funkyabx,
     gzip: true,
     cache_control_for_etags: "max-age=86400",
+#    only: FunkyABXWeb.static_paths()
     only:
       ~w(uploads assets fonts images favicon.ico favicon.png robots.txt apple-touch-icon.png apple-touch-icon-precomposed.png apple-touch-icon-57x57.png apple-touch-icon-72x72.png apple-touch-icon-76x76.png apple-touch-icon-114x114.png apple-touch-icon-120x120.png apple-touch-icon-144x144.png apple-touch-icon-152x152.png apple-touch-icon-180x180.png)
 

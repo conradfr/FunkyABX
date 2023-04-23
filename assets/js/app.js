@@ -13,9 +13,9 @@ import '../css/app.scss';
 // The simplest option is to put them in assets/vendor and
 // import them using relative paths:
 //
-//     import "./vendor/some-package.js"
+//     import "../vendor/some-package.js"
 //
-// Alternatively, you can `npm install some-package` and import
+// Alternatively, you can `npm install some-package --prefix assets` and import
 // them using a path starting with the package name:
 //
 //     import "some-package"
@@ -54,7 +54,7 @@ Hooks.Player.setAudioFiles(audioFiles);
 Hooks.LocalTestForm.setAudioFiles(audioFiles);
 Hooks.TestResults.setAudioFiles(audioFiles);
 
-const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');
+const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content')
 const liveSocket = new LiveSocket('/live', Socket, {
   hooks: Hooks,
   params: {
@@ -65,15 +65,16 @@ const liveSocket = new LiveSocket('/live', Socket, {
 });
 
 // Show progress bar on live navigation and form submits
-topbar.config({ barColors: { 0: '#29d' }, shadowColor: 'rgba(0, 0, 0, .3)' });
-window.addEventListener('phx:page-loading-start', () => topbar.show());
-window.addEventListener('phx:page-loading-stop', () => topbar.hide());
+topbar.config({ barColors: {0: '#29d'}, shadowColor: 'rgba(0, 0, 0, .3)' });
+window.addEventListener('phx:page-loading-start', _info => topbar.show(300));
+window.addEventListener('phx:page-loading-stop', _info => topbar.hide());
 
 // connect if there are any LiveViews on the page
 liveSocket.connect();
 
 // expose liveSocket on window for web console debug logs and latency simulation:
-// liveSocket.enableDebug();
+// >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
-window.liveSocket = liveSocket;
+window.liveSocket = liveSocket
+

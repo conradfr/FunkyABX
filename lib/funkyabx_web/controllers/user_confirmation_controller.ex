@@ -2,6 +2,7 @@ defmodule FunkyABXWeb.UserConfirmationController do
   use FunkyABXWeb, :controller
 
   alias FunkyABX.Accounts
+  alias FunkyABXWeb.Router.Helpers, as: Routes
 
   def new(conn, _params) do
     render(conn, :new)

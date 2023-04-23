@@ -118,9 +118,11 @@ defmodule FunkyABX.Test do
     |> Validators.ensure_not_public_when_password_and_encode()
     |> Validators.ensure_no_notification_when_not_logged()
     |> Validators.ensure_no_to_close_at_when_listening()
+    |> Validators.ensure_not_public_when_listening()
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
     |> Validators.validate_nb_rounds()
     |> Validators.validate_anonymized()
+#    |> Validators.validate_nb_tracks(@minimum_tracks)
     |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
     |> validate_length(:tracks,
       min: @minimum_tracks,
@@ -162,9 +164,11 @@ defmodule FunkyABX.Test do
     |> Validators.ensure_not_public_when_password_and_encode()
     |> Validators.ensure_no_notification_when_not_logged()
     |> Validators.ensure_no_to_close_at_when_listening()
+    |> Validators.ensure_not_public_when_listening()
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
     |> Validators.validate_nb_rounds()
     |> Validators.validate_anonymized()
+#    |> Validators.validate_nb_tracks(@minimum_tracks)
     |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
     |> validate_length(:tracks,
       min: @minimum_tracks,
@@ -199,6 +203,7 @@ defmodule FunkyABX.Test do
 
   def changeset_reset_upload_url(test) do
     test
+#    |> Validators.validate_nb_tracks(@minimum_tracks)
     |> cast(%{upload_url: nil}, [:upload_url])
   end
 

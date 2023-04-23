@@ -13,7 +13,7 @@ defmodule FunkyABXWeb.Plugs.TestTaken do
       test when is_nil(test) or not is_nil(test.deleted_at) ->
         conn
         |> put_status(:not_found)
-        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorView)
+        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorHTML)
         |> Phoenix.Controller.render(:"404")
         |> halt()
 

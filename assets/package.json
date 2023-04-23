@@ -1,27 +1,27 @@
 {
   "name": "funkyabx",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
     "bootstrap": "^5.2.3",
-    "browser-fs-access": "^0.31.1",
-    "draw-wave": "^2.0.0",
-    "eventemitter3": "^4.0.7",
+    "browser-fs-access": "^0.33.0",
+    "eventemitter3": "^5.0.0",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view"
   },
   "devDependencies": {
-    "esbuild": "^0.14.54",
-    "esbuild-sass-plugin": "^2.4.5",
-    "eslint": "^8.31.0",
+    "esbuild": "^0.16.17",
+    "esbuild-sass-plugin": "2.6.0",
+    "eslint": "^8.36.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0"
+    "eslint-plugin-import": "^2.27.5",
+    "sass": "^1.62.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "GPL-3.0-only"
 }

@@ -139,9 +139,9 @@ defmodule FunkyABXWeb.TestFormLive do
                   </label>
                     <% test_url =
                         if input_value(f, :embed) == "true" do
-                          Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug), embed: "1")
+                          url(~p"/test/#{input_value(f, :slug)}?embed=1")
                         else
-                          Routes.test_public_url(@socket, FunkyABXWeb.TestLive, input_value(f, :slug))
+                          url(~p"/test/#{input_value(f, :slug)}")
                         end
                     %>
                   <div class="input-group mb-3">
@@ -156,36 +156,36 @@ defmodule FunkyABXWeb.TestFormLive do
                   <label for="test_edit_link" class="form-label"><%= dgettext "test", "Test edit page" %> <span class="form-text"><%= dgettext "test", "(this page)" %></span></label>
                   <div class="input-group mb-3">
                     <%= if @current_user do %>
-                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))) %>
-                      <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}>
+                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: url(~p"/edit/#{input_value(f, :slug)}")) %>
+                      <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={url(~p"/edit/#{input_value(f, :slug)}")}>
                         <i class="bi bi-clipboard"></i>
                       </button>
-                      <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={Routes.test_edit_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={url(~p"/edit/#{input_value(f, :slug)}")}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% else %>
-                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))) %>
-                        <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}>
+                      <%= text_input(f, :edit_link, class: "form-control", readonly: "readonly", value: url(~p"/edit/#{input_value(f, :slug)}/#{input_value(f, :access_key)}")) %>
+                        <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={url(~p"/edit/#{input_value(f, :slug)}/#{input_value(f, :access_key)}")}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                      <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={Routes.test_edit_private_url(@socket, FunkyABXWeb.TestFormLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
+                      <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={url(~p"/edit/#{input_value(f, :slug)}/#{input_value(f, :access_key)}")}><i class="bi bi-box-arrow-up-right"></i></a>
                     <% end %>
                   </div>
                 </div>
                 <%= unless get_field(@changeset, :type) == :listening do %>
                   <div class="mb-3">
-                    <label for="" class="form-label"><%= dgettext "test", "Test private results page" %></label>
+                    <label for="" class="form-label"><%= dgettext "test", "Test private results page" %> <span class="form-text"><%= dgettext "test", "(if you don't take the test)" %></span></label>
                     <div class="input-group mb-3">
                       <%= if @current_user do %>
-                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))) %>
-                        <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}>
+                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: url(~p"/results/#{input_value(f, :slug)}")) %>
+                        <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={url(~p"/results/#{input_value(f, :slug)}")}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={Routes.test_results_public_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug))}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={url(~p"/results/#{input_value(f, :slug)}")}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% else %>
-                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))) %>
-                        <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}>
+                        <%= text_input(f, :results_link, class: "form-control", readonly: "readonly", value: url(~p"/results/#{input_value(f, :slug)}/#{input_value(f, :access_key)}")) %>
+                        <button class="btn btn-info" type="button" title={dgettext("site", "Copy to clipboard")} phx-click="clipboard" phx-value-text={url(~p"/results/#{input_value(f, :slug)}/#{input_value(f, :access_key)}")}>
                           <i class="bi bi-clipboard"></i>
                         </button>
-                        <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={Routes.test_results_private_url(@socket, FunkyABXWeb.TestResultsLive, input_value(f, :slug), input_value(f, :access_key))}><i class="bi bi-box-arrow-up-right"></i></a>
+                        <a class="btn btn-light" type="button" target="_blank" title={dgettext("site", "Open in a new tab")} href={url(~p"/results/#{input_value(f, :slug)}/#{input_value(f, :access_key)}")}><i class="bi bi-box-arrow-up-right"></i></a>
                       <% end %>
                     </div>
                   </div>
@@ -194,13 +194,13 @@ defmodule FunkyABXWeb.TestFormLive do
                   <hr>
                   <div class="d-flex justify-content-evenly">
                     <button :if={@test.type !== :listening and Tests.is_closed?(@test) == false} type="button" class="btn btn-info" data-confirm={dgettext("site", "Are you sure?")} phx-click="close_test">
-                      <i class="bi bi-x-circle"></i> <%= dgettext "test", "Close the test" %>
+                      <i class="bi bi-x-circle"></i>&nbsp;&nbsp;<%= dgettext "test", "Close the test" %>
                     </button>
                     <button :if={Tests.is_closed?(@test)} type="button" class="btn btn-warning" data-confirm="Are you sure?" phx-click="close_test">
                       <i class="bi bi-check-circle"></i> <%= dgettext "test", "Reopen the test" %>
                     </button>
                     <button type="button" class="btn btn-danger" data-confirm={dgettext("site", "Are you sure?")} phx-click="delete_test">
-                      <i class="bi bi-trash"></i> <%= dgettext "test", "Delete the test" %>
+                      <i class="bi bi-trash"></i>&nbsp;&nbsp;<%= dgettext "test", "Delete the test" %>
                     </button>
                   </div>
                 </div>
@@ -216,11 +216,11 @@ defmodule FunkyABXWeb.TestFormLive do
             </div>
             <% else %>
               <div class="w-100 text-center d-none d-sm-block" style="padding-top: 200px;">
-                <div class="form-example rounded-1 d-none" id="example-picking"><img title={dgettext("site", "Picking example")} src={Routes.static_path(@socket, "/images/example-picking.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-stars"><img title={dgettext("site", "Stars example")} src={Routes.static_path(@socket, "/images/example-stars.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-ranking"><img title={dgettext("site", "Ranking example")} src={Routes.static_path(@socket, "/images/example-ranking.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-identification"><img title={dgettext("site", "Identification example")} src={Routes.static_path(@socket, "/images/example-identification.png")}></div>
-                <div class="form-example rounded-1 d-none" id="example-abx"><img title={dgettext("site", "Abx example")} src={Routes.static_path(@socket, "/images/example-abx.png")}></div>
+                <div class="form-example rounded-1 d-none" id="example-picking"><img title={dgettext("site", "Picking example")} src={~p"/images/example-picking.png"}></div>
+                <div class="form-example rounded-1 d-none" id="example-stars"><img title={dgettext("site", "Stars example")} src={~p"/images/example-stars.png"}></div>
+                <div class="form-example rounded-1 d-none" id="example-ranking"><img title={dgettext("site", "Ranking example")} src={~p"/images/example-ranking.png"}></div>
+                <div class="form-example rounded-1 d-none" id="example-identification"><img title={dgettext("site", "Identification example")} src={~p"/images/example-identification.png"}></div>
+                <div class="form-example rounded-1 d-none" id="example-abx"><img title={dgettext("site", "Abx example")} src={~p"/images/example-abx.png"}></div>
               </div>
             <% end %>
           </div>
@@ -266,10 +266,14 @@ defmodule FunkyABXWeb.TestFormLive do
               <div class="col-12 col-md-6">
                 <div class="form-check">
                   <label class="form-check-label">
-                    <%= checkbox(f, :public, class: "form-check-input") %>
+                    <%= checkbox(f, :public, class: "form-check-input", disabled: get_field(@changeset, :type) == :listening and get_field(@changeset, :public) == false) %>
                     &nbsp;&nbsp;<%= dgettext "test", "The test is public" %>
                   </label>
-                  <div class="form-text"><%= dgettext "test", "It will be published in the gallery 15 minutes after its creation" %></div>
+                  <%= if get_field(@changeset, :type) != :listening do %>
+                    <div class="form-text"><%= dgettext "test", "It will be published in the gallery 15 minutes after its creation" %></div>
+                  <% else %>
+                    <div class="form-text"><i class="bi bi-exclamation-circle"></i> <%= dgettext "test", "Listening tests can't be public" %></div>
+                  <% end %>
                 </div>
               </div>
               <div class="col-12 col-md-6 pt-3 pt-md-0">
@@ -528,7 +532,7 @@ defmodule FunkyABXWeb.TestFormLive do
        )}
     else
       _ ->
-        {:ok, redirect(socket, to: Routes.test_new_path(socket, FunkyABXWeb.TestFormLive))}
+        {:ok, redirect(socket, to: ~p"/test")}
     end
   end
 
@@ -655,18 +659,9 @@ defmodule FunkyABXWeb.TestFormLive do
         # logged or not
         redirect =
           unless test.password == nil do
-            Routes.test_edit_private_path(
-              FunkyABXWeb.Endpoint,
-              FunkyABXWeb.TestFormLive,
-              test.slug,
-              test.password
-            )
+            ~p"/results/#{test.slug}/#{test.password}"
           else
-            Routes.test_edit_path(
-              FunkyABXWeb.Endpoint,
-              FunkyABXWeb.TestFormLive,
-              test.slug
-            )
+            ~p"/edit/#{test.slug}"
           end
 
         flash_text = dgettext("test", "Your test has been successfully updated.")
@@ -702,21 +697,12 @@ defmodule FunkyABXWeb.TestFormLive do
         # logged or not
         redirect =
           unless test.password == nil do
-            Routes.test_edit_private_path(
-              FunkyABXWeb.Endpoint,
-              FunkyABXWeb.TestFormLive,
-              test.slug,
-              test.password
-            )
+            ~p"/edit/#{test.slug}/#{test.password}"
           else
-            Routes.test_edit_path(
-              FunkyABXWeb.Endpoint,
-              FunkyABXWeb.TestFormLive,
-              test.slug
-            )
+            ~p"/edit/#{test.slug}"
           end
 
-        link = Routes.test_public_url(socket, FunkyABXWeb.TestLive, test.slug)
+        link = url(~p"/test/#{test.slug}")
 
         flash_text =
           gettext(
@@ -766,7 +752,6 @@ defmodule FunkyABXWeb.TestFormLive do
             ]
           })
           |> put_flash(:success, flash_text)
-          #         |> push_redirect(to: redirect, replace: true)
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -852,18 +837,9 @@ defmodule FunkyABXWeb.TestFormLive do
     # logged or not
     redirect =
       unless test.password == nil do
-        Routes.test_edit_private_path(
-          FunkyABXWeb.Endpoint,
-          FunkyABXWeb.TestFormLive,
-          test.slug,
-          test.password
-        )
+        ~p"/results/#{test.slug}/#{test.password}"
       else
-        Routes.test_edit_path(
-          FunkyABXWeb.Endpoint,
-          FunkyABXWeb.TestFormLive,
-          test.slug
-        )
+        ~p"/results/#{test.slug}"
       end
 
     flash_text = "Your test has been successfully updated."
@@ -905,7 +881,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
     Process.send_after(
       self(),
-      {:redirect, Routes.info_path(socket, FunkyABXWeb.FlashLive), flash_text},
+      {:redirect, ~p"/info", flash_text},
       1500
     )
 
@@ -1040,7 +1016,9 @@ defmodule FunkyABXWeb.TestFormLive do
     temp_id = UUID.generate()
 
     tracks =
-      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
+#      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
+      socket.assigns.changeset
+      |> get_field(:tracks)
       |> Enum.concat([
         Track.changeset(
           %Track{

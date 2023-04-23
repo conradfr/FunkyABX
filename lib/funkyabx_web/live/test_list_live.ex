@@ -22,7 +22,7 @@ defmodule FunkyABXWeb.TestListLive do
           <tbody class="table-striped">
             <%= for test <- @tests do %>
               <tr>
-                <td><.link href={Routes.test_public_path(@socket, FunkyABXWeb.TestLive, test.slug)} class="test-link"><%= test.title %></.link></td>
+                <td><.link href={~p"/test/#{test.slug}"} class="test-link"><%= test.title %></.link></td>
                 <td class="text-center"><%= format_date(test.inserted_at) %></td>
                 <td class="text-center">
                   <%= unless test.view_count == nil do %>
@@ -33,12 +33,12 @@ defmodule FunkyABXWeb.TestListLive do
                 </td>
                   <%= unless test.type == :listening do %>
                     <!-- <td class="text-center">-</td> -->
-                    <td class="text-center"><.link href={Routes.test_results_public_path(@socket, FunkyABXWeb.TestResultsLive, test.slug)}>results</.link></td>
+                    <td class="text-center"><.link href={~p"/results/#{test.slug}"}>results</.link></td>
                   <% else %>
                     <!-- <td class="text-center">-</td> -->
                     <td class="text-center">-</td>
                   <% end %>
-                <td class="text-center"><.link href={Routes.test_edit_path(@socket, FunkyABXWeb.TestFormLive, test.slug)}><%= dgettext "test", "edit / delete" %></.link></td>
+                <td class="text-center"><.link href={~p"/edit/#{test.slug}"}><%= dgettext "test", "edit / delete" %></.link></td>
               </tr>
             <% end %>
           </tbody>
