@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.14.3-erlang-25.2.1-ubuntu-bionic-20221130
+FROM hexpm/elixir:1.14.4-erlang-25.3-ubuntu-bionic-20230126
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
@@ -13,7 +13,6 @@ ARG TEMP_FOLDER=${TEMP_FOLDER}
 ARG MIX_ENV=${MIX_ENV}
 ARG TZ=${TZ}
 ARG ORIGIN=${ORIGIN}
-ARG HOST=${HOST}
 ARG CDN_PREFIX=${CDN_PREFIX}
 ARG S3_ACCESS_KEY=${S3_ACCESS_KEY}
 ARG S3_SECRET_KEY=${S3_SECRET_KEY}
@@ -27,14 +26,14 @@ ARG EMAIL_FROM=${EMAIL_FROM}
 ARG EMAIL_TO=${EMAIL_TO}
 ARG ANALYTICS=${ANALYTICS}
 ARG DISQUS_ID=${DISQUS_ID}
-ARG IMG_RESULTS=${IMG_RESULTS}
+ARG PHX_SERVER=${PHX_SERVER}
+ARG PHX_HOST=${PHX_HOST}
 
 ENV DATABASE_URL=${DATABASE_URL} \
     PORT=${PORT} \
     SECRET_KEY_BASE=${SECRET_KEY_BASE} \
     MIX_ENV=${MIX_ENV} \
     ORIGIN=${ORIGIN} \
-    HOST=${HOST} \
     FLAC_FOLDER=${FLAC_FOLDER} \
     TEMP_FOLDER=${TEMP_FOLDER} \
     TZ=${TZ} \
@@ -51,7 +50,8 @@ ENV DATABASE_URL=${DATABASE_URL} \
     EMAIL_TO=${EMAIL_TO} \
     ANALYTICS=${ANALYTICS} \
     DISQUS_ID=${DISQUS_ID} \
-    IMG_RESULTS=${IMG_RESULTS}
+    PHX_SERVER=${PHX_SERVER} \
+    PHX_HOST=${PHX_HOST}
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
     ffmpeg curl imagemagick

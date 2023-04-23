@@ -37,8 +37,7 @@ if config_env() == :prod do
     analytics: System.get_env("ANALYTICS") || nil,
     bucket: System.get_env("S3_BUCKET") || "",
     flac_folder: System.get_env("FLAC_FOLDER"),
-    temp_folder: System.get_env("TEMP_FOLDER"),
-    img_results_path: System.get_env("IMG_RESULTS") || nil
+    temp_folder: System.get_env("TEMP_FOLDER")
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
