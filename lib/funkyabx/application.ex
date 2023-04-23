@@ -11,6 +11,7 @@ defmodule FunkyABX.Application do
       FunkyABX.Cache,
       # Start the Telemetry supervisor
       FunkyABXWeb.Telemetry,
+      {Registry, [keys: :unique, name: FunkyABXRegistry]},
       # Start the Ecto repository
       FunkyABX.Repo,
       # Start the PubSub system

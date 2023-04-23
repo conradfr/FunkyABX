@@ -7,7 +7,7 @@ defmodule FunkyABXWeb.TestFormLive do
   alias Phoenix.LiveView.JS
   alias FunkyABX.Repo
   alias FunkyABX.Tests.FormUtils
-  alias FunkyABX.{Accounts, Test, Tests, Track, Files, Tracks, TestClosing}
+  alias FunkyABX.{Accounts, Utils, Test, Tests, Track, Files, Tracks, TestClosing}
 
   @title_max_length 100
 
@@ -517,6 +517,7 @@ defmodule FunkyABXWeb.TestFormLive do
            dgettext("test", "Edit test - %{title}",
              title: String.slice(test.title, 0..@title_max_length)
            ),
+         page_id: Utils.get_page_id_from_socket(socket),
          action: "update",
          changeset: changeset,
          test: Map.put(test, :to_close_at_timezone, get_timezone(socket)),
@@ -576,6 +577,7 @@ defmodule FunkyABXWeb.TestFormLive do
      end)
      |> assign(%{
        page_title: dgettext("test", "Create test"),
+       page_id: Utils.get_page_id_from_socket(socket),
        action: "save",
        changeset: changeset,
        test: test,
@@ -656,26 +658,12 @@ defmodule FunkyABXWeb.TestFormLive do
         |> Enum.map(fn t -> t.filename end)
         |> Files.delete(socket.assigns.test.id)
 
-        # logged or not
-        redirect =
-          unless test.password == nil do
-            ~p"/results/#{test.slug}/#{test.password}"
-          else
-            ~p"/edit/#{test.slug}"
-          end
+        dgettext("test", "Your test has been successfully updated.") |> Utils.send_success_toast(socket.assigns.page_id)
 
-        flash_text = dgettext("test", "Your test has been successfully updated.")
+        test = Tests.get_edit(test.slug)
+        changeset = Test.changeset_update(test) |> IO.inspect()
 
-        Process.send_after(
-          self(),
-          {:redirect, redirect, flash_text},
-          1000
-        )
-
-        {:noreply,
-         socket
-         |> assign(test: test)
-         |> put_flash(:success, flash_text)}
+        {:noreply, assign(socket, test: test, changeset: changeset, test_submittable: true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset, tracks_to_delete: [])}
@@ -780,6 +768,7 @@ defmodule FunkyABXWeb.TestFormLive do
       socket.assigns.test
       |> Test.changeset_update(updated_test_params)
       |> update_action(socket.assigns.action)
+      |> IO.inspect()
 
     {:noreply,
      assign(socket,
@@ -828,32 +817,19 @@ defmodule FunkyABXWeb.TestFormLive do
 
     Tests.clean_get_test_cache(test)
 
-    # (value has not been locally updated)
+    # update data
+    test = Tests.get_edit(test.slug)
+
     case Tests.is_closed?(test) do
-      true -> FunkyABXWeb.Endpoint.broadcast!(test.id, "test_opened", nil)
-      false -> FunkyABXWeb.Endpoint.broadcast!(test.id, "test_closed", nil)
+      false -> FunkyABXWeb.Endpoint.broadcast!(test.id, "test_opened", nil)
+      true -> FunkyABXWeb.Endpoint.broadcast!(test.id, "test_closed", nil)
     end
 
-    # logged or not
-    redirect =
-      unless test.password == nil do
-        ~p"/results/#{test.slug}/#{test.password}"
-      else
-        ~p"/results/#{test.slug}"
-      end
+    changeset = Test.changeset_update(test)
 
-    flash_text = "Your test has been successfully updated."
+    dgettext("test", "Your test has been successfully updated.") |> Utils.send_success_toast(socket.assigns.page_id)
 
-    Process.send_after(
-      self(),
-      {:redirect, redirect, flash_text},
-      1000
-    )
-
-    {:noreply,
-     socket
-     |> assign(test: test)
-     |> put_flash(:success, flash_text)}
+    {:noreply, assign(socket, test: test, changeset: changeset, test_submittable: true)}
   end
 
   @impl true

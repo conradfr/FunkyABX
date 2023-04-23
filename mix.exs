@@ -58,7 +58,9 @@ defmodule FunkyABX.MixProject do
       {:hackney, "~> 1.18"},
       {:sweet_xml, "~> 0.7.1"},
       {:gen_smtp, "~> 1.1"},
+      {:ex_cldr, "~> 2.33"},
       {:ex_cldr_dates_times, "~> 2.0"},
+      {:ex_cldr_plugs, "~> 1.2.0"},
       {:httpoison, "~> 1.8"},
       {:remote_ip, "~> 1.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
@@ -74,8 +76,7 @@ defmodule FunkyABX.MixProject do
       {:ex_machina, "~> 2.7.0", only: [:test]},
       {:oban, "~> 2.13"},
       {:tzdata, "~> 1.1"},
-      {:ex_cldr_plugs, "~> 1.2.0"},
-      {:pbkdf2_elixir, "~> 2.0"},
+      {:pbkdf2_elixir, "~> 2.0"}
     ]
   end
 

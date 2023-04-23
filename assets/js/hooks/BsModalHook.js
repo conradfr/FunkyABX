@@ -4,7 +4,11 @@ const BsModalHook = {
     this.modal = null;
     const id = this.el.dataset.id;
 
-    this.open = () => {
+    this.open = (_event) => {
+/*      if (event.detail.id !== id) {
+        return;
+      }*/
+
       this.modal = new bootstrap.Modal(`#${id}`);
       this.modal.show();
     };

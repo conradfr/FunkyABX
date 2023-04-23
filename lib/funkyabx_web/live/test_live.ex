@@ -326,8 +326,7 @@ defmodule FunkyABXWeb.TestLive do
      })
      |> then(fn s ->
        if Tests.is_closed?(test) == true do
-         link =
-           Routes.test_results_public_path(s, FunkyABXWeb.TestResultsLive, s.assigns.test.slug)
+         link = url(~p"/results/#{s.assigns.test.slug}")
 
          put_flash(
            s,

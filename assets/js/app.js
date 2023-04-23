@@ -22,13 +22,14 @@ import '../css/app.scss';
 //
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
-import 'phoenix_html';
+import "phoenix_html";
 // Establish Phoenix Socket and LiveView configuration.
-import { Socket } from 'phoenix';
-import { LiveSocket } from 'phoenix_live_view';
-import topbar from '../vendor/topbar';
+import { Socket } from "phoenix";
+import { LiveSocket } from "phoenix_live_view";
+import topbar from "../vendor/topbar";
 
 // App hooks
+import BsToastHook from './hooks/BsToastHook';
 import BsModalHook from './hooks/BsModalHook';
 import TestHook from './hooks/TestHook';
 import LocalTestFormHook from './hooks/LocalTestFormHook';
@@ -39,6 +40,7 @@ import PlayerHook from './hooks/PlayerHook';
 const audioFiles = {};
 const Hooks = {};
 
+Hooks.BsToast = BsToastHook;
 Hooks.BsModal = BsModalHook;
 Hooks.Test = TestHook;
 Hooks.LocalTestForm = LocalTestFormHook;
@@ -59,6 +61,7 @@ const liveSocket = new LiveSocket('/live', Socket, {
   hooks: Hooks,
   params: {
     _csrf_token: csrfToken,
+    page_id: Math?.floor(Math.random() * 100000000000000000000),
     locale: Intl.NumberFormat().resolvedOptions().locale,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
   }
