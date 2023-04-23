@@ -10,17 +10,24 @@ defmodule FunkyABXWeb.TestTrackStarComponent do
       end)
 
     ~H"""
-      <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0 test-starring">
-          <div class="me-auto flex-grow-1 flex-md-grow-0">
-            <span class="me-3 text-muted small"><%= dgettext "test", "I rate this track ..." %></span>
-          </div>
-          <div class=" p-0 p-md-3 flex-fill">
-            <%= for star <- 1..5 do %>
-              <i title={star} class={"bi bi-star#{if Map.get(@starred, @track.id, 0) >= star, do: "-fill"}"}
-                phx-click="star_track" phx-value-track_id={@track.id} phx-value-star={star} phx-target={@myself}></i>
-            <% end %>
-          </div>
+    <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0 test-starring">
+      <div class="me-auto flex-grow-1 flex-md-grow-0">
+        <span class="me-3 text-muted small"><%= dgettext("test", "I rate this track ...") %></span>
       </div>
+      <div class=" p-0 p-md-3 flex-fill">
+        <%= for star <- 1..5 do %>
+          <i
+            title={star}
+            class={"bi bi-star#{if Map.get(@starred, @track.id, 0) >= star, do: "-fill"}"}
+            phx-click="star_track"
+            phx-value-track_id={@track.id}
+            phx-value-star={star}
+            phx-target={@myself}
+          >
+          </i>
+        <% end %>
+      </div>
+    </div>
     """
   end
 

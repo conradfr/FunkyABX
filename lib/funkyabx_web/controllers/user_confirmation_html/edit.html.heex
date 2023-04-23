@@ -1,12 +1,14 @@
-<h1><%= dgettext "user", "Confirm account" %></h1>
+<h1><%= dgettext("user", "Confirm account") %></h1>
 
 <.form :let={_f} for={:user} action={Routes.user_confirmation_path(@conn, :update, @token)}>
   <div>
-    <%= submit dgettext("user", "Confirm my account") %>
+    <%= submit(dgettext("user", "Confirm my account")) %>
   </div>
 </.form>
 
 <p>
-  <%= link dgettext("user", "Register"), to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link dgettext("user", "Log in"), to: Routes.user_session_path(@conn, :new) %>
+  <%= link(dgettext("user", "Register"), to: Routes.user_registration_path(@conn, :new)) %> | <%= link(
+    dgettext("user", "Log in"),
+    to: Routes.user_session_path(@conn, :new)
+  ) %>
 </p>

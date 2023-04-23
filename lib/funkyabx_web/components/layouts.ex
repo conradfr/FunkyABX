@@ -46,7 +46,7 @@ defmodule FunkyABXWeb.Layouts do
     with release_version when is_binary(release_version) <- get_release_version() do
       "?v=#{release_version}"
     else
-      _ -> ""
+      _ -> "?v=dev"
     end
   end
 

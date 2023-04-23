@@ -77,11 +77,12 @@ defmodule FunkyABX.Files.Cloud do
     |> Enum.each(fn %{prefix: prefix} ->
       with folder <- prefix |> String.split("/") |> List.first(),
            true <- String.contains?(folder, "-"),
-           test when is_nil(test) or is_nil(test.deleted_at) == false <- FunkyABX.Tests.get(folder) do
-        IO.puts "delete #{folder}"
+           test when is_nil(test) or is_nil(test.deleted_at) == false <-
+             FunkyABX.Tests.get(folder) do
         delete_all(folder)
       else
-        _ -> IO.puts "skipped #{prefix}"
+        _ ->
+          :ok
       end
     end)
   end

@@ -22,49 +22,80 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
       end
 
     ~H"""
-      <div>
-        <h4 class="mt-3 header-neon"><%= dgettext "test", "ABX" %></h4>
+    <div>
+      <h4 class="mt-3 header-neon"><%= dgettext("test", "ABX") %></h4>
 
-        <div :if={@visitor_guesses != nil} class="mb-3">
-          <%= raw dgettext "test", "Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>", visitor_guesses: @visitor_guesses, nb_of_rounds: @test.nb_of_rounds %>
-          <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
+      <div :if={@visitor_guesses != nil} class="mb-3">
+        <%= raw(
+          dgettext("test", "Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>",
+            visitor_guesses: @visitor_guesses,
+            nb_of_rounds: @test.nb_of_rounds
+          )
+        ) %>
+        <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
+      </div>
+
+      <div class="tracks my-2 mb-1 track-results results">
+        <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin">
+          <%= dgettext("test", "No test taken ... yet!") %>
         </div>
+        <%= for {%{correct: guess, count: count, probability: probability}, i} <- @abx |> Enum.with_index(1) do %>
+          <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
+            <div class="p-3">
+              <%= if (guess < 4) do %>
+                <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
+              <% else %>
+                #<%= i %>
+              <% end %>
+            </div>
+            <div class="p-3 ps-1 text-end">
+              <%= raw(
+                dgettext("test", "Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>",
+                  guess: guess,
+                  nb_of_rounds: @test.nb_of_rounds
+                )
+              ) %>
+            </div>
 
-        <div class="tracks my-2 mb-1 track-results results">
-          <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin"><%= dgettext "test", "No test taken ... yet!" %></div>
-          <%= for {%{correct: guess, count: count, probability: probability}, i} <- @abx |> Enum.with_index(1) do %>
-            <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
-              <div class="p-3">
-                <%= if (guess < 4) do %>
-                  <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
+            <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+              <div
+                :if={@visitor_guesses == guess}
+                class="p-3 flex-grow-1 text-sm-end text-start pe-5 small"
+              >
+                <%= if @is_another_session == true do %>
+                  <%= dgettext("test", "Scored") %>
                 <% else %>
-                  #<%= i %>
+                  <%= dgettext("test", "Your score!") %>
                 <% end %>
               </div>
-              <div class="p-3 ps-1 text-end">
-                <%= raw dgettext "test", "Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>", guess: guess, nb_of_rounds: @test.nb_of_rounds %>
-              </div>
-
-              <div class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <div :if={@visitor_guesses == guess} class="p-3 flex-grow-1 text-sm-end text-start pe-5 small">
-                  <%= if @is_another_session == true do %>
-                    <%= dgettext "test", "Scored" %>
-                  <% else %>
-                    <%= dgettext "test", "Your score!" %>
-                  <% end %>
-                </div>
-              </div>
-              <div :if={Kernel.length(@test.tracks) == 2} class="d-flex flex-grow-1 justify-content-end align-items-center">
-                <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small"><%= dgettext "test", "Confidence that this result is better than chance: %{probability}%", probability: probability %></div>
-              </div>
-              <div class="p-3 ps-0 text-end">
-                <%= dngettext "test", "%{count} time", "%{count} times", count %>
+            </div>
+            <div
+              :if={Kernel.length(@test.tracks) == 2}
+              class="d-flex flex-grow-1 justify-content-end align-items-center"
+            >
+              <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small">
+                <%= dgettext(
+                  "test",
+                  "Confidence that this result is better than chance: %{probability}%",
+                  probability: probability
+                ) %>
               </div>
             </div>
-          <% end %>
-        </div>
-        <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw dgettext "test", "A 95% confidence level is commonly considered statistically significant (<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-muted\">source</a>)." %></div>
+            <div class="p-3 ps-0 text-end">
+              <%= dngettext("test", "%{count} time", "%{count} times", count) %>
+            </div>
+          </div>
+        <% end %>
       </div>
+      <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small">
+        <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(
+          dgettext(
+            "test",
+            "A 95% confidence level is commonly considered statistically significant (<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-muted\">source</a>)."
+          )
+        ) %>
+      </div>
+    </div>
     """
   end
 

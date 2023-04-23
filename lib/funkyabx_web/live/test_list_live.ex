@@ -7,43 +7,47 @@ defmodule FunkyABXWeb.TestListLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <div>
-        <table class="table">
-          <thead>
+    <div>
+      <table class="table">
+        <thead>
           <tr>
-            <th scope="col" class="text-center w-50"><%= dgettext "test", "Title" %></th>
-            <th scope="col" class="text-center w-25"><%= dgettext "test", "Created" %></th>
-            <th scope="col" class="text-center"><%= dgettext "test", "Views" %></th>
+            <th scope="col" class="text-center w-50"><%= dgettext("test", "Title") %></th>
+            <th scope="col" class="text-center w-25"><%= dgettext("test", "Created") %></th>
+            <th scope="col" class="text-center"><%= dgettext("test", "Views") %></th>
             <!-- <th scope="col" class="text-center"><%= dgettext "test", "Taken" %></th> -->
-            <th scope="col" class="text-center"><%= dgettext "test", "Results" %></th>
-            <th scope="col" class="text-center"><%= dgettext "test", "Actions" %></th>
+            <th scope="col" class="text-center"><%= dgettext("test", "Results") %></th>
+            <th scope="col" class="text-center"><%= dgettext("test", "Actions") %></th>
           </tr>
-          </thead>
-          <tbody class="table-striped">
-            <%= for test <- @tests do %>
-              <tr>
-                <td><.link href={~p"/test/#{test.slug}"} class="test-link"><%= test.title %></.link></td>
-                <td class="text-center"><%= format_date(test.inserted_at) %></td>
-                <td class="text-center">
-                  <%= unless test.view_count == nil do %>
-                    <%= test.view_count %>
-                  <% else %>
-                    -
-                  <% end %>
-                </td>
-                  <%= unless test.type == :listening do %>
-                    <!-- <td class="text-center">-</td> -->
-                    <td class="text-center"><.link href={~p"/results/#{test.slug}"}>results</.link></td>
-                  <% else %>
-                    <!-- <td class="text-center">-</td> -->
-                    <td class="text-center">-</td>
-                  <% end %>
-                <td class="text-center"><.link href={~p"/edit/#{test.slug}"}><%= dgettext "test", "edit / delete" %></.link></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+        </thead>
+        <tbody class="table-striped">
+          <%= for test <- @tests do %>
+            <tr>
+              <td>
+                <.link href={~p"/test/#{test.slug}"} class="test-link"><%= test.title %></.link>
+              </td>
+              <td class="text-center"><%= format_date(test.inserted_at) %></td>
+              <td class="text-center">
+                <%= unless test.view_count == nil do %>
+                  <%= test.view_count %>
+                <% else %>
+                  -
+                <% end %>
+              </td>
+              <%= unless test.type == :listening do %>
+                <!-- <td class="text-center">-</td> -->
+                <td class="text-center"><.link href={~p"/results/#{test.slug}"}>results</.link></td>
+              <% else %>
+                <!-- <td class="text-center">-</td> -->
+                <td class="text-center">-</td>
+              <% end %>
+              <td class="text-center">
+                <.link href={~p"/edit/#{test.slug}"}><%= dgettext("test", "edit / delete") %></.link>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
     """
   end
 

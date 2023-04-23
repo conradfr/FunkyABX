@@ -13,27 +13,48 @@ defmodule InvitationComponent do
     ~H"""
     <div>
       <div class="input-group mt-1">
-        <input type="text" class="form-control w-25" placeholder={dgettext("site", "Name or email")} aria-label={dgettext("site", "Send to this email")} aria-describedby="button--name_or_email"
-          phx-keyup="name_or_email_text" phx-target={@myself}>
-        <button class={"btn btn-secondary#{if @name_or_email == "", do: " disabled"}"} id="button-name_or_email" type="button"
-          phx-click="name_or_email_submit" phx-target={@myself}><%= dgettext "test", "Send" %></button>
+        <input
+          type="text"
+          class="form-control w-25"
+          placeholder={dgettext("site", "Name or email")}
+          aria-label={dgettext("site", "Send to this email")}
+          aria-describedby="button--name_or_email"
+          phx-keyup="name_or_email_text"
+          phx-target={@myself}
+        />
+        <button
+          class={"btn btn-secondary#{if @name_or_email == "", do: " disabled"}"}
+          id="button-name_or_email"
+          type="button"
+          phx-click="name_or_email_submit"
+          phx-target={@myself}
+        >
+          <%= dgettext("test", "Send") %>
+        </button>
       </div>
-      <div class="form-text"><%= dgettext "test", "An email will be sent if you enter a valid address, otherwise an invitation link will be generated. Use \",`\" to separate multiple names/addresses." %></div>
-      <hr>
-      <table class="table table-sm table-borderless" :if={length(@test.invitations) > 0}>
+      <div class="form-text">
+        <%= dgettext(
+          "test",
+          "An email will be sent if you enter a valid address, otherwise an invitation link will be generated. Use \",`\" to separate multiple names/addresses."
+        ) %>
+      </div>
+      <hr />
+      <table :if={length(@test.invitations) > 0} class="table table-sm table-borderless">
         <thead class="text-center">
           <tr>
-            <th><%= dgettext "test", "Name or email" %></th>
-            <th class="w-15"><%= dgettext "test", "Link" %></th>
-            <th class="w-15"><%= dgettext "test", "Clicked" %></th>
-            <th :if={@test.type != :listening} class="w-15"><%= dgettext "test", "Taken" %></th>
+            <th><%= dgettext("test", "Name or email") %></th>
+            <th class="w-15"><%= dgettext("test", "Link") %></th>
+            <th class="w-15"><%= dgettext("test", "Clicked") %></th>
+            <th :if={@test.type != :listening} class="w-15"><%= dgettext("test", "Taken") %></th>
           </tr>
         </thead>
         <tbody class="table-group-divider">
           <tr :for={invitation <- @test.invitations}>
             <td><%= invitation.name_or_email %></td>
             <td class="text-center">
-              <a href={~p"/test/#{@test.slug}?i=#{ShortUUID.encode!(invitation.id)}"}><i class="bi bi-share"></i></a>
+              <a href={~p"/test/#{@test.slug}?i=#{ShortUUID.encode!(invitation.id)}"}>
+                <i class="bi bi-share"></i>
+              </a>
             </td>
             <td class="text-center">
               <%= if invitation.clicked == true do %>
@@ -54,7 +75,9 @@ defmodule InvitationComponent do
           </tr>
         </tbody>
       </table>
-      <div :if={length(@test.invitations) == 0}><%= dgettext "test", "No invitation sent yet." %></div>
+      <div :if={length(@test.invitations) == 0}>
+        <%= dgettext("test", "No invitation sent yet.") %>
+      </div>
     </div>
     """
   end

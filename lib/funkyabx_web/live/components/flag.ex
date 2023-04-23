@@ -8,13 +8,36 @@ defmodule TestFlagComponent do
 
   def render(assigns) do
     ~H"""
-      <div class="text-end">
-        <span class="fs-9 text-muted cursor-link" phx-target={@myself} phx-click="flag_toggle" title={dgettext("site", "Flag this test")}><i class="bi bi-flag"></i></span>
-        <div :if={@flag_display} class="input-group mt-1">
-          <input type="text" class="form-control w-25" placeholder={dgettext("site", "Enter the reason")} aria-label={dgettext("site", "Enter the reason")} aria-describedby="button-flag" phx-keyup="flag_text" phx-target={@myself}>
-          <button class={"btn btn-secondary#{if @flag_text == "", do: " disabled"}"} type="button" id="button-flag" phx-target={@myself} phx-click="flag_submit" ><%= dgettext "test", "Flag" %></button>
-        </div>
+    <div class="text-end">
+      <span
+        class="fs-9 text-muted cursor-link"
+        phx-target={@myself}
+        phx-click="flag_toggle"
+        title={dgettext("site", "Flag this test")}
+      >
+        <i class="bi bi-flag"></i>
+      </span>
+      <div :if={@flag_display} class="input-group mt-1">
+        <input
+          type="text"
+          class="form-control w-25"
+          placeholder={dgettext("site", "Enter the reason")}
+          aria-label={dgettext("site", "Enter the reason")}
+          aria-describedby="button-flag"
+          phx-keyup="flag_text"
+          phx-target={@myself}
+        />
+        <button
+          class={"btn btn-secondary#{if @flag_text == "", do: " disabled"}"}
+          type="button"
+          id="button-flag"
+          phx-target={@myself}
+          phx-click="flag_submit"
+        >
+          <%= dgettext("test", "Flag") %>
+        </button>
       </div>
+    </div>
     """
   end
 

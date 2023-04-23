@@ -1,42 +1,62 @@
-<h3 class="header-chemyretro"><%= dgettext "user", "Register" %></h3>
+<h3 class="header-chemyretro"><%= dgettext("user", "Register") %></h3>
 
 <div class="row">
   <div class="col-12 col-sm-6">
-    <div class="alert alert-info" role="alert"><i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= dgettext "user", "Tests created without being logged in in this device will be transferred to your new account." %></div>
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= dgettext(
+        "user",
+        "Tests created without being logged in in this device will be transferred to your new account."
+      ) %>
+    </div>
     <.form :let={f} for={@changeset} action={Routes.user_registration_path(@conn, :create)}>
       <%= if @changeset.action do %>
         <div class="alert alert-danger">
-          <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= dgettext "user", "Oops, something went wrong! Please check the errors below." %>
+          <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "user",
+            "Oops, something went wrong! Please check the errors below."
+          ) %>
         </div>
       <% end %>
 
       <div class="mb-3">
-        <%= label f, :email, dgettext("user", "Email"), class: "form-label" %>
-        <%= email_input f, :email, required: true, class: "form-control" %>
-        <%= error_tag f, :email %>
+        <%= label(f, :email, dgettext("user", "Email"), class: "form-label") %>
+        <%= email_input(f, :email, required: true, class: "form-control") %>
+        <%= error_tag(f, :email) %>
       </div>
 
       <div class="mb-3">
-        <%= label f, :password, dgettext("user", "Password") %>
-        <%= password_input f, :password, required: true, class: "form-label", class: "form-control" %>
-        <div id="passwordHelp" class="form-text"><%= dgettext "user", "8 characters minimum" %></div>
-        <%= error_tag f, :password %>
+        <%= label(f, :password, dgettext("user", "Password")) %>
+        <%= password_input(f, :password,
+          required: true,
+          class: "form-label",
+          class: "form-control"
+        ) %>
+        <div id="passwordHelp" class="form-text">
+          <%= dgettext("user", "8 characters minimum") %>
+        </div>
+        <%= error_tag(f, :password) %>
       </div>
 
       <div class="mb-3">
-        <%= label f, :password_confirmation, dgettext("user", "Confirm new password") %>
-        <%= password_input f, :password_confirmation, required: true, class: "form-label", class: "form-control" %>
-        <%= error_tag f, :password_confirmation %>
+        <%= label(f, :password_confirmation, dgettext("user", "Confirm new password")) %>
+        <%= password_input(f, :password_confirmation,
+          required: true,
+          class: "form-label",
+          class: "form-control"
+        ) %>
+        <%= error_tag(f, :password_confirmation) %>
       </div>
 
       <div>
-        <%= submit dgettext("user", "Register"), class: "btn btn-primary" %>
+        <%= submit(dgettext("user", "Register"), class: "btn btn-primary") %>
       </div>
     </.form>
 
     <p class="mt-3">
-      <%= link dgettext("user", "Log in"), to: Routes.user_session_path(@conn, :new) %> |
-      <%= link dgettext("user", "Forgot your password?"), to: Routes.user_reset_password_path(@conn, :new) %>
+      <%= link(dgettext("user", "Log in"), to: Routes.user_session_path(@conn, :new)) %> | <%= link(
+        dgettext("user", "Forgot your password?"),
+        to: Routes.user_reset_password_path(@conn, :new)
+      ) %>
     </p>
   </div>
 </div>

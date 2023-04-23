@@ -45,18 +45,18 @@ defmodule FunkyABXWeb.BsToastLive do
 
     {:ok,
      socket
-     |> stream(:toasts, []),
-     layout: {FunkyABXWeb.Layouts, :toast}}
+     |> stream(:toasts, []), layout: {FunkyABXWeb.Layouts, :toast}}
   end
 
   @impl true
-  def handle_info({:display_toast, message, status}, socket) when is_binary(message) and status in @status do
+  def handle_info({:display_toast, message, status}, socket)
+      when is_binary(message) and status in @status do
     toast = Toast.new(message, status)
 
     {:noreply,
-      socket
-      |> stream_insert(:toasts, toast)
-      |> push_event("show_toast", %{id: "toasts-" <> toast.id})}
+     socket
+     |> stream_insert(:toasts, toast)
+     |> push_event("show_toast", %{id: "toasts-" <> toast.id})}
   end
 
   @impl true

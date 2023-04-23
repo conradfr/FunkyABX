@@ -12,7 +12,7 @@ defmodule FunkyABXWeb.PageController do
 
   def gallery(conn, _params) do
     tests = Tests.get_for_gallery()
-    active= :regular
+    active = :regular
 
     render(conn, :gallery, tests: tests, active: active)
   end

@@ -11,191 +11,395 @@ defmodule FunkyABXWeb.TestLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <div class="row">
-        <div class="col-sm-6">
-          <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
-            <%= @test.title %>
-          </h3>
-          <h6 :if={@test.author != nil} class="header-typographica"><%= dgettext "test", "By %{author}", author: @test.author %></h6>
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
+          <%= @test.title %>
+        </h3>
+        <h6 :if={@test.author != nil} class="header-typographica">
+          <%= dgettext("test", "By %{author}", author: @test.author) %>
+        </h6>
+      </div>
+      <div
+        :if={@test.local == false and @test.type != :listening}
+        class="col-sm-6 text-start text-sm-end pt-1"
+      >
+        <div class="fs-7 text-muted header-texgyreadventor">
+          <%= raw(
+            dngettext(
+              "test",
+              "Test taken <strong>%{count}</strong> time",
+              "Test taken <strong>%{count}</strong> times",
+              @test_taken_times
+            )
+          ) %>
         </div>
-        <div :if={@test.local == false and @test.type != :listening} class="col-sm-6 text-start text-sm-end pt-1">
-          <div class="fs-7 text-muted header-texgyreadventor"><%= raw dngettext "test", "Test taken <strong>%{count}</strong> time", "Test taken <strong>%{count}</strong> times", @test_taken_times %></div>
-          <div :if={@test.local == false and @test.to_close_at_enabled == true and Tests.is_closed?(@test) == false} class="fs-7 text-muted header-texgyreadventor">
-            <small><%= raw dgettext "test", "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>", to_close_at: @test.to_close_at, to_close_at_format: format_date(@test.to_close_at, @timezone) %></small>
-          </div>
+        <div
+          :if={
+            @test.local == false and @test.to_close_at_enabled == true and
+              Tests.is_closed?(@test) == false
+          }
+          class="fs-7 text-muted header-texgyreadventor"
+        >
+          <small>
+            <%= raw(
+              dgettext(
+                "test",
+                "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>",
+                to_close_at: @test.to_close_at,
+                to_close_at_format: format_date(@test.to_close_at, @timezone)
+              )
+            ) %>
+          </small>
+        </div>
 
-          <.live_component module={TestFlagComponent} id="flag" test={@test} />
+        <.live_component module={TestFlagComponent} id="flag" test={@test} />
+      </div>
+    </div>
+
+    <TestDescriptionComponent.format
+      :if={@test.description != nil}
+      wrapper_class="mt-2 p-3 test-description"
+      description_markdown={@test.description_markdown}
+      description={@test.description}
+    />
+
+    <%= if @view_tracklist == false do %>
+      <div class="fs-8 mt-2 mb-2 cursor-link text-muted" phx-click="toggle_tracklist">
+        Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+      </div>
+    <% else %>
+      <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_tracklist">
+        Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+      </div>
+      <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
+        <%= for {track, i} <- @test.tracks |> Enum.with_index(1) do %>
+          <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <form phx-change="change_player_settings">
+      <div
+        class="controls d-flex flex-wrap flex-row align-items-center"
+        id="player-controls"
+        phx-hook="Player"
+        data-tracks={Tracks.to_json(@tracks, @test)}
+        data-rotate-seconds={@rotate_seconds}
+        data-rotate={to_string(@rotate)}
+        data-loop={to_string(@loop)}
+        data-waveform={to_string(@test_params.draw_waveform)}
+      >
+        <div class="p-2 me-auto d-flex align-items-center">
+          <button
+            type="button"
+            phx-click={JS.dispatch("back", to: "body")}
+            class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}
+          >
+            <i class="bi bi-skip-start-fill"></i>
+          </button>
+          <%= if @playing == true do %>
+            <button
+              type="button"
+              phx-click={JS.dispatch("pause", to: "body")}
+              class="btn btn-success me-1"
+            >
+              <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;<%= dgettext("test", "Pause") %>&nbsp;&nbsp;
+            </button>
+          <% else %>
+            <button
+              type="button"
+              phx-click={JS.dispatch("play", to: "body")}
+              class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}
+            >
+              <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;<%= dgettext("test", "Play") %>&nbsp;&nbsp;
+            </button>
+          <% end %>
+          <button
+            type="button"
+            phx-click={JS.dispatch("stop", to: "body")}
+            class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}
+          >
+            <i class="bi bi-stop-fill"></i>
+          </button>
+          <%= if @tracks_loaded == false do %>
+            <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
+              <span class="visually-hidden"><%= dgettext("test", "Loading...") %></span>
+            </div>
+            <span class="text-muted ms-2">
+              <small><%= dgettext("test", "Loading tracks ...") %></small>
+            </span>
+          <% else %>
+            <div class="ms-2 text-muted" role="status">
+              <small>
+                <i
+                  class="bi bi-info-circle text-extra-muted"
+                  title={dgettext("test", "Player controls")}
+                  role="button"
+                  data-bs-toggle="popover"
+                  data-bs-placement="auto"
+                  data-bs-html="true"
+                  data-bs-content={
+                    dgettext(
+                      "test",
+                      "<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>"
+                    )
+                  }
+                >
+                </i>
+              </small>
+            </div>
+          <% end %>
+        </div>
+        <div :if={@test.local == false and @test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
+          <%= dgettext("test", "Round %{current_round} / %{nb_of_rounds}",
+            current_round: @current_round,
+            nb_of_rounds: @test.nb_of_rounds
+          ) %>
+        </div>
+        <div class="p-2">
+          <fieldset class="form-group">
+            <div class="form-check">
+              <input
+                class="form-check-input disabled"
+                type="checkbox"
+                id="inputLoopCheckbox"
+                name="inputLoopCheckbox"
+                checked={@loop}
+              />
+              <label class="form-check-label" for="inputLoopCheckbox">
+                Loop
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="p-2">
+          <div class="d-flex align-items-center">
+            <div class="p-2">
+              <fieldset class="form-group">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="inputRotateCheckbox"
+                    name="inputRotateCheckbox"
+                    checked={@rotate}
+                  />
+                  <label class="form-check-label" for="inputRotateCheckbox">
+                    <%= dgettext("test", "Switch track every") %>
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="p-2">
+              <input
+                type="number"
+                name="rotate-seconds"
+                class="form-control form-control-sm"
+                value={@rotate_seconds}
+                style="width: 65px"
+                min="3"
+                max="3600"
+              />
+            </div>
+            <div class="p-2">
+              seconds
+            </div>
+          </div>
         </div>
       </div>
+    </form>
 
-      <TestDescriptionComponent.format :if={@test.description != nil} wrapper_class="mt-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
+    <div class="tracks my-2">
+      <%= for {track, i} <- @tracks |> Enum.with_index(1) do %>
+        <div class={"track my-1 d-flex flex-wrap flex-md-nowrap align-items-center #{if @current_track == track.hash, do: "track-active"}"}>
+          <div class="p-2">
+            <%= if @current_track == track.hash and @playing == true do %>
+              <button
+                type="button"
+                class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"}
+                phx-click={JS.dispatch("pause", to: "body")}
+              >
+                <i class="bi bi-pause-fill"></i>
+              </button>
+            <% else %>
+              <button
+                type="button"
+                class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"}
+                phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}
+              >
+                <i class={"bi bi-play-fill #{if @tracks_loaded == false, do: " text-muted"}"}></i>
+              </button>
+            <% end %>
+          </div>
+          <%= if @test.anonymized_track_title == false do %>
+            <div
+              class="p-2 text-truncate cursor-link"
+              style="width: 300px;"
+              phx-click={
+                JS.dispatch(
+                  if @current_track == track.hash and @playing == true do
+                    "stop"
+                  else
+                    "play"
+                  end,
+                  to: "body",
+                  detail: %{"track_hash" => track.hash}
+                )
+              }
+            >
+              <%= track.title %>
+            </div>
+          <% else %>
+            <div
+              class="p-2 cursor-link"
+              style={"min-width: #{if @test.type == :listening, do: "300", else: "100"}px"}
+              phx-click={
+                JS.dispatch(
+                  if @current_track == track.hash and @playing == true do
+                    "stop"
+                  else
+                    "play"
+                  end,
+                  to: "body",
+                  detail: %{"track_hash" => track.hash}
+                )
+              }
+            >
+              <%= dgettext("test", "Track %{track_index}", track_index: i) %>
+            </div>
+          <% end %>
 
-      <%= if @view_tracklist == false do %>
-        <div class="fs-8 mt-2 mb-2 cursor-link text-muted" phx-click="toggle_tracklist">Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
-      <% else %>
-        <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_tracklist">Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></div>
-        <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
-          <%= for {track, i} <- @test.tracks |> Enum.with_index(1) do %>
-            <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
+          <div
+            class="flex-grow-1 px-2 px-md-3 "
+            style="position: relative; min-width: 100px"
+            id={"waveform-#{Tracks.get_track_hash(track)}"}
+          >
+            <div
+              :if={@test.local == false and @tracks_loaded == false}
+              class="track-loading-indicator text-muted"
+            >
+              <small :if={get_track_state(track.hash, @tracks_state) == :loading}>
+                <%= dgettext("test", "Loading ... %{progress}%",
+                  progress: get_track_progress(track.hash, @tracks_loading)
+                ) %>
+              </small>
+              <small :if={get_track_state(track.hash, @tracks_state) == :decoding}>
+                <%= dgettext("test", "Decoding...") %>
+                <div class="spinner-grow spinner-grow-sm ms-2 text-muted" role="status">
+                  <span class="visually-hidden"><%= dgettext("test", "Decoding...") %></span>
+                </div>
+              </small>
+              <small :if={get_track_state(track.hash, @tracks_state) == :finished}>
+                <%= dgettext("test", "Done ") %> <i class="bi bi-check"></i>
+              </small>
+              <small :if={get_track_state(track.hash, @tracks_state) == :error}>
+                <%= dgettext("test", "Error") %> <i class="bi bi-x-circle"></i>
+              </small>
+            </div>
+            <div
+              phx-update="ignore"
+              id={"waveform-wrapper-#{Tracks.get_track_hash(track)}"}
+              class="waveform-wrapper"
+            >
+            </div>
+          </div>
+
+          <%= unless @test_already_taken == true do %>
+            <%= for module <- @choices_modules do %>
+              <.live_component
+                module={module}
+                id={Atom.to_string(module) <> "_#{i}"}
+                track={track}
+                test={@test}
+                tracks={@tracks}
+                choices_taken={@choices_taken}
+                round={@current_round}
+              />
+            <% end %>
           <% end %>
         </div>
       <% end %>
+    </div>
 
-      <form phx-change="change_player_settings">
-        <div class="controls d-flex flex-wrap flex-row align-items-center"
-          id="player-controls"
-          phx-hook="Player"
-          data-tracks={Tracks.to_json(@tracks, @test)}
-          data-rotate-seconds={@rotate_seconds}
-          data-rotate={to_string(@rotate)}
-          data-loop={to_string(@loop)}
-          data-waveform={to_string(@test_params.draw_waveform)}>
-          <div class="p-2 me-auto d-flex align-items-center">
-            <button type="button" phx-click={JS.dispatch("back", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
-              <i class="bi bi-skip-start-fill"></i>
-            </button>
-            <%= if @playing == true do %>
-              <button type="button" phx-click={JS.dispatch("pause", to: "body")} class="btn btn-success me-1">
-                <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;<%= dgettext "test", "Pause" %>&nbsp;&nbsp;
-              </button>
-            <% else %>
-              <button type="button" phx-click={JS.dispatch("play", to: "body")} class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}>
-                <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;<%= dgettext "test","Play" %>&nbsp;&nbsp;
-              </button>
-            <% end %>
-            <button type="button" phx-click={JS.dispatch("stop", to: "body")} class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}>
-              <i class="bi bi-stop-fill"></i>
-            </button>
-            <%= if @tracks_loaded == false do %>
-              <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
-                <span class="visually-hidden"><%= dgettext "test", "Loading..." %></span>
-              </div>
-              <span class="text-muted ms-2"><small><%= dgettext "test", "Loading tracks ..." %></small></span>
-            <% else %>
-              <div class="ms-2 text-muted" role="status">
-                <small><i class="bi bi-info-circle text-extra-muted" title={dgettext("test", "Player controls")} role="button"
-                  data-bs-toggle="popover" data-bs-placement="auto" data-bs-html="true"
-                  data-bs-content={dgettext("test", "<strong>Mouse/touch:</strong><ul><li>Click on a track number to switch and/or start playing</li><li>Click on a waveform to go to a specific time</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>")}>
-                </i></small>
-              </div>
-            <% end %>
+    <div class="mt-3">
+      <div class="d-flex flex-row align-items-center justify-content-between">
+        <%= unless @test_params.has_choices == false do %>
+          <div :if={@test.local == true} class="results-actions">
+            <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link
+              navigate={~p"/local_test/edit/#{@test_data}"}
+              replace={true}
+            ><%= dgettext "test", "Go back to the test form" %></.link>
           </div>
-          <div :if={@test.local == false and @test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
-            <%= dgettext "test", "Round %{current_round} / %{nb_of_rounds}", current_round: @current_round, nb_of_rounds: @test.nb_of_rounds %>
+          <div :if={@test.local == true} class="results-actions">
+            <i class="bi bi-plus color-action"></i>&nbsp;<.link
+              href={~p"/local_test"}
+              class="color-action"
+            ><%= dgettext "test", "Create a new local test" %></.link>
           </div>
-          <div class="p-2">
-            <fieldset class="form-group">
-              <div class="form-check">
-                <input class="form-check-input disabled" type="checkbox" id="inputLoopCheckbox" name="inputLoopCheckbox" checked={@loop}>
-                <label class="form-check-label" for="inputLoopCheckbox">
-                  Loop
-                </label>
-            </div>
-            </fieldset>
-          </div>
-          <div class="p-2">
-            <div class="d-flex align-items-center">
-              <div class="p-2">
-                <fieldset class="form-group">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="inputRotateCheckbox" name="inputRotateCheckbox" checked={@rotate}>
-                    <label class="form-check-label" for="inputRotateCheckbox">
-                      <%= dgettext "test", "Switch track every" %>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-              <div class="p-2">
-                <input type="number" name="rotate-seconds" class="form-control form-control-sm" value={@rotate_seconds} style="width: 65px" min="3" max="3600">
-              </div>
-              <div class="p-2">
-                seconds
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-
-      <div class="tracks my-2">
-        <%= for {track, i} <- @tracks |> Enum.with_index(1) do %>
-          <div class={"track my-1 d-flex flex-wrap flex-md-nowrap align-items-center #{if @current_track == track.hash, do: "track-active"}"}>
-            <div class="p-2">
-              <%= if @current_track == track.hash and @playing == true do %>
-                <button type="button" class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"} phx-click={JS.dispatch("pause", to: "body")}>
-                  <i class="bi bi-pause-fill"></i>
+          <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
+            <%= unless @test.local == true do %>
+              <div class="px-1">
+                <button
+                  phx-click="no_participate"
+                  class="btn btn-sm btn-outline-dark"
+                  data-confirm={
+                    dgettext(
+                      "test",
+                      "Are you sure you want to check the results? You won't be able to participate afterwards."
+                    )
+                  }
+                >
+                  <%= gettext("Check the results without participating") %>
                 </button>
-              <% else %>
-                <button type="button" class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"} phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}>
-                  <i class={"bi bi-play-fill #{if @tracks_loaded == false, do: " text-muted"}"}></i>
-                </button>
-              <% end %>
-            </div>
-            <%= if @test.anonymized_track_title == false do %>
-              <div class="p-2 text-truncate cursor-link" style="width: 300px;" phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
-                <%= track.title %>
-              </div>
-            <% else %>
-              <div class="p-2 cursor-link" style={"min-width: #{if @test.type == :listening, do: "300", else: "100"}px"} phx-click={JS.dispatch(if @current_track == track.hash and @playing == true do "stop" else "play" end, to: "body", detail: %{"track_hash" => track.hash})}>
-                <%= dgettext "test", "Track %{track_index}", track_index: i %>
               </div>
             <% end %>
-
-            <div class="flex-grow-1 px-2 px-md-3 " style="position: relative; min-width: 100px" id={"waveform-#{Tracks.get_track_hash(track)}"}>
-              <div :if={@test.local == false and @tracks_loaded == false} class="track-loading-indicator text-muted">
-                <small :if={get_track_state(track.hash, @tracks_state) == :loading}><%= dgettext "test", "Loading ... %{progress}%", progress: get_track_progress(track.hash, @tracks_loading) %></small>
-                <small :if={get_track_state(track.hash, @tracks_state) == :decoding}><%= dgettext "test", "Decoding..." %>
-                  <div class="spinner-grow spinner-grow-sm ms-2 text-muted" role="status">
-                    <span class="visually-hidden"><%= dgettext "test", "Decoding..." %></span>
-                  </div>
-                </small>
-                <small :if={get_track_state(track.hash, @tracks_state) == :finished}><%= dgettext "test", "Done " %> <i class="bi bi-check"></i></small>
-                <small :if={get_track_state(track.hash, @tracks_state) == :error}><%= dgettext "test", "Error" %> <i class="bi bi-x-circle"></i></small>
-              </div>
-              <div phx-update="ignore" id={"waveform-wrapper-#{Tracks.get_track_hash(track)}"} class="waveform-wrapper"></div>
+            <div class="text-end px-1 _flex-fill">
+              <button
+                phx-click="submit"
+                class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}
+              >
+                <%= dgettext("test", "Submit my choices") %>
+              </button>
             </div>
-
-            <%= unless @test_already_taken == true do %>
-              <%= for module <- @choices_modules do %>
-                <.live_component module={module} id={Atom.to_string(module) <> "_#{i}"} track={track} test={@test} tracks={@tracks} choices_taken={@choices_taken} round={@current_round} />
-              <% end %>
-            <% end %>
+          <% else %>
+            <div class="text-end px-1 flex-fill">
+              <.link
+                :if={@test.local == false}
+                href={~p"/results/#{@test.slug}"}
+                class="btn btn-primary"
+              >
+                <%= dgettext("test", "Check the results") %>
+              </.link>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="px-1">
+            <button
+              :if={@test.anonymized_track_title == false}
+              phx-click="hide_and_shuffle_tracks"
+              class="btn btn-sm btn-outline-dark"
+            >
+              <%= dgettext("test", "Hide titles and shuffle tracks") %>
+            </button>
+            <button
+              :if={@test.anonymized_track_title == true}
+              phx-click="hide_and_shuffle_tracks"
+              class="btn btn-sm btn-outline-dark"
+            >
+              <%= dgettext("test", "Reveal tracks' titles") %>
+            </button>
           </div>
         <% end %>
       </div>
+    </div>
 
-      <div class="mt-3">
-        <div class="d-flex flex-row align-items-center justify-content-between">
-          <%= unless @test_params.has_choices == false do %>
-            <div :if={@test.local == true} class="results-actions">
-              <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={~p"/local_test/edit/#{@test_data}"} replace={true}><%= dgettext "test", "Go back to the test form" %></.link>
-            </div>
-            <div :if={@test.local == true} class="results-actions">
-              <i class="bi bi-plus color-action"></i>&nbsp;<.link href={~p"/local_test"} class="color-action"><%= dgettext "test", "Create a new local test" %></.link>
-            </div>
-            <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
-              <%= unless @test.local == true do %>
-                <div class="px-1">
-                  <button phx-click="no_participate" class="btn btn-sm btn-outline-dark" data-confirm={dgettext("test", "Are you sure you want to check the results? You won't be able to participate afterwards.")}><%= gettext "Check the results without participating" %></button>
-                </div>
-              <% end %>
-            <div class="text-end px-1 _flex-fill">
-              <button phx-click="submit" class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}><%= dgettext "test", "Submit my choices" %></button>
-            </div>
-            <% else %>
-              <div class="text-end px-1 flex-fill">
-                <.link :if={@test.local == false} href={~p"/results/#{@test.slug}"} class="btn btn-primary"><%= dgettext "test", "Check the results" %></.link>
-              </div>
-            <% end %>
-          <% else %>
-            <div class="px-1">
-              <button :if={@test.anonymized_track_title == false} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark"><%= dgettext "test", "Hide titles and shuffle tracks" %></button>
-              <button :if={@test.anonymized_track_title == true} phx-click="hide_and_shuffle_tracks" class="btn btn-sm btn-outline-dark"><%= dgettext "test", "Reveal tracks' titles" %></button>
-            </div>
-          <% end %>
-        </div>
-      </div>
-
-      <.live_component module={DisqusComponent} :if={@test.type == :listening and @test.local == false and @embed != true} id="disqus" test={@test} />
+    <.live_component
+      :if={@test.type == :listening and @test.local == false and @embed != true}
+      module={DisqusComponent}
+      id="disqus"
+      test={@test}
+    />
     """
   end
 
@@ -371,7 +575,10 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_info(%{event: "test_taken", payload: page_id} = _payload, socket) do
-    unless page_id == socket.assigns.page_id, do: dgettext("test", "Someone just took this test !") |> Utils.send_success_toast(socket.assigns.page_id)
+    unless page_id == socket.assigns.page_id,
+      do:
+        dgettext("test", "Someone just took this test !")
+        |> Utils.send_success_toast(socket.assigns.page_id)
 
     {:noreply, assign(socket, :test_taken_times, socket.assigns.test_taken_times + 1)}
   end
@@ -381,9 +588,7 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply,
      socket
      |> put_flash(:info, "This test has been reopened.")
-     |> redirect(
-       to: ~p"/test/#{socket.assigns.test.slug}"
-     )}
+     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
   end
 
   @impl true
@@ -399,9 +604,7 @@ defmodule FunkyABXWeb.TestLive do
        )
        |> raw()
      )
-     |> redirect(
-       to: ~p"/test/#{socket.assigns.test.slug}"
-     )}
+     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
   end
 
   @impl true
@@ -409,9 +612,7 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply,
      socket
      |> put_flash(:error, dgettext("test", "This test has been deleted :("))
-     |> redirect(
-       to: ~p"/info"
-     )}
+     |> redirect(to: ~p"/info")}
   end
 
   @impl true
@@ -422,9 +623,7 @@ defmodule FunkyABXWeb.TestLive do
        :info,
        dgettext("test", "Test has been updated by its creator, so the page has been reloaded.")
      )
-     |> redirect(
-       to: ~p"/test/#{socket.assigns.test.slug}"
-     )}
+     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
   end
 
   @impl true
@@ -500,25 +699,33 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_event("track_state", %{"track_hash" => track_hash, "state" => status} = _params, socket) do
-    tracks_state=
+  def handle_event(
+        "track_state",
+        %{"track_hash" => track_hash, "state" => status} = _params,
+        socket
+      ) do
+    tracks_state =
       socket.assigns.tracks_state
       |> Map.put(track_hash, String.to_atom(status))
 
     {:noreply,
-      socket
-      |> assign(tracks_state: tracks_state)}
+     socket
+     |> assign(tracks_state: tracks_state)}
   end
 
   @impl true
-  def handle_event("track_progress", %{"track_hash" => track_hash, "progress" => progress} = _params, socket) do
+  def handle_event(
+        "track_progress",
+        %{"track_hash" => track_hash, "progress" => progress} = _params,
+        socket
+      ) do
     tracks_loading =
       socket.assigns.tracks_loading
       |> Map.put(track_hash, progress)
 
     {:noreply,
-      socket
-      |> assign(tracks_loading: tracks_loading)}
+     socket
+     |> assign(tracks_loading: tracks_loading)}
   end
 
   @impl true
@@ -802,7 +1009,8 @@ defmodule FunkyABXWeb.TestLive do
 
   defp get_track_state(_track_hash, _tracks_loading), do: :loading
 
-  defp get_track_progress(track_hash, tracks_loading) when is_map_key(tracks_loading, track_hash) do
+  defp get_track_progress(track_hash, tracks_loading)
+       when is_map_key(tracks_loading, track_hash) do
     tracks_loading
     |> Map.get(track_hash)
     |> Kernel.round()

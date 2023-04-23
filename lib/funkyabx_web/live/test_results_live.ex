@@ -9,56 +9,123 @@ defmodule FunkyABXWeb.TestResultsLive do
   @impl true
   def render(assigns) do
     ~H"""
-      <div class="row">
-        <div class="col-sm-6">
-          <h3 class="mb-0 header-typographica" id="test-results-header" phx-hook="TestResults" data-testid={@test.id}>
-          <%= @test.title %></h3>
-          <h6 :if={@test.author != nil} class="header-typographica"><%= dgettext "test", "By %{author}", author: @test.author %></h6>
-        </div>
-        <%= unless @test.type == :listening or @test.local == true do %>
-          <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-            <span class="fs-7 text-muted header-texgyreadventor"><%= raw dngettext "test", "Test taken <strong>%{count}</strong> time", "Test taken <strong>%{count}</strong> times", @test_taken_times %></span>
-            <time :if={Tests.is_closed?(@test)} class="header-texgyreadventor text-muted" title={@test.closed_at} datetime={@test.closed_at}><br><small><%= dgettext "test", "(test is closed)" %></small></time>
-          </div>
-        <% end %>
+    <div class="row">
+      <div class="col-sm-6">
+        <h3
+          class="mb-0 header-typographica"
+          id="test-results-header"
+          phx-hook="TestResults"
+          data-testid={@test.id}
+        >
+          <%= @test.title %>
+        </h3>
+        <h6 :if={@test.author != nil} class="header-typographica">
+          <%= dgettext("test", "By %{author}", author: @test.author) %>
+        </h6>
       </div>
-
-      <%= if @test.description != nil do %>
-        <%= if @view_description == false do %>
-          <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description"><%= dgettext "test", "View description" %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i></div>
-        <% else %>
-          <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description"><%= dgettext "test", "Hide description" %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i></div>
-          <TestDescriptionComponent.format wrapper_class="my-2 p-3 test-description" description_markdown={@test.description_markdown} description={@test.description} />
-        <% end %>
+      <%= unless @test.type == :listening or @test.local == true do %>
+        <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
+          <span class="fs-7 text-muted header-texgyreadventor">
+            <%= raw(
+              dngettext(
+                "test",
+                "Test taken <strong>%{count}</strong> time",
+                "Test taken <strong>%{count}</strong> times",
+                @test_taken_times
+              )
+            ) %>
+          </span>
+          <time
+            :if={Tests.is_closed?(@test)}
+            class="header-texgyreadventor text-muted"
+            title={@test.closed_at}
+            datetime={@test.closed_at}
+          >
+            <br /><small><%= dgettext("test", "(test is closed)") %></small>
+          </time>
+        </div>
       <% end %>
+    </div>
 
-      <div class="row" :if={@test.local == false and @is_another_session == false and @session_id != nil}>
-        <div class="col-12 col-sm-3">
-          <h5 class="mt-3 header-neon"><%= dgettext "test", "Your test:" %></h5>
-          <div class="your-test rounded p-2 mb-4">
-            <div class="mb-1"><i class="bi bi-share"></i>&nbsp;&nbsp;<%= dgettext "test", "Share:" %> <a href={url(~p"/results/#{@test.slug}?s=#{ShortUUID.encode!(@session_id)}")}><%= dgettext "test", "link to my results" %></a></div>
-            <div><i class="bi bi-image"></i>&nbsp;&nbsp;<%= dgettext "test", "Image:" %> <a target="_blank" href={url(~p"/img/results/#{Image.get_filename(@session_id)}")}><%= dgettext "test", "my results" %></a></div>
+    <%= if @test.description != nil do %>
+      <%= if @view_description == false do %>
+        <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">
+          <%= dgettext("test", "View description") %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+        </div>
+      <% else %>
+        <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">
+          <%= dgettext("test", "Hide description") %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+        </div>
+        <TestDescriptionComponent.format
+          wrapper_class="my-2 p-3 test-description"
+          description_markdown={@test.description_markdown}
+          description={@test.description}
+        />
+      <% end %>
+    <% end %>
+
+    <div
+      :if={@test.local == false and @is_another_session == false and @session_id != nil}
+      class="row"
+    >
+      <div class="col-12 col-sm-3">
+        <h5 class="mt-3 header-neon"><%= dgettext("test", "Your test:") %></h5>
+        <div class="your-test rounded p-2 mb-4">
+          <div class="mb-1">
+            <i class="bi bi-share"></i>&nbsp;&nbsp;<%= dgettext("test", "Share:") %>
+            <a href={url(~p"/results/#{@test.slug}?s=#{ShortUUID.encode!(@session_id)}")}>
+              <%= dgettext("test", "link to my results") %>
+            </a>
+          </div>
+          <div>
+            <i class="bi bi-image"></i>&nbsp;&nbsp;<%= dgettext("test", "Image:") %>
+            <a target="_blank" href={url(~p"/img/results/#{Image.get_filename(@session_id)}")}>
+              <%= dgettext("test", "my results") %>
+            </a>
           </div>
         </div>
       </div>
+    </div>
 
-      <%= for module <- @result_modules do %>
-        <.live_component module={module} id={Atom.to_string(module)} test={@test} visitor_choices={@visitor_choices} is_another_session={@is_another_session} play_track_id={@play_track_id} test_taken_times={@test_taken_times} />
-      <% end %>
+    <%= for module <- @result_modules do %>
+      <.live_component
+        module={module}
+        id={Atom.to_string(module)}
+        test={@test}
+        visitor_choices={@visitor_choices}
+        is_another_session={@is_another_session}
+        play_track_id={@play_track_id}
+        test_taken_times={@test_taken_times}
+      />
+    <% end %>
 
-      <div :if={@test.local == true} class="mt-3 d-flex justify-content-between results-actions">
-        <div>
-          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link navigate={~p"/local_test/edit/#{@test_data}"} replace={true}><%= dgettext "test", "Go back to the test form" %></.link>
-        </div>
-        <div>
-          <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link navigate={~p"/local_test/#{@test_data}"} replace={true}><%= dgettext "test", "Take the test again" %></.link>
-        </div>
-        <div>
-          <i class="bi bi-plus color-action"></i>&nbsp;<.link href={~p"/local_test"} class="color-action"><%= dgettext "test", "Create a new local test" %></.link>
-        </div>
+    <div :if={@test.local == true} class="mt-3 d-flex justify-content-between results-actions">
+      <div>
+        <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
+          navigate={~p"/local_test/edit/#{@test_data}"}
+          replace={true}
+        ><%= dgettext "test", "Go back to the test form" %></.link>
       </div>
+      <div>
+        <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link
+          navigate={~p"/local_test/#{@test_data}"}
+          replace={true}
+        ><%= dgettext "test", "Take the test again" %></.link>
+      </div>
+      <div>
+        <i class="bi bi-plus color-action"></i>&nbsp;<.link
+          href={~p"/local_test"}
+          class="color-action"
+        ><%= dgettext "test", "Create a new local test" %></.link>
+      </div>
+    </div>
 
-      <.live_component module={DisqusComponent} :if={@test.local == false and @embed != true} id="disqus" test={@test} />
+    <.live_component
+      :if={@test.local == false and @embed != true}
+      module={DisqusComponent}
+      id="disqus"
+      test={@test}
+    />
     """
   end
 
@@ -155,9 +222,7 @@ defmodule FunkyABXWeb.TestResultsLive do
     with false <- socket.assigns.current_user_id == socket.assigns.test.user_id do
       {:noreply,
        socket
-       |> redirect(
-         to: ~p"/test/#{socket.assigns.test.slug}")
-      }
+       |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
     else
       _ -> {:noreply, socket}
     end
@@ -235,7 +300,8 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @impl true
   def handle_info(%{event: "test_taken"} = _payload, socket) do
-    dgettext("test", "Someone just took this test !") |> Utils.send_success_toast(socket.assigns.page_id)
+    dgettext("test", "Someone just took this test !")
+    |> Utils.send_success_toast(socket.assigns.page_id)
 
     # todo manage refresh of the data on components
     {:noreply,
@@ -249,9 +315,7 @@ defmodule FunkyABXWeb.TestResultsLive do
     {:noreply,
      socket
      |> put_flash(:error, "This test has been deleted :(")
-     |> redirect(
-       to: ~p"/info")
-    }
+     |> redirect(to: ~p"/info")}
   end
 
   @impl true

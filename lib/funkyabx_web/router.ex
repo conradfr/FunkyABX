@@ -29,7 +29,7 @@ defmodule FunkyABXWeb.Router do
 
   pipeline :api do
     plug RemoteIp,
-         clients: ~w[10.0.2.2/32]
+      clients: ~w[10.0.2.2/32]
 
     plug :accepts, ["json"]
     plug FunkyABXWeb.Plugs.Auth

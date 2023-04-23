@@ -1,67 +1,213 @@
-<h3 class="header-chemyretro"><%= dgettext "faq", "FAQ" %></h3>
+<h3 class="header-chemyretro"><%= dgettext("faq", "FAQ") %></h3>
 
 <div class="row">
   <div class="col-12 col-sm-8">
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "What is FunkyABX?" %></strong></p>
-      <p><%= dgettext "faq", "FunkyABX is an independent website to make audio blind tests with different ranking methods." %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "What is FunkyABX?"
+          ) %>
+        </strong>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "FunkyABX is an independent website to make audio blind tests with different ranking methods."
+        ) %>
+      </p>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "Where are the audio files stored?" %></strong></p>
-      <p><%= raw dgettext "faq", "Audio files are uploaded to the cloud provider <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> in Paris, France. Files are deleted when a test is deleted." %></p>
-      <p><%= dgettext "faq", "Files used for local tests are not transmitted to any servers. Even their filenames are not stored anywhere." %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "Where are the audio files stored?"
+          ) %>
+        </strong>
+      </p>
+      <p>
+        <%= raw(
+          dgettext(
+            "faq",
+            "Audio files are uploaded to the cloud provider <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> in Paris, France. Files are deleted when a test is deleted."
+          )
+        ) %>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "Files used for local tests are not transmitted to any servers. Even their filenames are not stored anywhere."
+        ) %>
+      </p>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "How much does it cost?" %></strong></p>
-      <p><%= dgettext "faq", "Everything is free. There's no ads and no usage data is collected and sold." %></p>
-      <p><%= raw dgettext "faq", "If you find this webapp useful you can help cover the hosting costs by donating your spare change <a href=\"%{url}\">here</a>.", url: ~p"/donate" %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "How much does it cost?"
+          ) %>
+        </strong>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "Everything is free. There's no ads and no usage data is collected and sold."
+        ) %>
+      </p>
+      <p>
+        <%= raw(
+          dgettext(
+            "faq",
+            "If you find this webapp useful you can help cover the hosting costs by donating your spare change <a href=\"%{url}\">here</a>.",
+            url: ~p"/donate"
+          )
+        ) %>
+      </p>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "Do I need to create an account?" %></strong></p>
-      <p><%= dgettext "faq", "We worked hard to make the experience with and without an account the same as much as possible." %></p>
-      <p><%= dgettext "faq", "Differences without an account:" %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "Do I need to create an account?"
+          ) %>
+        </strong>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "We worked hard to make the experience with and without an account the same as much as possible."
+        ) %>
+      </p>
+      <p><%= dgettext("faq", "Differences without an account:") %></p>
       <ul>
-        <li><%= dgettext "faq", "You can't get an email when someone takes one of your tests" %></li>
-        <li><%= dgettext "faq", "You can't get generate and/or send invitations" %></li>
-        <li><%= dgettext "faq", "Your list of tests is limited to the ones created on the same device." %></li>
+        <li>
+          <%= dgettext("faq", "You can't get an email when someone takes one of your tests") %>
+        </li>
+        <li><%= dgettext("faq", "You can't get generate and/or send invitations") %></li>
+        <li>
+          <%= dgettext(
+            "faq",
+            "Your list of tests is limited to the ones created on the same device."
+          ) %>
+        </li>
       </ul>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "What count as a \"view\" for my tests?" %></strong></p>
-      <p><%= dgettext "faq", "When the visitor plays at least one track." %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "What count as a \"view\" for my tests?"
+          ) %>
+        </strong>
+      </p>
+      <p><%= dgettext("faq", "When the visitor plays at least one track.") %></p>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "Would you implement my great feature idea?" %></strong></p>
-      <p><%= raw dgettext "faq", "Yes why not, maybe, it has been done before, try the <a href=\"%{url}\">contact form</a>.", url: ~p"/contact" %></p>
-      <p><%= dgettext "faq", "Please not that as the site is developed for free and on our spare time we have to take into account the time, cost of development, testing and support of any new feature." %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "Would you implement my great feature idea?"
+          ) %>
+        </strong>
+      </p>
+      <p>
+        <%= raw(
+          dgettext(
+            "faq",
+            "Yes why not, maybe, it has been done before, try the <a href=\"%{url}\">contact form</a>.",
+            url: ~p"/contact"
+          )
+        ) %>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "Please not that as the site is developed for free and on our spare time we have to take into account the time, cost of development, testing and support of any new feature."
+        ) %>
+      </p>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "A test has copyrighted material I want removed." %></strong></p>
-      <p><%= dgettext "faq", "Use the flag feature on the upper right of a test page, we may remember to check it." %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "A test has copyrighted material I want removed."
+          ) %>
+        </strong>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "Use the flag feature on the upper right of a test page, we may remember to check it."
+        ) %>
+      </p>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "Can I use an alternative hosting provider for my audio files?" %></strong></p>
-      <p><%= dgettext "faq", "Not currently but maybe in the future. One of the problem is the need to have a functioning CORS, which if you're a web developer know it's always tricky." %></p>
-      <p><%= raw dgettext "faq", "Alternatively you can host your own FunkyABX version by using the <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">Github repo</a>. We do not currently offer docker file or support for it but may do in the near future." %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext(
+            "faq",
+            "Can I use an alternative hosting provider for my audio files?"
+          ) %>
+        </strong>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "Not currently but maybe in the future. One of the problem is the need to have a functioning CORS, which if you're a web developer know it's always tricky."
+        ) %>
+      </p>
+      <p>
+        <%= raw(
+          dgettext(
+            "faq",
+            "Alternatively you can host your own FunkyABX version by using the <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">Github repo</a>. We do not currently offer docker file or support for it but may do in the near future."
+          )
+        ) %>
+      </p>
     </div>
 
     <div class="mb-4 form-unit rounded-2 p-3 pb-1">
-      <p class="mb-1"><strong><i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext "faq", "Is there an API?" %></strong></p>
-      <p><%= dgettext "faq", "There is an experimental REST API to create tests that has not been properly tested yet, so consider it alpha." %></p>
-      <p><%= dgettext "faq", "You'll need to:" %></p>
+      <p class="mb-1">
+        <strong>
+          <i class="bi bi-question-circle"></i>&nbsp;&nbsp;<%= dgettext("faq", "Is there an API?") %>
+        </strong>
+      </p>
+      <p>
+        <%= dgettext(
+          "faq",
+          "There is an experimental REST API to create tests that has not been properly tested yet, so consider it alpha."
+        ) %>
+      </p>
+      <p><%= dgettext("faq", "You'll need to:") %></p>
       <ul>
-        <li><%= dgettext "faq", "Create an account and be logged-in" %></li>
-        <li><%= raw dgettext "faq", "Generates an API key <a href=\"%{url}\">here</a>", url: ~p"/users/settings/api_key" %></li>
-        <li><%= raw dgettext "faq", "Check the <a href=\"/api/swagger/index.html\">Swagger spec</a>" %></li>
+        <li><%= dgettext("faq", "Create an account and be logged-in") %></li>
+        <li>
+          <%= raw(
+            dgettext("faq", "Generates an API key <a href=\"%{url}\">here</a>",
+              url: ~p"/users/settings/api_key"
+            )
+          ) %>
+        </li>
+        <li>
+          <%= raw(
+            dgettext("faq", "Check the <a href=\"/api/swagger/index.html\">Swagger spec</a>")
+          ) %>
+        </li>
       </ul>
     </div>
-
   </div>
 </div>
