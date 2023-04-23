@@ -4,7 +4,7 @@ defmodule FunkyABXWeb.TestLive do
 
   alias Ecto.UUID
   alias Phoenix.LiveView.JS
-  alias FunkyABX.{Test, Tests, Tracks, Invitations}
+  alias FunkyABX.{Utils, Test, Tests, Tracks, Invitations}
 
   @title_max_length 100
 
@@ -296,6 +296,7 @@ defmodule FunkyABXWeb.TestLive do
     {:ok,
      assign(socket, %{
        page_title: String.slice(test.title, 0..@title_max_length),
+       page_id: Utils.get_page_id_from_socket(socket),
        timezone: timezone,
        ip_address: Map.get(session, "visitor_ip", nil),
        test: test,
@@ -343,7 +344,7 @@ defmodule FunkyABXWeb.TestLive do
        end
      end)
      |> then(fn s ->
-       if test_already_taken == true do
+       if test_already_taken == true and invitation_id != nil do
          put_flash(
            s,
            :info,
@@ -369,7 +370,9 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_info(%{event: "test_taken"} = _payload, socket) do
+  def handle_info(%{event: "test_taken", payload: page_id} = _payload, socket) do
+    unless page_id == socket.assigns.page_id, do: dgettext("test", "Someone just took this test !") |> Utils.send_success_toast(socket.assigns.page_id)
+
     {:noreply, assign(socket, :test_taken_times, socket.assigns.test_taken_times + 1)}
   end
 
@@ -738,7 +741,7 @@ defmodule FunkyABXWeb.TestLive do
       Tests.submit(test, choices_cleaned, session_id, ip_address)
 
       spawn(fn ->
-        FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
+        FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", socket.assigns.page_id)
         FunkyABX.Notifier.Email.test_taken(test, socket)
         Invitations.test_taken(invitation_id, test)
       end)

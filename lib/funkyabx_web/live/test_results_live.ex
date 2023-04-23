@@ -1,6 +1,7 @@
 defmodule FunkyABXWeb.TestResultsLive do
   use FunkyABXWeb, :live_view
-  alias FunkyABX.{Tests, Test}
+
+  alias FunkyABX.{Utils, Tests, Test}
   alias FunkyABX.Tests.Image
 
   @title_max_length 100
@@ -124,6 +125,7 @@ defmodule FunkyABXWeb.TestResultsLive do
            dgettext("test", "Test results - %{test_title}",
              test_title: String.slice(test.title, 0..@title_max_length)
            ),
+         page_id: Utils.get_page_id_from_socket(socket),
          test: test,
          result_modules: result_modules,
          current_user_id: Map.get(session, "current_user_id"),
@@ -233,6 +235,8 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @impl true
   def handle_info(%{event: "test_taken"} = _payload, socket) do
+    dgettext("test", "Someone just took this test !") |> Utils.send_success_toast(socket.assigns.page_id)
+
     # todo manage refresh of the data on components
     {:noreply,
      assign(socket, %{

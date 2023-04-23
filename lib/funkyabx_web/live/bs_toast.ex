@@ -45,7 +45,8 @@ defmodule FunkyABXWeb.BsToastLive do
 
     {:ok,
      socket
-     |> stream(:toasts, [])}
+     |> stream(:toasts, []),
+     layout: {FunkyABXWeb.Layouts, :toast}}
   end
 
   @impl true

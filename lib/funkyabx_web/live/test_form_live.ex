@@ -601,6 +601,8 @@ defmodule FunkyABXWeb.TestFormLive do
       socket.assigns.changeset
       |> Ecto.Changeset.put_assoc(:tracks, socket.assigns.test.tracks)
 
+    dgettext("test", "Someone just took this test !") |> Utils.send_success_toast(socket.assigns.page_id)
+
     {:noreply,
      assign(socket, %{changeset: changeset, test_updatable: false, tracks_to_delete: []})}
   end
@@ -609,7 +611,7 @@ defmodule FunkyABXWeb.TestFormLive do
     {:noreply,
      socket
      |> put_flash(:success, text)
-     |> push_redirect(to: url, redirect: true)}
+     |> push_navigate(to: url)}
   end
 
   def handle_info(:invitations_updated, socket) do
@@ -698,6 +700,8 @@ defmodule FunkyABXWeb.TestFormLive do
             link: link
           )
           |> raw()
+
+        dgettext("test", "Your test has been successfully created !") |> Utils.send_success_toast(socket.assigns.page_id)
 
         Process.send_after(
           self(),
@@ -854,6 +858,8 @@ defmodule FunkyABXWeb.TestFormLive do
     FunkyABXWeb.Endpoint.broadcast!(test.id, "test_deleted", nil)
 
     flash_text = dgettext("test", "Your test has been successfully deleted.")
+
+    Utils.send_success_toast(flash_text, socket.assigns.page_id)
 
     Process.send_after(
       self(),
