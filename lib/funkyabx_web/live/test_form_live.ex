@@ -1063,7 +1063,7 @@ defmodule FunkyABXWeb.TestFormLive do
         |> Utils.send_success_toast(socket.assigns.page_id)
 
         test = Tests.get_edit(test.slug)
-        changeset = Test.changeset_update(test) |> IO.inspect()
+        changeset = Test.changeset_update(test)
 
         {:noreply, assign(socket, test: test, changeset: changeset, test_submittable: true)}
 
@@ -1173,7 +1173,6 @@ defmodule FunkyABXWeb.TestFormLive do
       socket.assigns.test
       |> Test.changeset_update(updated_test_params)
       |> update_action(socket.assigns.action)
-      |> IO.inspect()
 
     {:noreply,
      assign(socket,

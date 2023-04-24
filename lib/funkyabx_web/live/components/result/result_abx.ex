@@ -73,7 +73,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
               :if={Kernel.length(@test.tracks) == 2}
               class="d-flex flex-grow-1 justify-content-end align-items-center"
             >
-              <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small">
+              <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-muted small d-none">
                 <%= dgettext(
                   "test",
                   "Confidence that this result is better than chance: %{probability}%",
@@ -87,7 +87,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
           </div>
         <% end %>
       </div>
-      <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small">
+      <div :if={Kernel.length(@test.tracks) == 2} class="text-muted small d-none">
         <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(
           dgettext(
             "test",
