@@ -35,51 +35,65 @@ defmodule FunkyABXWeb.LocalTestFormLive do
         <div class="col-md-6 col-sm-12">
           <h4 class="mt-1 header-typographica"><%= dgettext("test", "Test type") %></h4>
           <fieldset class="form-group mb-3">
-            <%= hidden_input(f, :type) %>
             <div class="form-unit px-3 py-3 rounded-3">
-              <div class="fs-8 mb-2 text-muted mb-1">
-                <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= dgettext(
-                  "test",
-                  "Select at least one option"
-                ) %>
-              </div>
               <div class="form-check">
                 <label class="form-check-label">
-                  <%= checkbox(f, :rating, class: "form-check-input") %>
+                  <%= radio_button(f, :type, "regular",
+                    class: "form-check-input") %>
+                  <%= dgettext("test", "Blind test") %>
+                </label>
+                <%= error_tag(f, :type) %>
+              </div>
+              <div class="fs-8 mb-2 text-muted ms-4 mb-1">
+                <i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option
+              </div>
+              <div class="form-check ms-4">
+                <label class="form-check-label">
+                  <%= checkbox(f, :rating,
+                    class: "form-check-input",
+                    disabled: get_field(@changeset, :type) !== :regular
+                  ) %>
                   <%= dgettext("test", "Enable rating") %>
                 </label>
 
-                <div class="form-check mt-2">
+                <div class="form-check mt-2 ms-1 form-test-example" data-target="example-picking">
                   <label class="form-check-label">
                     <%= radio_button(f, :regular_type, "pick",
                       class: "form-check-input",
-                      disabled: get_field(@changeset, :rating) !== true
-                    ) %>
-                    <%= dgettext("test", "Picking") %>
+                      disabled:
+                        get_field(@changeset, :type) !== :regular or
+                          get_field(@changeset, :rating) !== true
+                    ) %> Picking
                   </label>
                   <div class="form-text mb-2">
-                    <%= dgettext("test", "You will have to pick your preferred track") %>
+                    <%= dgettext("test", "You will have to pick their preferred track") %>
                   </div>
                 </div>
 
-                <div class="form-check ms-1">
+                <div class="form-check ms-1 form-test-example" data-target="example-stars">
                   <label class="form-check-label">
                     <%= radio_button(f, :regular_type, "star",
                       class: "form-check-input",
-                      disabled: get_field(@changeset, :rating) !== true
-                    ) %>
-                    <%= dgettext("test", "Stars") %>
+                      disabled:
+                        get_field(@changeset, :type) !== :regular or
+                          get_field(@changeset, :rating) !== true
+                    ) %> Stars
                   </label>
                   <div class="form-text mb-2">
-                    <%= dgettext("test", "Each track will have a 1-5 star rating") %>
+                    <%= dgettext(
+                      "test",
+                      "Each track will have a 1-5 star rating (usually NOT the best choice !)"
+                    ) %>
                   </div>
                 </div>
 
-                <div class="form-check ms-1">
+                <div class="form-check ms-1 form-test-example" data-target="example-ranking">
                   <label class="form-check-label">
                     <%= radio_button(f, :regular_type, "rank",
                       class: "form-check-input",
-                      disabled: get_field(@changeset, :rating) !== true
+                      disabled:
+                        get_field(@changeset, :type) !== :regular or
+                          get_field(@changeset, :rating) !== true
                     ) %>
                     <%= dgettext("test", "Ranking") %>
                   </label>
@@ -90,7 +104,9 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                     <label class="form-check-label">
                       <%= checkbox(f, :ranking_only_extremities,
                         class: "form-check-input",
-                        disabled: Kernel.length(get_field(@changeset, :tracks)) < 10
+                        disabled:
+                          get_field(@changeset, :type) !== :regular or
+                            Kernel.length(get_field(@changeset, :tracks)) < 10
                       ) %>
                       <%= dgettext("test", "Only rank the top/bottom three tracks") %>
                     </label>
@@ -100,13 +116,49 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                   </div>
                 </div>
               </div>
-              <div class="form-check">
+              <div class="form-check ms-4 form-test-example" data-target="example-identification">
                 <label class="form-check-label">
-                  <%= checkbox(f, :identification, class: "form-check-input") %>
+                  <%= checkbox(f, :identification,
+                    class: "form-check-input",
+                    disabled: get_field(@changeset, :type) !== :regular
+                  ) %>
                   <%= dgettext("test", "Recognition test") %>
                 </label>
                 <div class="form-text mb-2">
                   <%= dgettext("test", "You will have to identify the anonymized tracks") %>
+                </div>
+              </div>
+
+              <div class="form-check disabled mt-4 mb-2 form-test-example" data-target="example-abx">
+                <label class="form-check-label">
+                  <%= radio_button(f, :type, "abx",
+                    class: "form-check-input"
+                  ) %>
+                  <%= dgettext("test", "ABX test") %>
+                </label>
+                <div class="form-text mb-2">
+                  <%= dgettext("test", "You will have to guess which track is cloned for n rounds") %>
+                </div>
+                <div class="row ms-4 mb-1">
+                  <label for="test[nb_of_rounds]" class="col-6 col-sm-4 col-form-label ps-0">
+                    <%= dgettext("test", "Number of rounds:") %>
+                  </label>
+                  <div class="col-6 col-sm-2">
+                    <%= number_input(f, :nb_of_rounds,
+                      class: "form-control",
+                      required: input_value(f, :type) == :abx,
+                      disabled: get_field(@changeset, :type) !== :abx
+                    ) %>
+                  </div>
+                </div>
+                <div class="form-check mt-2 ms-4 mb-3">
+                  <label class="form-check-label">
+                    <%= checkbox(f, :anonymized_track_title,
+                      class: "form-check-input",
+                      disabled: get_field(@changeset, :type) !== :abx
+                    ) %>
+                    <%= dgettext("test", "Hide tracks' title") %>
+                  </label>
                 </div>
               </div>
             </div>
@@ -121,10 +173,11 @@ defmodule FunkyABXWeb.LocalTestFormLive do
             <div class="form-unit p-3 pb-2 rounded-3" id="local_files_drop_zone">
               <div class="row form-unit pb-1 rounded-3">
                 <%= label(:f, :filename, dgettext("test", "Add file(s):"),
-                  class: "col-sm-4 col-form-label text-start text-md-end"
+                  class: "col-sm-3 col-form-label text-start text-md-end",
+                  style: "padding-top: 5px;"
                 ) %>
                 <div class="col text-center">
-                  <button id="local-file-picker" type="button" class="btn btn-info">
+                  <button id="local-file-picker" type="button" class="btn btn-info px-4">
                     <i class="bi bi-file-earmark-music"></i>&nbsp;&nbsp;<%= dgettext(
                       "test",
                       "Select files"
@@ -132,7 +185,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                   </button>
                 </div>
                 <div class="col text-center">
-                  <button id="local-folder-picker" type="button" class="btn btn-secondary">
+                  <button id="local-folder-picker" type="button" class="btn btn-secondary  px-3">
                     <i class="bi bi-folder-plus"></i>&nbsp;&nbsp;<%= dgettext("test", "Select folder") %>
                   </button>
                 </div>

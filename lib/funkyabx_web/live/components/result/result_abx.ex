@@ -22,7 +22,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
       end
 
     ~H"""
-    <div>
+    <div style="min-height: 200px">
       <h4 class="mt-3 header-neon"><%= dgettext("test", "ABX") %></h4>
 
       <div :if={@visitor_guesses != nil} class="mb-3">
@@ -35,7 +35,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
         <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
       </div>
 
-      <div class="tracks my-2 mb-1 track-results results">
+      <div :if={@test.local === false} class="tracks my-2 mb-1 track-results results">
         <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin">
           <%= dgettext("test", "No test taken ... yet!") %>
         </div>

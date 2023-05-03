@@ -26,7 +26,7 @@ defmodule FunkyABX.Download do
             # Couldn't get the redirect to work with async so we manage it "manually" below
             # follow_redirect: true,
             # force_redirect: true,
-            pool: :checker,
+            pool: :download,
             insecure: true
           ]
         )
@@ -83,11 +83,14 @@ defmodule FunkyABX.Download do
           reason when reason == :checkout_timeout ->
             Logger.warn("Error (#{url}): checkout_timeout - restarting pool ...")
 
-            :hackney_pool.stop_pool(:checker)
+            :hackney_pool.stop_pool(:download)
 
           reason when is_tuple(reason) and tuple_size(reason) == 2 ->
             {_error, {_error2, error_message}} = reason
             Logger.warn("Error (#{url}): #{to_string(error_message)}")
+
+          reason ->
+            Logger.warn("Error (#{url}): #{reason}")
         end
 
         File.close(fd)

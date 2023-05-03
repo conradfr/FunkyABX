@@ -404,7 +404,8 @@ defmodule FunkyABXWeb.TestFormLive do
                   <i class="bi bi-envelope"></i> <%= dgettext("test", "Send invitations") %>
                 </span>
                 <span :if={@current_user == nil} class="text-muted">
-                  <br /><small>
+                  <br />
+                  <small>
                     &nbsp;<%= dgettext(
                       "test",
                       "(available only for tests created by logged in users)"

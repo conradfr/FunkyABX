@@ -151,7 +151,7 @@ defmodule FunkyABXWeb.TestLive do
             </div>
           <% end %>
         </div>
-        <div :if={@test.local == false and @test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
+        <div :if={@test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
           <%= dgettext("test", "Round %{current_round} / %{nb_of_rounds}",
             current_round: @current_round,
             nb_of_rounds: @test.nb_of_rounds

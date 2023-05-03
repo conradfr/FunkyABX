@@ -77,9 +77,11 @@ defmodule FunkyABX.Test do
   def new_local() do
     %Test{
       id: UUID.generate(),
+      type: :regular,
       local: true,
       title: "Local test",
-      nb_of_rounds: 1,
+      nb_of_rounds: 10,
+      anonymized_track_title: false,
       tracks: []
     }
   end
@@ -211,6 +213,8 @@ defmodule FunkyABX.Test do
     test
     |> cast(attrs, [
       :type,
+      :nb_of_rounds,
+      :anonymized_track_title,
       :rating,
       :regular_type,
       :ranking_only_extremities,
@@ -219,8 +223,10 @@ defmodule FunkyABX.Test do
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> Validators.validate_general_type()
     |> Validators.ensure_regular_type()
+    |> Validators.validate_nb_rounds()
+    |> Validators.validate_anonymized()
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
-    |> validate_required([:type])
+    |> validate_required([:type, :nb_of_rounds])
     |> validate_length(:tracks,
       min: @minimum_tracks,
       message: "A test needs to have at least two tracks."
