@@ -2,12 +2,14 @@ defmodule FunkyABXWeb.UserResetPasswordController do
   use FunkyABXWeb, :controller
 
   alias FunkyABX.Accounts
+  alias FunkyABX.Accounts.User
   alias FunkyABXWeb.Router.Helpers, as: Routes
 
   plug :get_user_by_reset_password_token when action in [:edit, :update]
 
   def new(conn, _params) do
-    render(conn, :new)
+    user = User.changeset(%User{}, %{})
+    render(conn, :new, user: user)
   end
 
   def create(conn, %{"user" => %{"email" => email}}) do

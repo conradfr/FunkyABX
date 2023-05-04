@@ -162,7 +162,7 @@ defmodule FunkyABXWeb.Router do
   scope "/", FunkyABXWeb do
     pipe_through [:browser]
 
-    delete "/users/log_out", UserSessionController, :delete
+    get "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :edit
