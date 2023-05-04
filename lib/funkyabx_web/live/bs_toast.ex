@@ -20,11 +20,20 @@ defmodule FunkyABXWeb.BsToastLive do
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
-        class={"toast text-white #{if toast.type == :success, do: "bg-success"}#{if toast.type == :error, do: "bg-warning"}"}
+        class={[
+          "toast",
+          "text-white",
+          toast.type == :success && "bg-success",
+          toast.type == :error && "bg-warning"
+        ]}
       >
         <div class="d-flex justify-content-center align-items-center p-3">
           <div class="toast-icon">
-            <i class={"bi #{if toast.type == :success, do: "bi-check-circle-fill"}#{if toast.type == :error, do: "bi-x-circle-fill"}"}>
+            <i class={[
+              "bi",
+              toast.type == :success && "bi-check-circle-fill",
+              toast.type == :error && "bi-x-circle-fill"
+            ]}>
             </i>
           </div>
           <div class="toast-body flex-fill py-0 text-center align-middle">

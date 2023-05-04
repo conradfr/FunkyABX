@@ -497,7 +497,11 @@ defmodule FunkyABXWeb.TestFormLive do
               placeholder: dgettext("test", "Optional")
             ) %>
             <div class="fs-8 mt-2 mb-1 cursor-link" phx-click="toggle_description">
-              Preview&nbsp;&nbsp;<i class={"bi bi-arrow-#{if @view_description == true do "down" else "right" end}-circle"}></i>
+              Preview&nbsp;&nbsp;<i class={[
+                "bi",
+                @view_description == true && "bi-arrow-down",
+                @view_description == false && "bi-arrow-right"
+              ]}></i>
             </div>
             <%= if @view_description == true do %>
               <TestDescriptionComponent.format
@@ -721,7 +725,14 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="col-sm-2">
                   <button
                     type="button"
-                    class={"btn btn-secondary mt-2 mt-sm-0 #{if get_field(@changeset, :upload_url) == nil or get_field(@changeset, :upload_url) == "", do: " disabled"}"}
+                    class={[
+                      "btn",
+                      "btn-secondary",
+                      "mt-2",
+                      "mt-sm-0",
+                      (get_field(@changeset, :upload_url) == nil or
+                         get_field(@changeset, :upload_url) == "") && "disabled"
+                    ]}
                     phx-click="add_url"
                   >
                     <i class="bi bi-plus-lg"></i> <%= dgettext("test", "Add") %>
@@ -823,7 +834,11 @@ defmodule FunkyABXWeb.TestFormLive do
                   <%= if input_value(fp, :id) != nil do %>
                     <button
                       type="button"
-                      class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"}
+                      class={[
+                        "btn",
+                        "btn-dark",
+                        @test_updatable == false && " disabled"
+                      ]}
                       data-confirm={dgettext("site", "Are you sure?")}
                       phx-click="delete_track"
                       phx-value-id={input_value(fp, :id)}
@@ -833,7 +848,11 @@ defmodule FunkyABXWeb.TestFormLive do
                   <% else %>
                     <button
                       type="button"
-                      class={"btn btn-dark#{if @test_updatable == false, do: " disabled"}"}
+                      class={[
+                        "btn",
+                        "btn-dark",
+                        @test_updatable == false && " disabled"
+                      ]}
                       phx-click="remove_track"
                       phx-value-id={input_value(fp, :temp_id)}
                     >

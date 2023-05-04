@@ -1,6 +1,10 @@
 <li class="nav-item dropdown">
   <a
-    class={"nav-link dropdown-toggle#{if @current_user, do: " funkyabx-connected"}"}
+    class={[
+      "nav-link",
+      "dropdown-toggle",
+      @current_user && "funkyabx-connected"
+    ]}
     href="#"
     id="navbarDropdownUserMenuLink"
     role="button"

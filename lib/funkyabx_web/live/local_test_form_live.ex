@@ -38,8 +38,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
             <div class="form-unit px-3 py-3 rounded-3">
               <div class="form-check">
                 <label class="form-check-label">
-                  <%= radio_button(f, :type, "regular",
-                    class: "form-check-input") %>
+                  <%= radio_button(f, :type, "regular", class: "form-check-input") %>
                   <%= dgettext("test", "Blind test") %>
                 </label>
                 <%= error_tag(f, :type) %>
@@ -131,9 +130,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
 
               <div class="form-check disabled mt-4 mb-2 form-test-example" data-target="example-abx">
                 <label class="form-check-label">
-                  <%= radio_button(f, :type, "abx",
-                    class: "form-check-input"
-                  ) %>
+                  <%= radio_button(f, :type, "abx", class: "form-check-input") %>
                   <%= dgettext("test", "ABX test") %>
                 </label>
                 <div class="form-text mb-2">

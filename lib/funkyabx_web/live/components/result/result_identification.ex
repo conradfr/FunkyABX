@@ -70,7 +70,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
           <%= dgettext("test", "No tracks guesses ... yet!") %>
         </div>
         <%= for {identification, i} <- @identifications |> Enum.with_index(1) do %>
-          <div class={"track my-1 #{if (i > 1), do: "mt-4"} d-flex flex-wrap align-items-center"}>
+          <div class={["track", "my-1", "d-flex", "flex-wrap", "align-items-center", i > 1 && "mt-4"]}>
             <TestResultTrackHeaderComponent.display
               playing={@play_track_id == identification.track_id}
               rank={i}
@@ -113,10 +113,13 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                 <div class="my-1 d-flex flex-wrap align-items-center justify-content-end">
                   <div class="p-1 ps-0 text-end text-muted"><small>Mostly identified as</small></div>
                   <div class="p-1 ps-0 text-end text-truncate">
-                    <i
-                      class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}
-                      }
-                    >
+                    <i class={[
+                      "bi",
+                      identification.track_id == guess["track_guessed_id"] && "bi-check" &&
+                        "color-correct",
+                      identification.track_id != guess["track_guessed_id"] && "bi-x" &&
+                        "color-incorrect"
+                    ]}>
                     </i> <%= guess["title"] %>
                   </div>
                   <div class="p-1 ps-0 text-end text-muted">
@@ -134,10 +137,13 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                 >
                   <div class="p-1 ps-0 text-end text-muted"><small>Identified as</small></div>
                   <div class="p-1 ps-0 text-end text-truncate">
-                    <i
-                      class={"bi bi-#{if identification.track_id == guess["track_guessed_id"], do: "check color-correct", else: "x color-incorrect"}"}
-                      }
-                    >
+                    <i class={[
+                      "bi",
+                      identification.track_id == guess["track_guessed_id"] && "bi-check" &&
+                        "color-correct",
+                      identification.track_id != guess["track_guessed_id"] && "bi-x" &&
+                        "color-incorrect"
+                    ]}>
                     </i><%= guess["title"] %>
                   </div>
                   <div class="p-1 ps-0 text-end text-muted">

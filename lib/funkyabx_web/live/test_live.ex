@@ -94,7 +94,13 @@ defmodule FunkyABXWeb.TestLive do
           <button
             type="button"
             phx-click={JS.dispatch("back", to: "body")}
-            class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}
+            class={[
+              "btn",
+              "btn-dark",
+              "px-2",
+              "me-1",
+              @tracks_loaded == false && "disabled"
+            ]}
           >
             <i class="bi bi-skip-start-fill"></i>
           </button>
@@ -110,7 +116,14 @@ defmodule FunkyABXWeb.TestLive do
             <button
               type="button"
               phx-click={JS.dispatch("play", to: "body")}
-              class={"btn btn-secondary header-typographica btn-play me-1#{if @tracks_loaded == false, do: " disabled"}"}
+              class={[
+                "btn",
+                "btn-secondary",
+                "header-typographica",
+                "btn-play",
+                "me-1",
+                @tracks_loaded == false && "disabled"
+              ]}
             >
               <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;<%= dgettext("test", "Play") %>&nbsp;&nbsp;
             </button>
@@ -118,7 +131,7 @@ defmodule FunkyABXWeb.TestLive do
           <button
             type="button"
             phx-click={JS.dispatch("stop", to: "body")}
-            class={"btn btn-dark px-2 me-1#{if @tracks_loaded == false, do: " disabled"}"}
+            class={["btn", "btn-dark", "px-2", "me-1", @tracks_loaded == false && "disabled"]}
           >
             <i class="bi bi-stop-fill"></i>
           </button>
@@ -212,12 +225,20 @@ defmodule FunkyABXWeb.TestLive do
 
     <div class="tracks my-2">
       <%= for {track, i} <- @tracks |> Enum.with_index(1) do %>
-        <div class={"track my-1 d-flex flex-wrap flex-md-nowrap align-items-center #{if @current_track == track.hash, do: "track-active"}"}>
+        <div class={[
+          "track",
+          "my-1",
+          "d-flex",
+          "flex-wrap",
+          "flex-md-nowrap",
+          "align-items-center",
+          @current_track == track.hash && "track-active"
+        ]}>
           <div class="p-2">
             <%= if @current_track == track.hash and @playing == true do %>
               <button
                 type="button"
-                class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"}
+                class={["btn", "btn-dark", "px-2", @current_track == track.hash && "btn-track-active"]}
                 phx-click={JS.dispatch("pause", to: "body")}
               >
                 <i class="bi bi-pause-fill"></i>
@@ -225,10 +246,10 @@ defmodule FunkyABXWeb.TestLive do
             <% else %>
               <button
                 type="button"
-                class={"btn btn-dark px-2 #{if @current_track == track.hash, do: "btn-track-active"}"}
+                class={["btn", "btn-dark", "px-2", @current_track == track.hash && "btn-track-active"]}
                 phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}
               >
-                <i class={"bi bi-play-fill #{if @tracks_loaded == false, do: " text-muted"}"}></i>
+                <i class={["bi", "bi-play-fill", @tracks_loaded == false && "text-muted"]}></i>
               </button>
             <% end %>
           </div>

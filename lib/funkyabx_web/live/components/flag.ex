@@ -28,7 +28,7 @@ defmodule TestFlagComponent do
           phx-target={@myself}
         />
         <button
-          class={"btn btn-secondary#{if @flag_text == "", do: " disabled"}"}
+          class={["btn btn-secondary", @flag_text == "" && "disabled"]}
           type="button"
           id="button-flag"
           phx-target={@myself}

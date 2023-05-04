@@ -23,7 +23,7 @@ defmodule InvitationComponent do
           phx-target={@myself}
         />
         <button
-          class={"btn btn-secondary#{if @name_or_email == "", do: " disabled"}"}
+          class={["btn", "btn-secondary", @name_or_email == "" && "disabled"]}
           id="button-name_or_email"
           type="button"
           phx-click="name_or_email_submit"

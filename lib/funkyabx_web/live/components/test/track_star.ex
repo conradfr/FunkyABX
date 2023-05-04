@@ -18,7 +18,11 @@ defmodule FunkyABXWeb.TestTrackStarComponent do
         <%= for star <- 1..5 do %>
           <i
             title={star}
-            class={"bi bi-star#{if Map.get(@starred, @track.id, 0) >= star, do: "-fill"}"}
+            class={[
+              "bi",
+              Map.get(@starred, @track.id, 0) < star && "bi-star",
+              Map.get(@starred, @track.id, 0) >= star && "bi-star-fill"
+            ]}
             phx-click="star_track"
             phx-value-track_id={@track.id}
             phx-value-star={star}

@@ -51,7 +51,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
           <%= dgettext("test", "No rating done ... yet!") %>
         </div>
         <%= for {star, i} <- @stars |> Enum.with_index(1) do %>
-          <div class={"#{if @star_detail == true, do: "mb-3"}"}>
+          <div class={[@star_detail == true && "mb-3"]}>
             <div
               class="track my-1 d-flex flex-wrap justify-content-between align-items-center"
               phx-click={
@@ -103,7 +103,14 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                 </div>
                 <div class="p-3 ps-0 text-end test-starring-result">
                   <%= for star_nb <- 1..5 do %>
-                    <i title={star.rank} class={"bi bi-star#{if star.rank >= star_nb, do: "-fill"}"}>
+                    <i
+                      title={star.rank}
+                      class={[
+                        "bi",
+                        star.rank < star_nb && "bi-star",
+                        star.rank >= star_nb && "bi-star-fill"
+                      ]}
+                    >
                     </i>
                   <% end %>
                 </div>
