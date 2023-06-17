@@ -111,7 +111,9 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             <%= for {guess, j} <- identification.guesses |> Enum.with_index() do %>
               <%= if (j == 0) do %>
                 <div class="my-1 d-flex flex-wrap align-items-center justify-content-end">
-                  <div class="p-1 ps-0 text-end text-body-secondary"><small>Mostly identified as</small></div>
+                  <div class="p-1 ps-0 text-end text-body-secondary">
+                    <small>Mostly identified as</small>
+                  </div>
                   <div class="p-1 ps-0 text-end text-truncate">
                     <i class={[
                       "bi",
@@ -135,7 +137,9 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                   id={"#{i}_#{j}"}
                   class="track-guess d-flex align-items-center justify-content-end"
                 >
-                  <div class="p-1 ps-0 text-end text-body-secondary"><small>Identified as</small></div>
+                  <div class="p-1 ps-0 text-end text-body-secondary">
+                    <small>Identified as</small>
+                  </div>
                   <div class="p-1 ps-0 text-end text-truncate">
                     <i class={[
                       "bi",

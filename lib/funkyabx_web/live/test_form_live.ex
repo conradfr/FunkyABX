@@ -684,7 +684,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <.live_file_input upload={@uploads.tracks} />
                 </div>
                 <div :if={!@test_updatable} class="col text-center pt-1">
-                  <input type="file" disabled>
+                  <input type="file" disabled />
                 </div>
                 <div class="col-1 text-center col-form-label d-none d-sm-block">
                   <i
@@ -1324,8 +1324,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @impl true
   def handle_event("add_url", _value, socket)
-      when socket.assigns.test_updatable == true and is_binary(socket.assigns.upload_url)
-        and socket.assigns.upload_url != "" do
+      when socket.assigns.test_updatable == true and is_binary(socket.assigns.upload_url) and
+             socket.assigns.upload_url != "" do
     {:noreply, add_track_from_url(socket, socket.assigns.upload_url)}
   end
 

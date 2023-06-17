@@ -249,7 +249,8 @@ defmodule FunkyABXWeb.TestLive do
                 class={["btn", "btn-dark", "px-2", @current_track == track.hash && "btn-track-active"]}
                 phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}
               >
-                <i class={["bi", "bi-play-fill", @tracks_loaded == false && "text-body-secondary"]}></i>
+                <i class={["bi", "bi-play-fill", @tracks_loaded == false && "text-body-secondary"]}>
+                </i>
               </button>
             <% end %>
           </div>

@@ -12,7 +12,9 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
     ~H"""
     <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
       <div class="me-auto flex-grow-1 flex-md-grow-0">
-        <span class="me-3 text-body-secondary small"><%= dgettext("test", "I rank this track ...") %></span>
+        <span class="me-3 text-body-secondary small">
+          <%= dgettext("test", "I rank this track ...") %>
+        </span>
       </div>
       <div class=" p-0 p-md-3 flex-fill">
         <form phx-change="change_ranking" phx-target={@myself}>
