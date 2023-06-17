@@ -35,23 +35,38 @@ const TestResultsHook = {
     /* eslint-disable camelcase */
     this.play = async (e) => {
       const { test_local, track_id, track_url } = e.detail;
-      // pause currently playing track if any
-      if (this.audio !== null) {
-        this.audio.pause();
-        this.audio = null;
-      }
+      let audio = null;
 
       if (test_local === true) {
         const file = audioFiles[track_id];
         const fileUrl = URL.createObjectURL(file);
 
-        this.audio = new Audio(fileUrl);
+        audio = new Audio(fileUrl);
       } else {
-        this.audio = new Audio(track_url);
+        audio = new Audio(track_url);
       }
 
-      this.audio.volume = 1;
-      this.audio.play();
+      if (this.audio !== null) {
+        audio.volume = 0;
+      }
+
+      audio.loop = true;
+      audio.play();
+
+      // if track already playing we try to match the current time and limit the cut between the two plays
+
+      if (this.audio !== null) {
+        audio.currentTime = this.audio.currentTime;
+        this.audio.volume = 0;
+      }
+
+      if (this.audio !== null) {
+        audio.volume = 1;
+        this.audio.pause();
+        this.audio = null;
+      }
+
+      this.audio = audio;
 
       this.pushEvent('playing', { track_id });
     };
