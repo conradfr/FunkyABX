@@ -32,29 +32,26 @@ let opts = {
   external: ['*.woff2','*.woff', '*.ttf', '*.otf']
 }
 
-if (watch) {
-  opts = {
-    ...opts,
-    watch,
-    sourcemap: 'inline'
-  }
-}
-
 if (deploy) {
   opts = {
     ...opts,
-    minify: true
-  }
+    minify: true,
+  };
 }
 
-const promise = esbuild.build(opts)
-
 if (watch) {
-  promise.then(_result => {
-    process.stdin.on('close', () => {
-      process.exit(0)
-    })
-
-    process.stdin.resume()
-  })
+  opts = {
+    ...opts,
+    sourcemap: "inline",
+  };
+  esbuild
+      .context(opts)
+      .then((ctx) => {
+        ctx.watch();
+      })
+      .catch((_error) => {
+        process.exit(1);
+      });
+} else {
+  esbuild.build(opts);
 }

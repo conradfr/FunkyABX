@@ -1,23 +1,23 @@
 {
   "name": "funkyabx",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "bootstrap": "^5.2.3",
-    "browser-fs-access": "^0.33.0",
-    "eventemitter3": "^5.0.0",
+    "bootstrap": "^5.3.0",
+    "browser-fs-access": "^0.33.1",
+    "eventemitter3": "^5.0.1",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view"
   },
   "devDependencies": {
-    "esbuild": "^0.16.17",
-    "esbuild-sass-plugin": "2.6.0",
-    "eslint": "^8.36.0",
+    "esbuild": "^0.18.0",
+    "esbuild-sass-plugin": "2.9.0",
+    "eslint": "^8.43.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "sass": "^1.62.0"
+    "sass": "^1.63.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
