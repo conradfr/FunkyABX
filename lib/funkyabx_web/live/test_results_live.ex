@@ -25,7 +25,7 @@ defmodule FunkyABXWeb.TestResultsLive do
       </div>
       <%= unless @test.type == :listening or @test.local == true do %>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <span class="fs-7 text-muted header-texgyreadventor">
+          <span class="fs-7 text-body-secondary header-texgyreadventor">
             <%= raw(
               dngettext(
                 "test",
@@ -37,7 +37,7 @@ defmodule FunkyABXWeb.TestResultsLive do
           </span>
           <time
             :if={Tests.is_closed?(@test)}
-            class="header-texgyreadventor text-muted"
+            class="header-texgyreadventor text-body-secondary"
             title={@test.closed_at}
             datetime={@test.closed_at}
           >
@@ -49,11 +49,11 @@ defmodule FunkyABXWeb.TestResultsLive do
 
     <%= if @test.description != nil do %>
       <%= if @view_description == false do %>
-        <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">
+        <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_description">
           <%= dgettext("test", "View description") %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
         </div>
       <% else %>
-        <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_description">
+        <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_description">
           <%= dgettext("test", "Hide description") %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
         </div>
         <TestDescriptionComponent.format

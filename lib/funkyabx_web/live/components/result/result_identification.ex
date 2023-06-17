@@ -47,7 +47,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
         <div :if={@test.local == false} class="justify-content-end text-end pt-4">
           <%= if @identification_detail == false do %>
             <span
-              class="fs-8 mt-2 cursor-link text-muted"
+              class="fs-8 mt-2 cursor-link text-body-secondary"
               phx-click="toggle_detail"
               phx-target={@myself}
             >
@@ -55,7 +55,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             </span>
           <% else %>
             <span
-              class="fs-8 mt-2 cursor-link text-muted"
+              class="fs-8 mt-2 cursor-link text-body-secondary"
               phx-click="toggle_detail"
               phx-target={@myself}
             >
@@ -100,7 +100,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                   ).title %>
                 <% end %>
               <% else %>
-                <small :if={i == 1 and @is_another_session == false} class="text-muted">
+                <small :if={i == 1 and @is_another_session == false} class="text-body-secondary">
                   <%= dgettext("test", "You did not participate in this test") %>
                 </small>
               <% end %>
@@ -111,7 +111,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             <%= for {guess, j} <- identification.guesses |> Enum.with_index() do %>
               <%= if (j == 0) do %>
                 <div class="my-1 d-flex flex-wrap align-items-center justify-content-end">
-                  <div class="p-1 ps-0 text-end text-muted"><small>Mostly identified as</small></div>
+                  <div class="p-1 ps-0 text-end text-body-secondary"><small>Mostly identified as</small></div>
                   <div class="p-1 ps-0 text-end text-truncate">
                     <i class={[
                       "bi",
@@ -122,7 +122,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                     ]}>
                     </i> <%= guess["title"] %>
                   </div>
-                  <div class="p-1 ps-0 text-end text-muted">
+                  <div class="p-1 ps-0 text-end text-body-secondary">
                     <small><%= dgettext("test", "at") %></small>
                   </div>
                   <div class="p-2 ps-0 text-end">
@@ -135,7 +135,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                   id={"#{i}_#{j}"}
                   class="track-guess d-flex align-items-center justify-content-end"
                 >
-                  <div class="p-1 ps-0 text-end text-muted"><small>Identified as</small></div>
+                  <div class="p-1 ps-0 text-end text-body-secondary"><small>Identified as</small></div>
                   <div class="p-1 ps-0 text-end text-truncate">
                     <i class={[
                       "bi",
@@ -146,7 +146,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                     ]}>
                     </i><%= guess["title"] %>
                   </div>
-                  <div class="p-1 ps-0 text-end text-muted">
+                  <div class="p-1 ps-0 text-end text-body-secondary">
                     <small><%= dgettext("test", "at") %></small>
                   </div>
                   <div class="p-2 ps-0 text-end">

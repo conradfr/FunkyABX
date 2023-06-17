@@ -10,7 +10,7 @@ defmodule TestFlagComponent do
     ~H"""
     <div class="text-end">
       <span
-        class="fs-9 text-muted cursor-link"
+        class="fs-9 text-body-secondary cursor-link"
         phx-target={@myself}
         phx-click="flag_toggle"
         title={dgettext("site", "Flag this test")}

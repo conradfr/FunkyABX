@@ -16,7 +16,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
           <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="LocalTestForm">
             Local test
             <i
-              class="bi bi-question-circle text-muted"
+              class="bi bi-question-circle text-body-secondary"
               style="font-size: 0.75rem"
               data-bs-toggle="tooltip"
               title={
@@ -43,7 +43,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 </label>
                 <%= error_tag(f, :type) %>
               </div>
-              <div class="fs-8 mb-2 text-muted ms-4 mb-1">
+              <div class="fs-8 mb-2 text-body-secondary ms-4 mb-1">
                 <i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option
               </div>
               <div class="form-check ms-4">
@@ -188,7 +188,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 </div>
                 <div class="col-1 text-center col-form-label d-none d-sm-block">
                   <i
-                    class="bi bi-info-circle text-muted"
+                    class="bi bi-info-circle text-body-secondary"
                     data-bs-toggle="tooltip"
                     title={dgettext("site", "Or drag and drop files here")}
                   >

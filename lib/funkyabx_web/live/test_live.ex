@@ -24,7 +24,7 @@ defmodule FunkyABXWeb.TestLive do
         :if={@test.local == false and @test.type != :listening}
         class="col-sm-6 text-start text-sm-end pt-1"
       >
-        <div class="fs-7 text-muted header-texgyreadventor">
+        <div class="fs-7 text-body-secondary header-texgyreadventor">
           <%= raw(
             dngettext(
               "test",
@@ -39,7 +39,7 @@ defmodule FunkyABXWeb.TestLive do
             @test.local == false and @test.to_close_at_enabled == true and
               Tests.is_closed?(@test) == false
           }
-          class="fs-7 text-muted header-texgyreadventor"
+          class="fs-7 text-body-secondary header-texgyreadventor"
         >
           <small>
             <%= raw(
@@ -65,16 +65,16 @@ defmodule FunkyABXWeb.TestLive do
     />
 
     <%= if @view_tracklist == false do %>
-      <div class="fs-8 mt-2 mb-2 cursor-link text-muted" phx-click="toggle_tracklist">
+      <div class="fs-8 mt-2 mb-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
         Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
       </div>
     <% else %>
-      <div class="fs-8 mt-2 cursor-link text-muted" phx-click="toggle_tracklist">
+      <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
         Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
       </div>
       <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
-        <%= for {track, i} <- @test.tracks |> Enum.with_index(1) do %>
-          <div class="test-tracklist-one"><%= i %>.&nbsp;&nbsp;<%= track.title %></div>
+        <%= for track <- @test.tracks do %>
+          <div class="test-tracklist-one">- <%= track.title %></div>
         <% end %>
       </div>
     <% end %>
@@ -136,14 +136,14 @@ defmodule FunkyABXWeb.TestLive do
             <i class="bi bi-stop-fill"></i>
           </button>
           <%= if @tracks_loaded == false do %>
-            <div class="spinner-border spinner-border-sm ms-2 text-muted" role="status">
+            <div class="spinner-border spinner-border-sm ms-2 text-body-secondary" role="status">
               <span class="visually-hidden"><%= dgettext("test", "Loading...") %></span>
             </div>
-            <span class="text-muted ms-2">
+            <span class="text-body-secondary ms-2">
               <small><%= dgettext("test", "Loading tracks ...") %></small>
             </span>
           <% else %>
-            <div class="ms-2 text-muted" role="status">
+            <div class="ms-2 text-body-secondary" role="status">
               <small>
                 <i
                   class="bi bi-info-circle text-extra-muted"
@@ -249,7 +249,7 @@ defmodule FunkyABXWeb.TestLive do
                 class={["btn", "btn-dark", "px-2", @current_track == track.hash && "btn-track-active"]}
                 phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}
               >
-                <i class={["bi", "bi-play-fill", @tracks_loaded == false && "text-muted"]}></i>
+                <i class={["bi", "bi-play-fill", @tracks_loaded == false && "text-body-secondary"]}></i>
               </button>
             <% end %>
           </div>
@@ -298,7 +298,7 @@ defmodule FunkyABXWeb.TestLive do
           >
             <div
               :if={@test.local == false and @tracks_loaded == false}
-              class="track-loading-indicator text-muted"
+              class="track-loading-indicator text-body-secondary"
             >
               <small :if={get_track_state(track.hash, @tracks_state) == :loading}>
                 <%= dgettext("test", "Loading ... %{progress}%",
@@ -307,7 +307,7 @@ defmodule FunkyABXWeb.TestLive do
               </small>
               <small :if={get_track_state(track.hash, @tracks_state) == :decoding}>
                 <%= dgettext("test", "Decoding...") %>
-                <div class="spinner-grow spinner-grow-sm ms-2 text-muted" role="status">
+                <div class="spinner-grow spinner-grow-sm ms-2 text-body-secondary" role="status">
                   <span class="visually-hidden"><%= dgettext("test", "Decoding...") %></span>
                 </div>
               </small>

@@ -46,7 +46,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 </label>
                 <%= error_tag(f, :type) %>
               </div>
-              <div class="fs-8 mb-2 text-muted ms-4 mb-1">
+              <div class="fs-8 mb-2 text-body-secondary ms-4 mb-1">
                 <i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option
               </div>
               <div class="form-check ms-4">
@@ -184,7 +184,7 @@ defmodule FunkyABXWeb.TestFormLive do
               <%= unless @test.view_count == nil do %>
                 <legend class="header-typographica">
                   <div
-                    class="float-end fs-8 text-muted"
+                    class="float-end fs-8 text-body-secondary"
                     style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"
                   >
                     <%= raw(
@@ -400,10 +400,10 @@ defmodule FunkyABXWeb.TestFormLive do
             </fieldset>
             <div class="text-center mb-4">
               <%= if @current_user == nil do %>
-                <span class="text-muted">
+                <span class="text-body-secondary">
                   <i class="bi bi-envelope"></i> <%= dgettext("test", "Send invitations") %>
                 </span>
-                <span :if={@current_user == nil} class="text-muted">
+                <span :if={@current_user == nil} class="text-body-secondary">
                   <br />
                   <small>
                     &nbsp;<%= dgettext(
@@ -482,7 +482,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     target="_blank"
                     href="https://www.markdownguide.org/cheat-sheet/"
                   ><%= dgettext "test", "Markdown" %></a>&nbsp;&nbsp;<small><i
-                      class="bi bi-info-circle text-muted"
+                      class="bi bi-info-circle text-body-secondary"
                       data-bs-toggle="tooltip"
                       data-bs-placement="left"
                       title={dgettext("site", "<br> supported for line breaks")}
@@ -621,7 +621,7 @@ defmodule FunkyABXWeb.TestFormLive do
       <fieldset>
         <legend class="header-typographica">
           <span
-            class="float-end fs-8 text-muted"
+            class="float-end fs-8 text-body-secondary"
             style="font-family: var(--bs-font-sans-serif); padding-top: 12px;"
           >
             <i class="bi bi-info-circle"></i>&nbsp;<%= dgettext("test", "Two tracks minimum") %>
@@ -658,7 +658,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     "Apply EBU R128 loudness normalization during upload (wav files only)"
                   ) %>
                 </label>
-                <div class="text-muted text-end">
+                <div class="text-body-secondary text-end">
                   <small>
                     <i class="bi bi-info-circle"></i>&nbsp; <%= dgettext(
                       "test",
@@ -688,7 +688,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
                 <div class="col-1 text-center col-form-label d-none d-sm-block">
                   <i
-                    class="bi bi-info-circle text-muted"
+                    class="bi bi-info-circle text-body-secondary"
                     data-bs-toggle="tooltip"
                     title={dgettext("site", "Or drag and drop files here")}
                   >
@@ -711,7 +711,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <%= url_input(f, :upload_url, class: "form-control", disabled: !@test_updatable) %>
                     <div class="input-group-text">
                       <i
-                        class="bi bi-info-circle text-muted"
+                        class="bi bi-info-circle text-body-secondary"
                         data-bs-toggle="tooltip"
                         data-bs-placement="left"
                         title={

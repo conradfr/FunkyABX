@@ -16,7 +16,7 @@
     &.track-active {
       background-color: $track-active-bg-color;
 
-      .text-muted {
+      .text-muted, .text-body-secondary {
         color: $track-active-text-muted;
       }
 

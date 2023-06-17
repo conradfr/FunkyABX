@@ -60,7 +60,7 @@ defmodule InvitationComponent do
               <%= if invitation.clicked == true do %>
                 <i class="bi bi-check"></i>
               <% else %>
-                <span class="text-muted">-</span>
+                <span class="text-body-secondary">-</span>
               <% end %>
             </td>
             <td :if={@test.type != :listening} class="text-center">
@@ -69,7 +69,7 @@ defmodule InvitationComponent do
                   <i class="bi bi-eye"></i>
                 </a>
               <% else %>
-                <span class="text-muted">-</span>
+                <span class="text-body-secondary">-</span>
               <% end %>
             </td>
           </tr>

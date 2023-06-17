@@ -20,7 +20,7 @@
             <%= if test.view_count != nil do %>
               <i class="bi bi-eye"></i>&nbsp;&nbsp;<%= test.view_count %>
             <% else %>
-              <span class="text-muted">-</span>
+              <span class="text-body-secondary">-</span>
             <% end %>
           </div>
           <div class="d-flex text-end navbar-tests-actions">
@@ -28,7 +28,7 @@
               <div class="px-1">
                 <%= link(dgettext("test", "edit"), to: ~p"/edit/#{test.slug}") %>
               </div>
-              <div class="text-muted">|</div>
+              <div class="text-body-secondary">|</div>
               <%= unless test.type == :listening do %>
                 <div class="px-1">
                   <%= link(dgettext("test", "results"),
@@ -37,13 +37,13 @@
                   ) %>
                 </div>
               <% else %>
-                <div class="px-1 text-muted"><%= dgettext("test", "results") %></div>
+                <div class="px-1 text-body-secondary"><%= dgettext("test", "results") %></div>
               <% end %>
             <% else %>
               <div class="px-1">
                 <%= link(dgettext("test", "edit"), to: ~p"/edit/#{test.slug}/#{test.access_key}") %>
               </div>
-              <div class="text-muted">|</div>
+              <div class="text-body-secondary">|</div>
               <%= unless test.type == :listening do %>
                 <div class="px-1">
                   <%= link(dgettext("test", "results"),
@@ -51,7 +51,7 @@
                   ) %>
                 </div>
               <% else %>
-                <div class="px-1 text-muted"><%= dgettext("test", "results") %></div>
+                <div class="px-1 text-body-secondary"><%= dgettext("test", "results") %></div>
               <% end %>
             <% end %>
           </div>
@@ -60,7 +60,7 @@
     <% end %>
     <%= if Kernel.length(get_tests(@conn)) == 0 do %>
       <li class="navbar-tests px-2 text-center">
-        <small class="text-muted"><%= dgettext("test", "No tests (yet !)") %></small>
+        <small class="text-body-secondary"><%= dgettext("test", "No tests (yet !)") %></small>
       </li>
     <% else %>
       <%= if @current_user do %>

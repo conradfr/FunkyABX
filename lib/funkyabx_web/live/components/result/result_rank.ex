@@ -30,7 +30,7 @@ defmodule FunkyABXWeb.TestResultRankComponent do
         <div :if={@test.local == false} class="justify-content-end text-end pt-4">
           <%= if @ranks_detail == false do %>
             <span
-              class="fs-8 mt-2 cursor-link text-muted"
+              class="fs-8 mt-2 cursor-link text-body-secondary"
               phx-click="toggle_detail"
               phx-target={@myself}
             >
@@ -38,7 +38,7 @@ defmodule FunkyABXWeb.TestResultRankComponent do
             </span>
           <% else %>
             <span
-              class="fs-8 mt-2 cursor-link text-muted"
+              class="fs-8 mt-2 cursor-link text-body-secondary"
               phx-click="toggle_detail"
               phx-target={@myself}
             >
@@ -109,7 +109,7 @@ defmodule FunkyABXWeb.TestResultRankComponent do
           <%= if @ranks_detail == true do %>
             <div class="mb-3">
               <%= if Map.get(rank, :other_ranks, nil) == nil do %>
-                <div class="my-2 text-end text-muted">
+                <div class="my-2 text-end text-body-secondary">
                   <small><%= dgettext("test", "No other ranking") %></small>
                 </div>
               <% else %>

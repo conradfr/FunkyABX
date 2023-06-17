@@ -29,7 +29,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
         <div :if={@test.local == false} class="justify-content-end text-end pt-4">
           <%= if @star_detail == false do %>
             <span
-              class="fs-8 mt-2 cursor-link text-muted"
+              class="fs-8 mt-2 cursor-link text-body-secondary"
               phx-click="toggle_detail"
               phx-target={@myself}
             >
@@ -37,7 +37,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
             </span>
           <% else %>
             <span
-              class="fs-8 mt-2 cursor-link text-muted"
+              class="fs-8 mt-2 cursor-link text-body-secondary"
               phx-click="toggle_detail"
               phx-target={@myself}
             >
@@ -123,14 +123,14 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                   :if={star[String.to_atom("total_star_#{star_nb_sub}")] != 0}
                   class="d-flex align-items-center justify-content-end"
                 >
-                  <div class="p-1 ps-0 text-end text-muted">
+                  <div class="p-1 ps-0 text-end text-body-secondary">
                     <small>
                       <%= for _star_nb <- 1..star_nb_sub do %>
                         <i title={star_nb_sub} class="bi bi-star-fill"></i>
                       <% end %>
                     </small>
                   </div>
-                  <div class="p-1 ps-2 text-end text-muted">
+                  <div class="p-1 ps-2 text-end text-body-secondary">
                     <small>
                       <%= dngettext(
                         "test",
