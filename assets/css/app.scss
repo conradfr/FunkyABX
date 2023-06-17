@@ -12,6 +12,12 @@
 @import "~bootstrap/scss/bootstrap";
 @import "./theme/bootswatch";
 
+/* For some reason disqus background is wrong when using ":root color-scheme: light;" css var, which the Bootswatch theme does.
+   Forcing it to light, which should be ok as we only have one theme. */
+:root {
+  color-scheme: light;
+}
+
 @import "components/footer";
 @import "components/navbar";
 @import "components/test-public";
