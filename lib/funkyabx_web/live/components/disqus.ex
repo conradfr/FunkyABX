@@ -1,20 +1,22 @@
 defmodule DisqusComponent do
-  use FunkyABXWeb, :live_component
+  use Phoenix.Component
+  use FunkyABXWeb, :html
+  use Phoenix.VerifiedRoutes, endpoint: FunkyABXWeb.Endpoint, router: FunkyABXWeb.Router
 
   alias FunkyABX.Test
 
   attr :test, Test, required: true
 
-  def render(assigns) do
+  def load(assigns) do
     ~H"""
-    <div>
+    <div phx-update="ignore" id="disqus">
       <div
         :if={@test.local == false and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id))}
         class="test-comments mt-5"
       >
         <h5 class="header-neon"><%= dgettext("test", "Comments") %></h5>
-        <div phx-update="ignore" id="disqus_thread"></div>
-        <script phx-update="ignore" id="disqus_thread_js">
+        <div id="disqus_thread"></div>
+        <script id="disqus_thread_js">
           var disqus_config = function () {
           this.page.url = '<%= url(~p"/results/#{@test.slug}") %>';
           this.page.identifier = '<%= NaiveDateTime.to_iso8601(@test.inserted_at) %>-<%= @test.slug %>';
