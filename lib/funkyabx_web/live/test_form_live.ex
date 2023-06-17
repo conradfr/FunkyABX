@@ -680,8 +680,11 @@ defmodule FunkyABXWeb.TestFormLive do
                 <%= label(:f, :filename, "Select file(s) to upload:",
                   class: "col-sm-4 col-form-label text-start text-md-end"
                 ) %>
-                <div class="col text-center pt-1">
+                <div :if={@test_updatable} class="col text-center pt-1">
                   <.live_file_input upload={@uploads.tracks} />
+                </div>
+                <div :if={!@test_updatable} class="col text-center pt-1">
+                  <input type="file" disabled>
                 </div>
                 <div class="col-1 text-center col-form-label d-none d-sm-block">
                   <i
@@ -705,7 +708,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 ) %>
                 <div class="col">
                   <div class="input-group">
-                    <%= url_input(f, :upload_url, class: "form-control") %>
+                    <%= url_input(f, :upload_url, class: "form-control", disabled: !@test_updatable) %>
                     <div class="input-group-text">
                       <i
                         class="bi bi-info-circle text-muted"
@@ -1321,7 +1324,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @impl true
   def handle_event("add_url", _value, socket)
-      when is_binary(socket.assigns.upload_url) and socket.assigns.upload_url != "" do
+      when socket.assigns.test_updatable == true and is_binary(socket.assigns.upload_url)
+        and socket.assigns.upload_url != "" do
     {:noreply, add_track_from_url(socket, socket.assigns.upload_url)}
   end
 
@@ -1331,6 +1335,12 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   # Persisted tracks
+
+  @impl true
+  def handle_event("delete_track", _params, socket) when socket.assigns.test_updatable == false do
+    {:noreply, socket}
+  end
+
   @impl true
   def handle_event("delete_track", %{"id" => track_id}, socket) do
     deleted_track =
@@ -1355,6 +1365,12 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   # New tracks
+
+  @impl true
+  def handle_event("remove_track", _params, socket) when socket.assigns.test_updatable == false do
+    {:noreply, socket}
+  end
+
   @impl true
   def handle_event("remove_track", %{"id" => track_id}, socket) do
     tracks =
