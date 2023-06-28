@@ -11,6 +11,7 @@ const TestResultsHook = {
   mounted() {
     const testId = this.el.dataset.testid;
     this.audio = null;
+    this.ctrlPressed = false;
 
     // Send visitor test data to the result page
     if (localStorage[testId] !== undefined) {
@@ -33,8 +34,8 @@ const TestResultsHook = {
     }
 
     /* eslint-disable camelcase */
-    this.play = async (e) => {
-      const { test_local, track_id, track_url } = e.detail;
+    this.play = async (event) => {
+      const { test_local, track_id, track_url } = event.detail;
       let audio = null;
 
       if (test_local === true) {
@@ -56,7 +57,10 @@ const TestResultsHook = {
       // if track already playing we try to match the current time and limit the cut between the two plays
 
       if (this.audio !== null) {
-        audio.currentTime = this.audio.currentTime;
+        if (this.ctrlPressed !== true) {
+          audio.currentTime = this.audio.currentTime;
+        }
+
         this.audio.volume = 0;
       }
 
@@ -79,13 +83,41 @@ const TestResultsHook = {
       }
     };
 
+    this.keydown = (event) => {
+      const key = event.key;
+      switch (key) {
+        case 'Control':
+          this.ctrlPressed = true;
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    this.keyup = (event) => {
+      const key = event.key;
+      switch (key) {
+        case 'Control':
+          this.ctrlPressed = false;
+          break;
+
+        default:
+          break;
+      }
+    };
+
     window.addEventListener('play', this.play, false);
     window.addEventListener('stop', this.stop, false);
+    window.addEventListener('keyup', this.keyup, false);
+    window.addEventListener('keydown', this.keydown, false);
   },
   destroyed() {
     this.stop();
     window.removeEventListener('play', this.play, false);
     window.removeEventListener('stop', this.stop, false);
+    window.removeEventListener('keyup', this.keyup, false);
+    window.removeEventListener('keydown', this.keydown, false);
   }
 };
 

@@ -14,6 +14,7 @@ const PlayerHook = {
     // ---------- INIT ----------
 
     this.ee = new EventEmitter();
+    this.ctrlPressed = false;
 
     const loadPlayer = (tracksJson) => {
       return new Player(
@@ -37,10 +38,15 @@ const PlayerHook = {
 
     // ---------- JS EVENTS ----------
 
-    this.play = (e) => {
-      const { track_hash, start_time } = e.detail;
+    this.play = (event) => {
+      const { track_hash } = event.detail;
+
+      if (this.ctrlPressed === true) {
+        this.stop();
+      }
+
       if (this.player !== null && this.player !== undefined) {
-        this.player.play(track_hash, start_time);
+        this.player.play(track_hash);
       }
     };
 
@@ -62,6 +68,22 @@ const PlayerHook = {
       }
     };
 
+    this.keydown = (event) => {
+      if (this.player === null || this.player === undefined) {
+        return;
+      }
+
+      const key = event.key;
+      switch (key) {
+        case 'Control':
+          this.ctrlPressed = true;
+          break;
+
+        default:
+          break;
+      }
+    };
+
     this.keyup = (event) => {
       if (this.player === null || this.player === undefined) {
         return;
@@ -69,6 +91,10 @@ const PlayerHook = {
 
       const key = event.key;
       switch (key) {
+        case 'Control':
+          this.ctrlPressed = false;
+          break;
+
         case ' ':
           this.player.togglePlay(event.ctrlKey);
           break;
@@ -102,7 +128,8 @@ const PlayerHook = {
     window.addEventListener('stop', this.stop, false);
     window.addEventListener('pause', this.pause, false);
     window.addEventListener('back', this.back, false);
-    document.addEventListener('keyup', this.keyup, false);
+    window.addEventListener('keyup', this.keyup, false);
+    window.addEventListener('keydown', this.keydown, false);
 
     // push events from other components
     this.ee.on('push_event', (params) => {
@@ -163,7 +190,8 @@ const PlayerHook = {
     window.removeEventListener('stop', this.stop, false);
     window.removeEventListener('pause', this.pause, false);
     window.removeEventListener('back', this.back, false);
-    window.removeEventListener('keyup', this.back, false);
+    window.removeEventListener('keyup', this.keyup, false);
+    window.removeEventListener('keydown', this.keydown, false);
   }
   /* updated() {
     console.log("editor update...")

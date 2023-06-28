@@ -79,6 +79,10 @@ export default class {
   // ---------- PLAYBACK ----------
 
   play(startTime) {
+    if (typeof startTime === 'boolean') {
+      startTime = null;
+    }
+
     if (startTime !== undefined && startTime !== null) {
       this.stop();
     }
