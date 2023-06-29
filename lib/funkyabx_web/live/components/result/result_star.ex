@@ -8,6 +8,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
   attr :is_another_session, :boolean, required: true
   attr :track_id, :string, required: true
   attr :test_taken_times, :integer, required: true
+  attr :tracks_order, :any, required: false, default: nil
 
   @impl true
   def render(assigns) do
@@ -75,6 +76,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                 test={@test}
                 track_id={star.track_id}
                 title={star.track_title}
+                tracks_order={@tracks_order}
               />
 
               <div class="d-flex flex-grow-1 flex-no-wrap justify-content-between justify-content-sm-end align-items-center">

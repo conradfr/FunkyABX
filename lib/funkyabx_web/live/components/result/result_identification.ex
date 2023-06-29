@@ -7,6 +7,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
   attr :is_another_session, :boolean, required: true
   attr :track_id, :string, required: true
   attr :test_taken_times, :integer, required: true
+  attr :tracks_order, :any, required: false, default: nil
 
   @impl true
   def render(assigns) do
@@ -77,6 +78,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
               test={@test}
               track_id={identification.track_id}
               title={identification.title}
+              tracks_order={@tracks_order}
             />
 
             <div class="p-3 flex-grow-1 text-end text-truncate">

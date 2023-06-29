@@ -96,6 +96,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         is_another_session={@is_another_session}
         play_track_id={@play_track_id}
         test_taken_times={@test_taken_times}
+        tracks_order={@tracks_order}
       />
     <% end %>
 
@@ -120,16 +121,13 @@ defmodule FunkyABXWeb.TestResultsLive do
       </div>
     </div>
 
-    <DisqusComponent.load
-      :if={@test.local == false and @embed != true}
-      test={@test}
-    />
+    <DisqusComponent.load :if={@test.local == false and @embed != true} test={@test} />
     """
   end
 
   # Local test
   @impl true
-  def mount(%{"data" => data, "choices" => choices} = _params, _session, socket) do
+  def mount(%{"data" => data, "choices" => choices} = params, _session, socket) do
     test_data =
       data
       |> Base.url_decode64!()
@@ -139,6 +137,17 @@ defmodule FunkyABXWeb.TestResultsLive do
       choices
       |> Base.url_decode64!()
       |> Jason.decode!()
+
+    tracks_order =
+      case Map.get(params, "tracks_order") do
+        order when is_binary(order) ->
+          order
+          |> Base.url_decode64!()
+          |> Jason.decode!()
+
+        _ ->
+          nil
+      end
 
     {:ok, test} =
       Test.new_local()
@@ -158,6 +167,7 @@ defmodule FunkyABXWeb.TestResultsLive do
        play_track_id: nil,
        test_taken_times: nil,
        test_data: data,
+       tracks_order: tracks_order,
        is_another_session: false
      })}
   end
@@ -197,6 +207,7 @@ defmodule FunkyABXWeb.TestResultsLive do
          view_description: false,
          visitor_choices: choices,
          session_id: session_id,
+         tracks_order: nil,
          is_another_session: is_another_session,
          test_taken_times: Tests.get_how_many_taken(test),
          play_track_id: nil,
@@ -254,6 +265,17 @@ defmodule FunkyABXWeb.TestResultsLive do
   @impl true
   def handle_event("session_id", params, socket) do
     {:noreply, assign(socket, :session_id, params)}
+  end
+
+  # discard when when fetch another session
+  @impl true
+  def handle_event("tracks_order", _params, socket)
+      when socket.assigns.is_another_session == true,
+      do: {:noreply, socket}
+
+  @impl true
+  def handle_event("tracks_order", params, socket) do
+    {:noreply, assign(socket, :tracks_order, params)}
   end
 
   # ---------- PLAYER ----------

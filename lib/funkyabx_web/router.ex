@@ -85,7 +85,8 @@ defmodule FunkyABXWeb.Router do
     get "/blacklist/add/:invitation_id", BlacklistController, :add
     get "/blacklist/remove/:invitation_id", BlacklistController, :remove
 
-    live "/local_test/results/:data/:choices", TestResultsLive, as: :local_test_results
+    live "/local_test/results/:data/:choices", TestResultsLive
+    live "/local_test/results/:data/:choices/:tracks_order", TestResultsLive
     live "/local_test/:data", TestLive, as: :local_test
   end
 

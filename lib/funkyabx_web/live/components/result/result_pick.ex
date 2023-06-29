@@ -8,6 +8,7 @@ defmodule FunkyABXWeb.TestResultPickComponent do
   attr :is_another_session, :boolean, required: true
   attr :track_id, :string, required: true
   attr :test_taken_times, :integer, required: true
+  attr :tracks_order, :any, required: false, default: nil
 
   @impl true
   def render(assigns) do
@@ -55,6 +56,7 @@ defmodule FunkyABXWeb.TestResultPickComponent do
               track_id={pick.track_id}
               title={pick.track_title}
               trophy={@test.local == false}
+              tracks_order={@tracks_order}
             />
 
             <div class="d-flex flex-grow-1 justify-content-end align-items-center">

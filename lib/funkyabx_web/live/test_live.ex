@@ -930,10 +930,30 @@ defmodule FunkyABXWeb.TestLive do
         |> Jason.encode!()
         |> Base.url_encode64()
 
+      tracks_order =
+        if test.type == :regular do
+          tracks
+          |> Enum.with_index(1)
+          |> Enum.reduce(%{}, fn {track, i}, acc ->
+            Map.put(acc, track.id, i)
+          end)
+          |> Jason.encode!()
+          |> Base.url_encode64()
+        end
+
+      url =
+        ~p"/local_test/results/#{socket.assigns.test_data}/#{choices_cleaned}"
+        |> then(fn url ->
+          case tracks_order do
+            nil -> url
+            _ -> url <> "/" <> tracks_order
+          end
+        end)
+
       {:noreply,
        socket
        |> push_redirect(
-         to: ~p"/local_test/results/#{socket.assigns.test_data}/#{choices_cleaned}",
+         to: url,
          redirect: false
        )}
     else
@@ -965,6 +985,15 @@ defmodule FunkyABXWeb.TestLive do
 
       choices_cleaned = Tests.clean_choices(choices, tracks, test)
 
+      tracks_order =
+        if test.type == :regular do
+          tracks
+          |> Enum.with_index(1)
+          |> Enum.reduce(%{}, fn {track, i}, acc ->
+            Map.put(acc, track.id, i)
+          end)
+        end
+
       Tests.submit(test, choices_cleaned, session_id, ip_address)
 
       spawn(fn ->
@@ -981,7 +1010,11 @@ defmodule FunkyABXWeb.TestLive do
 
       {:noreply,
        socket
-       |> push_event("store_test", %{choices: choices_cleaned, session_id: session_id})
+       |> push_event("store_test", %{
+         choices: choices_cleaned,
+         session_id: session_id,
+         tracks_order: tracks_order
+       })
        |> put_flash(:success, dgettext("test", "Your submission has been registered!"))}
     else
       _ ->

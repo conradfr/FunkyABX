@@ -1,4 +1,5 @@
 import cookies from '../utils/cookies';
+import localStorageUtils from '../utils/localStorageUtils';
 import { COOKIE_TEST_TAKEN } from '../config/config';
 
 /* eslint-disable no-undef */
@@ -15,12 +16,23 @@ const TestHook = {
     }
 
     this.handleEvent('store_test', (params) => {
-      const { choices, session_id } = params;
+      const { choices, session_id, tracks_order } = params;
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}`, true);
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}_session`, session_id);
-      localStorage.setItem(testId, JSON.stringify(choices));
-      localStorage.setItem(`${testId}_taken`, true);
-      localStorage.setItem(`${testId}_taken_session_id`, session_id);
+
+      if (tracks_order) {
+        cookies.set(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`, JSON.stringify(tracks_order), {'max-age': null});
+      }
+
+      // todo better localStorage implementation
+      try {
+        localStorage.setItem(testId, JSON.stringify(choices));
+        localStorage.setItem(`${testId}_taken`, true);
+        // note: not sure why ls has "_id" and not the cookie. Keeping it for retro-compatibility.
+        localStorage.setItem(`${testId}_taken_session_id`, session_id);
+      } catch(e) {
+        localStorageUtils.clearIfFull(e);
+      }
     });
 
     this.handleEvent('bypass_test', () => {
