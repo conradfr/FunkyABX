@@ -487,7 +487,10 @@ defmodule FunkyABXWeb.TestLive do
         params -> Map.get(params, "timezone", "Etc/UTC")
       end
 
-    if connected?(socket), do: FunkyABXWeb.Endpoint.subscribe(test.id)
+    if connected?(socket) do
+      FunkyABXWeb.Endpoint.subscribe(test.id)
+      Tests.update_last_viewed(test)
+    end
 
     tracks =
       test.tracks

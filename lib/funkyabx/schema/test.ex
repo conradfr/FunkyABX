@@ -45,6 +45,8 @@ defmodule FunkyABX.Test do
     field(:local, :boolean, virtual: true, default: false)
     field(:embed, :boolean, virtual: true, default: false)
     field(:view_count, :integer, default: 0)
+    field(:last_viewed_at, :naive_datetime)
+    field(:archived, :boolean, default: false)
     has_many(:tracks, Track, on_replace: :delete_if_exists)
     has_many(:invitations, Invitation, on_replace: :delete_if_exists)
     has_many(:rank_details, RankDetails)
@@ -207,6 +209,16 @@ defmodule FunkyABX.Test do
     test
     #    |> Validators.validate_nb_tracks(@minimum_tracks)
     |> cast(%{upload_url: nil}, [:upload_url])
+  end
+
+  def changeset_last_viewed(test, attrs \\ %{}) do
+    test
+    |> cast(attrs, [:last_viewed_at])
+  end
+
+  def changeset_archived(test, attrs \\ %{}) do
+    test
+    |> cast(attrs, [:archived, :last_viewed_at])
   end
 
   def changeset_local(test, attrs \\ %{}) do

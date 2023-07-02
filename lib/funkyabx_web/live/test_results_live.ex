@@ -182,7 +182,10 @@ defmodule FunkyABXWeb.TestResultsLive do
                 (Map.get(params, "key") != nil and Map.get(params, "key") == test.access_key)) do
       result_modules = Tests.get_result_modules(test)
 
-      FunkyABXWeb.Endpoint.subscribe(test.id)
+      if connected?(socket) do
+        FunkyABXWeb.Endpoint.subscribe(test.id)
+        Tests.update_last_viewed(test)
+      end
 
       {is_another_session, session_id, choices} =
         case Tests.parse_session_id(Map.get(params, "s")) do

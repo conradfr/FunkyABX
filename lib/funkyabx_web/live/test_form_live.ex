@@ -6,8 +6,10 @@ defmodule FunkyABXWeb.TestFormLive do
   alias Ecto.UUID
   alias Phoenix.LiveView.JS
   alias FunkyABX.Repo
+
   alias FunkyABX.Tests.FormUtils
-  alias FunkyABX.{Accounts, Utils, Test, Tests, Track, Files, Tracks, TestClosing}
+  alias FunkyABX.{Accounts, Utils, Tests, Files, Tracks, TestClosing}
+  alias FunkyABX.{Test, Track}
 
   @title_max_length 100
 
@@ -923,7 +925,10 @@ defmodule FunkyABXWeb.TestFormLive do
       test_updatable = !Tests.has_tests_taken?(test)
       changeset = Test.changeset_update(test)
 
-      FunkyABXWeb.Endpoint.subscribe(test.id)
+      if connected?(socket) do
+        FunkyABXWeb.Endpoint.subscribe(test.id)
+        Tests.update_last_viewed(test)
+      end
 
       {:ok,
        socket

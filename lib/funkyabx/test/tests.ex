@@ -222,6 +222,16 @@ defmodule FunkyABX.Tests do
       when test.to_close_at_enabled == false or test.to_close_at == nil do
   end
 
+  def update_last_viewed(%Test{} = test) do
+    params = %{
+      "last_viewed_at" => NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+    }
+
+    test
+    |> Test.changeset_last_viewed(params)
+    |> Repo.update()
+  end
+
   # ---------- VIEWED ----------
 
   # we don't update old tests with no view counter
