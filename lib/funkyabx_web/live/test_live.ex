@@ -20,11 +20,9 @@ defmodule FunkyABXWeb.TestLive do
           <%= dgettext("test", "By %{author}", author: @test.author) %>
         </h6>
       </div>
-      <div
-        :if={@test.local == false and @test.type != :listening}
-        class="col-sm-6 text-start text-sm-end pt-1"
-      >
+      <div class="col-sm-6 text-start text-sm-end pt-1">
         <div
+          :if={@test.local == false and @test.type != :listening}
           class="fs-7 text-body-secondary header-texgyreadventor"
           title={if @test.view_count != nil, do:
             dngettext(
@@ -45,8 +43,8 @@ defmodule FunkyABXWeb.TestLive do
           ) %>
         </div>
 
-        <div class="d-flex justify-content-end">
-          <div class="fs-7 me-2 text-white-50 text-end header-texgyreadventor">
+        <div class="d-flex justify-content-start justify-content-md-end mb-1">
+          <div class="fs-7 me-2 text-white-50 header-texgyreadventor">
             <small>
               <%= raw(
                 dgettext(
