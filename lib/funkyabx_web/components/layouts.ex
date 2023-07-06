@@ -2,6 +2,7 @@ defmodule FunkyABXWeb.Layouts do
   use FunkyABXWeb, :html
 
   import Ecto.Query, only: [from: 2]
+
   alias FunkyABX.Repo
   alias FunkyABX.Test
   alias FunkyABX.Tests

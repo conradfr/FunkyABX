@@ -1,6 +1,6 @@
 defmodule FunkyABXWeb.TestListLive do
   use FunkyABXWeb, :live_view
-  alias FunkyABX.Cldr
+
   alias FunkyABX.Repo
   alias FunkyABX.Accounts
 
@@ -25,7 +25,7 @@ defmodule FunkyABXWeb.TestListLive do
               <td>
                 <.link href={~p"/test/#{test.slug}"} class="test-link"><%= test.title %></.link>
               </td>
-              <td class="text-center"><%= format_date(test.inserted_at) %></td>
+              <td class="text-center"><%= format_date_time(test.inserted_at) %></td>
               <td class="text-center">
                 <%= unless test.view_count == nil do %>
                   <%= test.view_count %>
@@ -69,10 +69,5 @@ defmodule FunkyABXWeb.TestListLive do
       _ ->
         {:ok, socket}
     end
-  end
-
-  defp format_date(datetime) do
-    {:ok, date_string} = Cldr.DateTime.to_string(datetime, format: :short)
-    date_string
   end
 end

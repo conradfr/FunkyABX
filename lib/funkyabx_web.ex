@@ -54,6 +54,7 @@ defmodule FunkyABXWeb do
       use Phoenix.LiveView,
         layout: {FunkyABXWeb.Layouts, :app}
 
+      import FunkyABXWeb.DatesHelpers
       unquote(html_helpers())
     end
   end

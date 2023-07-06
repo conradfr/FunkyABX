@@ -56,9 +56,4 @@ defmodule FunkyABX.Utils do
       _ -> @default_locale
     end
   end
-
-  def format_datetime(datetime, locale \\ "en", format \\ :short) do
-    {:ok, date_string} = Cldr.DateTime.to_string(datetime, format: format, locale: locale)
-    date_string
-  end
 end

@@ -24,7 +24,17 @@ defmodule FunkyABXWeb.TestLive do
         :if={@test.local == false and @test.type != :listening}
         class="col-sm-6 text-start text-sm-end pt-1"
       >
-        <div class="fs-7 text-body-secondary header-texgyreadventor">
+        <div
+          class="fs-7 text-body-secondary header-texgyreadventor"
+          title={if @test.view_count != nil, do:
+            dngettext(
+              "test",
+              "Test played %{count} time",
+              "Test played %{count} times",
+              @test.view_count
+            ), else: ""
+          }
+        >
           <%= raw(
             dngettext(
               "test",
@@ -34,12 +44,30 @@ defmodule FunkyABXWeb.TestLive do
             )
           ) %>
         </div>
+
+        <div class="d-flex justify-content-end">
+          <div class="fs-7 me-2 text-white-50 text-end header-texgyreadventor">
+            <small>
+              <%= raw(
+                dgettext(
+                  "test",
+                  "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
+                  created_at: @test.inserted_at,
+                  created_at_format:
+                    format_date(@test.inserted_at, timezone: @timezone, format: :short)
+                )
+              ) %>
+            </small>
+          </div>
+          <.live_component module={TestFlagComponent} id="flag" test={@test} />
+        </div>
+
         <div
           :if={
             @test.local == false and @test.to_close_at_enabled == true and
               Tests.is_closed?(@test) == false
           }
-          class="fs-7 text-body-secondary header-texgyreadventor"
+          class="fs-7 text-white-50 header-texgyreadventor"
         >
           <small>
             <%= raw(
@@ -47,13 +75,11 @@ defmodule FunkyABXWeb.TestLive do
                 "test",
                 "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>",
                 to_close_at: @test.to_close_at,
-                to_close_at_format: format_date(@test.to_close_at, @timezone)
+                to_close_at_format: format_date_time(@test.to_close_at, timezone: @timezone)
               )
             ) %>
           </small>
         </div>
-
-        <.live_component module={TestFlagComponent} id="flag" test={@test} />
       </div>
     </div>
 
@@ -1047,15 +1073,6 @@ defmodule FunkyABXWeb.TestLive do
     toggle = !socket.assigns.view_tracklist
 
     {:noreply, assign(socket, view_tracklist: toggle)}
-  end
-
-  defp format_date(datetime, _timezone) when datetime == nil, do: ""
-
-  defp format_date(datetime, timezone) do
-    datetime
-    |> DateTime.from_naive!("Etc/UTC")
-    |> DateTime.shift_zone!(timezone)
-    |> Cldr.DateTime.to_string!(format: :medium)
   end
 
   defp get_track_state(track_hash, tracks_state) when is_map_key(tracks_state, track_hash) do
