@@ -20,7 +20,7 @@ defmodule FunkyABXWeb.TestLive do
           <%= dgettext("test", "By %{author}", author: @test.author) %>
         </h6>
       </div>
-      <div class="col-sm-6 text-start text-sm-end pt-1">
+      <div class="col-sm-6 text-start text-sm-end pt-1 mb-1 mb-md-0">
         <div
           :if={@test.local == false and @test.type != :listening}
           class="fs-7 text-body-secondary header-texgyreadventor"
@@ -43,19 +43,23 @@ defmodule FunkyABXWeb.TestLive do
           ) %>
         </div>
 
-        <div class="d-flex justify-content-start justify-content-md-end mb-1">
+        <div :if={@test.local == false} class="d-flex justify-content-start justify-content-md-end">
           <div class="fs-7 me-2 text-white-50 header-texgyreadventor">
-            <small>
-              <%= raw(
-                dgettext(
-                  "test",
-                  "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
-                  created_at: @test.inserted_at,
-                  created_at_format:
-                    format_date(@test.inserted_at, timezone: @timezone, format: :short)
-                )
-              ) %>
-            </small>
+            <time
+              title={@test.inserted_at}
+              datetime={@test.inserted_at}>
+              <small>
+                <%= raw(
+                  dgettext(
+                    "test",
+                    "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
+                    created_at: @test.inserted_at,
+                    created_at_format:
+                      format_date(@test.inserted_at, timezone: @timezone, format: :short)
+                  )
+                ) %>
+              </small>
+            </time>
           </div>
           <.live_component module={TestFlagComponent} id="flag" test={@test} />
         </div>
@@ -67,16 +71,21 @@ defmodule FunkyABXWeb.TestLive do
           }
           class="fs-7 text-white-50 header-texgyreadventor"
         >
-          <small>
-            <%= raw(
-              dgettext(
-                "test",
-                "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>",
-                to_close_at: @test.to_close_at,
-                to_close_at_format: format_date_time(@test.to_close_at, timezone: @timezone)
-              )
-            ) %>
-          </small>
+          <time
+            class="header-texgyreadventor text-white-50"
+            title={@test.to_close_at}
+            datetime={@test.to_close_at}>
+            <small>
+              <%= raw(
+                dgettext(
+                  "test",
+                  "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>",
+                  to_close_at: @test.to_close_at,
+                  to_close_at_format: format_date_time(@test.to_close_at, timezone: @timezone)
+                )
+              ) %>
+            </small>
+          </time>
         </div>
       </div>
     </div>

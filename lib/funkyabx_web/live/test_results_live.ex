@@ -19,13 +19,28 @@ defmodule FunkyABXWeb.TestResultsLive do
         >
           <%= @test.title %>
         </h3>
+
         <h6 :if={@test.author != nil} class="header-typographica">
           <%= dgettext("test", "By %{author}", author: @test.author) %>
         </h6>
+
+        <div :if={@test.local == false} class="text-white-50 mb-1">
+          ← <.link navigate={~p"/test/#{@test.slug}"} class="back-link">
+            <%= dgettext("test", "Go back to the test") %>
+          </.link>
+        </div>
       </div>
       <%= unless @test.type == :listening or @test.local == true do %>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <span class="fs-7 text-body-secondary header-texgyreadventor">
+          <div class="fs-7 text-body-secondary header-texgyreadventor"
+            title={if @test.view_count != nil, do:
+              dngettext(
+                "test",
+                "Test played %{count} time",
+                "Test played %{count} times",
+                @test.view_count
+              ), else: ""}
+          >
             <%= raw(
               dngettext(
                 "test",
@@ -34,15 +49,34 @@ defmodule FunkyABXWeb.TestResultsLive do
                 @test_taken_times
               )
             ) %>
-          </span>
-          <time
-            :if={Tests.is_closed?(@test)}
-            class="header-texgyreadventor text-body-secondary"
-            title={@test.closed_at}
-            datetime={@test.closed_at}
-          >
-            <br /><small><%= dgettext("test", "(test is closed)") %></small>
-          </time>
+          </div>
+          <div class="fs-7 text-white-50 header-texgyreadventor">
+            <time
+              title={@test.inserted_at}
+              datetime={@test.inserted_at}>
+              <small>
+                <%= raw(
+                  dgettext(
+                    "test",
+                    "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
+                    created_at: @test.inserted_at,
+                    created_at_format:
+                      format_date(@test.inserted_at, timezone: @timezone, format: :short)
+                  )
+                ) %>
+              </small>
+            </time>
+          </div>
+          <div>
+            <time
+              :if={Tests.is_closed?(@test)}
+              class="header-texgyreadventor text-white-50"
+              title={@test.closed_at}
+              datetime={@test.closed_at}
+            >
+              <small><%= dgettext("test", "(test is closed)") %></small>
+            </time>
+          </div>
         </div>
       <% end %>
     </div>
@@ -187,6 +221,12 @@ defmodule FunkyABXWeb.TestResultsLive do
         Tests.update_last_viewed(test)
       end
 
+      timezone =
+        case get_connect_params(socket) do
+          nil -> "Etc/UTC"
+          params -> Map.get(params, "timezone", "Etc/UTC")
+        end
+
       {is_another_session, session_id, choices} =
         case Tests.parse_session_id(Map.get(params, "s")) do
           nil ->
@@ -204,6 +244,7 @@ defmodule FunkyABXWeb.TestResultsLive do
              test_title: String.slice(test.title, 0..@title_max_length)
            ),
          page_id: Utils.get_page_id_from_socket(socket),
+         timezone: timezone,
          test: test,
          result_modules: result_modules,
          current_user_id: Map.get(session, "current_user_id"),

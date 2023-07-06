@@ -67,6 +67,16 @@ a.test-link {
   text-decoration: none !important;
 }
 
+a.back-link {
+  font-size: 0.75rem;
+  color: rgba($white, .5);
+  text-decoration: none !important;
+
+  &:hover {
+    text-decoration: underline !important;
+  }
+}
+
 a.link-no-decoration {
   text-decoration: none !important;
 
