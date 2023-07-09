@@ -9,6 +9,7 @@ defmodule InvitationComponent do
   attr :test, Test, required: true
   attr :user, User, required: false, default: nil
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div>
@@ -82,6 +83,7 @@ defmodule InvitationComponent do
     """
   end
 
+  @impl true
   def mount(socket) do
     {:ok,
      assign(socket, %{
@@ -89,15 +91,18 @@ defmodule InvitationComponent do
      })}
   end
 
+  @impl true
   def handle_event("name_or_email_text", %{"value" => value}, socket) do
     {:noreply, assign(socket, %{name_or_email: value})}
   end
 
+  @impl true
   def handle_event("name_or_email_submit", _params, socket)
       when socket.assigns.name_or_email == "" do
     {:noreply, socket}
   end
 
+  @impl true
   def handle_event("name_or_email_submit", _params, socket) do
     socket.assigns.name_or_email
     |> String.split(",")

@@ -95,7 +95,10 @@ defmodule FunkyABXWeb.TestResultRankComponent do
               </div>
               <div class="p-3 ps-0 text-end">
                 <%= if @test.local == false do %>
-                  <%= dgettext("test", "%{count} votes as #%{rank}", count: rank.count, rank: rank.rank) %>
+                  <%= dgettext("test", "%{count} votes as #%{rank}",
+                    count: rank.count,
+                    rank: rank.rank
+                  ) %>
                 <% else %>
                   <%= raw(
                     dgettext("test", "<small>You ranked this track:</small> %{rank}", rank: rank.rank)

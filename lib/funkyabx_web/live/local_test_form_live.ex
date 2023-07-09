@@ -351,7 +351,9 @@ defmodule FunkyABXWeb.LocalTestFormLive do
 
     case test.valid? do
       true ->
-        Logger.info("Local test created")
+        Logger.info(
+          "Local test created (#{fetch_field!(test, :type)} / #{length(fetch_field!(test, :tracks))} tracks)"
+        )
 
         Tests.increment_local_test_counter()
 

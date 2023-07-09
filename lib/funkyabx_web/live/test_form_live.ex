@@ -1140,7 +1140,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
         changeset = Test.changeset_update(test)
 
-        Logger.info("Test created")
+        Logger.info("Test created (#{test.slug} / #{test.type} / #{length(test.tracks)} tracks)")
 
         # Refresh user test list if logged
         unless test.user == nil do
@@ -1176,6 +1176,10 @@ defmodule FunkyABXWeb.TestFormLive do
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        Logger.warn(
+          "Test creating failed (#{fetch_field!(changeset, :type)} / #{length(fetch_field!(changeset, :tracks))} tracks)"
+        )
+
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
@@ -1296,7 +1300,7 @@ defmodule FunkyABXWeb.TestFormLive do
       1500
     )
 
-    Logger.info("Test deleted")
+    Logger.info("Test deleted (#{test.slug})")
 
     {
       :noreply,

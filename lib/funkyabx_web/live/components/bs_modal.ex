@@ -6,6 +6,7 @@ defmodule BsModalComponent do
   attr :id, :string, required: true
   attr :title, :string, required: true
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div id={@id} class="modal fade" tabindex="-1" phx-hook="BsModal" data-id={@id}>

@@ -24,13 +24,16 @@ defmodule FunkyABXWeb.TestLive do
         <div
           :if={@test.local == false and @test.type != :listening}
           class="fs-7 text-body-secondary header-texgyreadventor"
-          title={if @test.view_count != nil, do:
-            dngettext(
-              "test",
-              "Test played %{count} time",
-              "Test played %{count} times",
-              @test.view_count
-            ), else: ""
+          title={
+            if @test.view_count != nil,
+              do:
+                dngettext(
+                  "test",
+                  "Test played %{count} time",
+                  "Test played %{count} times",
+                  @test.view_count
+                ),
+              else: ""
           }
         >
           <%= raw(
@@ -45,9 +48,7 @@ defmodule FunkyABXWeb.TestLive do
 
         <div :if={@test.local == false} class="d-flex justify-content-start justify-content-md-end">
           <div class="fs-7 me-2 text-white-50 header-texgyreadventor">
-            <time
-              title={@test.inserted_at}
-              datetime={@test.inserted_at}>
+            <time title={@test.inserted_at} datetime={@test.inserted_at}>
               <small>
                 <%= raw(
                   dgettext(
@@ -74,7 +75,8 @@ defmodule FunkyABXWeb.TestLive do
           <time
             class="header-texgyreadventor text-white-50"
             title={@test.to_close_at}
-            datetime={@test.to_close_at}>
+            datetime={@test.to_close_at}
+          >
             <small>
               <%= raw(
                 dgettext(
@@ -1017,7 +1019,7 @@ defmodule FunkyABXWeb.TestLive do
     with true <- Tests.is_valid?(test, current_round, choices),
          invitation <- Invitations.get_invitation(session_id),
          true <- invitation == nil or invitation.test_taken == false do
-      Logger.info("Test taken")
+      Logger.info("Test taken (#{test.slug})")
 
       choices_cleaned = Tests.clean_choices(choices, tracks, test)
 

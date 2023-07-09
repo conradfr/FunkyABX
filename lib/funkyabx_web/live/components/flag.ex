@@ -6,6 +6,7 @@ defmodule TestFlagComponent do
 
   attr :test, Test, required: true
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="text-end">
@@ -41,6 +42,7 @@ defmodule TestFlagComponent do
     """
   end
 
+  @impl true
   def mount(socket) do
     {:ok,
      assign(socket, %{
@@ -50,14 +52,17 @@ defmodule TestFlagComponent do
      })}
   end
 
+  @impl true
   def handle_event("flag_toggle", _params, socket) do
     {:noreply, assign(socket, %{flag_display: !socket.assigns.flag_display})}
   end
 
+  @impl true
   def handle_event("flag_text", %{"value" => value} = _params, socket) do
     {:noreply, assign(socket, %{flag_text: value})}
   end
 
+  @impl true
   def handle_event("flag_submit", _params, socket) do
     insert =
       %Flag{}

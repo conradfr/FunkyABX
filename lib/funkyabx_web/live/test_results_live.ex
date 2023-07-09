@@ -25,21 +25,27 @@ defmodule FunkyABXWeb.TestResultsLive do
         </h6>
 
         <div :if={@test.local == false} class="text-white-50 mb-1">
-          ← <.link navigate={~p"/test/#{@test.slug}"} class="back-link">
+          ←
+          <.link navigate={~p"/test/#{@test.slug}"} class="back-link">
             <%= dgettext("test", "Go back to the test") %>
           </.link>
         </div>
       </div>
       <%= unless @test.type == :listening or @test.local == true do %>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
-          <div class="fs-7 text-body-secondary header-texgyreadventor"
-            title={if @test.view_count != nil, do:
-              dngettext(
-                "test",
-                "Test played %{count} time",
-                "Test played %{count} times",
-                @test.view_count
-              ), else: ""}
+          <div
+            class="fs-7 text-body-secondary header-texgyreadventor"
+            title={
+              if @test.view_count != nil,
+                do:
+                  dngettext(
+                    "test",
+                    "Test played %{count} time",
+                    "Test played %{count} times",
+                    @test.view_count
+                  ),
+                else: ""
+            }
           >
             <%= raw(
               dngettext(
@@ -51,9 +57,7 @@ defmodule FunkyABXWeb.TestResultsLive do
             ) %>
           </div>
           <div class="fs-7 text-white-50 header-texgyreadventor">
-            <time
-              title={@test.inserted_at}
-              datetime={@test.inserted_at}>
+            <time title={@test.inserted_at} datetime={@test.inserted_at}>
               <small>
                 <%= raw(
                   dgettext(
