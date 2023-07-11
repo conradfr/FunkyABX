@@ -81,7 +81,11 @@
               <li class="nav-item">
                 <a class="nav-link" href={~p"/gallery"}><%= dgettext("site", "Gallery") %></a>
               </li>
-              <._tests_menu {assigns} />
+              <FunkyABXWeb.UserTestsMenuComponent.display
+                conn={@conn}
+                current_user={@current_user}
+              />
+              <FunkyABXWeb.TakenTestsMenuComponent.display cookies={@conn.cookies} />
               <._user_menu {assigns} />
               <li class="nav-item dropdown">
                 <a

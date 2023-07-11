@@ -1,5 +1,5 @@
 defmodule FunkyABX.Tests do
-  import Ecto.Query, only: [from: 2, dynamic: 2]
+  import Ecto.Query, only: [from: 2, dynamic: 2, limit: 3]
   use Nebulex.Caching
 
   alias Ecto.UUID
@@ -11,6 +11,7 @@ defmodule FunkyABX.Tests do
   @min_test_created_minutes 15
 
   @cache_test_ttl :timer.minutes(15)
+  @cache_tests_ttl :timer.minutes(5)
   @cache_user_ttl :timer.minutes(5)
   @cache_gallery_ttl :timer.minutes(5)
   @cache_gallery_home_ttl :timer.minutes(1)
@@ -117,6 +118,54 @@ defmodule FunkyABX.Tests do
       )
 
     Repo.one(query)
+  end
+
+  # todo also use limit as key
+  @decorate cacheable(
+              cache: Cache,
+              key: "tests_list_#{:crypto.hash(:sha256, test_ids)}",
+              opts: [ttl: @cache_tests_ttl]
+            )
+  def get_tests_from_ids(test_ids, limit \\ nil) do
+    query =
+      from(t in Test,
+        where: t.id in ^test_ids and is_nil(t.deleted_at),
+        order_by: [desc: t.inserted_at],
+        select: t
+      )
+
+    query =
+      unless limit == nil do
+        limit(query, [t], ^limit)
+      else
+        query
+      end
+
+    Repo.all(query)
+  end
+
+  # todo also use limit as key
+  @decorate cacheable(
+              cache: Cache,
+              key: "tests_access_list_#{:crypto.hash(:sha256, test_ids ++ access_key_ids)}",
+              opts: [ttl: @cache_tests_ttl]
+            )
+  def get_tests_from_ids_and_access_key_ids(test_ids, access_key_ids, limit \\ nil) do
+    query =
+      from(t in Test,
+        where: t.id in ^test_ids and t.access_key in ^access_key_ids and is_nil(t.deleted_at),
+        order_by: [desc: t.inserted_at],
+        select: t
+      )
+
+    query =
+      unless limit == nil do
+        limit(query, [t], ^limit)
+      else
+        query
+      end
+
+    Repo.all(query)
   end
 
   # ---------- CACHE ----------

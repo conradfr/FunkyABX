@@ -34,10 +34,8 @@ defmodule FunkyABXWeb.TestListLive do
                 <% end %>
               </td>
               <%= unless test.type == :listening do %>
-                <!-- <td class="text-center">-</td> -->
                 <td class="text-center"><.link href={~p"/results/#{test.slug}"}>results</.link></td>
               <% else %>
-                <!-- <td class="text-center">-</td> -->
                 <td class="text-center">-</td>
               <% end %>
               <td class="text-center">
@@ -54,6 +52,7 @@ defmodule FunkyABXWeb.TestListLive do
   @impl true
   def mount(_params, session, socket) do
     with user when not is_nil(user) <- Accounts.get_user_by_session_token(session["user_token"]) do
+      # todo more efficient
       user = Repo.preload(user, :tests)
       tests = Enum.filter(user.tests, fn t -> t.deleted_at == nil end)
 

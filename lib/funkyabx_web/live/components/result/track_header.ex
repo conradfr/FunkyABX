@@ -63,5 +63,5 @@ defmodule TestResultTrackHeaderComponent do
     end
   end
 
-  def track_index(_, tracks_order), do: nil
+  def track_index(_, _tracks_order), do: nil
 end
