@@ -15,6 +15,23 @@ defmodule FunkyABXWeb.BsToastLive do
       class="toast-container position-fixed top-0 end-0 p-3"
     >
       <div
+        id="toast-disconnected"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        class="toast text-white bg-warning"
+      >
+        <div class="d-flex justify-content-center align-items-center p-3">
+          <div class="toast-icon">
+            <i class="bi-x-circle-fill"></i>
+          </div>
+          <div class="toast-body flex-fill py-0 text-center align-middle">
+            <%= dgettext("site", "Websocket error, attempting to reconnect ...") %>
+          </div>
+        </div>
+      </div>
+
+      <div
         :for={{id, toast} <- @streams.toasts}
         id={id}
         role="alert"

@@ -84,3 +84,21 @@ a.link-no-decoration {
     text-decoration: underline !important;
   } */
 }
+
+// for live view compat
+
+.hidden {
+  display: none;
+}
+
+#disconnected {
+  display: none;
+}
+
+.phx-error.phx-client-error {
+  #disconnected, #toast-disconnected {
+    display: block !important;
+  }
+}
+
+
