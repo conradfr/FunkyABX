@@ -27,6 +27,15 @@ defmodule FunkyABXWeb.TestFormLive do
               <%= dgettext("test", "Edit a test") %>
             <% end %>
           </h3>
+
+          <%= if @action == "save" do %>
+            <div class="alert alert-info alert-thin">
+              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(dgettext(
+                "test",
+                "If you're making a one-off test for yourself, consider making a <a href=\"%{link}\">local test</a>, it's quicker and avoids uploading your files.", link: ~p"/local_test")) %>
+            </div>
+          <% end %>
+
           <fieldset class="form-group mb-3">
             <legend class="mt-1 header-typographica"><%= dgettext("test", "Test type") %></legend>
             <%= if @test_updatable == false do %>
