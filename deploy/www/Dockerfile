@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.14.4-erlang-25.3-ubuntu-bionic-20230126
+FROM hexpm/elixir:1.15.4-erlang-26.0.2-ubuntu-focal-20230126
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
@@ -54,12 +54,17 @@ ENV DATABASE_URL=${DATABASE_URL} \
     PHX_HOST=${PHX_HOST}
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
-    ffmpeg curl imagemagick
+    ffmpeg curl imagemagick ca-certificates gnupg
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+
+ENV NODE_MAJOR=16
+
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get update && apt-get install -y \
-    nodejs
+    nodejs -y
 
 #RUN usermod -u 1000 root
 #USER www-data
@@ -76,8 +81,11 @@ WORKDIR /var/funkyabx/
 RUN rm -Rf /var/funkyabx/_build && \
     mix local.hex --force && \
     mix local.rebar --force && \
-    mix deps.get --only $MIX_ENV && \
-    mix deps.compile
+    mix deps.get --only $MIX_ENV
+
+RUN mix deps.compile --skip-local-deps
+
+RUN mix deps.compile
 
 COPY / /var/funkyabx/
 
