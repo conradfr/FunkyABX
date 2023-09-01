@@ -163,9 +163,8 @@ defmodule FunkyABXWeb.CoreComponents do
         @kind == :info && "bi-info-circle",
         @kind == :success && "bi-check-circle",
         @kind == :error && "bi-x-circle"
-      ]}></i>&nbsp;&nbsp;
-        <span :if={is_binary(msg)}><%= raw(msg) %></span>
-        <span :if={!is_binary(msg)}><%= msg %></span>
+      ]}></i>&nbsp;&nbsp; <span :if={is_binary(msg)}><%= raw(msg) %></span>
+      <span :if={!is_binary(msg)}><%= msg %></span>
       <button
         :if={@close}
         type="button"

@@ -30,9 +30,13 @@ defmodule FunkyABXWeb.TestFormLive do
 
           <%= if @action == "save" do %>
             <div class="alert alert-info alert-thin">
-              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(dgettext(
-                "test",
-                "If you're making a one-off test for yourself, consider making a <a href=\"%{link}\">local test</a>, it's quicker and avoids uploading your files.", link: ~p"/local_test")) %>
+              <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(
+                dgettext(
+                  "test",
+                  "If you're making a one-off test for yourself, consider making a <a href=\"%{link}\">local test</a>, it's quicker and avoids uploading your files.",
+                  link: ~p"/local_test"
+                )
+              ) %>
             </div>
           <% end %>
 
@@ -761,7 +765,7 @@ defmodule FunkyABXWeb.TestFormLive do
       <div
         :if={
           get_field(@changeset, :type) != :listening and
-            track_count(inputs_for(f, :tracks), @tracks_to_delete) > 0
+            track_count(@changeset) > 0
         }
         class="alert alert-warning alert-thin"
       >
@@ -776,7 +780,7 @@ defmodule FunkyABXWeb.TestFormLive do
       <div
         :if={
           get_field(@changeset, :type) == :listening and get_field(@changeset, :public) == true and
-            track_count(inputs_for(f, :tracks), @tracks_to_delete) > 0
+            track_count(@changeset) > 0
         }
         class="alert alert-warning alert-thin"
       >
@@ -787,27 +791,27 @@ defmodule FunkyABXWeb.TestFormLive do
 
       <%= error_tag(f, :tracks) %>
 
-      <fieldset :if={track_count(inputs_for(f, :tracks), @tracks_to_delete) > 0}>
-        <div class="mb-2 py-1 rounded-3 form-unit">
-          <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
+      <fieldset>
+        <div class={["mb-2 py-1 rounded-3 form-unit", track_count(@changeset) === 0 && "d-none"]}>
+          <.inputs_for :let={fp} field={f[:tracks]}>
+            <%= if input_value(fp, :id) != nil do %>
+              <%= hidden_input(fp, :id) %>
+              <%= hidden_input(fp, :delete) %>
+            <% else %>
+              <%= hidden_input(fp, :temp_id) %>
+            <% end %>
+
+            <%= if input_value(fp, :url) != nil do %>
+              <%= hidden_input(fp, :url) %>
+            <% end %>
+
+            <%= hidden_input(fp, :original_filename) %>
+            <%= hidden_input(fp, :filename) %>
+
             <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
               <div class={"row p-2 mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
-                <%= if input_value(fp, :id) != nil do %>
-                  <%= hidden_input(fp, :id) %>
-                  <%= hidden_input(fp, :delete) %>
-                <% else %>
-                  <%= hidden_input(fp, :temp_id) %>
-                <% end %>
-
-                <%= if input_value(fp, :url) != nil do %>
-                  <%= hidden_input(fp, :url) %>
-                <% end %>
-
-                <%= hidden_input(fp, :original_filename) %>
-                <%= hidden_input(fp, :filename) %>
-
                 <label class="col-sm-1 col-form-label">
-                  <%= dgettext("test", "Track #%{track_index}", track_index: i) %>
+                  <%= dgettext("test", "Track #%{track_index}", track_index: fp.index + 1) %>
                 </label>
                 <hr class="d-block d-sm-none mb-0" />
                 <%= label(:fp, :title, dgettext("test", "Name:*"),
@@ -876,7 +880,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
               </div>
             <% end %>
-          <% end %>
+          </.inputs_for>
         </div>
       </fieldset>
 
@@ -1072,7 +1076,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
   def handle_info({"update", %{"test" => test_params}}, socket) do
     updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
-    update_changeset = Test.changeset_update(socket.assigns.test, updated_test_params)
+
+    update_changeset = Test.changeset_update(socket.assigns.changeset, updated_test_params)
     update = Repo.update(update_changeset)
 
     case update do
@@ -1361,20 +1366,22 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @impl true
   def handle_event("delete_track", %{"id" => track_id}, socket) do
-    deleted_track =
-      socket.assigns.changeset.data.tracks
-      |> Enum.find(&(&1.id == track_id))
-      |> Map.put(:delete, true)
-      |> Track.changeset(%{})
-
-    # done here instead at the end of the previous pipe to have the correct sort
     tracks =
-      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
-      |> Enum.concat([deleted_track])
+      socket.assigns.changeset
+      |> get_field(:tracks)
+      |> Enum.map(fn t ->
+        case t.id == track_id do
+          true ->
+            Track.changeset(t, %{delete: true})
+
+          false ->
+            Track.changeset(t, %{})
+        end
+      end)
 
     changeset =
       socket.assigns.changeset
-      |> Ecto.Changeset.cast_assoc(:tracks, tracks)
+      |> Ecto.Changeset.put_assoc(:tracks, tracks)
 
     updated_tracks_to_delete = socket.assigns.tracks_to_delete ++ [track_id]
 
@@ -1596,11 +1603,10 @@ defmodule FunkyABXWeb.TestFormLive do
     end
   end
 
-  defp track_count(track_inputs, tracks_to_delete) do
-    track_inputs
-    |> Enum.filter(fn i ->
-      Enum.member?(tracks_to_delete, input_value(i, :id)) == false
-    end)
+  defp track_count(changeset) do
+    changeset
+    |> get_field(:tracks)
+    |> Enum.reject(&(&1.delete == true))
     |> Kernel.length()
   end
 end

@@ -247,7 +247,8 @@ defmodule FunkyABX.Tests do
     %{
       identification: Map.get(session, "identification", false),
       rating: Map.get(session, "rating", true),
-      regular_type: Map.get(session, "regular_type", :pick)
+      regular_type: Map.get(session, "regular_type", :pick),
+      tracks: Map.get(session, "tracks", [])
     }
   end
 

@@ -10,7 +10,7 @@ defmodule FunkyABX.Track do
     field(:filename, :string)
     field(:original_filename, :string)
     field(:temp_id, :string, virtual: true)
-    field(:delete, :boolean, virtual: true)
+    field(:delete, :boolean, virtual: true, default: false)
     field(:fake_id, :integer, virtual: true)
     field(:hash, :string, virtual: true)
     field(:width, :string, virtual: true)
@@ -29,7 +29,7 @@ defmodule FunkyABX.Track do
   end
 
   defp maybe_mark_for_deletion(changeset) do
-    if get_change(changeset, :delete) do
+    if get_field(changeset, :delete) do
       %{changeset | action: :delete}
     else
       changeset

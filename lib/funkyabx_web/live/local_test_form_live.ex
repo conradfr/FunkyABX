@@ -204,7 +204,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
 
       <fieldset>
         <div class="mb-2 rounded-3 form-unit">
-          <%= for {fp, i} <- inputs_for(f, :tracks) |> Enum.with_index(1) do %>
+          <.inputs_for :let={fp} field={f[:tracks]}>
             <div class={"row p-2 mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
               <%= hidden_input(fp, :id) %>
               <%= hidden_input(fp, :local) %>
@@ -212,7 +212,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
               <%= hidden_input(fp, :original_filename) %>
 
               <label class="col-sm-1 col-form-label">
-                <%= dgettext("test", "Track #%{track_index}", track_index: i) %>
+                <%= dgettext("test", "Track #%{track_index}", track_index: fp.index + 1) %>
               </label>
               <hr class="d-block d-sm-none mb-0" />
               <%= label(:fp, :title, dgettext("test", "Name:*"),
@@ -243,7 +243,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 </button>
               </div>
             </div>
-          <% end %>
+          </.inputs_for>
         </div>
       </fieldset>
 
@@ -269,7 +269,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
     changeset =
       case Map.get(params, "data") do
         nil ->
-          Test.changeset_local(test, Tests.form_data_from_session(session))
+          Test.changeset_local(test, Tests.form_data_from_session(Map.put(session, "tracks", [])))
 
         data ->
           test_data =
