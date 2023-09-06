@@ -16,7 +16,7 @@ defmodule FunkyABXWeb.UserRegistrationController do
   def create(conn, %{"user" => user_params}) do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
-        {:ok, _} = Accounts.deliver_user_welcome(user)
+        Accounts.deliver_user_welcome(user)
 
         conn
         |> transfer_tests_to_account(user)
