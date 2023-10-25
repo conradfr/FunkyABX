@@ -83,6 +83,11 @@
                 <% end %>
               </div>
             <% end %>
+            <div :if={is_test_closed?(test)} class="mt-auto">
+              <div class="py-1 text-center gallery-test-closed">
+                <%= dgettext("test", "Test is closed") %>
+              </div>
+            </div>
             <div class="mt-auto">
               <div :if={test.type != :listening} class="py-1 text-center gallery-test-taken">
                 <%= dngettext(

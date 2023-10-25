@@ -2,12 +2,18 @@ defmodule FunkyABXWeb.PageHTML do
   use FunkyABXWeb, :html
 
   import Ecto.Query, only: [from: 2]
+
   alias FunkyABX.Repo
   alias FunkyABX.{Test, Stats}
+  alias FunkyABX.Tests
 
   @default_max_length 150
 
   embed_templates "page_html/*"
+
+  defp is_test_closed?(%Test{} = test) do
+    Tests.is_closed?(test)
+  end
 
   defp get_tests_total() do
     query =

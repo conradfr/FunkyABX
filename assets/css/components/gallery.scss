@@ -36,6 +36,12 @@
     background-color: $gallery-test-taken-bg-color;
     font-size: 0.875rem;
   }
+
+  .gallery-test-closed {
+    background-color: $gallery-test-closed-bg-color;
+    font-size: 0.875rem;
+  }
+
   .gallery-test-link {
     background-color: $gallery-test-link-bg-color;
     padding-bottom: 0.40rem !important;

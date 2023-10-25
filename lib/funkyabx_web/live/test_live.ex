@@ -596,7 +596,7 @@ defmodule FunkyABXWeb.TestLive do
            :info,
            dgettext(
              "test",
-             "This test has been closed. <a href=\"%{link}\">Check the results</a>",
+             "This test is closed. <a href=\"%{link}\">Check the results</a>",
              link: link
            )
            |> raw()
@@ -657,7 +657,7 @@ defmodule FunkyABXWeb.TestLive do
        :info,
        dgettext(
          "test",
-         "This test has been closed. <a href=\"%{results_url}\">Check the results</a>",
+         "This test is closed. <a href=\"%{results_url}\">Check the results</a>",
          results_url: ~p"/results/#{socket.assigns.test.slug}"
        )
        |> raw()
