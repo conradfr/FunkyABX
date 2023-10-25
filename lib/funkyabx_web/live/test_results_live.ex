@@ -276,7 +276,8 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @impl true
   def handle_event("test_not_taken", _params, socket) do
-    with false <- socket.assigns.current_user_id == socket.assigns.test.user_id do
+    with false <- socket.assigns.current_user_id == socket.assigns.test.user_id,
+         false <- Tests.is_closed?(socket.assigns.test) do
       {:noreply,
        socket
        |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
