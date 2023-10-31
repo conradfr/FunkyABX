@@ -1,7 +1,8 @@
 defmodule FunkyABXWeb.TestResultStarComponent do
   use FunkyABXWeb, :live_component
   alias Phoenix.LiveView.JS
-  alias FunkyABX.{Tracks, Stars, Test}
+  alias FunkyABX.{Tracks, Stars, Tests}
+  alias FunkyABX.Test
 
   attr :test, Test, required: true
   attr :visitor_choices, :any, required: true
@@ -147,6 +148,36 @@ defmodule FunkyABXWeb.TestResultStarComponent do
             <% end %>
           </div>
         <% end %>
+
+        <div
+          :if={@reference_track != nil}
+          class="track track-reference my-1 d-flex flex-wrap justify-content-between align-items-center"
+          phx-click={
+            JS.dispatch(
+              if @play_track_id == @reference_track.id do
+                "stop"
+              else
+                "play"
+              end,
+              to: "body",
+              detail: %{
+                "track_id" => @reference_track.id,
+                "track_url" => Tracks.get_track_url(@reference_track.id, @test)
+              }
+            )
+          }
+        >
+          <TestResultTrackHeaderComponent.display
+            playing={@play_track_id == @reference_track.id}
+            rank={0}
+            test={@test}
+            track_id={@reference_track.id}
+            title={@reference_track.title}
+            trophy={false}
+            tracks_order={@tracks_order}
+            is_reference_track={true}
+          />
+        </div>
       </div>
     </div>
     """
@@ -158,6 +189,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
      socket
      |> assign(assigns)
      |> assign_new(:stars, fn -> Stars.get_stars(assigns.test, assigns.visitor_choices) end)
+     |> assign_new(:reference_track, fn -> Tests.get_reference_track(assigns.test) end)
      |> assign_new(:star_detail, fn -> false end)}
   end
 

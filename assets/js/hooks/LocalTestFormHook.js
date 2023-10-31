@@ -10,8 +10,8 @@ const LocalTestFormHook = {
     audioFiles = files;
   },
   mounted() {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    this.tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    this.tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
     const isAllowedExt = (filename) => {
       const arr = filename.split('.');
@@ -94,6 +94,10 @@ const LocalTestFormHook = {
     };
 
     this.folderButton.addEventListener('click', this.folderClick, false);
+  },
+  updated() {
+    this.tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    this.tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
   },
   destroyed() {
     this.fileButton.removeEventListener('click', this.fileClick, false);

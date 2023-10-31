@@ -3,12 +3,14 @@ defmodule FunkyABX.Stars do
 
   alias FunkyABX.Repo
   alias FunkyABX.Tests.Image
+  alias FunkyABX.Tests
   alias FunkyABX.{Test, Track, Star, StarDetails}
 
   # ---------- GET ----------
 
   def get_stars(%Test{} = test, visitor_choices) when test.local == true do
     test.tracks
+    |> Enum.filter(fn t -> t.reference_track != true end)
     |> Enum.map(fn t ->
       %{
         track_id: t.id,
@@ -29,7 +31,7 @@ defmodule FunkyABX.Stars do
       from t in Track,
         join: s in Star,
         on: t.id == s.track_id,
-        where: s.test_id == ^test.id,
+        where: s.test_id == ^test.id and t.reference_track != true,
         group_by: [t.id, s.track_id],
         order_by: [
           desc: fragment("rank_decimal"),
@@ -79,7 +81,7 @@ defmodule FunkyABX.Stars do
   # ---------- FORM ----------
 
   def is_valid?(%Test{} = test, round, choices) when is_map_key(choices, round) do
-    map_size(choices[round][:star] || %{}) == Kernel.length(test.tracks)
+    map_size(choices[round][:star] || %{}) == Tests.tracks_count(test)
   end
 
   def is_valid?(_test, _round, _choices), do: false

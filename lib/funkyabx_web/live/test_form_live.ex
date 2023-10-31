@@ -16,11 +16,19 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.form :let={f} class="mb-2" for={@changeset} phx-change="validate" phx-submit={@action}>
+    <.form
+      :let={f}
+      class="mb-2"
+      for={@changeset}
+      phx-change="validate"
+      phx-submit={@action}
+      id="test-form"
+      phx-hook="TestForm"
+    >
       <%= hidden_input(f, :access_key) %>
       <div class="row">
         <div class="col-md-6 col-sm-12 order-md-1 order-2">
-          <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="TestForm">
+          <h3 class="mb-2 mt-0 header-chemyretro">
             <%= if @action == "save" do %>
               <%= dgettext("test", "Create a new test") %>
             <% else %>
@@ -848,7 +856,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <%= input_value(fp, :original_filename) %>
                   </div>
                 <% end %>
-                <div class="col-sm-1 d-flex flex-row-reverse" style="min-width: 62px">
+                <div class="col-sm-2 d-flex flex-row-reverse" style="min-width: 62px">
                   <%= if input_value(fp, :id) != nil do %>
                     <button
                       type="button"
@@ -877,6 +885,26 @@ defmodule FunkyABXWeb.TestFormLive do
                       <i class="bi bi-trash text-danger"></i>
                     </button>
                   <% end %>
+
+                  <label :if={Tests.can_have_reference_track?(@changeset)} class="col-form-label pe-3">
+                    <%= checkbox(fp, :reference_track,
+                      class: "form-check-input",
+                      disabled: !@test_updatable
+                    ) %> &nbsp;&nbsp;<%= dgettext(
+                      "test",
+                      "Reference"
+                    ) %> &nbsp;<i
+                      class="bi bi-info-circle text-body-secondary"
+                      data-bs-toggle="tooltip"
+                      title={
+                        dgettext(
+                          "site",
+                          "Reference / unprocessed track that will not be part of the test but playable."
+                        )
+                      }
+                    >
+                    </i>
+                  </label>
                 </div>
               </div>
             <% end %>
@@ -885,6 +913,7 @@ defmodule FunkyABXWeb.TestFormLive do
       </fieldset>
 
       <div class="mt-3 text-center text-md-end d-flex flex-row justify-content-end align-items-center">
+        <div class="pe-2"><%= error_tag(f, :type) %></div>
         <div class="loading-spinner spinner-border spinner-border-sm text-primary me-2" role="status">
           <span class="visually-hidden"><%= dgettext("test", "Loading...") %></span>
         </div>
@@ -1213,6 +1242,7 @@ defmodule FunkyABXWeb.TestFormLive do
       target
       |> List.last()
       |> FormUtils.update_test_params(test_params)
+      |> FormUtils.update_reference_track_params(target)
       |> build_upload_tracks(socket)
 
     changeset =

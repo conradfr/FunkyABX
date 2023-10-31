@@ -7,6 +7,10 @@
 
     background-color: $track-bg-color;
 
+    &.track-reference {
+      background-color: darken($track-bg-color, 5%);
+    }
+
     .track-loading-indicator {
       position: absolute;
       top: 10px;
@@ -21,11 +25,18 @@
       }
 
       .btn-track-active {
-        background-color: #40A8BDFF;
-        border-color: darken(#40A8BDFF, 5%);
+        background-color: $track-active-hover-bg-color;
+        border-color: darken($track-active-hover-bg-color, 5%);
 
         &:hover {
-          background-color: darken(#40A8BDFF, 5%);
+          background-color: darken($track-active-hover-bg-color, 5%);
+        }
+      }
+
+      &.track-reference {
+        .btn-track-active {
+          background-color: darken($track-active-hover-bg-color, 5%);
+          border-color: darken($track-active-hover-bg-color, 10%);
         }
       }
     }

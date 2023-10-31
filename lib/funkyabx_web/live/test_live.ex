@@ -259,7 +259,7 @@ defmodule FunkyABXWeb.TestLive do
     </form>
 
     <div class="tracks my-2">
-      <%= for {track, i} <- @tracks |> Enum.with_index(1) do %>
+      <%= for {track, i} <- @tracks |> Enum.with_index(get_starting_index(@test)) do %>
         <div class={[
           "track",
           "my-1",
@@ -267,7 +267,8 @@ defmodule FunkyABXWeb.TestLive do
           "flex-wrap",
           "flex-md-nowrap",
           "align-items-center",
-          @current_track == track.hash && "track-active"
+          @current_track == track.hash && "track-active",
+          track.reference_track == true && "track-reference"
         ]}>
           <div class="p-2">
             <%= if @current_track == track.hash and @playing == true do %>
@@ -323,7 +324,10 @@ defmodule FunkyABXWeb.TestLive do
                 )
               }
             >
-              <%= dgettext("test", "Track %{track_index}", track_index: i) %>
+              <div :if={track.reference_track == true}><%= dgettext("test", "Reference") %></div>
+              <div :if={track.reference_track != true}>
+                <%= dgettext("test", "Track %{track_index}", track_index: i) %>
+              </div>
             </div>
           <% end %>
 
@@ -362,7 +366,7 @@ defmodule FunkyABXWeb.TestLive do
             </div>
           </div>
 
-          <%= unless @test_already_taken == true do %>
+          <%= unless @test_already_taken == true or track.reference_track == true do %>
             <%= for module <- @choices_modules do %>
               <.live_component
                 module={module}
@@ -1099,4 +1103,11 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   defp get_track_progress(_track_hash, _tracks_loading), do: 0
+
+  defp get_starting_index(%Test{} = test) do
+    case Tests.has_reference_track?(test) do
+      true -> 0
+      false -> 1
+    end
+  end
 end

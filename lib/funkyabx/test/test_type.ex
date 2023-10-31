@@ -25,6 +25,11 @@ defmodule FunkyABX.Tests.Type do
   @callback get_test_params(test :: Test) :: map()
 
   @doc """
+    Can this test type have a have reference track?
+  """
+  @callback can_have_reference_track?() :: boolean()
+
+  @doc """
     How many times the test has been taken
   """
   @callback get_how_many_taken(test :: Test) :: integer()

@@ -5,8 +5,8 @@ import { COOKIE_TEST_AUTHOR } from '../config/config';
 /* eslint-disable no-undef */
 const TestFormHook = {
   mounted() {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    this.tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    this.tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
     // Examples display
     // (because LiveView has no phx-[mouse-events] support ...)
@@ -64,6 +64,10 @@ const TestFormHook = {
         }
       });
     });
+  },
+  updated() {
+    this.tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    this.tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
   },
   destroyed() {
     for (let element of this.examplesHoverElems) {

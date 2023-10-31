@@ -10,7 +10,8 @@ defmodule FunkyABX.Tracks do
         id: t.id,
         url: get_media_url(t, test),
         hash: t.hash,
-        local: t.local
+        local: t.local,
+        reference_track: t.reference_track
       }
       # keep id only for local tests (to avoid cheating)
       |> Kernel.then(fn

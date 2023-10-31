@@ -106,6 +106,9 @@ defmodule FunkyABX.Tests.Regular do
     }
   end
 
+  @impl true
+  def can_have_reference_track?(), do: true
+
   # ---------- TAKEN ----------
 
   @impl true
@@ -120,7 +123,18 @@ defmodule FunkyABX.Tests.Regular do
 
   @impl true
   def prep_tracks(tracks, _test) when is_list(tracks) do
-    Enum.shuffle(tracks)
+    randomized_tracks =
+      tracks
+      |> Enum.filter(fn t -> t.reference_track == false end)
+      |> Enum.shuffle()
+
+    # add reference track at the top if any
+    if length(randomized_tracks) < length(tracks) do
+      reference_track = Enum.find(tracks, fn t -> t.reference_track == true end)
+      [reference_track | randomized_tracks]
+    else
+      randomized_tracks
+    end
   end
 
   # ---------- FORM ----------

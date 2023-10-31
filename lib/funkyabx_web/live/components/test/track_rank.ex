@@ -1,5 +1,6 @@
 defmodule FunkyABXWeb.TestTrackRankComponent do
   use FunkyABXWeb, :live_component
+
   alias FunkyABX.Tests
 
   @impl true
@@ -64,11 +65,17 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
   end
 
   def ranking_choices(test) when test.ranking_only_extremities == true do
-    nb_tracks = Kernel.length(test.tracks)
+    nb_tracks = Tests.tracks_count(test)
     ["", Best: [1, 2, 3], Worst: [nb_tracks - 2, nb_tracks - 1, nb_tracks]]
   end
 
   def ranking_choices(test) do
-    [""] ++ Enum.to_list(1..Kernel.length(test.tracks))
+    track_count =
+      test
+      |> Map.get(:tracks, [])
+      |> Enum.filter(fn t -> t.reference_track != true end)
+      |> Kernel.length()
+
+    [""] ++ Enum.to_list(1..track_count)
   end
 end

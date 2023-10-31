@@ -30,6 +30,9 @@ defmodule FunkyABX.Tests.Listening do
     }
   end
 
+  @impl true
+  def can_have_reference_track?(), do: false
+
   # ---------- TAKEN ----------
 
   @impl true

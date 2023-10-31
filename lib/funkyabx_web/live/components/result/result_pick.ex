@@ -1,7 +1,8 @@
 defmodule FunkyABXWeb.TestResultPickComponent do
   use FunkyABXWeb, :live_component
   alias Phoenix.LiveView.JS
-  alias FunkyABX.{Tracks, Picks, Test}
+  alias FunkyABX.{Tracks, Picks, Tests}
+  alias FunkyABX.Test
 
   attr :test, Test, required: true
   attr :visitor_choices, :any, required: true
@@ -88,6 +89,35 @@ defmodule FunkyABXWeb.TestResultPickComponent do
             </div>
           </div>
         <% end %>
+        <div
+          :if={@reference_track != nil}
+          class="track track-reference my-1 d-flex flex-wrap justify-content-between align-items-center"
+          phx-click={
+            JS.dispatch(
+              if @play_track_id == @reference_track.id do
+                "stop"
+              else
+                "play"
+              end,
+              to: "body",
+              detail: %{
+                "track_id" => @reference_track.id,
+                "track_url" => Tracks.get_track_url(@reference_track.id, @test)
+              }
+            )
+          }
+        >
+          <TestResultTrackHeaderComponent.display
+            playing={@play_track_id == @reference_track.id}
+            rank={0}
+            test={@test}
+            track_id={@reference_track.id}
+            title={@reference_track.title}
+            trophy={false}
+            tracks_order={@tracks_order}
+            is_reference_track={true}
+          />
+        </div>
       </div>
     </div>
     """
@@ -98,6 +128,7 @@ defmodule FunkyABXWeb.TestResultPickComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:picks, fn -> Picks.get_picks(assigns.test, assigns.visitor_choices) end)}
+     |> assign_new(:picks, fn -> Picks.get_picks(assigns.test, assigns.visitor_choices) end)
+     |> assign_new(:reference_track, fn -> Tests.get_reference_track(assigns.test) end)}
   end
 end

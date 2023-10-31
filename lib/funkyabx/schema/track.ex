@@ -16,6 +16,7 @@ defmodule FunkyABX.Track do
     field(:width, :string, virtual: true)
     field(:url, :string, virtual: true)
     field(:local, :boolean, virtual: true, default: false)
+    field(:reference_track, :boolean, default: false)
     belongs_to(:test, Test, type: :binary_id)
     has_many(:pick, Pick)
   end
@@ -23,7 +24,16 @@ defmodule FunkyABX.Track do
   def changeset(track, attrs \\ %{}) do
     track
     |> Map.put(:temp_id, track.temp_id || attrs["temp_id"] || nil)
-    |> cast(attrs, [:id, :title, :filename, :original_filename, :delete, :temp_id, :local])
+    |> cast(attrs, [
+      :id,
+      :title,
+      :filename,
+      :original_filename,
+      :delete,
+      :temp_id,
+      :local,
+      :reference_track
+    ])
     #    |> validate_required([:title])
     |> maybe_mark_for_deletion()
   end

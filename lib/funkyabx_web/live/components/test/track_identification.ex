@@ -74,7 +74,9 @@ defmodule FunkyABXWeb.TestTrackIdentificationComponent do
   def identification_choices(tracks) do
     [""] ++
       Enum.map(
-        tracks |> Enum.sort_by(&Map.fetch(&1, :title)),
+        tracks
+        |> Enum.filter(fn t -> t.reference_track != true end)
+        |> Enum.sort_by(&Map.fetch(&1, :title)),
         fn x -> {x.title, x.fake_id} end
       )
   end

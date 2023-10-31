@@ -14,14 +14,14 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
         class="nav-link dropdown-toggle"
         class="nav-link dropdown-toggle"
         href="#"
-        id="navbarDropdownTestsMenuLink"
+        id="navbarDropdownTakenTestsMenuLink"
         role="button"
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
         <%= dgettext("test", "Tests taken") %>
       </a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownTestsMenuLink">
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownTakenTestsMenuLink">
         <%= for test <- @tests do %>
           <li class="navbar-tests">
             <div class="d-flex w-100">

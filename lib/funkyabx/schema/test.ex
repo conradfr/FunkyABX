@@ -126,12 +126,13 @@ defmodule FunkyABX.Test do
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
     |> Validators.validate_nb_rounds()
     |> Validators.validate_anonymized()
-    #    |> Validators.validate_nb_tracks(@minimum_tracks)
+    |> Validators.validate_max_reference_track()
+    |> Validators.validate_nb_tracks(@minimum_tracks)
     |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
-    |> validate_length(:tracks,
-      min: @minimum_tracks,
-      message: "A test needs to have at least two tracks."
-    )
+    #    |> validate_length(:tracks,
+    #      min: @minimum_tracks,
+    #      message: "A test needs to have at least two tracks."
+    #    )
     |> TitleSlug.maybe_generate_slug()
     |> TitleSlug.unique_constraint()
   end
@@ -172,12 +173,14 @@ defmodule FunkyABX.Test do
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
     |> Validators.validate_nb_rounds()
     |> Validators.validate_anonymized()
-    #    |> Validators.validate_nb_tracks(@minimum_tracks)
+    |> Validators.validate_max_reference_track()
+    |> Validators.validate_nb_tracks(@minimum_tracks)
     |> validate_required([:type, :title, :nb_of_rounds, :anonymized_track_title])
-    |> validate_length(:tracks,
-      min: @minimum_tracks,
-      message: "A test needs to have at least two tracks."
-    )
+
+    #    |> validate_length(:tracks,
+    #      min: @minimum_tracks,
+    #      message: "A test needs to have at least two tracks."
+    #    )
   end
 
   def changeset_close(test, _attrs \\ %{}) do
@@ -239,10 +242,12 @@ defmodule FunkyABX.Test do
     |> Validators.validate_anonymized()
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
     |> validate_required([:type, :nb_of_rounds])
-    |> validate_length(:tracks,
-      min: @minimum_tracks,
-      message: "A test needs to have at least two tracks."
-    )
+    |> Validators.validate_nb_tracks(@minimum_tracks)
+
+    #    |> validate_length(:tracks,
+    #      min: @minimum_tracks,
+    #      message: "A test needs to have at least two tracks."
+    #    )
   end
 
   # ---------- DATA ----------

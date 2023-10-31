@@ -3,12 +3,14 @@ defmodule FunkyABX.Ranks do
 
   alias FunkyABX.Repo
   alias FunkyABX.Tests.Image
+  alias FunkyABX.Tests
   alias FunkyABX.{Test, Track, Rank, RankDetails}
 
   # ---------- GET ----------
 
   def get_ranks(%Test{} = test, visitor_choices) when test.local == true do
     test.tracks
+    |> Enum.filter(fn t -> t.reference_track != true end)
     |> Enum.map(fn t ->
       %{
         track_id: t.id,
@@ -28,7 +30,7 @@ defmodule FunkyABX.Ranks do
       from r in Rank,
         join: t in Track,
         on: t.id == r.track_id,
-        where: r.test_id == ^test.id,
+        where: r.test_id == ^test.id and t.reference_track != true,
         order_by: [
           desc: r.count,
           asc: r.rank,
@@ -105,7 +107,9 @@ defmodule FunkyABX.Ranks do
   defp is_valid_count?(count, %Test{} = test) when test.ranking_only_extremities == true,
     do: count == 6
 
-  defp is_valid_count?(count, %Test{} = test), do: count == Kernel.length(test.tracks)
+  defp is_valid_count?(count, %Test{} = test) do
+    count == Tests.tracks_count(test)
+  end
 
   # ---------- SAVE ----------
 
@@ -156,6 +160,8 @@ defmodule FunkyABX.Ranks do
   def results_to_img(mogrify_params, %Test{} = test, session_id, choices)
       when is_binary(session_id) do
     with ranks when ranks != nil <- Map.get(choices, "rank", nil) do
+      track_count = Tests.tracks_count(test)
+
       {start, mogrify} = mogrify_params
 
       {index, mogrify} =
@@ -164,7 +170,7 @@ defmodule FunkyABX.Ranks do
         |> then(fn mogrify ->
           test.tracks
           |> Enum.sort_by(fn t ->
-            Map.get(ranks, t.id, length(test.tracks) / 2)
+            Map.get(ranks, t.id, track_count / 2)
           end)
           |> Enum.reduce({1, mogrify}, fn t, acc ->
             {index, mogrify} = acc

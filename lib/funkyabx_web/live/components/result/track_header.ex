@@ -12,6 +12,7 @@ defmodule TestResultTrackHeaderComponent do
   attr :title, :string, required: true
   attr :trophy, :boolean, required: false, default: true
   attr :tracks_order, :any, required: false, default: nil
+  attr :is_reference_track, :boolean, required: false, default: false
 
   def display(assigns) do
     ~H"""
@@ -50,18 +51,24 @@ defmodule TestResultTrackHeaderComponent do
       <% end %>
     </div>
     <div class="p-2 flex-grow-1 text-truncate cursor-link">
-      <%= @title %><%= track_index(@track_id, @tracks_order) |> raw() %>
+      <%= @title %>
+      <span :if={@is_reference_track == false} class="text-body-secondary">
+        <%= track_index(@track_id, @tracks_order) |> raw() %>
+      </span>
+      <span :if={@is_reference_track == true} class="text-body-secondary">
+        <small> - Reference track</small>
+      </span>
     </div>
     """
   end
 
-  def track_index(track_id, %{} = tracks_order) when is_map_key(tracks_order, track_id) do
+  defp track_index(track_id, %{} = tracks_order) when is_map_key(tracks_order, track_id) do
     index = Map.get(tracks_order, track_id)
 
     unless index == nil do
-      "&nbsp;<span class=\"text-body-secondary\"><small> - Track #{index}</small></span>"
+      "<small> - Track #{index}</small>"
     end
   end
 
-  def track_index(_, _tracks_order), do: nil
+  defp track_index(_, _tracks_order), do: nil
 end

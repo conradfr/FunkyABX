@@ -3,12 +3,14 @@ defmodule FunkyABX.Identifications do
 
   alias FunkyABX.Repo
   alias FunkyABX.Tests.Image
-  alias FunkyABX.{Test, Track, Tracks, Identification, IdentificationDetails}
+  alias FunkyABX.{Test, Track, Identification, IdentificationDetails}
+  alias FunkyABX.{Tests, Tracks}
 
   # ---------- GET ----------
 
   def get_identification(%Test{} = test, _visitor_choices) when test.local == true do
     test.tracks
+    |> Enum.filter(fn t -> t.reference_track != true end)
     |> Enum.map(fn t ->
       %{
         track_id: t.id,
@@ -73,10 +75,12 @@ defmodule FunkyABX.Identifications do
   # ---------- FORM ----------
 
   def is_valid?(%Test{} = test, round, choices) when is_map_key(choices, round) do
+    track_count = Tests.tracks_count(test)
+
     case Map.get(choices[round], :identification, %{})
          |> Map.values()
          |> Enum.count() do
-      count when count < Kernel.length(test.tracks) -> false
+      count when count < track_count -> false
       _ -> true
     end
   end

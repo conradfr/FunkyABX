@@ -1,6 +1,7 @@
 defmodule FunkyABXWeb.TestResultIdentificationComponent do
   use FunkyABXWeb, :live_component
-  alias FunkyABX.{Tracks, Identifications, Test}
+  alias FunkyABX.{Tracks, Identifications, Tests}
+  alias FunkyABX.Test
 
   attr :test, Test, required: true
   attr :visitor_choices, :any, required: true
@@ -163,6 +164,36 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             <% end %>
           <% end %>
         <% end %>
+
+        <div
+          :if={@reference_track != nil}
+          class="track track-reference my-1 d-flex flex-wrap justify-content-between align-items-center"
+          phx-click={
+            JS.dispatch(
+              if @play_track_id == @reference_track.id do
+                "stop"
+              else
+                "play"
+              end,
+              to: "body",
+              detail: %{
+                "track_id" => @reference_track.id,
+                "track_url" => Tracks.get_track_url(@reference_track.id, @test)
+              }
+            )
+          }
+        >
+          <TestResultTrackHeaderComponent.display
+            playing={@play_track_id == @reference_track.id}
+            rank={0}
+            test={@test}
+            track_id={@reference_track.id}
+            title={@reference_track.title}
+            trophy={false}
+            tracks_order={@tracks_order}
+            is_reference_track={true}
+          />
+        </div>
       </div>
     </div>
     """
@@ -176,6 +207,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
      |> assign_new(:identifications, fn ->
        Identifications.get_identification(assigns.test, assigns.visitor_choices)
      end)
+     |> assign_new(:reference_track, fn -> Tests.get_reference_track(assigns.test) end)
      |> assign_new(:identification_detail, fn -> false end)}
   end
 

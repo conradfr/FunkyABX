@@ -1,6 +1,8 @@
 defmodule FunkyABX.Tests.Validators do
   import Ecto.Changeset
 
+  @max_reference_track 1
+
   # ---------- DATA ----------
 
   def ensure_regular_type(changeset) do
@@ -97,17 +99,6 @@ defmodule FunkyABX.Tests.Validators do
     end
   end
 
-  defp at_least_one_regular(changeset) do
-    rating = get_field(changeset, :rating)
-    identification = get_field(changeset, :identification)
-
-    unless rating == false and identification == false do
-      changeset
-    else
-      add_error(changeset, :type, "Select at least one option.")
-    end
-  end
-
   # ---------- VALIDATE ----------
 
   def validate_general_type(changeset) do
@@ -120,6 +111,17 @@ defmodule FunkyABX.Tests.Validators do
 
       _ ->
         changeset
+    end
+  end
+
+  defp at_least_one_regular(changeset) do
+    rating = get_field(changeset, :rating)
+    identification = get_field(changeset, :identification)
+
+    unless rating == false and identification == false do
+      changeset
+    else
+      add_error(changeset, :type, "Select at least one option.")
     end
   end
 
@@ -158,10 +160,30 @@ defmodule FunkyABX.Tests.Validators do
   end
 
   def validate_nb_tracks(changeset, min) do
-    tracks = get_field(changeset, :tracks)
+    track_count =
+      changeset
+      |> get_field(:tracks)
+      |> Enum.count(fn t -> t.reference_track == false end)
 
-    if length(tracks) < min do
-      add_error(changeset, :type, "A test needs to have at least two tracks.")
+    if track_count < min do
+      add_error(
+        changeset,
+        :type,
+        "A test needs to have at least #{min} tracks (reference track excluding)."
+      )
+    else
+      changeset
+    end
+  end
+
+  def validate_max_reference_track(changeset) do
+    reference_track_count =
+      changeset
+      |> get_field(:tracks)
+      |> Enum.count(fn t -> t.reference_track == true end)
+
+    if reference_track_count > @max_reference_track do
+      add_error(changeset, :type, "Only one reference track is allowed.")
     else
       changeset
     end

@@ -9,6 +9,7 @@ defmodule FunkyABX.Picks do
 
   def get_picks(%Test{} = test, visitor_choices) when test.local == true do
     test.tracks
+    |> Enum.filter(fn t -> t.reference_track != true end)
     |> Enum.map(fn t ->
       picked =
         case Map.get(visitor_choices, "pick") do
@@ -29,7 +30,7 @@ defmodule FunkyABX.Picks do
       from t in Track,
         left_join: p in Pick,
         on: t.id == p.track_id,
-        where: t.test_id == ^test.id,
+        where: t.test_id == ^test.id and t.reference_track != true,
         order_by: [
           desc: fragment("picked"),
           asc: t.title
@@ -115,6 +116,7 @@ defmodule FunkyABX.Picks do
       picked_track_title =
         test
         |> Map.get(:tracks)
+        |> Enum.filter(fn t -> t.reference_track != true end)
         |> Enum.find(&(&1.id == picked_id))
         |> Map.get(:title)
 

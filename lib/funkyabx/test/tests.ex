@@ -1,8 +1,10 @@
 defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2, dynamic: 2, limit: 3]
+  import Ecto.Changeset, only: [get_field: 2]
   use Nebulex.Caching
 
   alias Ecto.UUID
+  alias Ecto.Changeset
   alias FunkyABX.Repo
   alias FunkyABX.{Cache, Test, Stats}
   alias FunkyABX.{PickDetails, StarDetails, RankDetails, IdentificationDetails, AbxDetails}
@@ -204,8 +206,21 @@ defmodule FunkyABX.Tests do
   end
 
   defp get_test_module(%Test{} = test) do
-    test.type
+    test
+    |> Map.get(:type)
     |> Atom.to_string()
+    |> get_test_module()
+  end
+
+  defp get_test_module(%Changeset{} = changeset) do
+    changeset
+    |> get_field(:type)
+    |> Atom.to_string()
+    |> get_test_module()
+  end
+
+  defp get_test_module(type) when is_binary(type) do
+    type
     |> String.capitalize()
     |> (&"Elixir.FunkyABX.Tests.#{&1}").()
     |> String.to_atom()
@@ -232,6 +247,29 @@ defmodule FunkyABX.Tests do
     test
     |> get_test_module()
     |> Kernel.apply(:prep_tracks, [tracks, test])
+  end
+
+  def get_reference_track(%Test{} = test) do
+    Enum.find(test.tracks, fn t -> t.reference_track == true end)
+  end
+
+  def can_have_reference_track?(%Changeset{} = changeset) do
+    changeset
+    |> get_test_module()
+    |> Kernel.apply(:can_have_reference_track?, [])
+  end
+
+  def can_have_reference_track?(type) when is_binary(type) do
+    type
+    |> get_test_module()
+    |> Kernel.apply(:can_have_reference_track?, [])
+  end
+
+  def tracks_count(%Test{} = test) do
+    test
+    |> Map.get(:tracks, [])
+    |> Enum.filter(fn t -> t.reference_track != true end)
+    |> Kernel.length()
   end
 
   # ---------- FORM ----------
@@ -348,6 +386,10 @@ defmodule FunkyABX.Tests do
       |> NaiveDateTime.compare(test.closed_at)
 
     compare != :lt
+  end
+
+  def has_reference_track?(%Test{} = test) do
+    Enum.any?(test.tracks, fn t -> t.reference_track == true end)
   end
 
   def assign_new(choices, round, key, default \\ %{}) do

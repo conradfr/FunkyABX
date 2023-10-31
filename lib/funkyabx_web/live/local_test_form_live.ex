@@ -10,10 +10,18 @@ defmodule FunkyABXWeb.LocalTestFormLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.form :let={f} class="mb-2" for={@changeset} phx-change="validate" phx-submit={@action}>
+    <.form
+      :let={f}
+      class="mb-2"
+      for={@changeset}
+      phx-change="validate"
+      phx-submit={@action}
+      id="test-form"
+      phx-hook="LocalTestForm"
+    >
       <div class="row">
         <div class="col-md-6 col-sm-12 order-md-1 order-2">
-          <h3 class="mb-2 mt-0 header-chemyretro" id="test-form-header" phx-hook="LocalTestForm">
+          <h3 class="mb-2 mt-0 header-chemyretro">
             Local test
             <i
               class="bi bi-question-circle text-body-secondary"
@@ -232,7 +240,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 <%= input_value(fp, :original_filename) %>
               </div>
 
-              <div class="col-sm-1 d-flex flex-row-reverse" style="min-width: 62px">
+              <div class="col-sm-2 d-flex flex-row-reverse" style="min-width: 62px">
                 <button
                   type="button"
                   class="btn btn-dark"
@@ -241,13 +249,32 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 >
                   <i class="bi bi-trash text-danger"></i>
                 </button>
+
+                <label :if={Tests.can_have_reference_track?(@changeset)} class="col-form-label pe-3">
+                  <%= checkbox(fp, :reference_track,
+                    class: "form-check-input"
+                  ) %> &nbsp;&nbsp;<%= dgettext(
+                    "test",
+                    "Reference"
+                  ) %> &nbsp;<i
+                    class="bi bi-info-circle text-body-secondary"
+                    data-bs-toggle="tooltip"
+                    title={
+                      dgettext(
+                        "site",
+                        "Reference / unprocessed track that will not be part of the test but playable."
+                      )
+                    }
+                  >
+                  </i>
+                </label>
               </div>
             </div>
           </.inputs_for>
         </div>
       </fieldset>
 
-      <div class="mt-3 text-center text-md-center d-flex flex-row justify-content-center align-items-center">
+      <div class="mt-3 mb-3 text-center text-md-center d-flex flex-row justify-content-center align-items-center">
         <div class="loading-spinner spinner-border spinner-border-sm text-primary me-2" role="status">
           <span class="visually-hidden"><%= dgettext("test", "Loading...") %></span>
         </div>
@@ -308,6 +335,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
       target
       |> List.last()
       |> FormUtils.update_test_params(test_params)
+      |> FormUtils.update_reference_track_params(target)
 
     changeset =
       socket.assigns.test
