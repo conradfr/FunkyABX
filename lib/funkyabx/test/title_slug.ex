@@ -17,7 +17,18 @@ defmodule FunkyABX.Test.TitleSlug do
 
     case count do
       0 -> slug
-      _ -> slug <> "-" <> Integer.to_string(count + 1)
+      _ -> get_next_available_slug(slug, count)
     end
   end
+
+  defp get_next_available_slug(slug, starting_point) do
+    increment = starting_point + 1
+    next_slug = slug <> "-" <> Integer.to_string(increment)
+
+    case Repo.get_by(Test, slug: next_slug) do
+      nil -> next_slug
+      _ -> get_next_available_slug(slug, increment)
+    end
+  end
+
 end
