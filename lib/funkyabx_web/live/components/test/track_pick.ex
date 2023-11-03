@@ -22,6 +22,7 @@ defmodule FunkyABXWeb.TestTrackPickComponent do
           phx-click="pick_track"
           phx-value-track_id={@track.id}
           phx-target={@myself}
+          disabled={@test_already_taken == true}
         >
           <%= dgettext("test", "Pick this track as favorite") %>
         </button>
@@ -29,6 +30,14 @@ defmodule FunkyABXWeb.TestTrackPickComponent do
     </div>
     """
   end
+
+  @impl true
+  def handle_event(
+        "pick_track",
+        _picking_params,
+        %{assigns: %{test_already_taken: true}} = socket
+      ),
+      do: {:noreply, socket}
 
   @impl true
   def handle_event("pick_track", %{"track_id" => track_id} = _picking_params, socket) do

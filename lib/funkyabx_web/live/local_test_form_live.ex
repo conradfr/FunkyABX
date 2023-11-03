@@ -251,9 +251,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 </button>
 
                 <label :if={Tests.can_have_reference_track?(@changeset)} class="col-form-label pe-3">
-                  <%= checkbox(fp, :reference_track,
-                    class: "form-check-input"
-                  ) %> &nbsp;&nbsp;<%= dgettext(
+                  <%= checkbox(fp, :reference_track, class: "form-check-input") %> &nbsp;&nbsp;<%= dgettext(
                     "test",
                     "Reference"
                   ) %> &nbsp;<i

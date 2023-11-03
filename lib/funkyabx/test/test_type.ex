@@ -37,7 +37,7 @@ defmodule FunkyABX.Tests.Type do
   @doc """
     Transform tracks to be used on the test
   """
-  @callback prep_tracks(list(), test :: Test) :: list()
+  @callback prep_tracks(list(), test :: Test, map()|nil) :: list()
 
   @doc """
     Is the test valid?

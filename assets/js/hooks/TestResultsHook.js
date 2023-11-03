@@ -78,52 +78,24 @@ const TestResultsHook = {
 
       this.audio = audio;
 
-      this.pushEvent('playing', { track_id });
+      this.pushEvent('playing_audio', { track_id });
     };
 
     this.stop = () => {
       if (this.audio !== null) {
         this.audio.pause();
         this.audio = null;
-        this.pushEvent('stopping');
+        this.pushEvent('stopping_audio');
       }
     };
 
-    this.keydown = (event) => {
-      const key = event.key;
-      switch (key) {
-        case 'Control':
-          this.ctrlPressed = true;
-          break;
-
-        default:
-          break;
-      }
-    };
-
-    this.keyup = (event) => {
-      const key = event.key;
-      switch (key) {
-        case 'Control':
-          this.ctrlPressed = false;
-          break;
-
-        default:
-          break;
-      }
-    };
-
-    window.addEventListener('play', this.play, false);
-    window.addEventListener('stop', this.stop, false);
-    window.addEventListener('keyup', this.keyup, false);
-    window.addEventListener('keydown', this.keydown, false);
+    window.addEventListener('play_result', this.play, false);
+    window.addEventListener('stop_result', this.stop, false);
   },
   destroyed() {
     this.stop();
-    window.removeEventListener('play', this.play, false);
-    window.removeEventListener('stop', this.stop, false);
-    window.removeEventListener('keyup', this.keyup, false);
-    window.removeEventListener('keydown', this.keydown, false);
+    window.removeEventListener('play_result', this.play, false);
+    window.removeEventListener('stop_result', this.stop, false);
   }
 };
 

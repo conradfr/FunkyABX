@@ -31,7 +31,7 @@ const PlayerHook = {
     };
 
     if (cookies.has(COOKIE_TEST_ROTATE_SECONDS)) {
-      this.pushEvent('update_rotate_seconds', { seconds: cookies.get(COOKIE_TEST_ROTATE_SECONDS) });
+      this.pushEventTo(this.el, 'update_rotate_seconds', { seconds: cookies.get(COOKIE_TEST_ROTATE_SECONDS) });
     }
 
     this.player = loadPlayer(this.el.dataset.tracks);
@@ -134,7 +134,7 @@ const PlayerHook = {
     // push events from other components
     this.ee.on('push_event', (params) => {
       const { event, data } = params;
-      this.pushEvent(event, data);
+      this.pushEventTo(this.el, event, data);
     });
 
     // ---------- SERVER EVENTS ----------
@@ -163,7 +163,7 @@ const PlayerHook = {
     /* todo clean */
     this.handleEvent('update_tracks', (params) => {
       this.stop();
-      this.pushEvent('stopping');
+      this.pushEventTo(this.el, 'stopping');
       this.player = null;
 
       this.ee.removeAllListeners('waveform-click');

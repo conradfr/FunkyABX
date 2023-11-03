@@ -1223,6 +1223,8 @@ defmodule FunkyABXWeb.TestFormLive do
           "Test creating failed (#{fetch_field!(changeset, :type)} / #{length(fetch_field!(changeset, :tracks))} tracks)"
         )
 
+        Utils.send_error_toast(socket.assigns.page_id)
+
         {:noreply, assign(socket, changeset: changeset)}
     end
   end

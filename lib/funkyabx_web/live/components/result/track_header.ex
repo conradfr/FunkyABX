@@ -21,9 +21,9 @@ defmodule TestResultTrackHeaderComponent do
       phx-click={
         JS.dispatch(
           if @playing do
-            "stop"
+            "stop_result"
           else
-            "play"
+            "play_result"
           end,
           to: "body",
           detail: %{
@@ -63,6 +63,8 @@ defmodule TestResultTrackHeaderComponent do
   end
 
   defp track_index(track_id, %{} = tracks_order) when is_map_key(tracks_order, track_id) do
+    IO.puts "##################################################"
+    IO.puts "#{inspect tracks_order}"
     index = Map.get(tracks_order, track_id)
 
     unless index == nil do

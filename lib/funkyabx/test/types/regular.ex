@@ -121,19 +121,33 @@ defmodule FunkyABX.Tests.Regular do
 
   # ---------- TRACKS ----------
 
-  @impl true
-  def prep_tracks(tracks, _test) when is_list(tracks) do
-    randomized_tracks =
-      tracks
-      |> Enum.filter(fn t -> t.reference_track == false end)
-      |> Enum.shuffle()
+  def prep_tracks(tracks, test, tracks_order \\ nil)
 
-    # add reference track at the top if any
-    if length(randomized_tracks) < length(tracks) do
+  @impl true
+  def prep_tracks(tracks, _test, tracks_order) when is_list(tracks) and is_map(tracks_order) do
+    IO.puts "=================================================="
+    tracks
+    |> Enum.filter(fn t -> t.reference_track == false end)
+    |> maybe_add_reference_track(tracks)
+  end
+
+  @impl true
+  def prep_tracks(tracks, _test, tracks_order) when is_list(tracks) do
+    IO.puts "OH NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+    IO.puts "#{inspect tracks_order}"
+    tracks
+    |> Enum.filter(fn t -> t.reference_track == false end)
+    |> Enum.shuffle()
+    |> maybe_add_reference_track(tracks)
+  end
+
+  # add reference track at the top if any
+  defp maybe_add_reference_track(processed_tracks, tracks) do
+    if length(processed_tracks) < length(tracks) do
       reference_track = Enum.find(tracks, fn t -> t.reference_track == true end)
-      [reference_track | randomized_tracks]
+      [reference_track | processed_tracks]
     else
-      randomized_tracks
+      processed_tracks
     end
   end
 

@@ -41,7 +41,7 @@ defmodule FunkyABX.Tests.Listening do
   # ---------- TRACKS ----------
 
   @impl true
-  def prep_tracks(tracks, _test), do: tracks
+  def prep_tracks(tracks, _test, _tracks_order \\ nil), do: tracks
 
   # ---------- FORM ----------
 

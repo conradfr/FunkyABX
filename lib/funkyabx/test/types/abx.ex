@@ -97,7 +97,7 @@ defmodule FunkyABX.Tests.Abx do
   # ---------- TRACKS ----------
 
   @impl true
-  def prep_tracks(tracks, _test) when is_list(tracks) do
+  def prep_tracks(tracks, _test, _tracks_order \\ nil) when is_list(tracks) do
     picked =
       tracks
       |> Enum.random()

@@ -40,6 +40,14 @@ defmodule FunkyABXWeb.TestTrackStarComponent do
   @impl true
   def handle_event(
         "star_track",
+        _picking_params,
+        %{assigns: %{test_already_taken: true}} = socket
+      ),
+      do: {:noreply, socket}
+
+  @impl true
+  def handle_event(
+        "star_track",
         %{"track_id" => track_id, "star" => star} = _picking_params,
         socket
       ) do
