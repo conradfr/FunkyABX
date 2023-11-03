@@ -243,6 +243,14 @@ defmodule FunkyABX.Tests do
 
   # ---------- TRACKS ----------
 
+  # from result page
+  def prep_tracks(tracks, %Test{} = test, tracks_order)
+      when is_list(tracks) and is_map(tracks_order) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:prep_tracks, [tracks, test, tracks_order])
+  end
+
   def prep_tracks(tracks, %Test{} = test) when is_list(tracks) do
     test
     |> get_test_module()
@@ -259,11 +267,19 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:can_have_reference_track?, [])
   end
 
-  def can_have_reference_track?(type) when is_binary(type) do
-    type
+  def can_have_reference_track?(test_type) when is_binary(test_type) do
+    test_type
     |> get_test_module()
     |> Kernel.apply(:can_have_reference_track?, [])
   end
+
+  def can_have_player_on_results_page?(%Test{} = test) do
+    test
+    |> get_test_module()
+    |> Kernel.apply(:can_have_player_on_results_page?, [])
+  end
+
+  def can_have_player_on_results_page?(_test), do: false
 
   def tracks_count(%Test{} = test) do
     test
@@ -392,10 +408,19 @@ defmodule FunkyABX.Tests do
     Enum.any?(test.tracks, fn t -> t.reference_track == true end)
   end
 
-  def assign_new(choices, round, key, default \\ %{}) do
-    case is_map_key(choices, round) do
-      true -> Map.get(choices[round], key, default)
-      false -> default
+  def assign_new(choices, round, key, default \\ %{})
+
+  # test page
+  def assign_new(choices, round, key, default) when is_map_key(choices, round),
+    do: Map.get(choices[round], key, default)
+
+  # result page (from js, keys are string)
+  def assign_new(choices, _round, key, default) do
+    key_string = Atom.to_string(key)
+
+    case is_map_key(choices, key_string) do
+      true -> Map.get(choices, key_string, default)
+      _ -> default
     end
   end
 end

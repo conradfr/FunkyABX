@@ -21,9 +21,9 @@ defmodule TestResultTrackHeaderComponent do
       phx-click={
         JS.dispatch(
           if @playing do
-            "stop"
+            "stop_result"
           else
-            "play"
+            "play_result"
           end,
           to: "body",
           detail: %{

@@ -20,7 +20,7 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
       <div class=" p-0 p-md-3 flex-fill">
         <form phx-change="change_ranking" phx-target={@myself}>
           <input name="track[id]" type="hidden" value={@track.id} />
-          <select class="form-select" name="rank">
+          <select class="form-select" name="rank" disabled={@test_already_taken == true}>
             <%= options_for_select(ranking_choices(@test), Map.get(@ranked, @track.id, "")) %>
           </select>
         </form>
@@ -28,6 +28,14 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
     </div>
     """
   end
+
+  @impl true
+  def handle_event(
+        "change_ranking",
+        _ranking_params,
+        %{assigns: %{test_already_taken: true}} = socket
+      ),
+      do: {:noreply, socket}
 
   @impl true
   def handle_event(

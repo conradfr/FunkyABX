@@ -251,9 +251,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 </button>
 
                 <label :if={Tests.can_have_reference_track?(@changeset)} class="col-form-label pe-3">
-                  <%= checkbox(fp, :reference_track,
-                    class: "form-check-input"
-                  ) %> &nbsp;&nbsp;<%= dgettext(
+                  <%= checkbox(fp, :reference_track, class: "form-check-input") %> &nbsp;&nbsp;<%= dgettext(
                     "test",
                     "Reference"
                   ) %> &nbsp;<i
@@ -347,11 +345,26 @@ defmodule FunkyABXWeb.LocalTestFormLive do
      )}
   end
 
+  @impl true
+  def handle_event("validate", %{"test" => test_params}, socket) do
+    changeset =
+      socket.assigns.test
+      |> Test.changeset_local(test_params)
+
+    {:noreply,
+     assign(socket,
+       changeset: changeset
+     )}
+  end
+
   # ---------- TRACKS ----------
 
   @impl true
   def handle_event("track_added", %{"id" => track_id, "filename" => filename} = _params, socket) do
-    {:noreply, add_track_from_filename(socket, track_id, filename)}
+    {:noreply,
+     socket
+     |> add_track_from_filename(track_id, filename)
+     |> push_event("revalidate", %{})}
   end
 
   @impl true

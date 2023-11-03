@@ -10,10 +10,7 @@ defmodule DisqusComponent do
   def load(assigns) do
     ~H"""
     <div phx-update="ignore" id="disqus">
-      <div
-        :if={@test.local == false and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id))}
-        class="test-comments mt-5"
-      >
+      <div class="test-comments mt-5">
         <h5 class="header-neon"><%= dgettext("test", "Comments") %></h5>
         <div id="disqus_thread"></div>
         <script id="disqus_thread_js">

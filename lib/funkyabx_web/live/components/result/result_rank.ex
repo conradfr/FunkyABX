@@ -59,9 +59,9 @@ defmodule FunkyABXWeb.TestResultRankComponent do
             phx-click={
               JS.dispatch(
                 if @play_track_id == rank.track_id do
-                  "stop"
+                  "stop_result"
                 else
-                  "play"
+                  "play_result"
                 end,
                 to: "body",
                 detail: %{
@@ -136,9 +136,9 @@ defmodule FunkyABXWeb.TestResultRankComponent do
           phx-click={
             JS.dispatch(
               if @play_track_id == @reference_track.id do
-                "stop"
+                "stop_result"
               else
-                "play"
+                "play_result"
               end,
               to: "body",
               detail: %{

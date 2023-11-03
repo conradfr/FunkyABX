@@ -31,6 +31,7 @@ import topbar from "../vendor/topbar";
 // App hooks
 import BsToastHook from './hooks/BsToastHook';
 import BsModalHook from './hooks/BsModalHook';
+import GlobalHook from './hooks/GlobalHook';
 import TestHook from './hooks/TestHook';
 import LocalTestFormHook from './hooks/LocalTestFormHook';
 import TestFormHook from './hooks/TestFormHook';
@@ -42,6 +43,7 @@ const Hooks = {};
 
 Hooks.BsToast = BsToastHook;
 Hooks.BsModal = BsModalHook;
+Hooks.Global = GlobalHook;
 Hooks.Test = TestHook;
 Hooks.LocalTestForm = LocalTestFormHook;
 Hooks.TestForm = TestFormHook;

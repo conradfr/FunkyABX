@@ -31,6 +31,12 @@ const TestFormHook = {
 
     // ---
 
+    this.handleEvent('revalidate', () => {
+      document.getElementById('test-form_type_regular').dispatchEvent(
+        new Event("input", {bubbles: true})
+      )
+    });
+
     this.handleEvent('clipboard', (params) => {
       clipboard.copy(params.text);
     });

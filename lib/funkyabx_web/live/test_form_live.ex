@@ -543,28 +543,15 @@ defmodule FunkyABXWeb.TestFormLive do
             <div class="col-12 col-md-6">
               <div class="form-check">
                 <label class="form-check-label">
-                  <%= checkbox(f, :public,
-                    class: "form-check-input",
-                    disabled:
-                      get_field(@changeset, :type) == :listening and
-                        get_field(@changeset, :public) == false
-                  ) %> &nbsp;&nbsp;<%= dgettext("test", "The test is public") %>
+                  <%= checkbox(f, :public, class: "form-check-input") %>
+                  &nbsp;&nbsp;<%= dgettext("test", "The test is public") %>
                 </label>
-                <%= if get_field(@changeset, :type) != :listening do %>
-                  <div class="form-text">
-                    <%= dgettext(
-                      "test",
-                      "It will be published in the gallery 15 minutes after its creation"
-                    ) %>
-                  </div>
-                <% else %>
-                  <div class="form-text">
-                    <i class="bi bi-exclamation-circle"></i> <%= dgettext(
-                      "test",
-                      "Listening tests can't be public"
-                    ) %>
-                  </div>
-                <% end %>
+                <div class="form-text">
+                  <%= dgettext(
+                    "test",
+                    "It will be published in the gallery 15 minutes after its creation"
+                  ) %>
+                </div>
               </div>
             </div>
             <div class="col-12 col-md-6 pt-3 pt-md-0">
@@ -1223,6 +1210,8 @@ defmodule FunkyABXWeb.TestFormLive do
           "Test creating failed (#{fetch_field!(changeset, :type)} / #{length(fetch_field!(changeset, :tracks))} tracks)"
         )
 
+        Utils.send_error_toast(socket.assigns.page_id)
+
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
@@ -1379,7 +1368,10 @@ defmodule FunkyABXWeb.TestFormLive do
   def handle_event("add_url", _value, socket)
       when socket.assigns.test_updatable == true and is_binary(socket.assigns.upload_url) and
              socket.assigns.upload_url != "" do
-    {:noreply, add_track_from_url(socket, socket.assigns.upload_url)}
+    {:noreply,
+     socket
+     |> add_track_from_url(socket.assigns.upload_url)
+     |> push_event("revalidate", %{})}
   end
 
   @impl true
@@ -1416,7 +1408,9 @@ defmodule FunkyABXWeb.TestFormLive do
     updated_tracks_to_delete = socket.assigns.tracks_to_delete ++ [track_id]
 
     {:noreply,
-     assign(socket, %{changeset: changeset, tracks_to_delete: updated_tracks_to_delete})}
+     socket
+     |> assign(%{changeset: changeset, tracks_to_delete: updated_tracks_to_delete})
+     |> push_event("revalidate", %{})}
   end
 
   # New tracks
@@ -1451,7 +1445,8 @@ defmodule FunkyABXWeb.TestFormLive do
            ref_to_cancel = Map.get(entry, :ref)
            cancel_upload(socket, :tracks, ref_to_cancel)
        end
-     end)}
+     end)
+     |> push_event("revalidate", %{})}
   end
 
   defp build_upload_tracks(test_params, socket) do

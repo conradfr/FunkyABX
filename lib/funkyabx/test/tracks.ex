@@ -26,11 +26,22 @@ defmodule FunkyABX.Tracks do
 
   def prep_tracks(tracks, _test) when is_list(tracks) do
     tracks
-    |> Enum.map(&prep_track/1)
+    |> Enum.map(&prep_track(&1))
   end
 
-  def prep_track(%Track{} = track) do
-    fake_id = :rand.uniform(1_000_000)
+  # from result page
+  def prep_tracks(tracks, _test, tracks_order) when is_list(tracks) and is_map(tracks_order) do
+    tracks
+    |> Enum.map(&prep_track(&1, true))
+  end
+
+  def prep_track(%Track{} = track, no_fake_id \\ false) do
+    fake_id =
+      if no_fake_id == true do
+        track.id
+      else
+        :rand.uniform(1_000_000)
+      end
 
     %{
       track
@@ -40,10 +51,16 @@ defmodule FunkyABX.Tracks do
   end
 
   def get_track_hash(%Track{} = track, fake_id \\ nil) do
-    track_fake_id = Map.get(track, :fake_id) || fake_id
+    track_fake_id =
+      (Map.get(track, :fake_id) || fake_id)
+      |> case do
+        fake_id when is_binary(fake_id) -> fake_id
+        fake_id when is_integer(fake_id) -> Integer.to_string(fake_id)
+        nil -> ""
+      end
 
     :md5
-    |> :crypto.hash(track.id <> track.filename <> Integer.to_string(track_fake_id))
+    |> :crypto.hash(track.id <> track.filename <> track_fake_id)
     |> Base.encode16()
   end
 

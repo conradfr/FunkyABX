@@ -33,6 +33,9 @@ defmodule FunkyABX.Tests.Listening do
   @impl true
   def can_have_reference_track?(), do: false
 
+  @impl true
+  def can_have_player_on_results_page?(), do: false
+
   # ---------- TAKEN ----------
 
   @impl true
@@ -41,7 +44,7 @@ defmodule FunkyABX.Tests.Listening do
   # ---------- TRACKS ----------
 
   @impl true
-  def prep_tracks(tracks, _test), do: tracks
+  def prep_tracks(tracks, _test, _tracks_order \\ nil), do: tracks
 
   # ---------- FORM ----------
 

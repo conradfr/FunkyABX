@@ -30,5 +30,4 @@ defmodule FunkyABX.Test.TitleSlug do
       _ -> get_next_available_slug(slug, increment)
     end
   end
-
 end

@@ -21,7 +21,7 @@ defmodule FunkyABXWeb.TestTrackIdentificationComponent do
       <div class="me-auto p-0 p-md-3 ps-0 flex-grow-1 flex-md-grow-0">
         <form phx-change="change_identification" phx-target={@myself}>
           <input name="track[id]" type="hidden" value={@track.id} />
-          <select class="form-select" name="guess">
+          <select class="form-select" name="guess" disabled={@test_already_taken == true}>
             <%= options_for_select(
               identification_choices(@tracks),
               Map.get(@identified, @track.fake_id, "")
@@ -32,6 +32,14 @@ defmodule FunkyABXWeb.TestTrackIdentificationComponent do
     </div>
     """
   end
+
+  @impl true
+  def handle_event(
+        "change_identification",
+        _identification_params,
+        %{assigns: %{test_already_taken: true}} = socket
+      ),
+      do: {:noreply, socket}
 
   @impl true
   def handle_event(

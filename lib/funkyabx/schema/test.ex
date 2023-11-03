@@ -122,7 +122,7 @@ defmodule FunkyABX.Test do
     |> Validators.ensure_not_public_when_password_and_encode()
     |> Validators.ensure_no_notification_when_not_logged()
     |> Validators.ensure_no_to_close_at_when_listening()
-    |> Validators.ensure_not_public_when_listening()
+#    |> Validators.ensure_not_public_when_listening()
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
     |> Validators.validate_nb_rounds()
     |> Validators.validate_anonymized()
@@ -169,7 +169,7 @@ defmodule FunkyABX.Test do
     |> Validators.ensure_not_public_when_password_and_encode()
     |> Validators.ensure_no_notification_when_not_logged()
     |> Validators.ensure_no_to_close_at_when_listening()
-    |> Validators.ensure_not_public_when_listening()
+#    |> Validators.ensure_not_public_when_listening()
     |> Validators.validate_ranking_extremities(@minimum_tracks_for_extremities_ranking)
     |> Validators.validate_nb_rounds()
     |> Validators.validate_anonymized()
@@ -222,6 +222,13 @@ defmodule FunkyABX.Test do
   def changeset_archived(test, attrs \\ %{}) do
     test
     |> cast(attrs, [:archived, :last_viewed_at])
+  end
+
+  def changeset_tracks(test) do
+    test
+    |> cast(%{}, [])
+    |> Validators.validate_max_reference_track()
+    |> Validators.validate_nb_tracks(@minimum_tracks)
   end
 
   def changeset_local(test, attrs \\ %{}) do

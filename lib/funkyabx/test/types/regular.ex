@@ -109,6 +109,9 @@ defmodule FunkyABX.Tests.Regular do
   @impl true
   def can_have_reference_track?(), do: true
 
+  @impl true
+  def can_have_player_on_results_page?(), do: true
+
   # ---------- TAKEN ----------
 
   @impl true
@@ -121,19 +124,32 @@ defmodule FunkyABX.Tests.Regular do
 
   # ---------- TRACKS ----------
 
-  @impl true
-  def prep_tracks(tracks, _test) when is_list(tracks) do
-    randomized_tracks =
-      tracks
-      |> Enum.filter(fn t -> t.reference_track == false end)
-      |> Enum.shuffle()
+  def prep_tracks(tracks, test, tracks_order \\ nil)
 
-    # add reference track at the top if any
-    if length(randomized_tracks) < length(tracks) do
+  # from results page, sort the tracks to what they were in the test page
+  @impl true
+  def prep_tracks(tracks, _test, tracks_order) when is_list(tracks) and is_map(tracks_order) do
+    tracks
+    |> Enum.filter(fn t -> t.reference_track == false end)
+    |> Enum.sort_by(&Map.fetch(tracks_order, &1.id), :asc)
+    |> maybe_add_reference_track(tracks)
+  end
+
+  @impl true
+  def prep_tracks(tracks, _test, _tracks_order) when is_list(tracks) do
+    tracks
+    |> Enum.filter(fn t -> t.reference_track == false end)
+    |> Enum.shuffle()
+    |> maybe_add_reference_track(tracks)
+  end
+
+  # add reference track at the top if any
+  defp maybe_add_reference_track(processed_tracks, tracks) do
+    if length(processed_tracks) < length(tracks) do
       reference_track = Enum.find(tracks, fn t -> t.reference_track == true end)
-      [reference_track | randomized_tracks]
+      [reference_track | processed_tracks]
     else
-      randomized_tracks
+      processed_tracks
     end
   end
 

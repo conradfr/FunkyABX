@@ -1,7 +1,9 @@
 defmodule FunkyABXWeb.TestResultsLive do
   use FunkyABXWeb, :live_view
 
-  alias FunkyABX.{Utils, Tests, Test}
+  alias FunkyABXWeb.PlayerComponent
+  alias FunkyABX.{Utils, Tests, Tracks}
+  alias FunkyABX.Test
   alias FunkyABX.Tests.Image
 
   @title_max_length 100
@@ -9,7 +11,7 @@ defmodule FunkyABXWeb.TestResultsLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="row">
+    <div class="row" id="test-results-global" phx-hook="Global">
       <div class="col-sm-6">
         <h3
           class="mb-0 header-typographica"
@@ -23,13 +25,14 @@ defmodule FunkyABXWeb.TestResultsLive do
         <h6 :if={@test.author != nil} class="header-typographica">
           <%= dgettext("test", "By %{author}", author: @test.author) %>
         </h6>
-
+        <!--
         <div :if={@test.local == false} class="text-white-50 mb-1">
           ←
           <.link navigate={~p"/test/#{@test.slug}"} class="back-link">
             <%= dgettext("test", "Go back to the test") %>
           </.link>
         </div>
+        -->
       </div>
       <%= unless @test.type == :listening or @test.local == true do %>
         <div class="col-sm-6 text-start text-sm-end pt-1 pt-sm-3">
@@ -102,13 +105,36 @@ defmodule FunkyABXWeb.TestResultsLive do
       <% end %>
     <% end %>
 
+    <%= if Tests.can_have_player_on_results_page?(@test)
+      and @tracks != nil and @tracks_order != nil and @is_another_session == false do %>
+      <%= if @view_test_tracks == false do %>
+        <div class="fs-8 mt-3 cursor-link text-body-secondary" phx-click="toggle_test_tracks">
+          <%= dgettext("test", "View your test") %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+        </div>
+      <% else %>
+        <div class="fs-8 mt-3 cursor-link text-body-secondary" phx-click="toggle_test_tracks">
+          <%= dgettext("test", "Hide test_tracks") %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+        </div>
+
+        <.live_component
+          module={PlayerComponent}
+          id="player"
+          test={@test}
+          tracks={@tracks}
+          choices_taken={@visitor_choices}
+          test_already_taken={true}
+          increment_view_counter={false}
+        />
+      <% end %>
+    <% end %>
+
     <div
       :if={@test.local == false and @is_another_session == false and @session_id != nil}
       class="row"
     >
       <div class="col-12 col-sm-3">
-        <h5 class="mt-3 header-neon"><%= dgettext("test", "Your test:") %></h5>
-        <div class="your-test rounded p-2 mb-4">
+        <h5 class="mt-4 header-neon"><%= dgettext("test", "Your test:") %></h5>
+        <div class="your-test rounded p-2 mb-3">
           <div class="mb-1">
             <i class="bi bi-share"></i>&nbsp;&nbsp;<%= dgettext("test", "Share:") %>
             <a href={url(~p"/results/#{@test.slug}?s=#{ShortUUID.encode!(@session_id)}")}>
@@ -159,7 +185,7 @@ defmodule FunkyABXWeb.TestResultsLive do
       </div>
     </div>
 
-    <DisqusComponent.load :if={@test.local == false and @embed != true} test={@test} />
+    <DisqusComponent.load :if={@disqus} test={@test} />
     """
   end
 
@@ -192,22 +218,32 @@ defmodule FunkyABXWeb.TestResultsLive do
       |> Test.changeset_local(test_data)
       |> Ecto.Changeset.apply_action(:update)
 
+    tracks =
+      test.tracks
+      |> Tracks.prep_tracks(test, tracks_order)
+      |> Tests.prep_tracks(test, tracks_order)
+
     result_modules = Tests.get_result_modules(test)
 
     {:ok,
-     assign(socket, %{
+     socket
+     |> assign(%{
        page_title: dgettext("test", "Local test results"),
        test: test,
+       tracks: tracks,
        result_modules: result_modules,
        current_user_id: nil,
        view_description: false,
+       view_test_tracks: false,
        visitor_choices: choices_taken,
        play_track_id: nil,
        test_taken_times: nil,
        test_data: data,
        tracks_order: tracks_order,
-       is_another_session: false
-     })}
+       is_another_session: false,
+       disqus: false
+     })
+     |> push_event("set_warning_local_test_reload", %{set: true})}
   end
 
   @impl true
@@ -232,7 +268,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         end
 
       {is_another_session, session_id, choices} =
-        case Tests.parse_session_id(Map.get(params, "s")) do
+        case Tests.parse_session_id(Map.get(params, "s")) |> IO.inspect() do
           nil ->
             {false, nil, %{}}
 
@@ -240,6 +276,8 @@ defmodule FunkyABXWeb.TestResultsLive do
             choices = Tests.get_results_of_session(test, session_id)
             {true, session_id, choices}
         end
+
+      embed = Map.get(session, "embed", false)
 
       {:ok,
        assign(socket, %{
@@ -250,16 +288,19 @@ defmodule FunkyABXWeb.TestResultsLive do
          page_id: Utils.get_page_id_from_socket(socket),
          timezone: timezone,
          test: test,
+         tracks: nil,
          result_modules: result_modules,
          current_user_id: Map.get(session, "current_user_id"),
          view_description: false,
+         view_test_tracks: false,
          visitor_choices: choices,
          session_id: session_id,
          tracks_order: nil,
          is_another_session: is_another_session,
          test_taken_times: Tests.get_how_many_taken(test),
          play_track_id: nil,
-         embed: Map.get(session, "embed", false)
+         embed: embed,
+         disqus: embed == false and !is_nil(Application.fetch_env!(:funkyabx, :disqus_id))
        })}
     else
       _ ->
@@ -324,18 +365,23 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   @impl true
   def handle_event("tracks_order", params, socket) do
-    {:noreply, assign(socket, :tracks_order, params)}
+    tracks =
+      socket.assigns.test.tracks
+      |> Tracks.prep_tracks(socket.assigns.test, params)
+      |> Tests.prep_tracks(socket.assigns.test, params)
+
+    {:noreply, assign(socket, %{tracks_order: params, tracks: tracks})}
   end
 
   # ---------- PLAYER ----------
 
   @impl true
-  def handle_event("playing", %{"track_id" => track_id} = _params, socket) do
+  def handle_event("playing_audio", %{"track_id" => track_id} = _params, socket) do
     {:noreply, assign(socket, :play_track_id, track_id)}
   end
 
   @impl true
-  def handle_event("stopping", _params, socket) do
+  def handle_event("stopping_audio", _params, socket) do
     {:noreply, assign(socket, :play_track_id, nil)}
   end
 
@@ -345,6 +391,12 @@ defmodule FunkyABXWeb.TestResultsLive do
     toggle = !socket.assigns.view_description
 
     {:noreply, assign(socket, view_description: toggle)}
+  end
+
+  def handle_event("toggle_test_tracks", _value, socket) do
+    toggle = !socket.assigns.view_test_tracks
+
+    {:noreply, assign(socket, view_test_tracks: toggle)}
   end
 
   # todo move to component

@@ -1,6 +1,14 @@
 defmodule FunkyABXWeb.TestTrackAbxComponent do
   use FunkyABXWeb, :live_component
 
+  alias FunkyABX.{Test, Track}
+
+  attr :test, Test, required: true
+  attr :track, Track, required: true
+  attr :choices_taken, :map, required: false, default: %{}
+  attr :tracks, :list, required: true
+  attr :round, :integer, required: false, default: 1
+
   @impl true
   def render(assigns) do
     assigns =

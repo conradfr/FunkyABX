@@ -30,6 +30,11 @@ defmodule FunkyABX.Tests.Type do
   @callback can_have_reference_track?() :: boolean()
 
   @doc """
+    Can test tracks be displayed on result page?
+  """
+  @callback can_have_player_on_results_page?() :: boolean()
+
+  @doc """
     How many times the test has been taken
   """
   @callback get_how_many_taken(test :: Test) :: integer()
@@ -37,7 +42,7 @@ defmodule FunkyABX.Tests.Type do
   @doc """
     Transform tracks to be used on the test
   """
-  @callback prep_tracks(list(), test :: Test) :: list()
+  @callback prep_tracks(list(), test :: Test, map() | nil) :: list()
 
   @doc """
     Is the test valid?

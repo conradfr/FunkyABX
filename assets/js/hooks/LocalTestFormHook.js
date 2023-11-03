@@ -28,6 +28,12 @@ const LocalTestFormHook = {
       this.pushEvent('redirect', { url });
     });
 
+    this.handleEvent('revalidate', () => {
+      document.getElementById('test-form_type_regular').dispatchEvent(
+        new Event("input", {bubbles: true})
+      )
+    });
+
     // ---------- DRAG & DROP ----------
 
     this.ondrop = async (event) => {
