@@ -113,7 +113,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         </div>
       <% else %>
         <div class="fs-8 mt-3 cursor-link text-body-secondary" phx-click="toggle_test_tracks">
-          <%= dgettext("test", "Hide test_tracks") %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+          <%= dgettext("test", "Hide your test") %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
         </div>
 
         <.live_component
