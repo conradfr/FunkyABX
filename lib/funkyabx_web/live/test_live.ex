@@ -169,7 +169,7 @@ defmodule FunkyABXWeb.TestLive do
             <div class="text-end px-1 flex-fill">
               <.link
                 :if={@test.local == false}
-                href={~p"/results/#{@test.slug}"}
+                href={~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)}
                 class="btn btn-primary"
               >
                 <%= dgettext("test", "Check the results") %>
@@ -236,7 +236,6 @@ defmodule FunkyABXWeb.TestLive do
        changeset: changeset,
        choices_taken: %{},
        valid: false,
-       #       test_already_taken: Map.get(session, "test_taken_" <> slug, false),
        test_already_taken: false,
        view_tracklist: false,
        disqus: false
@@ -249,6 +248,7 @@ defmodule FunkyABXWeb.TestLive do
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
     test_params = Tests.get_test_params(test)
+    embed = Map.get(params, "embed") == "1"
 
     timezone =
       case get_connect_params(socket) do
@@ -287,8 +287,6 @@ defmodule FunkyABXWeb.TestLive do
           invitation.test_taken == true
       end
 
-    embed = Map.get(session, "embed", false)
-
     {:ok,
      assign(socket, %{
        page_title: String.slice(test.title, 0..@title_max_length),
@@ -315,7 +313,7 @@ defmodule FunkyABXWeb.TestLive do
      })
      |> then(fn s ->
        if Tests.is_closed?(test) == true do
-         link = url(~p"/results/#{s.assigns.test.slug}")
+         link = url(~p"/results/#{s.assigns.test.slug}") <> Utils.embedize_url(embed)
 
          put_flash(
            s,
@@ -372,7 +370,7 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply,
      socket
      |> put_flash(:info, "This test has been reopened.")
-     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
+     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed))}
   end
 
   @impl true
@@ -384,11 +382,11 @@ defmodule FunkyABXWeb.TestLive do
        dgettext(
          "test",
          "This test is closed. <a href=\"%{results_url}\">Check the results</a>",
-         results_url: ~p"/results/#{socket.assigns.test.slug}"
+         results_url: ~p"/results/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
        )
        |> raw()
      )
-     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
+     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed))}
   end
 
   @impl true
@@ -407,7 +405,7 @@ defmodule FunkyABXWeb.TestLive do
        :info,
        dgettext("test", "Test has been updated by its creator, so the page has been reloaded.")
      )
-     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
+     |> redirect(to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed))}
   end
 
   @impl true
@@ -419,13 +417,10 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_info({:redirect_results, url} = _payload, socket) do
-    # a bit hackish, for now
-    embed = if socket.assigns.embed == true, do: "?embed=1", else: ""
-
     {:noreply,
      socket
      |> put_flash(:success, dgettext("test", "Your submission has been registered!"))
-     |> redirect(to: url <> embed)}
+     |> redirect(to: url <> Utils.embedize_url(socket.assigns.embed))}
   end
 
   @impl true
@@ -452,7 +447,7 @@ defmodule FunkyABXWeb.TestLive do
 
   @impl true
   def handle_event("test_already_taken", _params, socket) do
-    results_url = ~p"/results/#{socket.assigns.test.slug}"
+    results_url = ~p"/results/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
 
     {:noreply,
      socket
@@ -586,7 +581,7 @@ defmodule FunkyABXWeb.TestLive do
 
       Process.send_after(
         self(),
-        {:redirect_results, ~p"/results/#{socket.assigns.test.slug}"},
+        {:redirect_results, ~p"/results/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)},
         1000
       )
 
@@ -613,7 +608,7 @@ defmodule FunkyABXWeb.TestLive do
   def handle_event("no_participate", _params, socket) do
     Process.send_after(
       self(),
-      {:skip_to_results, ~p"/results/#{socket.assigns.test.slug}"},
+      {:skip_to_results, ~p"/results/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)},
       1000
     )
 

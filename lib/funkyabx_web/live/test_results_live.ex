@@ -28,7 +28,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         <!--
         <div :if={@test.local == false} class="text-white-50 mb-1">
           ←
-          <.link navigate={~p"/test/#{@test.slug}"} class="back-link">
+          <.link navigate={~p"/test/#{@test.slug}" <> Utils.embedize_url(@embed)} class="back-link">
             <%= dgettext("test", "Go back to the test") %>
           </.link>
         </div>
@@ -255,6 +255,7 @@ defmodule FunkyABXWeb.TestResultsLive do
              ((Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) or
                 (Map.get(params, "key") != nil and Map.get(params, "key") == test.access_key)) do
       result_modules = Tests.get_result_modules(test)
+      embed = Map.get(params, "embed") == "1"
 
       if connected?(socket) do
         FunkyABXWeb.Endpoint.subscribe(test.id)
@@ -276,8 +277,6 @@ defmodule FunkyABXWeb.TestResultsLive do
             choices = Tests.get_results_of_session(test, session_id)
             {true, session_id, choices}
         end
-
-      embed = Map.get(session, "embed", false)
 
       {:ok,
        assign(socket, %{
@@ -321,7 +320,7 @@ defmodule FunkyABXWeb.TestResultsLive do
          false <- Tests.is_closed?(socket.assigns.test) do
       {:noreply,
        socket
-       |> redirect(to: ~p"/test/#{socket.assigns.test.slug}")}
+       |> redirect(to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed))}
     else
       _ -> {:noreply, socket}
     end

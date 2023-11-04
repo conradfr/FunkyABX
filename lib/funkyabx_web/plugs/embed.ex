@@ -10,7 +10,6 @@ defmodule FunkyABXWeb.Plugs.Embed do
       "1" ->
         conn
         |> Controller.put_root_layout({FunkyABXWeb.Layouts, "embed.html"})
-        |> put_session("embed", true)
 
       _ ->
         conn

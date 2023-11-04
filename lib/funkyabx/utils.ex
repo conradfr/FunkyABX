@@ -56,4 +56,7 @@ defmodule FunkyABX.Utils do
       _ -> @default_locale
     end
   end
+
+  def embedize_url(true), do: "?embed=1"
+  def embedize_url(_embed), do: ""
 end
