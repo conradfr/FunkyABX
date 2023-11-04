@@ -268,7 +268,7 @@ defmodule FunkyABXWeb.TestResultsLive do
         end
 
       {is_another_session, session_id, choices} =
-        case Tests.parse_session_id(Map.get(params, "s")) |> IO.inspect() do
+        case Tests.parse_session_id(Map.get(params, "s")) do
           nil ->
             {false, nil, %{}}
 

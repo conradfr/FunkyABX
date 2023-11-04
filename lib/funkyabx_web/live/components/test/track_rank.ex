@@ -81,7 +81,7 @@ defmodule FunkyABXWeb.TestTrackRankComponent do
     track_count =
       test
       |> Map.get(:tracks, [])
-      |> Enum.filter(fn t -> t.reference_track != true end)
+      |> Tests.filter_reference_track()
       |> Kernel.length()
 
     [""] ++ Enum.to_list(1..track_count)

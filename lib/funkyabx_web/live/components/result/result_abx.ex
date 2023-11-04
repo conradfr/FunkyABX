@@ -13,8 +13,8 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
   @impl true
   def render(assigns) do
     assigns =
-      case Map.get(assigns, :visitor_guesses, %{}) do
-        %{} ->
+      case Map.get(assigns, :visitor_guesses) do
+        nil ->
           assign(assigns, :visitor_guesses, get_visitor_score(assigns))
 
         _ ->
@@ -107,7 +107,10 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
      |> assign_new(:abx, fn -> Abx.get_abx(assigns.test) end)}
   end
 
-  defp get_visitor_score(assigns) when is_map_key(assigns, :visitor_choices) == false, do: nil
+  defp get_visitor_score(assigns)
+       when is_map_key(assigns, :visitor_choices) == false or
+              map_size(assigns.visitor_choices) == 0,
+       do: nil
 
   defp get_visitor_score(assigns) do
     assigns.visitor_choices

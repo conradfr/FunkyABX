@@ -9,8 +9,9 @@ defmodule FunkyABX.Stars do
   # ---------- GET ----------
 
   def get_stars(%Test{} = test, visitor_choices) when test.local == true do
-    test.tracks
-    |> Enum.filter(fn t -> t.reference_track != true end)
+    test
+    |> Map.get(:tracks, [])
+    |> Tests.filter_reference_track()
     |> Enum.map(fn t ->
       %{
         track_id: t.id,
@@ -140,7 +141,9 @@ defmodule FunkyABX.Stars do
         mogrify
         |> Image.type_title(start, "Rating")
         |> then(fn mogrify ->
-          test.tracks
+          test
+          |> Map.get(:tracks, [])
+          |> Tests.filter_reference_track()
           |> Enum.sort_by(
             fn t ->
               Map.get(stars, t.id)

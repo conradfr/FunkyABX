@@ -543,8 +543,10 @@ defmodule FunkyABXWeb.TestFormLive do
             <div class="col-12 col-md-6">
               <div class="form-check">
                 <label class="form-check-label">
-                  <%= checkbox(f, :public, class: "form-check-input") %>
-                  &nbsp;&nbsp;<%= dgettext("test", "The test is public") %>
+                  <%= checkbox(f, :public, class: "form-check-input") %> &nbsp;&nbsp;<%= dgettext(
+                    "test",
+                    "The test is public"
+                  ) %>
                 </label>
                 <div class="form-text">
                   <%= dgettext(

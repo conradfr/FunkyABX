@@ -2,14 +2,16 @@ defmodule FunkyABX.Picks do
   import Ecto.Query, only: [dynamic: 2, from: 2]
 
   alias FunkyABX.Repo
+  alias FunkyABX.Tests
   alias FunkyABX.Tests.Image
   alias FunkyABX.{Test, Track, Pick, PickDetails}
 
   # ---------- GET ----------
 
   def get_picks(%Test{} = test, visitor_choices) when test.local == true do
-    test.tracks
-    |> Enum.filter(fn t -> t.reference_track != true end)
+    test
+    |> Map.get(:tracks, [])
+    |> Tests.filter_reference_track()
     |> Enum.map(fn t ->
       picked =
         case Map.get(visitor_choices, "pick") do
@@ -115,8 +117,8 @@ defmodule FunkyABX.Picks do
 
       picked_track_title =
         test
-        |> Map.get(:tracks)
-        |> Enum.filter(fn t -> t.reference_track != true end)
+        |> Map.get(:tracks, [])
+        |> Tests.filter_reference_track()
         |> Enum.find(&(&1.id == picked_id))
         |> Map.get(:title)
 

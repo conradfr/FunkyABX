@@ -284,7 +284,7 @@ defmodule FunkyABX.Tests do
   def tracks_count(%Test{} = test) do
     test
     |> Map.get(:tracks, [])
-    |> Enum.filter(fn t -> t.reference_track != true end)
+    |> filter_reference_track()
     |> Kernel.length()
   end
 
@@ -406,6 +406,10 @@ defmodule FunkyABX.Tests do
 
   def has_reference_track?(%Test{} = test) do
     Enum.any?(test.tracks, fn t -> t.reference_track == true end)
+  end
+
+  def filter_reference_track(tracks) when is_list(tracks) do
+    Enum.filter(tracks, fn t -> t.reference_track != true end)
   end
 
   def assign_new(choices, round, key, default \\ %{})

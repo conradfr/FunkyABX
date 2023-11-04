@@ -9,8 +9,9 @@ defmodule FunkyABX.Identifications do
   # ---------- GET ----------
 
   def get_identification(%Test{} = test, _visitor_choices) when test.local == true do
-    test.tracks
-    |> Enum.filter(fn t -> t.reference_track != true end)
+    test
+    |> Map.get(:tracks, [])
+    |> Tests.filter_reference_track()
     |> Enum.map(fn t ->
       %{
         track_id: t.id,
@@ -158,7 +159,10 @@ defmodule FunkyABX.Identifications do
         mogrify
         |> Image.type_title(start, "Identification")
         |> then(fn mogrify ->
-          Enum.reduce(test.tracks, {1, mogrify}, fn t, acc ->
+          test
+          |> Map.get(:tracks, [])
+          |> Tests.filter_reference_track()
+          |> Enum.reduce({1, mogrify}, fn t, acc ->
             {index, mogrify} = acc
 
             identified_as =
