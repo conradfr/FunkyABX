@@ -1,5 +1,6 @@
 defmodule FunkyABX.Accounts.UserNotifier do
   import Swoosh.Email
+
   alias FunkyABX.Mailer
 
   defp get_from() do
