@@ -28,6 +28,46 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
+// ---------- TEMP ----------
+
+let cookies = document.cookie.split(';');
+let renamed = false;
+
+for (let i = 0; i < cookies.length; i++) {
+  let cookie = cookies[i];
+  let eqPos = cookie.indexOf('=');
+  let name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+
+  let newName = '';
+  let value = '';
+
+  if (name.startsWith('funkyabx_test_')) {
+    newName = name.substring('funkyabx_test_'.length);
+    value = eqPos > -1 ? cookie.substr(eqPos + 1) : "";
+    document.cookie = newName + "=" + value + ";path=/";
+
+    // Delete the old cookie
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+
+    renamed = true;
+  } else if (name.startsWith('funkyabx_')) {
+    newName = name.substring('funkyabx_'.length);
+    value = eqPos > -1 ? cookie.substr(eqPos + 1) : "";
+    document.cookie = newName + "=" + value + ";path=/";
+
+    // Delete the old cookie
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+
+    renamed = true;
+  }
+}
+
+if (renamed === true) {
+  location.reload();
+}
+
+// ---------- END TEMP ----------
+
 // App hooks
 import BsToastHook from './hooks/BsToastHook';
 import BsModalHook from './hooks/BsModalHook';

@@ -1,6 +1,5 @@
 /* eslint-env browser */
 
-export const COOKIE_PREFIX = 'funkyabx_';
 export const COOKIE_TTL = '31536000';
 export const COOKIE_PARAMS = {
   path: '/',
@@ -10,9 +9,9 @@ export const COOKIE_PARAMS = {
   SameSite: 'Lax'
 };
 
-export const COOKIE_TEST_TAKEN = `${COOKIE_PREFIX}test_taken`;
-export const COOKIE_TEST_BYPASS = `${COOKIE_PREFIX}test_bypass`;
-export const COOKIE_TEST_AUTHOR = `${COOKIE_PREFIX}test_author`;
-export const COOKIE_TEST_ROTATE_SECONDS = `${COOKIE_PREFIX}rotate_seconds`;
-export const COOKIE_TEST_ROTATE = `${COOKIE_PREFIX}rotate`;
-export const COOKIE_TEST_WAVEFORM = `${COOKIE_PREFIX}waveform`;
+export const COOKIE_TEST_TAKEN = 'taken';
+export const COOKIE_TEST_BYPASS = 'bypass';
+export const COOKIE_TEST_AUTHOR = 'author';
+export const COOKIE_TEST_ROTATE_SECONDS = 'rotate_seconds';
+export const COOKIE_TEST_ROTATE = 'rotate';
+export const COOKIE_TEST_WAVEFORM = 'waveform';

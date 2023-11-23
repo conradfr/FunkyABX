@@ -1,7 +1,7 @@
 defmodule FunkyABXWeb.Plugs.TestParams do
   import Plug.Conn
 
-  @cookie_author "funkyabx_test_author"
+  @cookie_author "author"
 
   # TODO better generic code
 

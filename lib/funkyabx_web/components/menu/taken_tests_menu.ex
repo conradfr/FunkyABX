@@ -50,10 +50,11 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
   defp get_taken_tests(cookies) do
     test_ids =
       cookies
+      |> IO.inspect()
       |> Enum.reduce([], fn {k, c}, acc ->
-        case String.starts_with?(k, "funkyabx_test_taken_") and
+        case String.starts_with?(k, "taken_") and
                not String.ends_with?(k, ["_session", "_tracks_order"]) do
-          true -> [String.slice(k, 20, 51) | [c | acc]]
+          true -> [String.slice(k, 6, 36) | [c | acc]]
           false -> acc
         end
       end)
