@@ -21,7 +21,13 @@ const TestHook = {
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}_session`, session_id);
 
       if (tracks_order) {
-        cookies.set(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`, JSON.stringify(tracks_order), {'max-age': null});
+        // we set max-age as now + 24h,
+        // previously it was null (i.e session) but browsers nowadays apparently don't really delete those cookies
+        const now = new Date();
+        now.setTime(now.getTime() + (24 * 60 * 60 * 1000));
+        const expires = "expires=" + now.toUTCString();
+
+        cookies.set(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`, JSON.stringify(tracks_order), {'max-age': expires});
       }
 
       // todo better localStorage implementation

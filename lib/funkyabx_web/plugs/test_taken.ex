@@ -2,7 +2,7 @@ defmodule FunkyABXWeb.Plugs.TestTaken do
   import Plug.Conn
   alias FunkyABX.Tests
 
-  @cookie_prefix "test_taken_"
+  @cookie_prefix "taken_"
 
   def init(options), do: options
 

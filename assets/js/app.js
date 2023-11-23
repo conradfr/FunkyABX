@@ -29,6 +29,9 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
 // ---------- TEMP ----------
+// adapted from ChatGPT
+
+import { COOKIE_TTL } from './config/config';
 
 let cookies = document.cookie.split(';');
 let renamed = false;
@@ -43,8 +46,16 @@ for (let i = 0; i < cookies.length; i++) {
 
   if (name.startsWith('funkyabx_test_')) {
     newName = name.substring('funkyabx_test_'.length);
-    value = eqPos > -1 ? cookie.substr(eqPos + 1) : "";
-    document.cookie = newName + "=" + value + ";path=/";
+    value = eqPos > -1 ? cookie.substr(eqPos + 1) : '';
+
+    if (newName.endsWith('_tracks_order')) {
+      const now = new Date();
+      now.setTime(now.getTime() + (24 * 60 * 60 * 1000));
+      const expires = "expires=" + now.toUTCString();
+      document.cookie = newName + "=" + value + `;expires=${expires};path=/`;
+    } else {
+      document.cookie = newName + "=" + value + `;expires=${COOKIE_TTL};path=/`;
+    }
 
     // Delete the old cookie
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
