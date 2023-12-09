@@ -273,6 +273,10 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:can_have_reference_track?, [])
   end
 
+  def can_have_reference_track?(_params) do
+    true
+  end
+
   def can_have_player_on_results_page?(%Test{} = test) do
     test
     |> get_test_module()
