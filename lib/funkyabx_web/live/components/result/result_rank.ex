@@ -97,8 +97,8 @@ defmodule FunkyABXWeb.TestResultRankComponent do
               <div class="p-3 ps-0 text-end">
                 <%= if @test.local == false do %>
                   <%= dgettext("test", "%{count} votes as #%{rank}",
-                    count: rank.count,
-                    rank: rank.rank
+                    count: Map.get(rank, :ranks) |> Enum.at(1) |> Map.get("count"),
+                    rank: Map.get(rank, :ranks) |> Enum.at(1) |> Map.get("rank")
                   ) %>
                 <% else %>
                   <%= raw(
@@ -111,17 +111,17 @@ defmodule FunkyABXWeb.TestResultRankComponent do
 
           <%= if @ranks_detail == true do %>
             <div class="mb-3">
-              <%= if Map.get(rank, :other_ranks, nil) == nil do %>
+              <%= if Map.get(rank, :ranks, nil) == nil do %>
                 <div class="my-2 text-end text-body-secondary">
                   <small><%= dgettext("test", "No other ranking") %></small>
                 </div>
               <% else %>
-                <%= for other_rank <- Map.get(rank, :other_ranks, []) do %>
+                <%= for other_rank <- Map.get(rank, :ranks, []) do %>
                   <div class="my-2 d-flex flex-wrap align-items-center justify-content-end">
                     <small>
                       <%= dgettext("test", "%{count} votes as #%{rank}",
-                        count: other_rank.count,
-                        rank: other_rank.rank
+                        count: other_rank["count"],
+                        rank: other_rank["rank"]
                       ) %>
                     </small>
                   </div>

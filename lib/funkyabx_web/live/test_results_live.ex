@@ -320,7 +320,9 @@ defmodule FunkyABXWeb.TestResultsLive do
          false <- Tests.is_closed?(socket.assigns.test) do
       {:noreply,
        socket
-       |> redirect(to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed))}
+       |> redirect(
+         to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
+       )}
     else
       _ -> {:noreply, socket}
     end

@@ -25,60 +25,34 @@ defmodule FunkyABX.Ranks do
     |> Enum.sort(fn curr, prev -> curr.rank < prev.rank end)
   end
 
-  # todo: maybe revisit the query since adding the details
+  # Ranks as mean.
+  # todo: offer more ranking algo?
   def get_ranks(%Test{} = test, _visitor_choices) do
     query =
-      from r in Rank,
-        join: t in Track,
+      from t in Track,
+        left_join: r in Rank,
         on: t.id == r.track_id,
         where: r.test_id == ^test.id and t.reference_track != true,
+        group_by: t.id,
         order_by: [
-          desc: r.count,
-          asc: r.rank,
-          asc: fragment("SUM(?) OVER (PARTITION BY ?)", r.rank, r.track_id),
-          desc: r.track_id
+          asc: fragment("AVG(? * ?)", r.rank, r.count),
+          desc: t.title
         ],
         select: %{
-          track_id: r.track_id,
+          track_id: t.id,
           track_title: t.title,
-          rank: r.rank,
-          count: r.count,
-          total_rank: fragment("SUM(?) OVER (PARTITION BY ?) as total_rank", r.rank, r.track_id)
+          rank: fragment("ROW_NUMBER() OVER(ORDER BY AVG(? * ?))", r.rank, r.count),
+          mean_rank: fragment("AVG(? * ?) as mean_rank", r.rank, r.count),
+          ranks:
+            fragment(
+              "JSON_AGG(JSON_BUILD_OBJECT('rank', ?, 'count', ?) ORDER BY (?) ASC) as ranks",
+              r.rank,
+              r.count,
+              r.rank
+            )
         }
 
-    # Can't make a sql query that avoids duplicate track or rank so we clean the data here instead
-    query
-    |> Repo.all()
-    |> Enum.reduce([], fn r, acc ->
-      with true <-
-             already_has_rank?(r.rank, acc) or
-               already_has_track?(r.track_id, acc) do
-        add_to_rank_details(r, acc)
-      else
-        _ -> [r | acc]
-      end
-    end)
-    |> Enum.sort(fn curr, prev -> curr.rank < prev.rank end)
-  end
-
-  defp already_has_rank?(rank, acc), do: Enum.any?(acc, fn r -> r.rank == rank end)
-
-  defp already_has_track?(track_id, acc), do: Enum.any?(acc, fn r -> r.track_id == track_id end)
-
-  defp add_to_rank_details(rank, acc) do
-    Enum.reduce(acc, [], fn
-      r, acc when r.track_id != rank.track_id ->
-        [r | acc]
-
-      r, acc ->
-        other_ranks =
-          [rank | Map.get(r, :other_ranks, [])]
-          |> Enum.sort(fn curr, prev -> curr.count < prev.count end)
-
-        rank_updated = Map.put(r, :other_ranks, other_ranks)
-
-        [rank_updated | acc]
-    end)
+    Repo.all(query)
   end
 
   def get_how_many_taken(%Test{} = test) do
