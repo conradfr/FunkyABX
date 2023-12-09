@@ -124,6 +124,8 @@ defmodule FunkyABX.Notifier.Email do
 
     with {:ok, _metadata} <- Mailer.deliver(email) do
       {:ok, email}
+    else
+      _ -> {:error, nil}
     end
   end
 end

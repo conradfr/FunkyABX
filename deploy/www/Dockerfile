@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.15.7-erlang-26.1.2-ubuntu-focal-20230126
+FROM hexpm/elixir:1.15.7-erlang-26.1.2-ubuntu-jammy-20231004
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
@@ -54,7 +54,9 @@ ENV DATABASE_URL=${DATABASE_URL} \
     PHX_HOST=${PHX_HOST}
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
-    ffmpeg curl imagemagick ca-certificates gnupg
+    ffmpeg curl imagemagick gnupg
+
+RUN apt-get install --no-install-recommends --no-install-suggests -y git libssl-dev ca-certificates
 
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg

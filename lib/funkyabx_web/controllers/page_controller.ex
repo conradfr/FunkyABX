@@ -30,10 +30,16 @@ defmodule FunkyABXWeb.PageController do
       if changeset.valid? == true do
         try do
           {:ok, data} = Ecto.Changeset.apply_action(changeset, :insert)
-          FunkyABX.Notifier.Email.contact(data)
 
-          conn
-          |> put_flash(:success, "Your message has been sent.")
+          case FunkyABX.Notifier.Email.contact(data) do
+            {:ok, _} ->
+              conn
+              |> put_flash(:success, "Your message has been sent.")
+
+            {:error, _} ->
+              conn
+              |> put_flash(:error, "An error has occurred.")
+          end
         rescue
           _ ->
             conn
