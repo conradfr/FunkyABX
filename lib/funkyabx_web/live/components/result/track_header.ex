@@ -5,6 +5,8 @@ defmodule TestResultTrackHeaderComponent do
   alias Phoenix.LiveView.JS
   alias FunkyABX.{Test, Tracks}
 
+  # attr is not supported by live components, just act as docs here
+
   attr :test, Test, required: true
   attr :track_id, :string, required: true
   attr :playing, :boolean, required: true

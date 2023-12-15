@@ -3,6 +3,8 @@ defmodule FunkyABXWeb.TestTrackAbxComponent do
 
   alias FunkyABX.{Test, Track}
 
+  # attr is not supported by live components, just act as docs here
+
   attr :test, Test, required: true
   attr :track, Track, required: true
   attr :choices_taken, :map, required: false, default: %{}

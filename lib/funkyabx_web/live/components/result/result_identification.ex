@@ -3,6 +3,8 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
   alias FunkyABX.{Tracks, Identifications, Tests}
   alias FunkyABX.Test
 
+  # attr is not supported by live components, just act as docs here
+
   attr :test, Test, required: true
   attr :visitor_choices, :any, required: true
   attr :is_another_session, :boolean, required: true

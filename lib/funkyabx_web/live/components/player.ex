@@ -5,13 +5,15 @@ defmodule FunkyABXWeb.PlayerComponent do
   alias FunkyABX.{Tracks, Tests}
   alias FunkyABX.Test
 
+  # attr are not supported by live components, just act as docs here
+
   attr :test, Test, required: true
   attr :tracks, :list, required: true
   attr :user, User, required: false, default: nil
   attr :current_round, :integer, required: false, default: 1
   attr :choices_taken, :map, required: false, default: %{}
   attr :test_already_taken, :boolean, required: false, default: false
-  attr :increment_view_counter, :boolean, required: false, default: true
+  attr :increment_view_counter, :boolean, default: true
 
   @impl true
   def render(assigns) do
@@ -321,6 +323,9 @@ defmodule FunkyABXWeb.PlayerComponent do
      socket
      |> assign(assigns)
      |> assign(choices_modules: choices_modules)
+     |> assign_new(:choices_taken, fn ->
+       %{}
+     end)
      |> assign_new(:test_params, fn ->
        Tests.get_test_params(assigns.test)
      end)}
@@ -397,8 +402,9 @@ defmodule FunkyABXWeb.PlayerComponent do
         %{assigns: %{test: test, played: played}} = socket
       ) do
     spawn(fn ->
-      if Map.get(socket.assigns, :increment_view_counter, false) == true and played == false,
-        do: Tests.increment_view_counter(test)
+      if Map.get(socket.assigns, :current_round, 1) < 2
+         and Map.get(socket.assigns, :increment_view_counter, true) == true
+         and played == false, do: Tests.increment_view_counter(test)
     end)
 
     {:noreply, assign(socket, playing: true, played: true)}
