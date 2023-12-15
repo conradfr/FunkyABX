@@ -48,12 +48,7 @@ for (let i = 0; i < cookies.length; i++) {
     newName = name.substring('funkyabx_test_'.length);
     value = eqPos > -1 ? cookie.substr(eqPos + 1) : '';
 
-    if (newName.endsWith('_tracks_order')) {
-      const now = new Date();
-      now.setTime(now.getTime() + (24 * 60 * 60 * 1000));
-      const expires = "expires=" + now.toUTCString();
-      document.cookie = newName + "=" + value + `;expires=${expires};path=/`;
-    } else {
+    if (!newName.endsWith('_tracks_order')) {
       document.cookie = newName + "=" + value + `;expires=${COOKIE_TTL};path=/`;
     }
 
@@ -70,6 +65,8 @@ for (let i = 0; i < cookies.length; i++) {
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
 
     renamed = true;
+  } else if (name.endsWith('_tracks_order')) {
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
   }
 }
 

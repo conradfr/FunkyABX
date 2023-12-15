@@ -28,8 +28,8 @@ const TestResultsHook = {
     }
 
     // Send track order from test session if any
-    if (cookies.has(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`) === true) {
-      this.pushEvent('tracks_order', cookies.getJson(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`));
+    if (sessionStorage.getItem(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`) !== undefined) {
+      this.pushEvent('tracks_order', JSON.parse(sessionStorage.getItem(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`)));
     }
 
     // note: not sure why ls has "_id" and not the cookie. Keeping it for retro-compatibility.
