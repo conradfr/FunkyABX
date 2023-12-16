@@ -58,28 +58,29 @@ config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 # at the `config/runtime.exs`.
 # config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
 
-config :funkyabx, FunkyABX.Mailer,
-  adapter: Swoosh.Adapters.SMTP,
-  ssl: true,
-  tls: :always,
-  tls_options: [
-    versions: [:"tlsv1.3"],
-    verify: :verify_peer,
-    cacerts: :public_key.cacerts_get(),
-    server_name_indication: ~c"#{System.get_env("MAILER_SMTP")}",
-    depth: 99
-  ],
-  #       tls: :always,
-  #       auth: :always,
-  #       dkim: [
-  #         s: "default", d: "domain.com",
-  #         private_key: {:pem_plain, File.read!("priv/keys/domain.private")}
-  #       ],
-  retries: 3,
-  no_mx_lookups: true
+# config :funkyabx, FunkyABX.Mailer,
+#  adapter: Swoosh.Adapters.SMTP,
+#  ssl: true,
+#  tls: :always,
+#  tls_options: [
+#    versions: [:"tlsv1.3"],
+#    verify: :verify_peer,
+#    cacerts: :public_key.cacerts_get(),
+#    server_name_indication: ~c"#{System.get_env("MAILER_SMTP")}",
+#    depth: 99
+#  ],
+#  #       tls: :always,
+#  #       auth: :always,
+#  #       dkim: [
+#  #         s: "default", d: "domain.com",
+#  #         private_key: {:pem_plain, File.read!("priv/keys/domain.private")}
+#  #       ],
+#  retries: 3,
+#  no_mx_lookups: true
 
 # Swoosh API client is needed for adapters other than SMTP.
-config :swoosh, :api_client, false
+# config :swoosh, :api_client, false
+# config :swoosh, :api_client, Swoosh.ApiClient.Finch
 
 # Configures Elixir's Logger
 config :logger, :console,

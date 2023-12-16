@@ -38,12 +38,12 @@ defmodule FunkyABXWeb.PageController do
 
             {:error, _} ->
               conn
-              |> put_flash(:error, "An error has occurred.")
+              |> put_flash(:error, "Sorry, an error has occurred. Please try again.")
           end
         rescue
           _ ->
             conn
-            |> put_flash(:error, "An error occurred.")
+            |> put_flash(:error, "Sorry, an error has occurred. Please try again.")
         end
       else
         conn
