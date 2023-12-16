@@ -244,8 +244,7 @@ defmodule FunkyABX.Tests do
   # ---------- TRACKS ----------
 
   # from result page
-  def prep_tracks(tracks, %Test{} = test, tracks_order)
-      when is_list(tracks) and is_map(tracks_order) do
+  def prep_tracks(tracks, %Test{} = test, tracks_order) when is_list(tracks) do
     test
     |> get_test_module()
     |> Kernel.apply(:prep_tracks, [tracks, test, tracks_order])

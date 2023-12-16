@@ -30,7 +30,7 @@ defmodule FunkyABX.Tracks do
   end
 
   # from result page
-  def prep_tracks(tracks, _test, tracks_order) when is_list(tracks) and is_map(tracks_order) do
+  def prep_tracks(tracks, _test, _tracks_order) when is_list(tracks) do
     tracks
     |> Enum.map(&prep_track(&1, true))
   end
