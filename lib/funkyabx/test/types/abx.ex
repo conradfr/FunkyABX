@@ -8,7 +8,7 @@ defmodule FunkyABX.Tests.Abx do
 
   @behaviour FunkyABX.Tests.Type
 
-  @p_value 0.5
+  @minimum_probability 0.05
 
   # ---------- GET ----------
 
@@ -27,30 +27,8 @@ defmodule FunkyABX.Tests.Abx do
           count: a.count
         }
 
-    result =
-      query
-      |> Repo.all()
-
-    # I have no idea what I'm doing and why I have to reverse this list to get the correct value
-
-    values_inverse =
-      result
-      |> Enum.map(fn a ->
-        Statistics.Distributions.Binomial.cdf(test.nb_of_rounds, @p_value).(a.correct)
-      end)
-      |> Enum.reverse()
-
-    # Add ABX Binomial Probability
-    result
-    |> Enum.with_index()
-    |> Enum.map(fn {a, k} ->
-      probability =
-        values_inverse
-        |> Enum.at(k)
-        |> format_probability()
-
-      Map.put(a, :probability, probability)
-    end)
+    query
+    |> Repo.all()
   end
 
   # ---------- TEST MODULES ----------
@@ -205,10 +183,32 @@ defmodule FunkyABX.Tests.Abx do
 
   # ---------- UTILS ----------
 
-  defp format_probability(probability) when is_number(probability) do
-    probability_percent = (1 - probability) * 100
+  # Formula (n! * p^n) / (k! * (n-k)!)
+  # from: http://mclements.net/blogWP/index.php/2019/11/22/blind-testing-a-b-and-a-b-x/
+  # p = probability to guess right (1/2 or 50%)
+  # n = # of trials – total
+  # k = # of trials – successful
 
-    :io_lib.format("~.2f", [probability_percent])
-    |> IO.iodata_to_binary()
+  def get_minimum_score(rounds) when is_number(rounds) do
+    rounds
+    |> Range.new(1)
+    |> Enum.reduce_while(0, fn x, acc ->
+      score = (factorial(rounds) * :math.pow(0.5, rounds)) / (factorial(x) * factorial(rounds - x))
+      total = score + acc
+
+      if total < @minimum_probability do
+        {:cont, total}
+      else
+        {:halt, x}
+      end
+    end)
+  end
+
+  # factorial from: https://inquisitivedeveloper.com/lwm-elixir-35/
+
+  defp factorial(0), do: 1
+
+  defp factorial(n) when n > 0 do
+    Enum.reduce(1..n, &*/2)
   end
 end

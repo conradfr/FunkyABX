@@ -41,7 +41,7 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
         <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin">
           <%= dgettext("test", "No test taken ... yet!") %>
         </div>
-        <%= for {%{correct: guess, count: count, probability: probability}, i} <- @abx |> Enum.with_index(1) do %>
+        <%= for {%{correct: guess, count: count}, i} <- @abx |> Enum.with_index(1) do %>
           <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
             <div class="p-3">
               <%= if (guess < 4) do %>
@@ -71,29 +71,17 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
                 <% end %>
               </div>
             </div>
-            <div
-              :if={Kernel.length(@test.tracks) == 2}
-              class="d-flex flex-grow-1 justify-content-end align-items-center"
-            >
-              <div class="p-3 flex-grow-1 text-sm-end text-start pe-5 text-body-secondary small d-none">
-                <%= dgettext(
-                  "test",
-                  "Confidence that this result is better than chance: %{probability}%",
-                  probability: probability
-                ) %>
-              </div>
-            </div>
             <div class="p-3 ps-0 text-end">
               <%= dngettext("test", "%{count} time", "%{count} times", count) %>
             </div>
           </div>
         <% end %>
       </div>
-      <div :if={Kernel.length(@test.tracks) == 2} class="text-body-secondary small d-none">
+      <div :if={Kernel.length(@test.tracks) == 2} class="text-white-50 small">
         <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(
           dgettext(
             "test",
-            "A 95% confidence level is commonly considered statistically significant (<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-body-secondary\">source</a>)."
+            "Minimum correct answers to be considered better than random guesses: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">source</a>)</small>", minimum: @minimum_correct
           )
         ) %>
       </div>
@@ -106,7 +94,8 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:abx, fn -> Abx.get_abx(assigns.test) end)}
+     |> assign_new(:abx, fn -> Abx.get_abx(assigns.test) end)
+     |> assign_new(:minimum_correct, fn -> Abx.get_minimum_score(assigns.test.nb_of_rounds) end)}
   end
 
   defp get_visitor_score(assigns)

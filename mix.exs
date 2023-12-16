@@ -72,7 +72,7 @@ defmodule FunkyABX.MixProject do
       {:remote_ip, "~> 1.0"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:mock, "~> 0.3.0", only: :test},
-      {:statistics, "~> 0.6.2"},
+      # {:statistics, "~> 0.6.2"},
       {:nebulex, "~> 2.4"},
       {:decorator, "~> 1.4"},
       {:mime, "~> 2.0"},
