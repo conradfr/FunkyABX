@@ -129,7 +129,7 @@ defmodule FunkyABXWeb.TestLive do
       <div class="d-flex flex-row align-items-center justify-content-between">
         <%= unless @test_params.has_choices == false do %>
           <div :if={@test.local == true} class="results-actions">
-            <i :if={@tracks_loaded == true} class="bi bi-arrow-left color-action"></i>&nbsp;<.link
+            <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
               navigate={~p"/local_test/edit/#{@test_data}"}
               replace={true}
             ><%= dgettext "test", "Go back to the test form" %></.link>
@@ -229,10 +229,8 @@ defmodule FunkyABXWeb.TestLive do
        test_data: data,
        test: test,
        tracks: tracks,
-       tracks_loaded: false,
        test_params: test_params,
        current_round: 1,
-       current_track: nil,
        changeset: changeset,
        choices_taken: %{},
        valid: false,
@@ -295,11 +293,9 @@ defmodule FunkyABXWeb.TestLive do
        ip_address: Map.get(session, "visitor_ip", nil),
        test: test,
        tracks: tracks,
-       tracks_loaded: false,
        test_params: test_params,
        session_id: session_id,
        current_round: 1,
-       current_track: nil,
        changeset: changeset,
        choices_taken: %{},
        valid: false,
@@ -489,9 +485,7 @@ defmodule FunkyABXWeb.TestLive do
        |> assign(
          current_round: current_round + 1,
          tracks: tracks,
-         valid: false,
-         current_track: nil,
-         tracks_loaded: false
+         valid: false
        )}
     else
       _ -> {:noreply, socket}
@@ -623,6 +617,53 @@ defmodule FunkyABXWeb.TestLive do
     )
 
     {:noreply, push_event(socket, "bypass_test", %{})}
+  end
+
+  # ---------- PLAYER SETTINGS ----------
+
+  @impl true
+  def handle_event(
+        "hide_and_shuffle_tracks",
+        _params,
+        %{assigns: %{test: test, tracks: tracks}} = socket
+      )
+      when test.anonymized_track_title == false do
+    tracks = Enum.shuffle(tracks)
+    test = %{test | anonymized_track_title: true}
+
+    send_update_after(
+      PlayerComponent,
+      [
+        id: "player",
+        test: test,
+        tracks: tracks,
+        current_track: nil,
+        tracks_loaded: false,
+        current_round: socket.assigns.current_round,
+        choices_taken: socket.assigns.choices_taken,
+        test_already_taken: socket.assigns.test_already_taken
+      ],
+      250
+    )
+
+    # push_event is sent to the player hook
+    {:noreply,
+      socket
+      |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
+      |> assign(
+           test: test,
+           tracks: tracks
+         )}
+  end
+
+  @impl true
+  def handle_event(
+        "hide_and_shuffle_tracks",
+        _params,
+        %{assigns: %{test: test}} = socket
+      ) do
+    test = %{test | anonymized_track_title: false}
+    {:noreply, assign(socket, test: test)}
   end
 
   # ---------- UI ----------

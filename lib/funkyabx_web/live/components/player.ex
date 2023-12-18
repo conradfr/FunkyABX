@@ -209,6 +209,7 @@ defmodule FunkyABXWeb.PlayerComponent do
               <div
                 class="p-2 text-truncate cursor-link"
                 style="width: 300px;"
+                title={track.title}
                 phx-click={
                   JS.dispatch(
                     if @current_track == track.hash and @playing == true do
@@ -487,37 +488,6 @@ defmodule FunkyABXWeb.PlayerComponent do
      socket
      |> assign(loop: loop)
      |> push_event("loop", %{loop: loop})}
-  end
-
-  @impl true
-  def handle_event(
-        "hide_and_shuffle_tracks",
-        _params,
-        %{assigns: %{test: test, tracks: tracks}} = socket
-      )
-      when test.anonymized_track_title == false do
-    tracks = Enum.shuffle(tracks)
-    test = %{test | anonymized_track_title: true}
-
-    {:noreply,
-     socket
-     |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
-     |> assign(
-       test: test,
-       tracks: tracks,
-       current_track: nil,
-       tracks_loaded: false
-     )}
-  end
-
-  @impl true
-  def handle_event(
-        "hide_and_shuffle_tracks",
-        _params,
-        %{assigns: %{test: test}} = socket
-      ) do
-    test = %{test | anonymized_track_title: false}
-    {:noreply, assign(socket, test: test)}
   end
 
   # ---------- UI ----------
