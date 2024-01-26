@@ -73,7 +73,7 @@
   <div class="col-lg-4">
     <img class="rounded-circle" src={~p"/images/home_invitation.png"} />
     <h3 class="fw-normal mt-2"><%= dgettext("site", "Invitations") %></h3>
-    <p><%= dgettext("site", "Invites people and view their results") %></p>
+    <p><%= raw(dgettext("site", "Invites people<br>and view their results")) %></p>
     <p class="mb-4">
       <a class="btn btn-secondary" href={~p"/test"}><%= dgettext("site", "Create a test »") %></a>
     </p>
@@ -147,3 +147,4 @@
     </div>
   </div>
 <% end %>
+
