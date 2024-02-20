@@ -23,11 +23,12 @@ defmodule FunkyABXWeb.PageController do
     render(conn, :contact, changeset: changeset)
   end
 
-  def contact_submit(conn, %{"contact" => form_params} = _params) do
+  def contact_submit(conn, %{"contact" => form_params} = params) do
     changeset = Contact.changeset(%Contact{}, form_params)
+    recaptcha_token = Map.get(params, "g-recaptcha-response")
 
     conn =
-      if changeset.valid? == true do
+      if changeset.valid? == true and parse_recaptcha_token(recaptcha_token) == true do
         try do
           {:ok, data} = Ecto.Changeset.apply_action(changeset, :insert)
 
@@ -47,11 +48,40 @@ defmodule FunkyABXWeb.PageController do
         end
       else
         conn
+        |> put_flash(:error, "Sorry, an error has occurred. Please try again.")
       end
 
     changeset = Contact.changeset(%Contact{})
 
     render(conn, :contact, changeset: changeset)
+  end
+
+  @headers [
+    {"Content-type", "application/x-www-form-urlencoded"},
+    {"Accept", "application/json"}
+  ]
+
+  @verify_url "https://www.google.com/recaptcha/api/siteverify"
+
+  # todo move repatcha code elsewhere
+
+  defp parse_recaptcha_token(nil), do: false
+  defp parse_recaptcha_token(token) do
+    body =
+      %{secret: Application.fetch_env!(:funkyabx, :recaptcha_private), response: token}
+      |> URI.encode_query()
+
+    case HTTPoison.post(@verify_url, body, @headers) |> IO.inspect() do
+      {:ok, response} ->
+        body = response.body |> Jason.decode!()
+        if body["success"] do
+          true
+        else
+          false
+        end
+      _ ->
+        false
+    end
   end
 
   def about(conn, _params) do
