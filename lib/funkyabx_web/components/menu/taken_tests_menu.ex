@@ -12,7 +12,6 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
     <li class="nav-item dropdown">
       <a
         class="nav-link dropdown-toggle"
-        class="nav-link dropdown-toggle"
         href="#"
         id="navbarDropdownTakenTestsMenuLink"
         role="button"

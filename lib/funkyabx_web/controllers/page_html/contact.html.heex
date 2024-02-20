@@ -1,8 +1,16 @@
 <h3 class="header-chemyretro"><%= dgettext("site", "Contact") %></h3>
 
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
+<script>
+  function onSubmit(token) {
+    document.getElementById("form-contact").submit();
+  }
+</script>
+
 <div class="row">
   <div class="col-12 col-sm-6">
-    <%= form_for @changeset, ~p"/contact", fn f -> %>
+    <%= form_for @changeset, ~p"/contact", [id: "form-contact"], fn f -> %>
       <div class="mb-3">
         <%= label(f, :name, dgettext("site", "Name*:"), class: "form-label") %>
         <%= text_input(f, :name, required: true, class: "form-control") %>
@@ -31,7 +39,11 @@
       </div>
 
       <div class="text-end">
-        <%= submit(dgettext("site", "Send"), class: "btn btn-secondary px-5") %>
+        <button class="btn btn-secondary px-5 g-recaptcha"
+          data-sitekey={Application.fetch_env!(:funkyabx, :recaptcha_key)}
+          data-callback="onSubmit"
+          data-action="submit"
+        ><%= dgettext("site", "Send") %></button>
       </div>
     <% end %>
   </div>
