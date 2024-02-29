@@ -71,7 +71,7 @@ defmodule FunkyABXWeb.PageController do
       %{secret: Application.fetch_env!(:funkyabx, :recaptcha_private), response: token}
       |> URI.encode_query()
 
-    case HTTPoison.post(@verify_url, body, @headers) |> IO.inspect() do
+    case HTTPoison.post(@verify_url, body, @headers) do
       {:ok, response} ->
         body = response.body |> Jason.decode!()
         if body["success"] do

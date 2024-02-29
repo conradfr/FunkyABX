@@ -87,7 +87,7 @@ defmodule FunkyABX.Notifier.Email do
     Someone sent a message !
 
     Name: #{contact.name}
-    #{unless contact.email == nil, do: "Email:" <> contact.email, else: ""}
+    #{unless contact.email == nil, do: "Email: " <> contact.email, else: ""}
 
     Message:
     #{contact.message}
@@ -119,7 +119,9 @@ defmodule FunkyABX.Notifier.Email do
     email =
       case body_html do
         nil -> email
-        _ -> email |> html_body(body_html)
+        _ ->
+          email
+          |> html_body(body_html)
       end
 
     with {:ok, _metadata} <- Mailer.deliver(email) do
