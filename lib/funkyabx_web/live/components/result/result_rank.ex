@@ -99,8 +99,8 @@ defmodule FunkyABXWeb.TestResultRankComponent do
               <div class="p-3 ps-0 text-end">
                 <%= if @test.local == false do %>
                   <%= dgettext("test", "%{count} votes as #%{rank}",
-                    count: Map.get(rank, :ranks) |> Enum.at(1) |> Map.get("count"),
-                    rank: Map.get(rank, :ranks) |> Enum.at(1) |> Map.get("rank")
+                    count: Map.get(rank, :ranks) |> Enum.at(0) |> Map.get("count"),
+                    rank: Map.get(rank, :ranks) |> Enum.at(0) |> Map.get("rank")
                   ) %>
                 <% else %>
                   <%= raw(
