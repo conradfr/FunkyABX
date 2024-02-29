@@ -1208,7 +1208,7 @@ defmodule FunkyABXWeb.TestFormLive do
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        Logger.warn(
+        Logger.warning(
           "Test creating failed (#{fetch_field!(changeset, :type)} / #{length(fetch_field!(changeset, :tracks))} tracks)"
         )
 
