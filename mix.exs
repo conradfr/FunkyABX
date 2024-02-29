@@ -4,8 +4,8 @@ defmodule FunkyABX.MixProject do
   def project do
     [
       app: :funkyabx,
-      version: "0.3.0",
-      elixir: "~> 1.14",
+      version: "0.4.0",
+      elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers() ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
@@ -51,7 +51,7 @@ defmodule FunkyABX.MixProject do
       #      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       #      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.4"},
-      {:finch, "~> 0.13"},
+      {:finch, "~> 0.18"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},

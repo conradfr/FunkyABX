@@ -78,19 +78,19 @@ defmodule FunkyABX.Download do
       e in HTTPoison.Error ->
         case e.reason do
           reason when is_binary(reason) ->
-            Logger.warn("Error (#{url}): #{e.reason}")
+            Logger.warning("Error (#{url}): #{e.reason}")
 
           reason when reason == :checkout_timeout ->
-            Logger.warn("Error (#{url}): checkout_timeout - restarting pool ...")
+            Logger.warning("Error (#{url}): checkout_timeout - restarting pool ...")
 
             :hackney_pool.stop_pool(:download)
 
           reason when is_tuple(reason) and tuple_size(reason) == 2 ->
             {_error, {_error2, error_message}} = reason
-            Logger.warn("Error (#{url}): #{to_string(error_message)}")
+            Logger.warning("Error (#{url}): #{to_string(error_message)}")
 
           reason ->
-            Logger.warn("Error (#{url}): #{reason}")
+            Logger.warning("Error (#{url}): #{reason}")
         end
 
         File.close(fd)
