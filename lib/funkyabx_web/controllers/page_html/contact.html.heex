@@ -1,6 +1,7 @@
 <h3 class="header-chemyretro"><%= dgettext("site", "Contact") %></h3>
 
-<script src="https://www.google.com/recaptcha/api.js"></script>
+<script src="https://www.google.com/recaptcha/api.js">
+</script>
 
 <script>
   function onSubmit(token) {
@@ -39,11 +40,14 @@
       </div>
 
       <div class="text-end">
-        <button class="btn btn-secondary px-5 g-recaptcha"
+        <button
+          class="btn btn-secondary px-5 g-recaptcha"
           data-sitekey={Application.fetch_env!(:funkyabx, :recaptcha_key)}
           data-callback="onSubmit"
           data-action="submit"
-        ><%= dgettext("site", "Send") %></button>
+        >
+          <%= dgettext("site", "Send") %>
+        </button>
       </div>
     <% end %>
   </div>

@@ -648,12 +648,12 @@ defmodule FunkyABXWeb.TestLive do
 
     # push_event is sent to the player hook
     {:noreply,
-      socket
-      |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
-      |> assign(
-           test: test,
-           tracks: tracks
-         )}
+     socket
+     |> push_event("update_tracks", %{tracks: Tracks.to_json(tracks, test)})
+     |> assign(
+       test: test,
+       tracks: tracks
+     )}
   end
 
   @impl true

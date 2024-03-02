@@ -193,7 +193,7 @@ defmodule FunkyABX.Tests.Abx do
     rounds
     |> Range.new(1)
     |> Enum.reduce_while(0, fn x, acc ->
-      score = (factorial(rounds) * :math.pow(0.5, rounds)) / (factorial(x) * factorial(rounds - x))
+      score = factorial(rounds) * :math.pow(0.5, rounds) / (factorial(x) * factorial(rounds - x))
       total = score + acc
 
       if total < @minimum_probability do

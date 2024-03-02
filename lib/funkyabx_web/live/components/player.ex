@@ -403,9 +403,10 @@ defmodule FunkyABXWeb.PlayerComponent do
         %{assigns: %{test: test, played: played}} = socket
       ) do
     spawn(fn ->
-      if Map.get(socket.assigns, :current_round, 1) < 2
-         and Map.get(socket.assigns, :increment_view_counter, true) == true
-         and played == false, do: Tests.increment_view_counter(test)
+      if Map.get(socket.assigns, :current_round, 1) < 2 and
+           Map.get(socket.assigns, :increment_view_counter, true) == true and
+           played == false,
+         do: Tests.increment_view_counter(test)
     end)
 
     {:noreply, assign(socket, playing: true, played: true)}

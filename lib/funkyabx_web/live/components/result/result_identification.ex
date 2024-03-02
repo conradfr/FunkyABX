@@ -48,7 +48,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             </i>
           </div>
         </div>
-        <div :if={@test.local == false} class="justify-content-end text-end pt-4">
+        <div :if={@test.local == false} class="view-details justify-content-end text-end pt-4">
           <%= if @identification_detail == false do %>
             <span
               class="fs-8 mt-2 cursor-link text-body-secondary"
