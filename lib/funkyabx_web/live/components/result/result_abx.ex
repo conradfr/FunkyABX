@@ -81,7 +81,8 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
         <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(
           dgettext(
             "test",
-            "Minimum correct answers to be considered better than random guesses: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">source</a>)</small>", minimum: @minimum_correct
+            "Minimum correct answers to be considered better than random guesses: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">source</a>)</small>",
+            minimum: @minimum_correct
           )
         ) %>
       </div>

@@ -66,6 +66,7 @@ defmodule FunkyABXWeb.PageController do
   # todo move repatcha code elsewhere
 
   defp parse_recaptcha_token(nil), do: false
+
   defp parse_recaptcha_token(token) do
     body =
       %{secret: Application.fetch_env!(:funkyabx, :recaptcha_private), response: token}
@@ -74,11 +75,13 @@ defmodule FunkyABXWeb.PageController do
     case HTTPoison.post(@verify_url, body, @headers) do
       {:ok, response} ->
         body = response.body |> Jason.decode!()
+
         if body["success"] do
           true
         else
           false
         end
+
       _ ->
         false
     end

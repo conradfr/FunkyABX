@@ -118,7 +118,9 @@ defmodule FunkyABX.Notifier.Email do
 
     email =
       case body_html do
-        nil -> email
+        nil ->
+          email
+
         _ ->
           email
           |> html_body(body_html)

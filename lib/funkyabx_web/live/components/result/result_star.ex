@@ -30,7 +30,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
         <div class="me-auto">
           <h4 class="mt-3 header-neon"><%= dgettext("test", "Rating") %></h4>
         </div>
-        <div :if={@test.local == false} class="justify-content-end text-end pt-4">
+        <div :if={@test.local == false} class="view-details justify-content-end text-end pt-4">
           <%= if @star_detail == false do %>
             <span
               class="fs-8 mt-2 cursor-link text-body-secondary"

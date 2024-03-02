@@ -77,7 +77,7 @@ a.back-link {
   }
 }
 
-a.link-no-decoration {
+button.link-no-decoration, a.link-no-decoration {
   text-decoration: none !important;
 
 /* &:hover {

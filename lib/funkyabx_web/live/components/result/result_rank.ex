@@ -5,6 +5,9 @@ defmodule FunkyABXWeb.TestResultRankComponent do
   alias FunkyABX.{Tracks, Ranks, Tests}
   alias FunkyABX.Test
 
+  @sort [{:average, "By average score"}, {:top, "By top score"}]
+  @default_sort :average
+
   # attr is not supported by live components, just act as docs here
 
   attr :test, Test, required: true
@@ -31,10 +34,37 @@ defmodule FunkyABXWeb.TestResultRankComponent do
         <div class="me-auto">
           <h4 class="mt-3 header-neon"><%= dgettext("test", "Ranking") %></h4>
         </div>
-        <div :if={@test.local == false} class="justify-content-end text-end pt-4">
+        <div :if={@test.local == false} class="pe-3">
+          <button
+            class="btn btn-sm link-underline-light text-body-secondary btn-link dropdown-toggle link-no-decoration"
+            type="button"
+            data-bs-toggle="dropdown"
+            id="sortDropdown"
+            aria-expanded="false"
+          >
+            <% {_sort_key, sort_value} = get_current_sort(@sort) %>
+            <%= Gettext.dgettext(FunkyABXWeb.Gettext, "test", sort_value) %>
+          </button>
+
+          <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+            <%= for {sort_key, sort_value} <- get_rest_sort(@sort) do %>
+              <li>
+                <a
+                  class="dropdown-item"
+                  phx-click="sort_change"
+                  phx-value-sort={sort_key}
+                  phx-target={@myself}
+                >
+                  <%= Gettext.dgettext(FunkyABXWeb.Gettext, "test", sort_value) %>
+                </a>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+        <div :if={@test.local == false} class="view-details justify-content-end text-end pt-4">
           <%= if @ranks_detail == false do %>
             <span
-              class="fs-8 mt-2 cursor-link text-body-secondary"
+              class="fs-8 cursor-link text-body-secondary"
               phx-click="toggle_detail"
               phx-target={@myself}
             >
@@ -98,9 +128,11 @@ defmodule FunkyABXWeb.TestResultRankComponent do
               </div>
               <div class="p-3 ps-0 text-end">
                 <%= if @test.local == false do %>
+                  <% {rank_display, count_display} =
+                    Ranks.pick_rank_to_display(rank.ranks, rank.rank, @sort) %>
                   <%= dgettext("test", "%{count} votes as #%{rank}",
-                    count: Map.get(rank, :ranks) |> Enum.at(0) |> Map.get("count"),
-                    rank: Map.get(rank, :ranks) |> Enum.at(0) |> Map.get("rank")
+                    count: count_display,
+                    rank: rank_display
                   ) %>
                 <% else %>
                   <%= raw(
@@ -171,7 +203,10 @@ defmodule FunkyABXWeb.TestResultRankComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:ranks, fn -> Ranks.get_ranks(assigns.test, assigns.visitor_choices) end)
+     |> assign_new(:sort, fn -> @default_sort end)
+     |> assign_new(:ranks, fn s ->
+       Ranks.get_ranks(assigns.test, assigns.visitor_choices, s.sort)
+     end)
      |> assign_new(:reference_track, fn -> Tests.get_reference_track(assigns.test) end)
      |> assign_new(:ranks_detail, fn -> false end)}
   end
@@ -181,5 +216,26 @@ defmodule FunkyABXWeb.TestResultRankComponent do
     toggle = !socket.assigns.ranks_detail
 
     {:noreply, assign(socket, ranks_detail: toggle)}
+  end
+
+  @impl true
+  def handle_event("sort_change", %{"sort" => value}, socket) do
+    value_atom = String.to_atom(value)
+    ranks = Ranks.get_ranks(socket.assigns.test, socket.assigns.visitor_choices, value_atom)
+
+    {:noreply,
+     assign(socket,
+       sort: value_atom,
+       ranks: ranks
+     )}
+  end
+
+  def get_current_sort(assign_sort) do
+    List.keyfind(@sort, assign_sort, 0)
+  end
+
+  def get_rest_sort(assign_sort) do
+    {_, rest} = List.keytake(@sort, assign_sort, 0)
+    rest
   end
 end
