@@ -5,7 +5,7 @@ defmodule FunkyABXWeb.TestResultRankComponent do
   alias FunkyABX.{Tracks, Ranks, Tests}
   alias FunkyABX.Test
 
-  @sort [{:average, "By average score"}, {:top, "By top score"}]
+  @sort [{:average, "By average score"}, {:top, "By top votes"}]
   @default_sort :average
 
   # attr is not supported by live components, just act as docs here
