@@ -127,19 +127,21 @@ defmodule FunkyABXWeb.TestLive do
 
     <div class="mt-3">
       <div class="d-flex flex-row align-items-center justify-content-between">
+        <div :if={@test.local == true} class="results-actions">
+          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
+            navigate={~p"/local_test/edit/#{@test_data}"}
+            replace={true}
+          ><%= dgettext "test", "Go back to the test form" %></.link>
+        </div>
+
+        <div :if={@test.local == true} class="results-actions">
+          <i class="bi bi-plus color-action"></i>&nbsp;<.link
+            href={~p"/local_test"}
+            class="color-action"
+          ><%= dgettext "test", "Create a new local test" %></.link>
+        </div>
+
         <%= unless @test_params.has_choices == false do %>
-          <div :if={@test.local == true} class="results-actions">
-            <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
-              navigate={~p"/local_test/edit/#{@test_data}"}
-              replace={true}
-            ><%= dgettext "test", "Go back to the test form" %></.link>
-          </div>
-          <div :if={@test.local == true} class="results-actions">
-            <i class="bi bi-plus color-action"></i>&nbsp;<.link
-              href={~p"/local_test"}
-              class="color-action"
-            ><%= dgettext "test", "Create a new local test" %></.link>
-          </div>
           <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
             <%= unless @test.local == true do %>
               <div class="px-1">
@@ -176,24 +178,24 @@ defmodule FunkyABXWeb.TestLive do
               </.link>
             </div>
           <% end %>
-        <% else %>
-          <div class="px-1">
-            <button
-              :if={@test.anonymized_track_title == false}
-              phx-click="hide_and_shuffle_tracks"
-              class="btn btn-sm btn-outline-dark"
-            >
-              <%= dgettext("test", "Hide titles and shuffle tracks") %>
-            </button>
-            <button
-              :if={@test.anonymized_track_title == true}
-              phx-click="hide_and_shuffle_tracks"
-              class="btn btn-sm btn-outline-dark"
-            >
-              <%= dgettext("test", "Reveal tracks' titles") %>
-            </button>
-          </div>
         <% end %>
+
+        <div :if={@test_params.has_choices == false} class="px-1">
+          <button
+            :if={@test.anonymized_track_title == false}
+            phx-click="hide_and_shuffle_tracks"
+            class="btn btn-sm btn-outline-dark"
+          >
+            <%= dgettext("test", "Hide titles and shuffle tracks") %>
+          </button>
+          <button
+            :if={@test.anonymized_track_title == true}
+            phx-click="hide_and_shuffle_tracks"
+            class="btn btn-sm btn-outline-dark"
+          >
+            <%= dgettext("test", "Reveal tracks titles") %>
+          </button>
+        </div>
       </div>
     </div>
 
