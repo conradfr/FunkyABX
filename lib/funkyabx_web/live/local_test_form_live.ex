@@ -63,7 +63,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                   <%= dgettext("test", "Enable rating") %>
                 </label>
 
-                <div class="form-check mt-2 ms-1 form-test-example" data-target="example-picking">
+                <div class="form-check mt-2 ms-1">
                   <label class="form-check-label">
                     <%= radio_button(f, :regular_type, "pick",
                       class: "form-check-input",
@@ -77,7 +77,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                   </div>
                 </div>
 
-                <div class="form-check ms-1 form-test-example" data-target="example-stars">
+                <div class="form-check ms-1">
                   <label class="form-check-label">
                     <%= radio_button(f, :regular_type, "star",
                       class: "form-check-input",
@@ -94,7 +94,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                   </div>
                 </div>
 
-                <div class="form-check ms-1 form-test-example" data-target="example-ranking">
+                <div class="form-check ms-1">
                   <label class="form-check-label">
                     <%= radio_button(f, :regular_type, "rank",
                       class: "form-check-input",
@@ -123,7 +123,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                   </div>
                 </div>
               </div>
-              <div class="form-check ms-4 form-test-example" data-target="example-identification">
+              <div class="form-check ms-4">
                 <label class="form-check-label">
                   <%= checkbox(f, :identification,
                     class: "form-check-input",
@@ -136,7 +136,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 </div>
               </div>
 
-              <div class="form-check disabled mt-4 mb-2 form-test-example" data-target="example-abx">
+              <div class="form-check disabled mt-4 mb-2">
                 <label class="form-check-label">
                   <%= radio_button(f, :type, "abx", class: "form-check-input") %>
                   <%= dgettext("test", "ABX test") %>
@@ -165,6 +165,13 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                     <%= dgettext("test", "Hide tracks' title") %>
                   </label>
                 </div>
+              </div>
+
+              <div class="form-check disabled mt-4 mb-2">
+                <label class="form-check-label">
+                  <%= radio_button(f, :type, "listening", class: "form-check-input") %>
+                  <%= dgettext("test", "No test, only listening") %>
+                </label>
               </div>
             </div>
           </fieldset>
