@@ -1,5 +1,11 @@
 defmodule FunkyABX.Tracks do
-  alias FunkyABX.{Test, Track, Files, Download}
+  require Logger
+
+  alias FunkyABX.{Test, Track}
+  alias FunkyABX.{Files, Download}
+
+  @download_task_timeout 300_000
+  @download_flor_local_expiration_days 1
 
   # ---------- EXPORT ----------
 
@@ -70,8 +76,20 @@ defmodule FunkyABX.Tracks do
     |> get_media_url(test)
   end
 
+  def get_media_url(%Track{} = track, %Test{} = _test) when track.local_url == true do
+    Path.join([
+      Application.fetch_env!(:funkyabx, :cdn_prefix),
+      Application.fetch_env!(:funkyabx, :local_url_folder),
+      track.filename
+    ])
+  end
+
   def get_media_url(%Track{} = track, %Test{} = test) do
-    Application.fetch_env!(:funkyabx, :cdn_prefix) <> test.id <> "/" <> track.filename
+    Path.join([
+      Application.fetch_env!(:funkyabx, :cdn_prefix),
+      test.id,
+      track.filename
+    ])
   end
 
   def find_track(track_id, tracks) when is_list(tracks) do
@@ -119,31 +137,101 @@ defmodule FunkyABX.Tracks do
     |> :string.titlecase()
   end
 
+  def import_url_for_local(track) do
+    final_filename =
+      track
+      |> Map.get("original_filename")
+      |> Download.clean_url()
+      |> Files.filename_to_flac_if_needed()
+      |> Files.get_destination_filename_for_local_url()
+
+    filename_dest =
+      final_filename
+      |> (&Path.join([Application.fetch_env!(:funkyabx, :local_url_folder), &1])).()
+
+    if Files.is_cached?(final_filename) do
+      Logger.info("File is cached")
+
+      Map.merge(track, %{
+        "url" => track["url"],
+        "filename" => final_filename,
+        "title" => url_to_title(track["url"], Map.get(track, "title"))
+      })
+    else
+      try do
+        task =
+          Task.Supervisor.async(FunkyABX.TaskSupervisor, Download, :from_url, [
+            track["original_filename"]
+          ])
+
+        result = Task.await(task, @download_task_timeout)
+
+        case result do
+          {original_filename, download_path} ->
+            final_filename_dest =
+              Files.save(download_path, filename_dest,
+                expires: @download_flor_local_expiration_days
+              )
+
+            File.rm(download_path)
+
+            Map.merge(track, %{
+              "url" => track["url"],
+              "filename" => final_filename_dest,
+              "original_filename" => original_filename,
+              "title" => url_to_title(track["url"], Map.get(track, "title"))
+            })
+
+          _ ->
+            :error
+        end
+      rescue
+        _ ->
+          Logger.warning("Download task error: #{track["original_filename"]}")
+          :error
+      catch
+        :exit, _ ->
+          Logger.warning("Download task error: #{track["original_filename"]}")
+          :error
+      end
+    end
+  end
+
   def import_track_url(track, test_id, normalization) do
-    task = Task.Supervisor.async(FunkyABX.TaskSupervisor, Download, :from_url, [track["url"]])
-    result = Task.await(task)
+    try do
+      task = Task.Supervisor.async(FunkyABX.TaskSupervisor, Download, :from_url, [track["url"]])
+      result = Task.await(task, @download_task_timeout)
 
-    case result do
-      {original_filename, download_path} ->
-        filename_dest =
-          track
-          |> Map.get("url")
-          |> Download.clean_url()
-          |> Files.get_destination_filename()
-          |> (&Path.join([test_id, &1])).()
+      case result do
+        {original_filename, download_path} ->
+          filename_dest =
+            track
+            |> Map.get("url")
+            |> Download.clean_url()
+            |> Files.get_destination_filename()
+            |> (&Path.join([test_id, &1])).()
 
-        final_filename_dest = Files.save(download_path, filename_dest, [], normalization)
-        File.rm(download_path)
+          final_filename_dest = Files.save(download_path, filename_dest, [], normalization)
+          File.rm(download_path)
 
-        Map.merge(track, %{
-          "url" => track["url"],
-          "filename" => final_filename_dest,
-          "original_filename" => original_filename,
-          "title" => url_to_title(track["url"], Map.get(track, "title"))
-        })
+          Map.merge(track, %{
+            "url" => track["url"],
+            "filename" => final_filename_dest,
+            "original_filename" => original_filename,
+            "title" => url_to_title(track["url"], Map.get(track, "title"))
+          })
 
+        _ ->
+          :error
+      end
+    rescue
       _ ->
-        track
+        Logger.warning("Download task error: #{track["url"]}")
+        :error
+    catch
+      :exit, _ ->
+        Logger.warning("Download task error: #{track["url"]}")
+        :error
     end
   end
 

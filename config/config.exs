@@ -11,7 +11,8 @@ config :funkyabx,
   namespace: FunkyABX,
   ecto_repos: [FunkyABX.Repo],
   analytics: nil,
-  env: Mix.env()
+  env: Mix.env(),
+  local_url_folder: "local"
 
 # Configures the endpoint
 config :funkyabx, FunkyABXWeb.Endpoint,

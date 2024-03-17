@@ -240,7 +240,8 @@ defmodule FunkyABX.Test do
       :rating,
       :regular_type,
       :ranking_only_extremities,
-      :identification
+      :identification,
+      :upload_url
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2)
     |> Validators.validate_general_type()

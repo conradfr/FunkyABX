@@ -3,8 +3,6 @@ defmodule FunkyABXWeb.Layouts do
 
   @release_version_env "RELEASE_ID"
 
-  @limit 11
-
   embed_templates "layouts/*"
 
   defp get_release_version_query_string() do

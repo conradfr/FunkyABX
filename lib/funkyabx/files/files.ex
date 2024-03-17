@@ -6,6 +6,11 @@ defmodule FunkyABX.Files do
 
   # ---------- PUBLIC API ----------
 
+  def get_destination_filename_for_local_url(url) when is_binary(url) do
+    Base.encode16(:crypto.hash(:sha, url)) <>
+      Path.extname(url)
+  end
+
   def get_destination_filename(filename) when is_binary(filename) do
     Integer.to_string(DateTime.to_unix(DateTime.now!("Etc/UTC"))) <>
       "_" <>
@@ -64,7 +69,22 @@ defmodule FunkyABX.Files do
     |> Kernel.apply(:delete_all, [test_id])
   end
 
+  def is_cached?(path) when is_binary(path) do
+    final_path = filename_to_flac_if_needed(path)
+
+    Application.fetch_env!(:funkyabx, :file_module)
+    |> Kernel.apply(:is_cached?, [final_path])
+  end
+
   # ---------- INTERNAL ----------
+
+  def filename_to_flac_if_needed(filename) when is_binary(filename) do
+    if Path.extname(filename) in @ext_to_flac do
+      String.replace_suffix(filename, Path.extname(filename), @flac_ext)
+    else
+      filename
+    end
+  end
 
   defp filename_to_flac(filename) when is_binary(filename) do
     String.replace_suffix(filename, Path.extname(filename), @flac_ext)

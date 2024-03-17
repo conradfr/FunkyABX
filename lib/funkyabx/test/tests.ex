@@ -299,13 +299,24 @@ defmodule FunkyABX.Tests do
     |> Kernel.apply(:is_valid?, [test, round, choices])
   end
 
-  # TODO better generic code
   def form_data_from_session(session) do
     %{
       identification: Map.get(session, "identification", false),
       rating: Map.get(session, "rating", true),
       regular_type: Map.get(session, "regular_type", :pick),
-      tracks: Map.get(session, "tracks", [])
+      tracks: Map.get(session, "tracks", []),
+      type: Map.get(session, "type", :regular)
+    }
+  end
+
+  def form_data_from_params(data, params) do
+    %{
+      identification:
+        Map.get(params, "identification", false) || Map.get(data, "identification", false),
+      rating: Map.get(params, "rating") || Map.get(data, "rating", true),
+      regular_type: Map.get(params, "regular_type") || Map.get(data, "regular_type", :pick),
+      tracks: data["tracks"],
+      type: Map.get(params, "type") || Map.get(data, "type", :regular)
     }
   end
 

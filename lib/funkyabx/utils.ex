@@ -19,6 +19,14 @@ defmodule FunkyABX.Utils do
     end
   end
 
+  def send_error_toast(message, id) do
+    with pid when pid != nil <- get_pid_of_toast_lv(id) do
+      Process.send(pid, {:display_toast, message, :error}, [])
+    else
+      _ -> :error
+    end
+  end
+
   def send_error_toast(id) do
     with pid when pid != nil <- get_pid_of_toast_lv(id) do
       Process.send(
