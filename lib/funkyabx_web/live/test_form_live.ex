@@ -8,7 +8,7 @@ defmodule FunkyABXWeb.TestFormLive do
   alias FunkyABX.Repo
 
   alias FunkyABX.Tests.FormUtils
-  alias FunkyABX.{Accounts, Utils, Tests, Files, Tracks, TestClosing}
+  alias FunkyABX.{Accounts, Utils, Urls, Tests, Files, Tracks, TestClosing}
   alias FunkyABX.{Test, Track}
 
   @title_max_length 100
@@ -729,7 +729,7 @@ defmodule FunkyABXWeb.TestFormLive do
                         title={
                           dgettext(
                             "site",
-                            "The file will be downloaded, not served from the original url"
+                            "The file will be downloaded once you submit, not served from the original url"
                           )
                         }
                       >
@@ -888,7 +888,7 @@ defmodule FunkyABXWeb.TestFormLive do
                       title={
                         dgettext(
                           "site",
-                          "Reference / unprocessed track that will not be part of the test but playable."
+                          "Reference / unprocessed track that will not be part of the test but playable alongside the others."
                         )
                       }
                     >
@@ -996,7 +996,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
   # New
   @impl true
-  def mount(_params, session, socket) do
+  def mount(params, session, socket) do
     user =
       case session["user_token"] do
         nil -> nil
@@ -1021,6 +1021,7 @@ defmodule FunkyABXWeb.TestFormLive do
         Map.merge(
           %{},
           Tests.form_data_from_session(session)
+          |> Tests.form_data_from_params(params)
         )
       )
 
@@ -1092,7 +1093,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
   # ---------- INDIRECT FORM EVENTS ----------
 
-  def handle_info({"update", %{"test" => test_params}}, socket) do
+  def handle_info({:update, %{"test" => test_params}}, socket) do
     updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
 
     update_changeset = Test.changeset_update(socket.assigns.changeset, updated_test_params)
@@ -1132,7 +1133,7 @@ defmodule FunkyABXWeb.TestFormLive do
     end
   end
 
-  def handle_info({"save", %{"test" => test_params}}, socket) do
+  def handle_info({:save, %{"test" => test_params}}, socket) do
     updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
 
     insert =
@@ -1259,7 +1260,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @impl true
   def handle_event("update", params, socket) do
-    send(self(), {"update", params})
+    send(self(), {:update, params})
     {:noreply, assign(socket, test_submittable: false)}
   end
 
@@ -1272,7 +1273,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @impl true
   def handle_event("save", params, socket) do
-    send(self(), {"save", params})
+    send(self(), {:save, params})
     {:noreply, assign(socket, test_submittable: false)}
   end
 
@@ -1370,10 +1371,7 @@ defmodule FunkyABXWeb.TestFormLive do
   def handle_event("add_url", _value, socket)
       when socket.assigns.test_updatable == true and is_binary(socket.assigns.upload_url) and
              socket.assigns.upload_url != "" do
-    {:noreply,
-     socket
-     |> add_track_from_url(socket.assigns.upload_url)
-     |> push_event("revalidate", %{})}
+    {:noreply, add_url_maybe(socket, socket.assigns.upload_url)}
   end
 
   @impl true
@@ -1483,10 +1481,34 @@ defmodule FunkyABXWeb.TestFormLive do
     Map.put(test_params, "tracks", existing_tracks ++ new_tracks)
   end
 
+  defp add_url_maybe(socket, url) when is_binary(url) do
+    parsed_upload_url = Urls.parse_url_tracks(url)
+
+    socket
+    |> add_track_from_url(parsed_upload_url)
+    |> push_event("revalidate", %{})
+  end
+
+  defp add_url_maybe(socket, _url), do: socket
+
+  defp add_track_from_url(socket, url) when is_list(url) do
+    Enum.reduce(url, socket, fn x, acc ->
+      add_track_from_url(acc, x)
+    end)
+  end
+
   defp add_track_from_url(socket, url) do
     temp_id = UUID.generate()
 
-    #      Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
+    {title, final_url} =
+      case url do
+        {file_title, dest_url} ->
+          {Tracks.url_to_title(file_title), dest_url}
+
+        _ ->
+          {Tracks.url_to_title(url), url}
+      end
+
     tracks =
       socket.assigns.changeset
       |> get_field(:tracks)
@@ -1495,9 +1517,9 @@ defmodule FunkyABXWeb.TestFormLive do
           %Track{
             test_id: socket.assigns.test.id,
             temp_id: temp_id,
-            original_filename: url,
-            url: url,
-            title: Tracks.url_to_title(url)
+            original_filename: final_url,
+            url: final_url,
+            title: title
           },
           %{}
         )
@@ -1590,11 +1612,19 @@ defmodule FunkyABXWeb.TestFormLive do
       # url download
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         with false <- Map.has_key?(t, "id"),
-             url when url != nil <- Map.get(t, "url") do
-          t
-          |> Tracks.import_track_url(socket.assigns.test.id, normalization)
-          |> (&Map.put(acc, k, &1)).()
+             url when url != nil <- Map.get(t, "url"),
+             downloaded when downloaded != :error <-
+               Tracks.import_track_url(t, socket.assigns.test.id, normalization) do
+          Map.put(acc, k, downloaded)
         else
+          :error ->
+            Utils.send_error_toast(
+              "Error downloading #{t["original_filename"]}",
+              socket.assigns.page_id
+            )
+
+            Map.put(acc, k, t)
+
           _ ->
             Map.put(acc, k, t)
         end

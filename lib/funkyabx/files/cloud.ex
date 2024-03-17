@@ -12,6 +12,12 @@ defmodule FunkyABX.Files.Cloud do
   end
 
   @impl true
+  def is_cached?(path) do
+    Path.join([Application.fetch_env!(:funkyabx, :local_url_folder), path])
+    |> exists?()
+  end
+
+  @impl true
   def save(src_path, dest_path, opts \\ []) when is_binary(src_path) and is_binary(dest_path) do
     Application.fetch_env!(:funkyabx, :bucket)
     |> ExAws.S3.put_object(dest_path, File.read!(src_path), [{:acl, "public-read"}] ++ opts)

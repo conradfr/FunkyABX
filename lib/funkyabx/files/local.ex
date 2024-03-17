@@ -8,6 +8,12 @@ defmodule FunkyABX.Files.Local do
   end
 
   @impl true
+  def is_cached?(path) do
+    Path.join([Application.fetch_env!(:funkyabx, :local_url_folder), path])
+    |> exists?()
+  end
+
+  @impl true
   def save(src_path, dest_path, _opts) when is_binary(src_path) and is_binary(dest_path) do
     local_dest_path = local_path(dest_path)
 

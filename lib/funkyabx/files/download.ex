@@ -1,23 +1,30 @@
 defmodule FunkyABX.Download do
   require Logger
   alias Ecto.UUID
+  alias FunkyABX.Urls
 
   @timeout 300_000
 
-  def from_url(url, original_url \\ nil) when is_binary(url) do
+  def from_url(url) when is_binary(url) do
     Logger.debug("downloading from url: #{url}")
 
-    file_path = local_path(original_url || url)
+    file_path = local_path(url)
 
     {:ok, fd} = File.open(file_path, [:write, :binary])
 
     try do
-      resp =
+      clean_url =
         url
         |> filter()
         |> URI.decode()
         |> URI.encode()
-        |> HTTPoison.get!(%{},
+
+      headers = Urls.get_headers_for_url(clean_url)
+
+      resp =
+        clean_url
+        |> HTTPoison.get!(
+          headers,
           stream_to: self(),
           async: :once,
           timeout: @timeout,
@@ -54,7 +61,7 @@ defmodule FunkyABX.Download do
                 |> URI.parse()
                 |> URI.merge(location)
                 |> URI.to_string()
-                |> from_url(original_url || url)
+                |> from_url()
 
               _ ->
                 HTTPoison.stream_next(resp)
@@ -68,8 +75,7 @@ defmodule FunkyABX.Download do
 
           %HTTPoison.AsyncEnd{id: ^resp_id} ->
             File.close(fd)
-
-            {Path.basename(original_url || url), file_path}
+            {Path.basename(url), file_path}
         end
       end
 

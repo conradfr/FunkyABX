@@ -6,4 +6,6 @@ defmodule FunkyABX.Files.Type do
   @callback delete_all(test_id :: String.t()) :: any()
 
   @callback delete(filename :: String.t() | list(), test_id :: String.t()) :: any()
+
+  @callback is_cached?(path :: String.t()) :: boolean()
 end

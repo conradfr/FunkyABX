@@ -4,8 +4,10 @@ defmodule FunkyABXWeb.LocalTestFormLive do
   require Logger
   use FunkyABXWeb, :live_view
 
+  alias Ecto.UUID
   alias FunkyABX.Tests.FormUtils
-  alias FunkyABX.{Tests, Test, Track, Tracks}
+  alias FunkyABX.{Tests, Tracks, Utils, Urls}
+  alias FunkyABX.{Test, Track}
 
   @impl true
   def render(assigns) do
@@ -181,6 +183,11 @@ defmodule FunkyABXWeb.LocalTestFormLive do
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <h4 class="mt-1 header-typographica"><%= dgettext("test", "Tracks") %></h4>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
           <fieldset class="form-group mb-3">
             <div class="form-unit p-3 pb-2 rounded-3" id="local_files_drop_zone">
               <div class="row form-unit pb-1 rounded-3">
@@ -213,6 +220,53 @@ defmodule FunkyABXWeb.LocalTestFormLive do
             </div>
           </fieldset>
         </div>
+
+        <div class="col-md-6 col-sm-12 order-md-1 order-2">
+          <fieldset class="form-group mb-3">
+            <div class="form-unit p-3 pb-2 rounded-3">
+              <div class="row form-unit pb-1 rounded-3">
+                <%= label(:f, :upload_url, dgettext("test", "Add file from url:"),
+                  class: "col-sm-4 col-form-label text-start text-md-end mt-2 mt-md-0"
+                ) %>
+                <div class="col">
+                  <div class="input-group">
+                    <%= url_input(f, :upload_url, class: "form-control") %>
+                    <div class="input-group-text">
+                      <i
+                        class="bi bi-info-circle text-body-secondary"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="left"
+                        title={
+                          dgettext(
+                            "site",
+                            "The file will be downloaded once you submit, not served from the original url"
+                          )
+                        }
+                      >
+                      </i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <button
+                    type="button"
+                    class={[
+                      "btn",
+                      "btn-secondary",
+                      "mt-2",
+                      "mt-sm-0",
+                      (get_field(@changeset, :upload_url) == nil or
+                         get_field(@changeset, :upload_url) == "") && "disabled"
+                    ]}
+                    phx-click="add_url"
+                  >
+                    <i class="bi bi-plus-lg"></i> <%= dgettext("test", "Add") %>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
       </div>
 
       <%= error_tag(f, :tracks) %>
@@ -223,6 +277,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
             <div class={"row p-2 mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
               <%= hidden_input(fp, :id) %>
               <%= hidden_input(fp, :local) %>
+              <%= hidden_input(fp, :local_url) %>
               <%= hidden_input(fp, :filename) %>
               <%= hidden_input(fp, :original_filename) %>
 
@@ -267,7 +322,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                     title={
                       dgettext(
                         "site",
-                        "Reference / unprocessed track that will not be part of the test but playable."
+                        "Reference / unprocessed track that will not be part of the test but playable alongside the others."
                       )
                     }
                   >
@@ -301,7 +356,11 @@ defmodule FunkyABXWeb.LocalTestFormLive do
     changeset =
       case Map.get(params, "data") do
         nil ->
-          Test.changeset_local(test, Tests.form_data_from_session(Map.put(session, "tracks", [])))
+          data =
+            Tests.form_data_from_session(Map.put(session, "tracks", []))
+            |> Tests.form_data_from_params(params)
+
+          Test.changeset_local(test, data)
 
         data ->
           test_data =
@@ -316,11 +375,13 @@ defmodule FunkyABXWeb.LocalTestFormLive do
      socket
      |> assign(%{
        page_title: "Local test",
+       page_id: Utils.get_page_id_from_socket(socket),
        action: "save",
        changeset: changeset,
        test: test,
        tracks_to_delete: []
-     })}
+     })
+     |> add_url_maybe(Map.get(params, "url"))}
   end
 
   # ---------- MISC EVENTS ----------
@@ -348,7 +409,8 @@ defmodule FunkyABXWeb.LocalTestFormLive do
 
     {:noreply,
      assign(socket,
-       changeset: changeset
+       changeset: changeset,
+       upload_url: test_params["upload_url"]
      )}
   end
 
@@ -364,37 +426,11 @@ defmodule FunkyABXWeb.LocalTestFormLive do
      )}
   end
 
-  # ---------- TRACKS ----------
-
-  @impl true
-  def handle_event("track_added", %{"id" => track_id, "filename" => filename} = _params, socket) do
-    {:noreply,
-     socket
-     |> add_track_from_filename(track_id, filename)
-     |> push_event("revalidate", %{})}
-  end
-
-  @impl true
-  def handle_event("remove_track", %{"id" => track_id}, socket) do
-    tracks =
-      socket.assigns.changeset.changes.tracks
-      |> Enum.reject(fn track_changeset ->
-        get_field(track_changeset, :id) == track_id
-      end)
-
-    changeset =
-      socket.assigns.changeset
-      |> Ecto.Changeset.put_assoc(:tracks, tracks)
-
-    {:noreply,
-     socket
-     |> assign(%{changeset: changeset})}
-  end
-
   # ---------- FORM ----------
 
   @impl true
   def handle_event("save", %{"test" => test_params}, socket) do
+    test_params = consume_and_update_form_tracks_params(test_params, socket)
     test = Test.changeset_local(socket.assigns.test, test_params)
 
     case test.valid? do
@@ -430,12 +466,131 @@ defmodule FunkyABXWeb.LocalTestFormLive do
               }
             ]
           })
-          # |> push_redirect(to: url, redirect: false)
+          #           |> push_redirect(to: url, redirect: false)
         }
 
       false ->
         {:noreply, assign(socket, changeset: test)}
     end
+  end
+
+  # ---------- TRACKS ----------
+
+  @impl true
+  def handle_event("add_url", _value, socket)
+      when is_binary(socket.assigns.upload_url) and socket.assigns.upload_url != "" do
+    {:noreply, add_url_maybe(socket, socket.assigns.upload_url)}
+  end
+
+  @impl true
+  def handle_event("add_url", _value, socket) do
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("track_added", %{"id" => track_id, "filename" => filename} = _params, socket) do
+    {:noreply,
+     socket
+     |> add_track_from_filename(track_id, filename)
+     |> push_event("revalidate", %{})}
+  end
+
+  @impl true
+  def handle_event("remove_track", %{"id" => track_id}, socket) do
+    tracks =
+      socket.assigns.changeset.changes.tracks
+      |> Enum.reject(fn track_changeset ->
+        get_field(track_changeset, :id) == track_id
+      end)
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:tracks, tracks)
+
+    {:noreply,
+     socket
+     |> assign(%{changeset: changeset})}
+  end
+
+  defp add_url_maybe(socket, url) when is_binary(url) do
+    parsed_upload_url = Urls.parse_url_tracks(url)
+
+    socket
+    |> add_track_from_url(parsed_upload_url)
+    |> push_event("revalidate", %{})
+  end
+
+  defp add_url_maybe(socket, _url), do: socket
+
+  defp add_track_from_url(socket, url) when is_list(url) do
+    Enum.reduce(url, socket, fn x, acc ->
+      add_track_from_url(acc, x)
+    end)
+  end
+
+  defp add_track_from_url(socket, url) do
+    temp_id = UUID.generate()
+
+    {title, final_url} =
+      case url do
+        {file_title, dest_url} ->
+          {Tracks.url_to_title(file_title), dest_url}
+
+        _ ->
+          {Tracks.url_to_title(url), url}
+      end
+
+    tracks =
+      socket.assigns.changeset
+      |> get_field(:tracks)
+      |> Enum.concat([
+        Track.changeset(
+          %Track{
+            test_id: socket.assigns.test.id,
+            temp_id: temp_id,
+            id: temp_id,
+            original_filename: final_url,
+            url: final_url,
+            title: title,
+            local_url: true
+          },
+          %{}
+        )
+      ])
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:tracks, tracks)
+      |> Test.changeset_reset_upload_url()
+
+    socket
+    |> assign(upload_url: nil, changeset: changeset)
+  end
+
+  # only url tracks
+  defp consume_and_update_form_tracks_params(test_params, socket) do
+    updated_tracks =
+      test_params
+      |> Map.get("tracks", %{})
+      |> Enum.reduce(%{}, fn {k, t}, acc ->
+        with true <- Map.get(t, "local") == "false",
+             downloaded when downloaded != :error <- Tracks.import_url_for_local(t) do
+          Map.put(acc, k, downloaded)
+        else
+          :error ->
+            Utils.send_error_toast(
+              "Error downloading #{t["original_filename"]}",
+              socket.assigns.page_id
+            )
+
+            Map.put(acc, k, t)
+
+          _ ->
+            Map.put(acc, k, t)
+        end
+      end)
+
+    Map.put(test_params, "tracks", updated_tracks)
   end
 
   # ---------- UTILS ----------

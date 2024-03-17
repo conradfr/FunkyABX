@@ -44,7 +44,7 @@ const TestResultsHook = {
       const { test_local, track_id, track_url } = event.detail;
       let audio = null;
 
-      if (test_local === true) {
+      if (test_local === true && audioFiles[track_id]) {
         const file = audioFiles[track_id];
         const fileUrl = URL.createObjectURL(file);
 

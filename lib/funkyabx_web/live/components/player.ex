@@ -253,7 +253,7 @@ defmodule FunkyABXWeb.PlayerComponent do
               id={"waveform-#{track.hash}"}
             >
               <div
-                :if={@test.local == false and @tracks_loaded == false}
+                :if={(@test.local == false or track.local_url == true) and @tracks_loaded == false}
                 class="track-loading-indicator text-body-secondary"
               >
                 <small :if={get_track_state(track.hash, @tracks_state) == :loading}>
