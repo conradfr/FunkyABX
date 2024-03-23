@@ -1,6 +1,8 @@
 defmodule FunkyABX.Files.Cloud do
   @behaviour FunkyABX.Files.Type
 
+  @upload_timeout 180_000
+
   @impl true
   def exists?(filename) when is_binary(filename) do
     case Application.fetch_env!(:funkyabx, :bucket)
@@ -19,8 +21,12 @@ defmodule FunkyABX.Files.Cloud do
 
   @impl true
   def save(src_path, dest_path, opts \\ []) when is_binary(src_path) and is_binary(dest_path) do
-    Application.fetch_env!(:funkyabx, :bucket)
-    |> ExAws.S3.put_object(dest_path, File.read!(src_path), [{:acl, "public-read"}] ++ opts)
+    bucket = Application.fetch_env!(:funkyabx, :bucket)
+    opts = [{:acl, "public-read"}, {:timeout, @upload_timeout}] ++ opts
+
+    src_path
+    |> ExAws.S3.Upload.stream_file
+    |> ExAws.S3.upload(bucket, dest_path, opts)
     |> ExAws.request!()
   end
 
