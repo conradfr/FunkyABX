@@ -169,6 +169,14 @@ defmodule FunkyABXWeb.TestLive do
             </div>
           <% else %>
             <div class="text-end px-1 flex-fill">
+              <button
+                :if={@test.local == false and @test.allow_retake == true}
+                phx-click={JS.dispatch("delete_test", to: "#test-header")}
+                class="btn btn-secondary me-2"
+              >
+                <%= dgettext("test", "Take the test again") %>
+              </button>
+
               <.link
                 :if={@test.local == false}
                 href={~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)}
@@ -455,16 +463,27 @@ defmodule FunkyABXWeb.TestLive do
     results_url =
       ~p"/results/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
 
+    text =
+      if socket.assigns.test.allow_retake == true do
+        # could not find the correct way to have the regular phx-click to be correctly parsed so we pass the "final form"
+        dgettext(
+          "test",
+          "You have already taken this test. What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>.",
+          results_url: results_url
+        )
+      else
+        dgettext(
+          "test",
+          "You have already taken this test. <a href=\"%{results_url}\">Check the results</a>.",
+          results_url: results_url
+        )
+      end
+
     {:noreply,
      socket
      |> put_flash(
        :info,
-       dgettext(
-         "test",
-         "You have already taken this test. <a href=\"%{results_url}\">Check the results</a>.",
-         results_url: results_url
-       )
-       |> raw()
+       raw(text)
      )
      |> assign(test_already_taken: true)}
   end

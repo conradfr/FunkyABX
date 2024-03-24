@@ -20,7 +20,6 @@ const TestResultsHook = {
       && localStorage.getItem(`${testId}_taken`) !== 'true') {
       this.pushEvent('test_not_taken', {});
     }
-
     // Send visitor test data to the result page
     if (localStorage[testId] !== undefined) {
       const results = JSON.parse(localStorage.getItem(testId));
