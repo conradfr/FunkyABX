@@ -35,6 +35,7 @@ defmodule FunkyABX.Test do
     field(:nb_of_rounds, :integer)
     field(:ip_address, :binary)
     field(:hide_global_results, :boolean, default: false)
+    field(:allow_retake, :boolean, default: false)
     field(:to_close_at_enabled, :boolean, default: false)
     field(:to_close_at, :naive_datetime)
     field(:to_close_at_timezone, :string, virtual: true, default: "Etc/UTC")
@@ -111,6 +112,7 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
+      :allow_retake,
       :hide_global_results,
       :to_close_at_enabled,
       :to_close_at,
@@ -161,6 +163,7 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
+      :allow_retake,
       :hide_global_results,
       :to_close_at_enabled,
       :to_close_at,

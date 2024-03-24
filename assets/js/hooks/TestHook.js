@@ -39,6 +39,24 @@ const TestHook = {
       cookies.set(`${COOKIE_TEST_TAKEN}_${testId}`, true);
       localStorage.setItem(`${testId}_taken`, true);
     });
+
+    this.deleteTest = () => {
+      cookies.remove(`${COOKIE_TEST_TAKEN}_${testId}`);
+      cookies.remove(`${COOKIE_TEST_TAKEN}_${testId}_session`);
+
+      sessionStorage.removeItem(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`);
+
+      localStorage.removeItem(testId);
+      localStorage.removeItem(`${testId}_taken`);
+      localStorage.removeItem(`${testId}_taken_session_id`);
+
+      window.location.reload();
+    };
+
+    window.addEventListener('delete_test', this.deleteTest, false);
+  },
+  destroyed() {
+    window.removeEventListener('delete_test', this.deleteTest, false);
   }
 };
 

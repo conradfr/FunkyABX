@@ -587,6 +587,16 @@ defmodule FunkyABXWeb.TestFormLive do
                 </div>
               </div>
             </div>
+            <div class="col-12 col-md-6 pt-3 pt-md-0">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <%= checkbox(f, :allow_retake, class: "form-check-input") %> &nbsp;&nbsp;<%= dgettext(
+                    "test",
+                    "Allow a visitor to take the test multiple times."
+                  ) %>
+                </label>
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-12 col-md-6 mb-2 mb-sm-0">
