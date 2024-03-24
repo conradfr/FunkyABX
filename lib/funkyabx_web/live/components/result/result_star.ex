@@ -30,7 +30,10 @@ defmodule FunkyABXWeb.TestResultStarComponent do
         <div class="me-auto">
           <h4 class="mt-3 header-neon"><%= dgettext("test", "Rating") %></h4>
         </div>
-        <div :if={@test.local == false} class="view-details justify-content-end text-end pt-4">
+        <div
+          :if={@test.local == false and @test.hide_global_results == false}
+          class="view-details justify-content-end text-end pt-4"
+        >
           <%= if @star_detail == false do %>
             <span
               class="fs-8 mt-2 cursor-link text-body-secondary"
@@ -106,7 +109,10 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                     </div>
                   </div>
                 </div>
-                <div class="p-3 ps-0 text-end test-starring-result">
+                <div
+                  :if={@test.hide_global_results == false}
+                  class="p-3 ps-0 text-end test-starring-result"
+                >
                   <%= for star_nb <- 1..5 do %>
                     <i
                       title={star.rank}
@@ -187,6 +193,24 @@ defmodule FunkyABXWeb.TestResultStarComponent do
 
   @impl true
   def update(assigns, socket) do
+    # special case, mostly for online tests w/ hide_global_results == true,
+    # as we need to re-rank the tracks once the JS hooks sends the visitor choices
+    if Map.get(assigns, :visitor_choices) != nil and
+         Map.get(socket.assigns, :visitor_choices, %{}) != Map.get(assigns, :visitor_choices) do
+      send_update_after(
+        __MODULE__,
+        [
+          id: assigns.id,
+          stars:
+            Stars.get_stars(
+              Map.get(assigns, :test),
+              Map.get(assigns, :visitor_choices, %{})
+            )
+        ],
+        250
+      )
+    end
+
     {:ok,
      socket
      |> assign(assigns)

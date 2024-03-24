@@ -48,7 +48,10 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             </i>
           </div>
         </div>
-        <div :if={@test.local == false} class="view-details justify-content-end text-end pt-4">
+        <div
+          :if={@test.local == false and @test.hide_global_results == false}
+          class="view-details justify-content-end text-end pt-4"
+        >
           <%= if @identification_detail == false do %>
             <span
               class="fs-8 mt-2 cursor-link text-body-secondary"
@@ -112,7 +115,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             </div>
           </div>
 
-          <%= if @test.local == false do %>
+          <%= if @test.local == false and @test.hide_global_results == false do %>
             <%= for {guess, j} <- identification.guesses |> Enum.with_index() do %>
               <%= if (j == 0) do %>
                 <div class="my-1 d-flex flex-wrap align-items-center justify-content-end">
@@ -169,7 +172,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
 
         <div
           :if={@reference_track != nil}
-          class="track track-reference my-1 d-flex flex-wrap justify-content-between align-items-center"
+          class="track track-reference my-1 mt-4 d-flex flex-wrap justify-content-between align-items-center"
           phx-click={
             JS.dispatch(
               if @play_track_id == @reference_track.id do
@@ -203,6 +206,24 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
 
   @impl true
   def update(assigns, socket) do
+    # special case, mostly for online tests w/ hide_global_results == true,
+    # as we need to re-rank the tracks once the JS hooks sends the visitor choices
+    if Map.get(assigns, :visitor_choices) != nil and
+         Map.get(socket.assigns, :visitor_choices, %{}) != Map.get(assigns, :visitor_choices) do
+      send_update_after(
+        __MODULE__,
+        [
+          id: assigns.id,
+          identifications:
+            Identifications.get_identification(
+              Map.get(assigns, :test),
+              Map.get(assigns, :visitor_choices, %{})
+            )
+        ],
+        250
+      )
+    end
+
     {:ok,
      socket
      |> assign(assigns)

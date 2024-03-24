@@ -34,7 +34,7 @@ defmodule FunkyABXWeb.TestResultRankComponent do
         <div class="me-auto">
           <h4 class="mt-3 header-neon"><%= dgettext("test", "Ranking") %></h4>
         </div>
-        <div :if={@test.local == false} class="pe-3">
+        <div :if={@test.local == false and @test.hide_global_results == false} class="pe-3">
           <button
             class="btn btn-sm link-underline-light text-body-secondary btn-link dropdown-toggle link-no-decoration"
             type="button"
@@ -61,7 +61,10 @@ defmodule FunkyABXWeb.TestResultRankComponent do
             <% end %>
           </ul>
         </div>
-        <div :if={@test.local == false} class="view-details justify-content-end text-end pt-4">
+        <div
+          :if={@test.local == false and @test.hide_global_results == false}
+          class="view-details justify-content-end text-end pt-4"
+        >
           <%= if @ranks_detail == false do %>
             <span
               class="fs-8 cursor-link text-body-secondary"
@@ -114,20 +117,26 @@ defmodule FunkyABXWeb.TestResultRankComponent do
 
             <div class="d-flex flex-grow-1 justify-content-end align-items-center">
               <div
-                :if={@test.local == false and Map.has_key?(@visitor_ranked, rank.track_id) == true}
+                :if={
+                  @test.local == false and @test.hide_global_results == false and
+                    Map.has_key?(@visitor_ranked, rank.track_id) == true
+                }
                 class="p-3 flex-grow-1 text-sm-end text-start pe-5"
               >
                 <small>
                   <%= if @is_another_session == true do %>
-                    <%= dgettext("test", "This track was ranked:") %>
+                    <%= dgettext("test", "This track was ranked: %{rank}",
+                      rank: @visitor_ranked[rank.track_id]
+                    ) %>
                   <% else %>
-                    <%= dgettext("test", "You ranked this track:") %>
+                    <%= dgettext("test", "You ranked this track: %{rank}",
+                      rank: @visitor_ranked[rank.track_id]
+                    ) %>
                   <% end %>
-                  &nbsp;#<%= @visitor_ranked[rank.track_id] %>
                 </small>
               </div>
               <div class="p-3 ps-0 text-end">
-                <%= if @test.local == false do %>
+                <%= if @test.local == false and @test.hide_global_results == false do %>
                   <% {rank_display, count_display} =
                     Ranks.pick_rank_to_display(rank.ranks, rank.rank, @sort) %>
                   <%= dgettext("test", "%{count} votes as #%{rank}",
@@ -200,6 +209,25 @@ defmodule FunkyABXWeb.TestResultRankComponent do
 
   @impl true
   def update(assigns, socket) do
+    # special case, mostly for online tests w/ hide_global_results == true,
+    # as we need to re-rank the tracks once the JS hooks sends the visitor choices
+    if Map.get(assigns, :visitor_choices) != nil and
+         Map.get(socket.assigns, :visitor_choices, %{}) != Map.get(assigns, :visitor_choices) do
+      send_update_after(
+        __MODULE__,
+        [
+          id: assigns.id,
+          ranks:
+            Ranks.get_ranks(
+              Map.get(assigns, :test),
+              Map.get(assigns, :visitor_choices, %{}),
+              Map.get(assigns, :sort, @default_sort)
+            )
+        ],
+        250
+      )
+    end
+
     {:ok,
      socket
      |> assign(assigns)

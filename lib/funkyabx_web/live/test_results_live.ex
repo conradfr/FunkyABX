@@ -164,6 +164,10 @@ defmodule FunkyABXWeb.TestResultsLive do
       />
     <% end %>
 
+    <div :if={@test.hide_global_results == true} class="mt-3 text-muted">
+      <small><%= dgettext "test", "Global results have been hidden by test creator." %></small>
+    </div>
+
     <div :if={@test.local == true} class="mt-3 d-flex justify-content-between results-actions">
       <div>
         <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link

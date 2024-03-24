@@ -25,7 +25,7 @@ defmodule FunkyABX.Files.Cloud do
     opts = [{:acl, "public-read"}, {:timeout, @upload_timeout}] ++ opts
 
     src_path
-    |> ExAws.S3.Upload.stream_file
+    |> ExAws.S3.Upload.stream_file()
     |> ExAws.S3.upload(bucket, dest_path, opts)
     |> ExAws.request!()
   end

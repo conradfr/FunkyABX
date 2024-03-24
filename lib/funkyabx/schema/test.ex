@@ -34,6 +34,7 @@ defmodule FunkyABX.Test do
     field(:identification, :boolean, default: false)
     field(:nb_of_rounds, :integer)
     field(:ip_address, :binary)
+    field(:hide_global_results, :boolean, default: false)
     field(:to_close_at_enabled, :boolean, default: false)
     field(:to_close_at, :naive_datetime)
     field(:to_close_at_timezone, :string, virtual: true, default: "Etc/UTC")
@@ -70,6 +71,7 @@ defmodule FunkyABX.Test do
       user: Map.get(params, :user, nil),
       nb_of_rounds: @default_rounds,
       anonymized_track_title: true,
+      hide_global_results: false,
       ip_address: Map.get(params, :ip_address, nil),
       to_close_at_timezone: Map.get(params, :to_close_at_timezone, nil),
       invitations: []
@@ -109,6 +111,7 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
+      :hide_global_results,
       :to_close_at_enabled,
       :to_close_at,
       :email_notification,
@@ -158,6 +161,7 @@ defmodule FunkyABX.Test do
       :ranking_only_extremities,
       :identification,
       :normalization,
+      :hide_global_results,
       :to_close_at_enabled,
       :to_close_at,
       :email_notification,
