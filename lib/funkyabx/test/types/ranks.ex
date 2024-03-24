@@ -10,7 +10,13 @@ defmodule FunkyABX.Ranks do
 
   def get_ranks(test, visitor_choices, sort \\ :average)
 
-  def get_ranks(%Test{} = test, visitor_choices, _sort) when test.local == true do
+  def get_ranks(%Test{} = test, visitor_choices, _sort)
+      when test.hide_global_results == true and map_size(visitor_choices) == 0 do
+    []
+  end
+
+  def get_ranks(%Test{} = test, visitor_choices, _sort)
+      when test.local == true or test.hide_global_results == true do
     test
     |> Map.get(:tracks, [])
     |> Tests.filter_reference_track()

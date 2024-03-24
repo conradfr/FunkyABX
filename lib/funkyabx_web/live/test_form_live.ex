@@ -322,7 +322,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <% end %>
                   </div>
                 </div>
-                <%= unless get_field(@changeset, :type) == :listening do %>
+                <%= unless get_field(@changeset, :type) == :listening or get_field(@changeset, :hide_global_results) == true do %>
                   <div class="mb-3">
                     <label for="" class="form-label">
                       <%= dgettext("test", "Test private results page") %>
@@ -559,6 +559,24 @@ defmodule FunkyABXWeb.TestFormLive do
             <div class="col-12 col-md-6 pt-3 pt-md-0">
               <div class="form-check">
                 <label class="form-check-label">
+                  <%= checkbox(f, :hide_global_results, class: "form-check-input") %> &nbsp;&nbsp;<%= dgettext(
+                    "test",
+                    "Only show the visitor choices on the results page"
+                  ) %>
+                </label>
+                <div class="form-text">
+                  <%= dgettext(
+                    "test",
+                    "Global results and stats of the test will be hidden (even for you)"
+                  ) %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col-12 col-md-6 pt-3 pt-md-0">
+              <div class="form-check">
+                <label class="form-check-label">
                   <%= checkbox(f, :email_notification,
                     class: "form-check-input",
                     disabled: @test.user == nil
@@ -571,7 +589,7 @@ defmodule FunkyABXWeb.TestFormLive do
             </div>
           </div>
           <div class="row">
-            <div class="col-12 col-md-6 mb-4 mb-sm-0">
+            <div class="col-12 col-md-6 mb-2 mb-sm-0">
               <div class="form-check">
                 <label class="form-check-label">
                   <%= checkbox(f, :password_enabled, class: "form-check-input") %>
@@ -598,7 +616,7 @@ defmodule FunkyABXWeb.TestFormLive do
               <% end %>
               <div class="form-check mt-2 mb-1">
                 <%= password_input(f, :password_input,
-                  class: "form-control",
+                  class: "form-control w-75",
                   placeholder: dgettext("test", "Enter new password")
                 ) %>
                 <%= error_tag(f, :password_input) %>
@@ -621,7 +639,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   </div>
                 </div>
                 <div class="form-check mt-2 mb-1">
-                  <%= datetime_local_input(f, :to_close_at, class: "form-control") %>
+                  <%= datetime_local_input(f, :to_close_at, class: "form-control w-75") %>
                   <%= error_tag(f, :to_close_at) %>
                 </div>
               <% end %>

@@ -37,7 +37,10 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
         <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
       </div>
 
-      <div :if={@test.local === false} class="tracks my-2 mb-1 track-results results">
+      <div
+        :if={@test.local === false and @test.hide_global_results == false}
+        class="tracks my-2 mb-1 track-results results"
+      >
         <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin">
           <%= dgettext("test", "No test taken ... yet!") %>
         </div>

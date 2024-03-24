@@ -8,7 +8,13 @@ defmodule FunkyABX.Picks do
 
   # ---------- GET ----------
 
-  def get_picks(%Test{} = test, visitor_choices) when test.local == true do
+  def get_picks(%Test{} = test, visitor_choices)
+      when test.hide_global_results == true and map_size(visitor_choices) == 0 do
+    []
+  end
+
+  def get_picks(%Test{} = test, visitor_choices)
+      when test.local == true or test.hide_global_results == true do
     test
     |> Map.get(:tracks, [])
     |> Tests.filter_reference_track()
