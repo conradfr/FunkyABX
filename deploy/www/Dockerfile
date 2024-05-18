@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.16.1-erlang-26.2.2-ubuntu-jammy-20240125
+FROM hexpm/elixir:1.16.2-erlang-26.2.5-ubuntu-jammy-20240427
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
@@ -86,10 +86,10 @@ COPY ./mix.exs mix.lock /var/funkyabx/
 
 WORKDIR /var/funkyabx/
 
-RUN rm -Rf /var/funkyabx/_build && \
-    mix local.hex --force && \
-    mix local.rebar --force && \
-    mix deps.get --only $MIX_ENV
+#RUN rm -Rf _build && \
+RUN mix local.hex --force
+RUN mix local.rebar --force
+RUN mix deps.get --only prod
 
 RUN mix deps.compile --skip-local-deps
 
