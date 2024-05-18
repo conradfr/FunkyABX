@@ -16,6 +16,7 @@ config :funkyabx,
 
 # Configures the endpoint
 config :funkyabx, FunkyABXWeb.Endpoint,
+  adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
   render_errors: [
     formats: [html: FunkyABXWeb.ErrorHTML, json: FunkyABXWeb.ErrorJSON],

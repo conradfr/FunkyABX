@@ -55,13 +55,12 @@ defmodule FunkyABX.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.6"},
       {:ecto_autoslug_field, "~> 3.0"},
       {:earmark, "~> 1.4.0"},
       {:ex_aws, "~> 2.0"},
       {:ex_aws_s3, "~> 2.0"},
       {:auto_linker, "~> 1.0"},
-      {:hackney, "~> 1.18"},
+      {:hackney, "~> 1.20"},
       {:sweet_xml, "~> 0.7.1"},
       {:gen_smtp, "~> 1.2"},
       {:ex_cldr, "~> 2.33"},
@@ -83,7 +82,8 @@ defmodule FunkyABX.MixProject do
       {:oban, "~> 2.13"},
       {:tzdata, "~> 1.1"},
       {:pbkdf2_elixir, "~> 2.0"},
-      {:floki, "~> 0.36.0"}
+      {:floki, "~> 0.36.0"},
+      {:bandit, "~> 1.0"}
     ]
   end
 
