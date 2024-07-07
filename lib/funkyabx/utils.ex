@@ -65,6 +65,8 @@ defmodule FunkyABX.Utils do
     end
   end
 
-  def embedize_url(true), do: "?embed=1"
-  def embedize_url(_embed), do: ""
+  def embedize_url(add_embed, prefix \\ "?")
+
+  def embedize_url(true, prefix), do: "#{prefix}embed=1"
+  def embedize_url(_embed, _prefix), do: ""
 end

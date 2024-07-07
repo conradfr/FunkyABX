@@ -132,12 +132,12 @@ defmodule FunkyABXWeb.TestResultsLive do
       :if={@test.local == false and @is_another_session == false and @session_id != nil}
       class="row"
     >
-      <div class="col-12 col-sm-3">
+      <div class="col-12">
         <h5 class="mt-4 header-neon"><%= dgettext("test", "Your test:") %></h5>
-        <div class="your-test rounded p-2 mb-3">
+        <div class="your-test rounded p-2 mb-3" style="max-width: 300px;">
           <div class="mb-1">
             <i class="bi bi-share"></i>&nbsp;&nbsp;<%= dgettext("test", "Share:") %>
-            <a href={url(~p"/results/#{@test.slug}?s=#{ShortUUID.encode!(@session_id)}")}>
+            <a href={url(~p"/results/#{@test.slug}?s=#{ShortUUID.encode!(@session_id)}") <> Utils.embedize_url(@embed, "&")}>
               <%= dgettext("test", "link to my results") %>
             </a>
           </div>
@@ -245,13 +245,16 @@ defmodule FunkyABXWeb.TestResultsLive do
        test_data: data,
        tracks_order: tracks_order,
        is_another_session: false,
-       disqus: false
+       disqus: false,
+       embed: false
      })
      |> push_event("set_warning_local_test_reload", %{set: true})}
   end
 
   @impl true
   def mount(%{"slug" => slug} = params, session, socket) do
+    embed = Map.get(params, "embed") == "1"
+
     with %Test{} = test <- Tests.get_by_slug(slug),
          true <-
            Tests.is_closed?(test) or
@@ -259,7 +262,6 @@ defmodule FunkyABXWeb.TestResultsLive do
              ((Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) or
                 (Map.get(params, "key") != nil and Map.get(params, "key") == test.access_key)) do
       result_modules = Tests.get_result_modules(test)
-      embed = Map.get(params, "embed") == "1"
 
       if connected?(socket) do
         FunkyABXWeb.Endpoint.subscribe(test.id)
@@ -314,7 +316,7 @@ defmodule FunkyABXWeb.TestResultsLive do
            dgettext("test", "Please take the test before checking the results.")
          )
          |> assign(test_already_taken: false)
-         |> redirect(to: ~p"/test/#{slug}")}
+         |> redirect(to: ~p"/test/#{slug}" <> Utils.embedize_url(embed))}
     end
   end
 
@@ -441,7 +443,7 @@ defmodule FunkyABXWeb.TestResultsLive do
     {:noreply,
      socket
      |> put_flash(:error, "This test has been deleted :(")
-     |> redirect(to: ~p"/info")}
+     |> redirect(to: ~p"/info" <> Utils.embedize_url(socket.assigns.embed))}
   end
 
   @impl true

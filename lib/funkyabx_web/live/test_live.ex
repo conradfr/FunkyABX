@@ -433,7 +433,7 @@ defmodule FunkyABXWeb.TestLive do
     {:noreply,
      socket
      |> put_flash(:success, dgettext("test", "Your submission has been registered!"))
-     |> redirect(to: url <> Utils.embedize_url(socket.assigns.embed))}
+     |> redirect(to: url)}
   end
 
   @impl true
