@@ -6,7 +6,7 @@ export const COOKIE_PARAMS = {
   'max-age': COOKIE_TTL,
   expires: 'mage-age',
   secure: true,
-  SameSite: 'Lax'
+  SameSite: 'None'
 };
 
 export const COOKIE_TEST_TAKEN = 'taken';

@@ -8,7 +8,8 @@ defmodule FunkyABXWeb.Endpoint do
     store: :cookie,
     key: "_funkyabx_key",
     signing_salt: "4WY4WK0b",
-    same_site: "Lax"
+    same_site: "None",
+    secure: true
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -23,6 +24,7 @@ defmodule FunkyABXWeb.Endpoint do
     gzip: true,
     cache_control_for_etags: "max-age=86400",
     #    only: FunkyABXWeb.static_paths()
+    headers: %{"Access-Control-Allow-Origin" => "*"},
     only:
       ~w(uploads assets fonts images favicon.ico favicon.png robots.txt apple-touch-icon.png apple-touch-icon-precomposed.png apple-touch-icon-57x57.png apple-touch-icon-72x72.png apple-touch-icon-76x76.png apple-touch-icon-114x114.png apple-touch-icon-120x120.png apple-touch-icon-144x144.png apple-touch-icon-152x152.png apple-touch-icon-180x180.png)
 

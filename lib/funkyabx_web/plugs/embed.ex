@@ -10,6 +10,8 @@ defmodule FunkyABXWeb.Plugs.Embed do
       "1" ->
         conn
         |> Controller.put_root_layout({FunkyABXWeb.Layouts, "embed.html"})
+        |> delete_resp_header("x-frame-options")
+        |> put_resp_header("content-security-policy", "frame-ancestors *")
 
       _ ->
         conn
