@@ -561,7 +561,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <label class="form-check-label">
                   <%= checkbox(f, :hide_global_results, class: "form-check-input") %> &nbsp;&nbsp;<%= dgettext(
                     "test",
-                    "Only show the visitor choices on the results page"
+                    "Visitors can only see their own test results."
                   ) %>
                 </label>
                 <div class="form-text">
