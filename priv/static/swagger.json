@@ -1,4 +1,9 @@
 {
+  "info": {
+    "version": "0.2",
+    "title": "FunkyABX"
+  },
+  "host": "localhost:4000",
   "definitions": {
     "Test": {
       "description": "",
@@ -105,11 +110,10 @@
       "type": "object"
     }
   },
-  "host": "localhost:4000",
-  "info": {
-    "title": "FunkyABX",
-    "version": "0.2"
-  },
+  "schemes": [
+    "https",
+    "http"
+  ],
   "paths": {
     "/test": {
       "post": {
@@ -165,9 +169,5 @@
       }
     }
   },
-  "schemes": [
-    "https",
-    "http"
-  ],
   "swagger": "2.0"
 }

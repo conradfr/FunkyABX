@@ -29,9 +29,7 @@ funkyabx-*.tar
 /priv/static/assets/
 
 /priv/static/uploads/
-
-/priv/static.temp/
-
+/priv/static/temp/
 /priv/static/flac/
 
 /priv/cert/

@@ -43,7 +43,7 @@ defmodule FunkyABXWeb do
         layouts: [html: FunkyABXWeb.Layouts]
 
       import Plug.Conn
-      import FunkyABXWeb.Gettext
+       use Gettext, backend: FunkyABXWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -86,7 +86,7 @@ defmodule FunkyABXWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import FunkyABXWeb.CoreComponents
-      import FunkyABXWeb.Gettext
+       use Gettext, backend: FunkyABXWeb.Gettext
 
       # because Phoenix hates us not using their CoreComponent / Tailscale bullshit
       import Phoenix.HTML.{Link, Form, Format}

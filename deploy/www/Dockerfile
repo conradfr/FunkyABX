@@ -1,9 +1,11 @@
-FROM hexpm/elixir:1.16.2-erlang-26.2.5-ubuntu-jammy-20240427
+FROM hexpm/elixir:1.18.4-erlang-28.0.2-ubuntu-jammy-20250714
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
 
 EXPOSE 80
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 ARG DATABASE_URL=${DATABASE_URL}
 ARG PORT=${PORT}
@@ -22,7 +24,6 @@ ARG MAILER_SMTP=${MAILER_SMTP}
 ARG MAILER_USERNAME=${MAILER_USERNAME}
 ARG MAILER_PASSWORD=${MAILER_PASSWORD}
 ARG MAILER_PORT=${MAILER_PORT}
-ARG SENDGRID_API_KEY=${SENDGRID_API_KEY}
 ARG EMAIL_FROM=${EMAIL_FROM}
 ARG EMAIL_TO=${EMAIL_TO}
 ARG ANALYTICS=${ANALYTICS}
@@ -49,7 +50,6 @@ ENV DATABASE_URL=${DATABASE_URL} \
     MAILER_USERNAME=${MAILER_USERNAME} \
     MAILER_PASSWORD=${MAILER_PASSWORD} \
     MAILER_PORT=${MAILER_PORT} \
-    SENDGRID_API_KEY=${SENDGRID_API_KEY} \
     EMAIL_FROM=${EMAIL_FROM} \
     EMAIL_TO=${EMAIL_TO} \
     ANALYTICS=${ANALYTICS} \
@@ -60,14 +60,13 @@ ENV DATABASE_URL=${DATABASE_URL} \
     RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET}
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
-    ffmpeg curl imagemagick gnupg
+    tzdata ffmpeg curl jpegoptim optipng pngquant gifsicle imagemagick gnupg
 
-RUN apt-get install --no-install-recommends --no-install-suggests -y git libssl-dev ca-certificates
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+ENV NODE_MAJOR=18
 
-RUN mkdir -p /etc/apt/keyrings
-RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-
-ENV NODE_MAJOR=16
+# For temp forked dep
+RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y git libssl-dev ca-certificates nodejs
 
 RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 

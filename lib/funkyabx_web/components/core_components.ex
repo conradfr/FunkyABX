@@ -13,7 +13,7 @@ defmodule FunkyABXWeb.CoreComponents do
   import Phoenix.HTML, only: [raw: 1]
 
   alias Phoenix.LiveView.JS
-  import FunkyABXWeb.Gettext
+   use Gettext, backend: FunkyABXWeb.Gettext
 
   @doc """
   Renders a modal.
