@@ -1,5 +1,5 @@
 defmodule FunkyABX.Utils do
-  import FunkyABXWeb.Gettext
+   use Gettext, backend: FunkyABXWeb.Gettext
 
   @default_locale "en"
 

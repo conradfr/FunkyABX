@@ -9,7 +9,7 @@ https://abx.funkybits.fr/
 Phoenix LiveView app
 
 Dependencies:
-- Elixir 1.13+
+- Elixir 1.17+
 - Postgresql
-- Node 14+
+- Node 18+
 - S3 compatible storage (prod)

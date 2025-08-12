@@ -129,13 +129,10 @@ if config_env() == :prod do
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
   config :funkyabx, FunkyABX.Mailer,
-    adapter: Swoosh.Adapters.Sendgrid,
-    api_key: System.get_env("SENDGRID_API_KEY")
-
-  #    relay: System.get_env("MAILER_SMTP"),
-  #    username: System.get_env("MAILER_USERNAME"),
-  #    password: System.get_env("MAILER_PASSWORD"),
-  #    port: System.get_env("MAILER_PORT")
+    adapter: Swoosh.Adapters.Mua,
+    relay: System.get_env("MAILER_SMTP"),
+    port: System.get_env("MAILER_PORT") |> String.to_integer(),
+    auth: [username: System.get_env("MAILER_USERNAME"), password: System.get_env("MAILER_PASSWORD")]
 
   config :ex_aws,
     access_key_id: System.get_env("S3_ACCESS_KEY"),
