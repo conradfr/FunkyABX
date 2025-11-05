@@ -1,19 +1,20 @@
 defmodule FunkyABXWeb.PageHTML do
+  @moduledoc """
+  This module contains pages rendered by PageController.
+
+  See the `page_html` directory for all templates available.
+  """
   use FunkyABXWeb, :html
+  use PhoenixHTMLHelpers
 
   import Ecto.Query, only: [from: 2]
 
   alias FunkyABX.Repo
   alias FunkyABX.{Test, Stats}
-  alias FunkyABX.Tests
 
   @default_max_length 150
 
   embed_templates "page_html/*"
-
-  defp is_test_closed?(%Test{} = test) do
-    Tests.is_closed?(test)
-  end
 
   defp get_tests_total() do
     query =

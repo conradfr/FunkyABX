@@ -3,18 +3,24 @@ defmodule FunkyABXWeb.PageController do
 
   alias FunkyABX.Contact
   alias FunkyABX.Tests
+  alias FunkyABX.Utils
 
-  def index(conn, _params) do
+  def home(conn, _params) do
     tests_gallery = Tests.get_random()
 
     render(conn, :index, tests_gallery: tests_gallery)
   end
 
-  def gallery(conn, _params) do
-    tests = Tests.get_for_gallery()
-    active = :regular
+  def about(conn, _params) do
+    render(conn, :about)
+  end
 
-    render(conn, :gallery, tests: tests, active: active)
+  def faq(conn, _params) do
+    render(conn, :faq)
+  end
+
+  def donate(conn, _params) do
+    render(conn, :donate)
   end
 
   def contact(conn, _params) do
@@ -28,14 +34,14 @@ defmodule FunkyABXWeb.PageController do
     recaptcha_token = Map.get(params, "g-recaptcha-response")
 
     conn =
-      if changeset.valid? == true and parse_recaptcha_token(recaptcha_token) == true do
+      if changeset.valid? == true and Utils.parse_recaptcha_token(recaptcha_token) == true do
         try do
           {:ok, data} = Ecto.Changeset.apply_action(changeset, :insert)
 
           case FunkyABX.Notifier.Email.contact(data) do
             {:ok, _} ->
               conn
-              |> put_flash(:success, "Your message has been sent.")
+              |> put_flash(:success, dgettext("site", "Your message has been sent."))
 
             {:error, _} ->
               conn
@@ -54,48 +60,5 @@ defmodule FunkyABXWeb.PageController do
     changeset = Contact.changeset(%Contact{})
 
     render(conn, :contact, changeset: changeset)
-  end
-
-  @headers [
-    {"Content-type", "application/x-www-form-urlencoded"},
-    {"Accept", "application/json"}
-  ]
-
-  @verify_url "https://www.google.com/recaptcha/api/siteverify"
-
-  # todo move repatcha code elsewhere
-
-  defp parse_recaptcha_token(nil), do: false
-
-  defp parse_recaptcha_token(token) do
-    body =
-      %{secret: Application.fetch_env!(:funkyabx, :recaptcha_private), response: token}
-      |> URI.encode_query()
-
-    case HTTPoison.post(@verify_url, body, @headers) do
-      {:ok, response} ->
-        body = response.body |> Jason.decode!()
-
-        if body["success"] do
-          true
-        else
-          false
-        end
-
-      _ ->
-        false
-    end
-  end
-
-  def about(conn, _params) do
-    render(conn, :about)
-  end
-
-  def faq(conn, _params) do
-    render(conn, :faq)
-  end
-
-  def donate(conn, _params) do
-    render(conn, :donate)
   end
 end

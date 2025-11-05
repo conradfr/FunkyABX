@@ -14,29 +14,16 @@ defmodule FunkyABXWeb.Router do
       cldr: FunkyABX.Cldr
 
     plug :fetch_live_flash
-    plug :put_root_layout, {FunkyABXWeb.Layouts, :root}
+    plug :put_root_layout, html: {FunkyABXWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug :fetch_current_scope_for_user
 
     plug RemoteIp,
       clients: ~w[10.0.2.2/32]
 
     plug FunkyABXWeb.Plugs.Ip
-
     plug FunkyABXWeb.Plugs.Embed
-  end
-
-  pipeline :api do
-    plug RemoteIp,
-      clients: ~w[10.0.2.2/32]
-
-    plug :accepts, ["json"]
-    plug FunkyABXWeb.Plugs.Auth
-  end
-
-  pipeline :test do
-    plug FunkyABXWeb.Plugs.TestTaken
   end
 
   pipeline :test_password do
@@ -48,47 +35,42 @@ defmodule FunkyABXWeb.Router do
   end
 
   scope "/", FunkyABXWeb do
-    pipe_through [:browser, :test, :test_password]
+    pipe_through [:browser, :test_password]
 
     live "/test/:slug", TestLive, as: :test_public
     live "/results/:slug", TestResultsLive, as: :test_results_public
   end
 
   scope "/", FunkyABXWeb do
-    pipe_through [:browser, :test]
-
-    live "/results/:slug/:key", TestResultsLive, as: :test_results_private
-  end
-
-  scope "/", FunkyABXWeb do
-    pipe_through :api
-
-    post "/test_api", TestController, :test_api_new
-  end
-
-  scope "/", FunkyABXWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", PageController, :home
     get "/about", PageController, :about
     get "/faq", PageController, :faq
     get "/donate", PageController, :donate
-    get "/gallery", PageController, :gallery
+
     get "/contact", PageController, :contact
     post "/contact", PageController, :contact_submit
+
     get "/auth/:slug", TestController, :password
     post "/auth/:slug", TestController, :password_verify
+
     live "/info", FlashLive, as: :info
+    live "/gallery", GalleryLive, :gallery
 
     get "/img/results/:filename", TestController, :image
 
-    get "/blacklist/add/:invitation_id", BlacklistController, :add
-    get "/blacklist/remove/:invitation_id", BlacklistController, :remove
+    live "/results/:slug/:key", TestResultsLive, as: :test_results_private
 
     live "/local_test/results/:data/:choices", TestResultsLive
     live "/local_test/results/:data/:choices/:tracks_order", TestResultsLive
     live "/local_test/:data", TestLive, as: :local_test
   end
+
+  # Other scopes may use custom stacks.
+  # scope "/api", FunkyABXWeb do
+  #   pipe_through :api
+  # end
 
   scope "/", FunkyABXWeb do
     pipe_through [:browser, :form]
@@ -98,11 +80,6 @@ defmodule FunkyABXWeb.Router do
     live "/local_test/edit/:data", LocalTestFormLive, as: :local_test_edit
     live "/local_test", LocalTestFormLive, as: :local_test_new
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", FunkyABXWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:funkyabx, :dev_routes) do
@@ -132,54 +109,31 @@ defmodule FunkyABXWeb.Router do
   ## Authentication routes
 
   scope "/", FunkyABXWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
-
-    get "/users/register", UserRegistrationController, :new
-    post "/users/register", UserRegistrationController, :create
-    get "/users/log_in", UserSessionController, :new
-    post "/users/log_in", UserSessionController, :create
-    get "/users/reset_password", UserResetPasswordController, :new
-    post "/users/reset_password", UserResetPasswordController, :create
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
-    put "/users/reset_password/:token", UserResetPasswordController, :update
-  end
-
-  scope "/", FunkyABXWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    delete "/users/settings", UserSettingsController, :delete
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    live_session :require_authenticated_user,
+      on_mount: [{FunkyABXWeb.UserAuth, :require_authenticated}] do
+      live "/users/settings", UserLive.Settings, :edit
 
-    get "/users/settings/api_key", UserSettingsApiKeyController, :index
-    post "/users/settings/api_key", UserSettingsApiKeyController, :generate
-    get "/users/settings/api_key/delete/:key", UserSettingsApiKeyController, :delete
+      live "/edit/:slug", TestFormLive, as: :test_edit
+      live "/user/tests", TestListLive, as: :test_list
+    end
 
-    live "/edit/:slug", TestFormLive, as: :test_edit
-    live "/user/tests", TestListLive, as: :test_list
+    post "/users/update-password", UserSessionController, :update_password
   end
 
   scope "/", FunkyABXWeb do
     pipe_through [:browser]
 
-    get "/users/log_out", UserSessionController, :delete
-    get "/users/confirm", UserConfirmationController, :new
-    post "/users/confirm", UserConfirmationController, :create
-    get "/users/confirm/:token", UserConfirmationController, :edit
-    post "/users/confirm/:token", UserConfirmationController, :update
-  end
+    live_session :current_user,
+      on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
+      live "/users/register", UserLive.Registration, :new
+      live "/users/log-in", UserLive.Login, :new
+      live "/users/log-in/:token", UserLive.Confirmation, :new
+    end
 
-  scope "/api/swagger" do
-    forward "/", PhoenixSwagger.Plug.SwaggerUI, otp_app: :funkyabx, swagger_file: "swagger.json"
-  end
-
-  def swagger_info do
-    %{
-      info: %{
-        version: "0.2",
-        title: "FunkyABX"
-      }
-    }
+    post "/users/log-in", UserSessionController, :create
+    delete "/users/log-out", UserSessionController, :delete
+    get "/users/log-out", UserSessionController, :delete
   end
 end

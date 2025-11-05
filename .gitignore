@@ -26,7 +26,10 @@ erl_crash.dump
 funkyabx-*.tar
 
 # Ignore assets that are produced by build tools.
-/priv/static/assets/
+/priv/static/assets/css/
+/priv/static/assets/js/
+/priv/static/assets/app.css
+/priv/static/assets/app.js
 
 /priv/static/uploads/
 /priv/static/temp/

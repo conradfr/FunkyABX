@@ -5,209 +5,253 @@ defmodule FunkyABXWeb.TestLive do
   alias Ecto.UUID
   alias FunkyABXWeb.PlayerComponent
   alias FunkyABX.{Utils, Tests, Tracks, Invitations}
-  alias FunkyABX.Test
+  alias FunkyABX.{Test, Invitation}
 
   @title_max_length 100
 
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="row" id="test-global" phx-hook="Global">
-      <div class="col-sm-6">
-        <h3 class="mb-0 header-typographica" id="test-header" phx-hook="Test" data-testid={@test.id}>
-          <%= @test.title %>
-        </h3>
-        <h6 :if={@test.author != nil} class="header-typographica">
-          <%= dgettext("test", "By %{author}", author: @test.author) %>
-        </h6>
-      </div>
-      <div class="col-sm-6 text-start text-sm-end pt-1 mb-1 mb-md-0">
-        <div
-          :if={@test.local == false and @test.type != :listening}
-          class="fs-7 text-body-secondary header-texgyreadventor"
-          title={
-            if @test.view_count != nil,
-              do:
-                dngettext(
-                  "test",
-                  "Test played %{count} time",
-                  "Test played %{count} times",
-                  @test.view_count
-                ),
-              else: ""
-          }
-        >
-          <%= raw(
-            dngettext(
+    <Layouts.app flash={@flash}>
+      <div :if={@test_already_taken == true} class="alert alert-info mb-4">
+        <i class="bi bi-x-circle"></i>&nbsp;&nbsp;
+        <span :if={@test.allow_retake == true}>
+          {raw(
+            dgettext(
               "test",
-              "Test taken <strong>%{count}</strong> time",
-              "Test taken <strong>%{count}</strong> times",
-              @test_taken_times
+              "You have already taken this test (or chosen to not take it). What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>.",
+              results_url: ~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)
             )
-          ) %>
-        </div>
-
-        <div :if={@test.local == false} class="d-flex justify-content-start justify-content-md-end">
-          <div class="fs-7 me-2 text-white-50 header-texgyreadventor">
-            <time title={@test.inserted_at} datetime={@test.inserted_at}>
-              <small>
-                <%= raw(
-                  dgettext(
-                    "test",
-                    "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
-                    created_at: @test.inserted_at,
-                    created_at_format:
-                      format_date(@test.inserted_at, timezone: @timezone, format: :short)
-                  )
-                ) %>
-              </small>
-            </time>
-          </div>
-          <.live_component module={TestFlagComponent} id="flag" test={@test} />
-        </div>
-
-        <div
-          :if={
-            @test.local == false and @test.to_close_at_enabled == true and
-              Tests.is_closed?(@test) == false
-          }
-          class="fs-7 text-white-50 header-texgyreadventor"
-        >
-          <time
-            class="header-texgyreadventor text-white-50"
-            title={@test.to_close_at}
-            datetime={@test.to_close_at}
-          >
-            <small>
-              <%= raw(
-                dgettext(
-                  "test",
-                  "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>",
-                  to_close_at: @test.to_close_at,
-                  to_close_at_format: format_date_time(@test.to_close_at, timezone: @timezone)
-                )
-              ) %>
-            </small>
-          </time>
-        </div>
+          )}
+        </span>
+        <span :if={@test.allow_retake == false}>
+          {raw(
+            dgettext(
+              "test",
+              "You have already taken this test (or chosen to not take it). <a href=\"%{results_url}\">Check the results</a>.",
+              results_url: ~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)
+            )
+          )}
+        </span>
       </div>
-    </div>
 
-    <TestDescriptionComponent.format
-      :if={@test.description != nil}
-      wrapper_class="mt-2 p-3 test-description"
-      description_markdown={@test.description_markdown}
-      description={@test.description}
-    />
-
-    <%= if @view_tracklist == false do %>
-      <div class="fs-8 mt-2 mb-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
-        Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+      <div :if={@test_closed == true} class="alert alert-info mb-4">
+        <i class="bi bi-x-circle"></i>&nbsp;&nbsp; {raw(
+          dgettext(
+            "test",
+            "This test is closed. <a href=\"%{results_url}\">Check the results</a>.",
+            results_url: ~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)
+          )
+        )}
       </div>
-    <% else %>
-      <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
-        Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
-      </div>
-      <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
-        <%= for track <- @test.tracks do %>
-          <div class="test-tracklist-one">- <%= track.title %></div>
-        <% end %>
-      </div>
-    <% end %>
 
-    <.live_component
-      module={PlayerComponent}
-      id="player"
-      test={@test}
-      tracks={@tracks}
-      current_round={@current_round}
-      choices_taken={@choices_taken}
-      test_already_taken={@test_already_taken}
-    />
-
-    <div class="mt-3">
-      <div class="d-flex flex-row align-items-center justify-content-between">
-        <div :if={@test.local == true} class="results-actions">
-          <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
-            navigate={~p"/local_test/edit/#{@test_data}"}
-            replace={true}
-          ><%= dgettext "test", "Go back to the test form" %></.link>
-        </div>
-
-        <div :if={@test.local == true} class="results-actions">
-          <i class="bi bi-plus color-action"></i>&nbsp;<.link
-            href={~p"/local_test"}
-            class="color-action"
-          ><%= dgettext "test", "Create a new local test" %></.link>
-        </div>
-
-        <%= unless @test_params.has_choices == false do %>
-          <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
-            <%= unless @test.local == true do %>
-              <div class="px-1">
-                <button
-                  phx-click="no_participate"
-                  class="btn btn-sm btn-outline-dark"
-                  data-confirm={
-                    dgettext(
-                      "test",
-                      "Are you sure you want to check the results? You won't be able to participate afterwards."
-                    )
+      <%= if @test.type != :listening or @embed != :player do %>
+        <div class="row" id="test-global" phx-hook="Global">
+          <div class="col-12">
+            <div class="d-flex justify-content-between">
+              <div class="flex-grow-1">
+                <h3 class="mb-1 header-funky" id="test-header" phx-hook="Test" data-testid={@test.id}>
+                  {@test.title}
+                </h3>
+                <h5 :if={@test.author != nil} class="header-funky-simple">
+                  {dgettext("test", "By %{author}", author: @test.author)}
+                </h5>
+              </div>
+              <div class="text-end">
+                <div
+                  :if={@test.local == false and @test.type != :listening}
+                  class="fs-7 text-body-secondary header-texgyreadventor"
+                  title={
+                    if @test.view_count != nil,
+                      do:
+                        dngettext(
+                          "test",
+                          "Test played %{count} time",
+                          "Test played %{count} times",
+                          @test.view_count
+                        ),
+                      else: ""
                   }
                 >
-                  <%= gettext("Check the results without participating") %>
-                </button>
+                  {raw(
+                    dngettext(
+                      "test",
+                      "Test taken <strong>%{count}</strong> time",
+                      "Test taken <strong>%{count}</strong> times",
+                      @test_taken_times
+                    )
+                  )}
+                </div>
+
+                <div
+                  :if={@test.local == false}
+                  class="d-flex justify-content-start justify-content-md-end"
+                >
+                  <div class="fs-7 me-2 text-white-50 header-texgyreadventor">
+                    <time title={@test.inserted_at} datetime={@test.inserted_at}>
+                      <small>
+                        {raw(
+                          dgettext(
+                            "test",
+                            "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
+                            created_at: @test.inserted_at,
+                            created_at_format:
+                              format_date(@test.inserted_at, timezone: @timezone, format: :short)
+                          )
+                        )}
+                      </small>
+                    </time>
+                  </div>
+                </div>
+
+                <div
+                  :if={
+                    @test.local == false and @test.to_close_at_enabled == true and
+                      Tests.is_closed?(@test) == false
+                  }
+                  class="fs-7 text-white-50 header-texgyreadventor"
+                >
+                  <time
+                    class="header-texgyreadventor text-white-50"
+                    title={@test.to_close_at}
+                    datetime={@test.to_close_at}
+                  >
+                    <small>
+                      {raw(
+                        dgettext(
+                          "test",
+                          "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>",
+                          to_close_at: @test.to_close_at,
+                          to_close_at_format: format_date_time(@test.to_close_at, timezone: @timezone)
+                        )
+                      )}
+                    </small>
+                  </time>
+                </div>
               </div>
-            <% end %>
-            <div class="text-end px-1 _flex-fill">
-              <button
-                phx-click="submit"
-                class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}
-              >
-                <%= dgettext("test", "Submit my choices") %>
-              </button>
             </div>
-          <% else %>
-            <div class="text-end px-1 flex-fill">
-              <button
-                :if={@test.local == false and @test.allow_retake == true}
-                phx-click={JS.dispatch("delete_test", to: "#test-header")}
-                class="btn btn-secondary me-2"
-              >
-                <%= dgettext("test", "Take the test again") %>
-              </button>
-
-              <.link
-                :if={@test.local == false}
-                href={~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)}
-                class="btn btn-primary"
-              >
-                <%= dgettext("test", "Check the results") %>
-              </.link>
-            </div>
-          <% end %>
-        <% end %>
-
-        <div :if={@test_params.has_choices == false} class="px-1">
-          <button
-            :if={@test.anonymized_track_title == false}
-            phx-click="hide_and_shuffle_tracks"
-            class="btn btn-sm btn-outline-dark"
-          >
-            <%= dgettext("test", "Hide titles and shuffle tracks") %>
-          </button>
-          <button
-            :if={@test.anonymized_track_title == true}
-            phx-click="hide_and_shuffle_tracks"
-            class="btn btn-sm btn-outline-dark"
-          >
-            <%= dgettext("test", "Reveal tracks titles") %>
-          </button>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <DisqusComponent.load :if={@disqus} test={@test} />
+        <TestDescriptionComponent.format
+          :if={@test.description != nil}
+          wrapper_class="mt-2 p-3 test-description"
+          description_markdown={@test.description_markdown}
+          description={@test.description}
+        />
+
+        <%= if @view_tracklist == false do %>
+          <div class="fs-8 mt-2 mb-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
+            Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+          </div>
+        <% else %>
+          <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
+            Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+          </div>
+          <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
+            <%= for track <- @test.tracks do %>
+              <div class="test-tracklist-one">- {track.title}</div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <.live_component
+        module={PlayerComponent}
+        id="player"
+        rotate={@rotate_init}
+        loop={@loop_init}
+        test={@test}
+        tracks={@tracks}
+        current_round={@current_round}
+        choices_taken={@choices_taken}
+        test_already_taken={@test_already_taken}
+      />
+
+      <%= if @test.type != :listening or @embed != :player do %>
+        <div class="mt-3">
+          <div class="d-flex flex-row align-items-center justify-content-between">
+            <div :if={@test.local == true} class="results-actions">
+              <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
+                navigate={~p"/local_test/edit/#{@test_data}"}
+                replace={true}
+              >{dgettext "test", "Go back to the test form"}</.link>
+            </div>
+
+            <div :if={@test.local == true} class="results-actions">
+              <i class="bi bi-plus color-action"></i>&nbsp;<.link
+                href={~p"/local_test"}
+                class="color-action"
+              >{dgettext "test", "Create a new local test"}</.link>
+            </div>
+
+            <%= unless @test_params.has_choices == false do %>
+              <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
+                <%= unless @test.local == true do %>
+                  <div class="px-1">
+                    <button
+                      phx-click="no_participate"
+                      class="btn btn-sm btn-outline-dark"
+                      data-confirm={
+                        dgettext(
+                          "test",
+                          "Are you sure you want to check the results? You won't be able to participate afterwards."
+                        )
+                      }
+                    >
+                      {gettext("Check the results without participating")}
+                    </button>
+                  </div>
+                <% end %>
+                <div class="text-end px-1 _flex-fill">
+                  <button
+                    phx-click="submit"
+                    class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}
+                  >
+                    {dgettext("test", "Submit my choices")}
+                  </button>
+                </div>
+              <% else %>
+                <div class="text-end px-1 flex-fill">
+                  <button
+                    :if={@test.local == false and @test.allow_retake == true}
+                    phx-click={JS.dispatch("delete_test", to: "#test-header")}
+                    class="btn btn-secondary me-2"
+                  >
+                    {dgettext("test", "Take the test again")}
+                  </button>
+
+                  <.link
+                    :if={@test.local == false}
+                    href={~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)}
+                    class="btn btn-primary"
+                  >
+                    {dgettext("test", "Check the results")}
+                  </.link>
+                </div>
+              <% end %>
+            <% end %>
+
+            <div :if={@test_params.has_choices == false} class="px-1">
+              <button
+                :if={@test.anonymized_track_title == false}
+                phx-click="hide_and_shuffle_tracks"
+                class="btn btn-sm btn-outline-dark"
+              >
+                {dgettext("test", "Hide titles and shuffle tracks")}
+              </button>
+              <button
+                :if={@test.anonymized_track_title == true}
+                phx-click="hide_and_shuffle_tracks"
+                class="btn btn-sm btn-outline-dark"
+              >
+                {dgettext("test", "Reveal tracks titles")}
+              </button>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </Layouts.app>
     """
   end
 
@@ -246,7 +290,10 @@ defmodule FunkyABXWeb.TestLive do
        valid: false,
        test_already_taken: false,
        view_tracklist: false,
-       disqus: false
+       test_closed: false,
+       rotate_init: true,
+       loop_init: true,
+       embed: nil,
      })
      |> push_event("set_warning_local_test_reload", %{set: true})}
   end
@@ -256,7 +303,7 @@ defmodule FunkyABXWeb.TestLive do
     test = Tests.get_by_slug(slug)
     changeset = Test.changeset(test)
     test_params = Tests.get_test_params(test)
-    embed = Map.get(params, "embed") == "1"
+    embed = Map.get(session, "embedded")
 
     timezone =
       case get_connect_params(socket) do
@@ -283,22 +330,27 @@ defmodule FunkyABXWeb.TestLive do
       if invitation_id == nil do
         UUID.generate()
       else
+        # not the best place to put that, sure
+        spawn(fn ->
+          Invitations.clicked(invitation_id, test)
+          FunkyABXWeb.Endpoint.broadcast!(test.id, "invitation_viewed", nil)
+        end)
+
         invitation_id
       end
 
     test_already_taken =
       case Invitations.get_invitation(invitation_id) do
-        nil ->
-          Map.get(session, "test_taken_" <> slug, false)
-
-        invitation ->
+        %Invitation{} = invitation ->
           invitation.test_taken == true
+
+        _ ->
+          Map.get(session, "test_taken_" <> slug, false)
       end
 
     {:ok,
      assign(socket, %{
        page_title: String.slice(test.title, 0..@title_max_length),
-       page_id: Utils.get_page_id_from_socket(socket),
        timezone: timezone,
        ip_address: Map.get(session, "visitor_ip", nil),
        test: test,
@@ -315,14 +367,16 @@ defmodule FunkyABXWeb.TestLive do
        view_tracklist: test.description == nil,
        embed: embed,
        invitation_id: invitation_id,
-       disqus: test.type == :listening and test.local == false and embed != true
+       rotate_init: Map.get(params, "rotate", "1") == "1",
+       loop_init: Map.get(params, "loop", "1") == "1"
      })
      |> then(fn s ->
        if Tests.is_closed?(test) == true do
          link = url(~p"/results/#{s.assigns.test.slug}") <> Utils.embedize_url(embed)
 
-         put_flash(
-           s,
+         s
+         |> assign(test_closed: true)
+         |> put_flash(
            :info,
            dgettext(
              "test",
@@ -332,7 +386,7 @@ defmodule FunkyABXWeb.TestLive do
            |> raw()
          )
        else
-         s
+         assign(s, test_closed: false)
        end
      end)
      |> then(fn s ->
@@ -362,20 +416,18 @@ defmodule FunkyABXWeb.TestLive do
   end
 
   @impl true
-  def handle_info(%{event: "test_taken", payload: page_id} = _payload, socket) do
-    unless page_id == socket.assigns.page_id,
-      do:
-        dgettext("test", "Someone just took this test!")
-        |> Utils.send_success_toast(socket.assigns.page_id)
-
-    {:noreply, assign(socket, :test_taken_times, socket.assigns.test_taken_times + 1)}
+  def handle_info(%{event: "test_taken", payload: _page_id} = _payload, socket) do
+    {:noreply,
+     socket
+     |> put_flash(:info, dgettext("test", "Someone just took this test!"))
+     |> assign(:test_taken_times, socket.assigns.test_taken_times + 1)}
   end
 
   @impl true
   def handle_info(%{event: "test_opened"} = _payload, socket) do
     {:noreply,
      socket
-     |> put_flash(:info, "This test has been reopened.")
+     |> put_flash(:info, dgettext("test", "This test has been reopened."))
      |> redirect(
        to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
      )}
@@ -385,6 +437,7 @@ defmodule FunkyABXWeb.TestLive do
   def handle_info(%{event: "test_closed"} = _payload, socket) do
     {:noreply,
      socket
+     |> assign(test_closed: true)
      |> put_flash(
        :info,
        dgettext(
@@ -414,7 +467,10 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> put_flash(
        :info,
-       dgettext("test", "Test has been updated by its creator, so the page has been reloaded.")
+       dgettext(
+         "test",
+         "The page has been reloaded because the test has been updated by its creator."
+       )
      )
      |> redirect(
        to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
@@ -468,13 +524,13 @@ defmodule FunkyABXWeb.TestLive do
         # could not find the correct way to have the regular phx-click to be correctly parsed so we pass the "final form"
         dgettext(
           "test",
-          "You have already taken this test. What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>.",
+          "You have already taken this test (or chosen to not take it). What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>.",
           results_url: results_url
         )
       else
         dgettext(
           "test",
-          "You have already taken this test. <a href=\"%{results_url}\">Check the results</a>.",
+          "You have already taken this test (or chosen to not take it). <a href=\"%{results_url}\">Check the results</a>.",
           results_url: results_url
         )
       end
@@ -551,7 +607,7 @@ defmodule FunkyABXWeb.TestLive do
 
       {:noreply,
        socket
-       |> push_redirect(
+       |> push_navigate(
          to: url,
          redirect: false
        )}
@@ -597,7 +653,7 @@ defmodule FunkyABXWeb.TestLive do
       Tests.submit(test, choices_cleaned, session_id, ip_address)
 
       spawn(fn ->
-        FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", socket.assigns.page_id)
+        FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
         FunkyABX.Notifier.Email.test_taken(test, socket)
         Invitations.test_taken(invitation_id, test)
       end)

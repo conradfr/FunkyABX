@@ -1,6 +1,6 @@
 defmodule FunkyABXWeb.Plugs.TestPassword do
   import Plug.Conn
-  alias FunkyABXWeb.Router.Helpers, as: Routes
+  use FunkyABXWeb, :verified_routes
   alias FunkyABX.Tests
 
   @cookie_prefix "token_test_"
@@ -45,7 +45,7 @@ defmodule FunkyABXWeb.Plugs.TestPassword do
       # password needed, redirect
       _ ->
         conn
-        |> Phoenix.Controller.redirect(to: Routes.test_path(conn, :password, test.slug))
+        |> Phoenix.Controller.redirect(to: ~p"/auth/#{test.slug}")
         |> halt()
     end
   end

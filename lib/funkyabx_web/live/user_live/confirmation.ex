@@ -1,0 +1,68 @@
+defmodule FunkyABXWeb.UserLive.Confirmation do
+  use FunkyABXWeb, :live_view
+
+  alias FunkyABX.Accounts
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <Layouts.app flash={@flash}>
+      <h2 class="header-chemyretro mb-4">
+        {dgettext("user", "Welcome %{email}", email: @user.email)}
+      </h2>
+
+      <div class="row">
+        <div class="col-12 col-sm-6">
+          <.form
+            for={@form}
+            id="login_form"
+            phx-submit="submit"
+            phx-mounted={JS.focus_first()}
+            action={~p"/users/log-in"}
+            phx-trigger-action={@trigger_submit}
+          >
+            <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
+            <%= if @current_scope do %>
+              <.button phx-disable-with="Logging in..." class="btn btn-primary w-100">
+                {dgettext("user", "Log in")}
+              </.button>
+            <% else %>
+              <.button
+                name={@form[:remember_me].name}
+                value="true"
+                phx-disable-with="Logging in..."
+                class="btn btn-primary w-100 mb-2"
+              >
+                {dgettext("user", "Keep me logged in on this device")}
+              </.button>
+              <.button phx-disable-with="Logging in..." class="btn btn-outline-primary w-100 mt-2">
+                {dgettext("user", "Log me in only this time")}
+              </.button>
+            <% end %>
+          </.form>
+        </div>
+      </div>
+    </Layouts.app>
+    """
+  end
+
+  @impl true
+  def mount(%{"token" => token}, _session, socket) do
+    if user = Accounts.get_user_by_magic_link_token(token) do
+      form = to_form(%{"token" => token}, as: "user")
+
+      {:ok, assign(socket, user: user, form: form, trigger_submit: false),
+       temporary_assigns: [form: nil]}
+    else
+      {:ok,
+       socket
+       |> put_flash(:error, "Magic link is invalid or it has expired.")
+       |> push_navigate(to: ~p"/users/log-in")}
+    end
+  end
+
+  @impl true
+  def handle_event("submit", %{"user" => params}, socket) do
+    {:noreply, assign(socket, form: to_form(params, as: "user"), trigger_submit: true)}
+  end
+end

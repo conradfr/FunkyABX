@@ -1,8 +1,8 @@
-FROM hexpm/elixir:1.18.4-erlang-28.0.2-ubuntu-jammy-20250714
-# FROM elixir:latest
+FROM hexpm/elixir:1.19.2-erlang-28.1.1-ubuntu-jammy-20251001
+#FROM elixir:latest
 
 ENV TZ=Europe/Paris
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 EXPOSE 4000
 EXPOSE 4001
@@ -18,12 +18,12 @@ RUN apt-get update && apt-get install --no-install-suggests -y \
     ffmpeg gnupg \
     inotify-tools
 
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-ENV NODE_MAJOR=18
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+ENV NODE_MAJOR=22
 
 # For temp forked dep
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y git libssl-dev ca-certificates nodejs
-#
+
 #RUN pkg-config --libs icu-uc icu-io
 
 # Install hex package manager
@@ -35,7 +35,7 @@ COPY ./ /app/funkyabx/
 
 WORKDIR /app/funkyabx
 
-RUN mv -vn config/dev.secret.exs.dist config/dev.secret.exs
+RUN #mv -vn config/dev.secret.exs.dist config/dev.secret.exs
 
 # Install dependencies
 RUN mix deps.get

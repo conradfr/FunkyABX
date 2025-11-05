@@ -18,7 +18,9 @@ defmodule FunkyABX.Repo.Migrations.CreateUsersAuthTables do
       add :token, :binary, null: false
       add :context, :string, null: false
       add :sent_to, :string
-      timestamps(updated_at: false)
+      add :authenticated_at, :utc_datetime
+
+      timestamps(type: :utc_datetime, updated_at: false)
     end
 
     create index(:users_tokens, [:user_id])

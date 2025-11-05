@@ -3,7 +3,7 @@ defmodule FunkyABX.Invitations do
 
   alias Ecto.UUID
   alias FunkyABX.Repo
-  alias FunkyABX.{Test, Invitation, EmailBlacklist}
+  alias FunkyABX.{Test, Invitation}
   alias FunkyABX.Notifier.Email
 
   def add(%Test{} = test, name_or_email) when is_binary(name_or_email) do
@@ -27,39 +27,35 @@ defmodule FunkyABX.Invitations do
     Email.test_invitation(invitation, socket_or_conn)
   end
 
-  def invitation_clicked(invitation_id, test) when is_binary(invitation_id) do
-    Logger.info("Invitation clicked")
-    invitation = get_invitation(invitation_id)
+  def clicked(invitation_id, %Test{} = test) when is_binary(invitation_id) do
+    with %Invitation{} = invitation <- get_invitation(invitation_id),
+         true <- invitation.test.id == test.id do
+      Logger.info("Invitation clicked")
 
-    unless invitation == nil or invitation.test.id != test.id do
       invitation
-      |> Invitation.changeset(%{test: test, clicked: true})
+      |> Invitation.changeset_clicked(%{clicked: true})
       |> Repo.update()
+    else
+      _ -> false
     end
   end
 
-  def invitation_clicked(_invitation_id, _test), do: false
+  def clicked(_invitation_id, _test), do: false
 
   def test_taken(invitation_id, test) when is_binary(invitation_id) do
-    Logger.info("Invitation test taken")
-    invitation = get_invitation(invitation_id)
+    with %Invitation{} = invitation <- get_invitation(invitation_id),
+         true <- invitation.test.id == test.id do
+      Logger.info("Invitation test taken")
 
-    unless invitation == nil or invitation.test.id != test.id do
       invitation
-      |> Invitation.changeset(%{test: test, test_taken: true})
+      |> Invitation.changeset_test_taken(%{test_taken: true})
       |> Repo.update()
+    else
+      _ -> false
     end
   end
 
   def test_taken(_invitation_id, _test), do: false
-
-  def get_email_blacklist(email) when is_binary(email) do
-    Repo.get(EmailBlacklist, email)
-  end
-
-  def is_email_blacklisted?(email) when is_binary(email) do
-    Repo.get(EmailBlacklist, email) != nil
-  end
 
   def is_already_invited?(%Test{} = test, name_or_email) when is_binary(name_or_email) do
     Repo.get_by(Invitation, test_id: test.id, name_or_email: name_or_email) != nil

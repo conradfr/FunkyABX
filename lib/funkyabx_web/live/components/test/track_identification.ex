@@ -1,5 +1,6 @@
 defmodule FunkyABXWeb.TestTrackIdentificationComponent do
   use FunkyABXWeb, :live_component
+  import Phoenix.HTML.Form
 
   alias FunkyABX.Tests
   alias FunkyABX.Tracks
@@ -15,17 +16,17 @@ defmodule FunkyABXWeb.TestTrackIdentificationComponent do
     <div class="p-2 d-flex flex-row align-items-center flex-grow-1 flex-md-grow-0">
       <div class="me-auto ms-0 ms-md-3 flex-fill text-start text-md-end">
         <span class="me-2 text-body-secondary small">
-          <%= dgettext("test", "I think this is ...") %>
+          {dgettext("test", "I think this is ...")}
         </span>
       </div>
       <div class="me-auto p-0 p-md-3 ps-0 flex-grow-1 flex-md-grow-0">
         <form phx-change="change_identification" phx-target={@myself}>
           <input name="track[id]" type="hidden" value={@track.id} />
           <select class="form-select" name="guess" disabled={@test_already_taken == true}>
-            <%= options_for_select(
+            {options_for_select(
               identification_choices(@tracks),
               Map.get(@identified, @track.fake_id, "")
-            ) %>
+            )}
           </select>
         </form>
       </div>

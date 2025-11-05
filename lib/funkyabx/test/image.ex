@@ -1,5 +1,6 @@
 defmodule FunkyABX.Tests.Image do
   import Mogrify
+  use FunkyABXWeb, :verified_routes
 
   alias FunkyABX.{Tests, Test, Files}
 
@@ -98,13 +99,7 @@ defmodule FunkyABX.Tests.Image do
 
   defp footer_link(mogrify, test, session_id, start) do
     url =
-      FunkyABXWeb.Endpoint.url() <>
-        FunkyABXWeb.Router.Helpers.test_results_public_path(
-          FunkyABXWeb.Endpoint,
-          FunkyABXWeb.TestResultsLive,
-          test.slug,
-          s: ShortUUID.encode!(session_id)
-        )
+      FunkyABXWeb.Endpoint.url() <> ~p"/results/#{test.slug}?s=#{ShortUUID.encode!(session_id)}"
 
     mogrify
     |> custom("gravity", "NorthEast")

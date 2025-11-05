@@ -14,6 +14,8 @@ defmodule FunkyABXWeb.PlayerComponent do
   attr :choices_taken, :map, required: false, default: %{}
   attr :test_already_taken, :boolean, required: false, default: false
   attr :increment_view_counter, :boolean, default: true
+  attr :loop, :boolean, default: true
+  attr :rotate, :boolean, default: true
 
   @impl true
   def render(assigns) do
@@ -34,6 +36,7 @@ defmodule FunkyABXWeb.PlayerComponent do
             <button
               type="button"
               phx-click={JS.dispatch("back", to: "body")}
+              title={dgettext("test", "Start back")}
               class={[
                 "btn",
                 "btn-dark",
@@ -48,42 +51,45 @@ defmodule FunkyABXWeb.PlayerComponent do
               <button
                 type="button"
                 phx-click={JS.dispatch("pause", to: "body")}
+                title={dgettext("test", "Pause")}
                 class="btn btn-success me-1"
               >
-                <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;<%= dgettext("test", "Pause") %>&nbsp;&nbsp;
+                <i class="bi bi-pause-fill"></i>&nbsp;&nbsp;&nbsp;{dgettext("test", "Pause")}&nbsp;&nbsp;
               </button>
             <% else %>
               <button
                 type="button"
                 phx-click={JS.dispatch("play", to: "body")}
+                title={dgettext("test", "Play")}
                 class={[
                   "btn",
                   "btn-secondary",
-                  "header-typographica",
+                  "header-funky",
                   "btn-play",
                   "me-1",
                   @tracks_loaded == false && "disabled"
                 ]}
               >
-                <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;<%= dgettext("test", "Play") %>&nbsp;&nbsp;
+                <i class="bi bi-play-fill"></i>&nbsp;&nbsp;&nbsp;{dgettext("test", "Play")}&nbsp;&nbsp;
               </button>
             <% end %>
             <button
               type="button"
               phx-click={JS.dispatch("stop", to: "body")}
-              class={["btn", "btn-dark", "px-2", "me-1", @tracks_loaded == false && "disabled"]}
+              title={dgettext("test", "Stop")}
+              class={["btn", "btn-dark", "ps-2", @tracks_loaded == false && "disabled"]}
             >
               <i class="bi bi-stop-fill"></i>
             </button>
             <%= if @tracks_loaded == false do %>
               <div class="spinner-border spinner-border-sm ms-2 text-body-secondary" role="status">
-                <span class="visually-hidden"><%= dgettext("test", "Loading...") %></span>
+                <span class="visually-hidden">{dgettext("test", "Loading...")}</span>
               </div>
               <span class="text-body-secondary ms-2">
-                <small><%= dgettext("test", "Loading tracks ...") %></small>
+                <small>{dgettext("test", "Loading tracks ...")}</small>
               </span>
             <% else %>
-              <div class="ms-2 text-body-secondary" role="status">
+              <div class="ms-3 text-body-secondary" role="status">
                 <small>
                   <i
                     class="bi bi-info-circle text-extra-muted"
@@ -103,12 +109,33 @@ defmodule FunkyABXWeb.PlayerComponent do
                 </small>
               </div>
             <% end %>
+            <div id="volume-slider-wrapper" phx-update="ignore" class="d-none d-sm-block ms-3">
+              <div id="volume-slider"></div>
+            </div>
           </div>
           <div :if={@test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">
-            <%= dgettext("test", "Round %{current_round} / %{nb_of_rounds}",
+            {dgettext("test", "Round %{current_round} / %{nb_of_rounds}",
               current_round: @current_round,
               nb_of_rounds: @test.nb_of_rounds
-            ) %>
+            )}
+          </div>
+          <div class="flex-grow-1 p-2 text-center">
+            <button
+              type="button"
+              phx-click={JS.dispatch("start_cue", to: "body")}
+              title={dgettext("test", "Cue start")}
+              class="btn btn-dark btn-sm me-1"
+            >
+              <i class="bi bi-align-start"></i>
+            </button>
+            <button
+              type="button"
+              phx-click={JS.dispatch("end_cue", to: "body")}
+              title={dgettext("test", "Cue end")}
+              class="btn btn-dark btn-sm me-1"
+            >
+              <i class="bi bi-align-end"></i>
+            </button>
           </div>
           <div class="p-2">
             <fieldset class="form-group">
@@ -121,7 +148,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                   checked={@loop}
                 />
                 <label class="form-check-label" for="inputLoopCheckbox">
-                  Loop
+                  {dgettext("test", "Loop")}
                 </label>
               </div>
             </fieldset>
@@ -139,7 +166,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                       checked={@rotate}
                     />
                     <label class="form-check-label" for="inputRotateCheckbox">
-                      <%= dgettext("test", "Switch track every") %>
+                      {dgettext("test", "Switch track every")}
                     </label>
                   </div>
                 </fieldset>
@@ -222,7 +249,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                   )
                 }
               >
-                <%= track.title %>
+                {track.title}
               </div>
             <% else %>
               <div
@@ -240,9 +267,9 @@ defmodule FunkyABXWeb.PlayerComponent do
                   )
                 }
               >
-                <div :if={track.reference_track == true}><%= dgettext("test", "Reference") %></div>
+                <div :if={track.reference_track == true}>{dgettext("test", "Reference")}</div>
                 <div :if={track.reference_track != true}>
-                  <%= dgettext("test", "Track %{track_index}", track_index: i) %>
+                  {dgettext("test", "Track %{track_index}", track_index: i)}
                 </div>
               </div>
             <% end %>
@@ -257,21 +284,21 @@ defmodule FunkyABXWeb.PlayerComponent do
                 class="track-loading-indicator text-body-secondary"
               >
                 <small :if={get_track_state(track.hash, @tracks_state) == :loading}>
-                  <%= dgettext("test", "Loading ... %{progress}%",
+                  {dgettext("test", "Loading ... %{progress}%",
                     progress: get_track_progress(track.hash, @tracks_loading)
-                  ) %>
+                  )}
                 </small>
                 <small :if={get_track_state(track.hash, @tracks_state) == :decoding}>
-                  <%= dgettext("test", "Decoding...") %>
+                  {dgettext("test", "Decoding...")}
                   <div class="spinner-grow spinner-grow-sm ms-2 text-body-secondary" role="status">
-                    <span class="visually-hidden"><%= dgettext("test", "Decoding...") %></span>
+                    <span class="visually-hidden">{dgettext("test", "Decoding...")}</span>
                   </div>
                 </small>
                 <small :if={get_track_state(track.hash, @tracks_state) == :finished}>
-                  <%= dgettext("test", "Done ") %> <i class="bi bi-check"></i>
+                  {dgettext("test", "Done ")} <i class="bi bi-check"></i>
                 </small>
                 <small :if={get_track_state(track.hash, @tracks_state) == :error}>
-                  <%= dgettext("test", "Error") %> <i class="bi bi-x-circle"></i>
+                  {dgettext("test", "Error")} <i class="bi bi-x-circle"></i>
                 </small>
               </div>
               <div phx-update="ignore" id={"waveform-wrapper-#{track.hash}"} class="waveform-wrapper">
@@ -307,8 +334,8 @@ defmodule FunkyABXWeb.PlayerComponent do
        tracks_loading: %{},
        tracks_loaded: false,
        current_track: nil,
-       loop: true,
        rotate: true,
+       loop: true,
        rotate_seconds: 5,
        playing: false,
        playingTime: 0,
@@ -323,6 +350,7 @@ defmodule FunkyABXWeb.PlayerComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(tracks_loaded: socket.assigns.tracks_loaded)
      |> assign(choices_modules: choices_modules)
      |> assign_new(:choices_taken, fn ->
        %{}
@@ -486,9 +514,9 @@ defmodule FunkyABXWeb.PlayerComponent do
     loop = Map.has_key?(player_params, "inputLoopCheckbox")
 
     {:noreply,
-     socket
-     |> assign(loop: loop)
-     |> push_event("loop", %{loop: loop})}
+      socket
+      |> assign(loop: loop)
+      |> push_event("loop", %{loop: loop})}
   end
 
   # ---------- UI ----------

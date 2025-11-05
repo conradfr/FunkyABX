@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.18.4-erlang-28.0.2-ubuntu-jammy-20250714
+FROM hexpm/elixir:1.19.2-erlang-28.1.1-ubuntu-jammy-20251001
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
@@ -27,7 +27,6 @@ ARG MAILER_PORT=${MAILER_PORT}
 ARG EMAIL_FROM=${EMAIL_FROM}
 ARG EMAIL_TO=${EMAIL_TO}
 ARG ANALYTICS=${ANALYTICS}
-ARG DISQUS_ID=${DISQUS_ID}
 ARG PHX_SERVER=${PHX_SERVER}
 ARG PHX_HOST=${PHX_HOST}
 ARG RECAPTCHA3_KEY=${RECAPTCHA3_KEY}
@@ -53,25 +52,27 @@ ENV DATABASE_URL=${DATABASE_URL} \
     EMAIL_FROM=${EMAIL_FROM} \
     EMAIL_TO=${EMAIL_TO} \
     ANALYTICS=${ANALYTICS} \
-    DISQUS_ID=${DISQUS_ID} \
     PHX_SERVER=${PHX_SERVER} \
     PHX_HOST=${PHX_HOST} \
     RECAPTCHA3_KEY=${RECAPTCHA3_KEY} \
     RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET}
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
-    tzdata ffmpeg curl jpegoptim optipng pngquant gifsicle imagemagick gnupg
+    tzdata \
+    build-essential make \
+    imagemagick \
+    pkgconf \
+    libicu-dev \
+    curl \
+    jpegoptim optipng pngquant gifsicle \
+    ffmpeg gnupg \
+    inotify-tools
 
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-ENV NODE_MAJOR=18
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+ENV NODE_MAJOR=22
 
 # For temp forked dep
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y git libssl-dev ca-certificates nodejs
-
-RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-
-RUN apt-get update && apt-get install -y \
-    nodejs -y
 
 #RUN usermod -u 1000 root
 #USER www-data

@@ -1,15 +1,18 @@
 # FunkyABX
 
-Audio blind tests
+To start your Phoenix server:
 
-https://abx.funkybits.fr/
+* Run `mix setup` to install and setup dependencies
+* Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
----
+Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Phoenix LiveView app
+Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
-Dependencies:
-- Elixir 1.17+
-- Postgresql
-- Node 18+
-- S3 compatible storage (prod)
+## Learn more
+
+* Official website: https://www.phoenixframework.org/
+* Guides: https://hexdocs.pm/phoenix/overview.html
+* Docs: https://hexdocs.pm/phoenix
+* Forum: https://elixirforum.com/c/phoenix-forum
+* Source: https://github.com/phoenixframework/phoenix

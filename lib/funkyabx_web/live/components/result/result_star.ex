@@ -28,7 +28,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
     <div>
       <div class="d-flex flex-row align-items-end">
         <div class="me-auto">
-          <h4 class="mt-3 header-neon"><%= dgettext("test", "Rating") %></h4>
+          <h4 class="mt-3 header-neon">{dgettext("test", "Rating")}</h4>
         </div>
         <div
           :if={@test.local == false and @test.hide_global_results == false}
@@ -40,7 +40,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
               phx-click="toggle_detail"
               phx-target={@myself}
             >
-              <%= dgettext("test", "View details") %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+              {dgettext("test", "View details")}&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
             </span>
           <% else %>
             <span
@@ -48,14 +48,14 @@ defmodule FunkyABXWeb.TestResultStarComponent do
               phx-click="toggle_detail"
               phx-target={@myself}
             >
-              <%= dgettext("test", "Hide details") %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+              {dgettext("test", "Hide details")}&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
             </span>
           <% end %>
         </div>
       </div>
       <div class="tracks my-1 mb-4 track-results results">
         <div :if={Kernel.length(@stars) == 0} class="alert alert-info alert-thin">
-          <%= dgettext("test", "No rating done ... yet!") %>
+          {dgettext("test", "No rating done ... yet!")}
         </div>
         <%= for {star, i} <- @stars |> Enum.with_index(1) do %>
           <div class={[@star_detail == true && "mb-3"]}>
@@ -94,9 +94,9 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                     <div class="pe-2">
                       <small>
                         <%= if @is_another_session == true do %>
-                          <%= dgettext("test", "This track was rated:") %>
+                          {dgettext("test", "This track was rated:")}
                         <% else %>
-                          <%= dgettext("test", "You rated this track:") %>
+                          {dgettext("test", "You rated this track:")}
                         <% end %>
                       </small>
                     </div>
@@ -129,7 +129,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
             </div>
 
             <%= if @star_detail == true do %>
-              <%= for star_nb_sub <- 5..1 do %>
+              <%= for star_nb_sub <- 5..1//-1 do %>
                 <div
                   :if={star[String.to_atom("total_star_#{star_nb_sub}")] != 0}
                   class="d-flex align-items-center justify-content-end"
@@ -143,12 +143,12 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                   </div>
                   <div class="p-1 ps-2 text-end text-body-secondary">
                     <small>
-                      <%= dngettext(
+                      {dngettext(
                         "test",
                         "%{count} time",
                         "%{count} times",
                         star[String.to_atom("total_star_#{star_nb_sub}")]
-                      ) %>
+                      )}
                     </small>
                   </div>
                 </div>

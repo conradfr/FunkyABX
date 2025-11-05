@@ -7,23 +7,51 @@
 # General application configuration
 import Config
 
+config :funkyabx, :scopes,
+  accounts_user: [
+    default: false,
+    module: FunkyABX.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:user, :id],
+    schema_key: :user_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: FunkyABX.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_user
+  ]
+
+config :funkyabx, :scopes,
+  user: [
+    default: true,
+    module: FunkyABX.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:user, :id],
+    schema_key: :user_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: FunkyABX.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_user
+  ]
+
 config :funkyabx,
   namespace: FunkyABX,
   ecto_repos: [FunkyABX.Repo],
+  generators: [timestamp_type: :utc_datetime],
   analytics: nil,
   env: Mix.env(),
-  local_url_folder: "local"
+  local_url_folder: "local",
+  file_module: FunkyABX.Files.Local
 
 # Configures the endpoint
 config :funkyabx, FunkyABXWeb.Endpoint,
-  adapter: Bandit.PhoenixAdapter,
   url: [host: "localhost"],
+  adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [html: FunkyABXWeb.ErrorHTML, json: FunkyABXWeb.ErrorJSON],
     layout: false
   ],
   pubsub_server: FunkyABX.PubSub,
-  live_view: [signing_salt: "6XEXEKnK"]
+  live_view: [signing_salt: "28vawG63"]
 
 # Configures the mailer
 #
@@ -36,58 +64,29 @@ config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 # config :esbuild,
-#  version: "0.14.41",
-#  default: [
+#  version: "0.25.4",
+#  funkyabx: [
 #    args:
-#      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+#      ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
 #    cd: Path.expand("../assets", __DIR__),
-#    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+#    env: %{"NODE_PATH" => [Path.expand("../deps", __DIR__), Mix.Project.build_path()]}
 #  ]
 
-config :mime, :types, %{
-  #  "audio/ogg" => ["ogg"]
-  "audio/flac" => ["flac"]
-}
-
-config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
-
-# Configures the mailer
-#
-# By default it uses the "Local" adapter which stores the emails
-# locally. You can see the emails in your browser, at "/dev/mailbox".
-#
-# For production it's recommended to configure a different adapter
-# at the `config/runtime.exs`.
-# config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Local
-
-# config :funkyabx, FunkyABX.Mailer,
-#  adapter: Swoosh.Adapters.SMTP,
-#  ssl: true,
-#  tls: :always,
-#  tls_options: [
-#    versions: [:"tlsv1.3"],
-#    verify: :verify_peer,
-#    cacerts: :public_key.cacerts_get(),
-#    server_name_indication: ~c"#{System.get_env("MAILER_SMTP")}",
-#    depth: 99
-#  ],
-#  #       tls: :always,
-#  #       auth: :always,
-#  #       dkim: [
-#  #         s: "default", d: "domain.com",
-#  #         private_key: {:pem_plain, File.read!("priv/keys/domain.private")}
-#  #       ],
-#  retries: 3,
-#  no_mx_lookups: true
-
-# Swoosh API client is needed for adapters other than SMTP.
-# config :swoosh, :api_client, false
-# config :swoosh, :api_client, Swoosh.ApiClient.Finch
+# Configure tailwind (the version is required)
+# config :tailwind,
+#  version: "4.1.7",
+#  funkyabx: [
+#    args: ~w(
+#      --input=assets/css/app.css
+#      --output=priv/static/assets/css/app.css
+#    ),
+#    cd: Path.expand("..", __DIR__)
+#  ]
 
 # Configures Elixir's Logger
-config :logger, :console,
+config :logger, :default_formatter,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id, :user_id]
+  metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
@@ -100,40 +99,17 @@ config :ex_cldr,
   default_locale: "en",
   default_backend: FunkyABX.Cldr
 
-config :funkyabx,
-  file_module: FunkyABX.Files.Local
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
-config :phoenix_swagger,
-  json_library: Jason
-
-config :funkyabx, :phoenix_swagger,
-  swagger_files: %{
-    "priv/static/swagger.json" => [
-      # phoenix routes will be converted to swagger paths
-      router: FunkyABXWeb.Router,
-      # (optional) endpoint config used to set host, port and https schemes.
-      endpoint: FunkyABXWeb.Endpoint
-    ]
-  }
-
-config :funkyabx, FunkyABX.Cache,
-  # When using :shards as backend
-  # backend: :shards,
-  # GC interval for pushing new generation: 12 hrs
-  gc_interval: :timer.hours(12),
-  # Max 1 million entries in cache
-  max_size: 1_00_000,
-  # Max 2 GB of memory
-  allocated_memory: 2_000_000_000,
-  # GC min timeout: 10 sec
-  gc_cleanup_min_timeout: :timer.seconds(10),
-  # GC min timeout: 10 min
-  gc_cleanup_max_timeout: :timer.minutes(10)
+config :mime, :types, %{
+  #  "audio/ogg" => ["ogg"]
+  "audio/flac" => ["flac"]
+}
 
 config :funkyabx, Oban,
   repo: FunkyABX.Repo,
   plugins: [Oban.Plugins.Pruner],
-  queues: [default: 2, closing: 2]
+  queues: [default: 2, closing: 2, user_delete: 1]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

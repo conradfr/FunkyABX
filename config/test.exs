@@ -1,7 +1,7 @@
 import Config
 
 # Only in tests, remove the complexity from the password hashing algorithm
-config :pbkdf2_elixir, :rounds, 1
+config :bcrypt_elixir, :log_rounds, 1
 
 # Configure your database
 #
@@ -14,19 +14,19 @@ config :funkyabx, FunkyABX.Repo,
   hostname: "localhost",
   database: "funkyabx_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  pool_size: System.schedulers_online() * 2
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :funkyabx, FunkyABXWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "2iZJEQAoWQBdFAViS1Ubr6aPOiqpvTHF3ZfRvc/iQcei1JF6BVx1Ze7nrFU0ac1K",
+  secret_key_base: "v4j43UlgA/lQNb6ofP8dKUuKG9UVZrizzh6vyA4hzXxDTOiM7oC+7LA1N2/KoFaa",
   server: false
 
-# In test we don't send emails.
+# In test we don't send emails
 config :funkyabx, FunkyABX.Mailer, adapter: Swoosh.Adapters.Test
 
-# Disable swoosh api client as it is only required for production adapters.
+# Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false
 
 # Print only warnings and errors during test
@@ -37,4 +37,6 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :funkyabx, Oban, testing: :inline
 
-import_config "test.secret.exs"
+# Enable helpful, but potentially expensive runtime checks
+config :phoenix_live_view,
+  enable_expensive_runtime_checks: true

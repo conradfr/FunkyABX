@@ -1,5 +1,6 @@
 defmodule FunkyABXWeb.TestTrackAbxComponent do
   use FunkyABXWeb, :live_component
+  import Phoenix.HTML.Form
 
   alias FunkyABX.{Test, Track}
 
@@ -26,13 +27,13 @@ defmodule FunkyABXWeb.TestTrackAbxComponent do
       <%= if Map.get(@track, :to_guess, false) do %>
         <div class="me-auto flex-grow-1 flex-md-grow-0">
           <span class="me-3 text-body-secondary small">
-            <%= dgettext("test", "I think this is ...") %>
+            {dgettext("test", "I think this is ...")}
           </span>
         </div>
         <div class=" p-0 p-md-3 flex-fill">
           <form phx-change="change_guess" phx-target={@myself}>
             <select class="form-select" name="guess">
-              <%= options_for_select(abx_choices(@test), @guessed) %>
+              {options_for_select(abx_choices(@test), @guessed)}
             </select>
           </form>
         </div>

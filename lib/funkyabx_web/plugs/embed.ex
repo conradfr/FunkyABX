@@ -10,11 +10,20 @@ defmodule FunkyABXWeb.Plugs.Embed do
       "1" ->
         conn
         |> Controller.put_root_layout({FunkyABXWeb.Layouts, "embed.html"})
+        |> put_session("embedded", :test)
+        |> delete_resp_header("x-frame-options")
+        |> put_resp_header("content-security-policy", "frame-ancestors *")
+
+      "2" ->
+        conn
+        |> Controller.put_root_layout({FunkyABXWeb.Layouts, "embed.html"})
+        |> put_session("embedded", :player)
         |> delete_resp_header("x-frame-options")
         |> put_resp_header("content-security-policy", "frame-ancestors *")
 
       _ ->
         conn
+        |> put_session("embedded", nil)
     end
   end
 end

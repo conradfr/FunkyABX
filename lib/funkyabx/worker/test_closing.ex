@@ -1,4 +1,4 @@
-defmodule FunkyABX.TestClosing do
+defmodule FunkyABX.TestClosingWorker do
   import Ecto.Query, warn: false, only: [from: 2]
   use Oban.Worker, queue: :closing
 
@@ -33,13 +33,13 @@ defmodule FunkyABX.TestClosing do
     scheduled_at = DateTime.from_naive!(test.to_close_at, test.to_close_at_timezone)
 
     %{id: test.id}
-    |> TestClosing.new(scheduled_at: scheduled_at, tags: [test.id])
+    |> TestClosingWorker.new(scheduled_at: scheduled_at, tags: [test.id])
     |> Oban.insert()
   end
 
   def remove_test_from_closing_queue(%Test{} = test) do
     Oban.Job
-    |> Ecto.Query.where(worker: "FunkyABX.TestClosing")
+    |> Ecto.Query.where(worker: "FunkyABX.TestClosingWorker")
     |> Ecto.Query.where(fragment("? = ANY (tags)", ^test.id))
     |> Oban.cancel_all_jobs()
   end

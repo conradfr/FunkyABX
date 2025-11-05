@@ -1,17 +1,17 @@
 defmodule FunkyABX.Notifier.Email do
   import Swoosh.Email
+  use FunkyABXWeb, :verified_routes
 
-  alias FunkyABXWeb.Router.Helpers, as: Routes
   alias FunkyABX.{Repo, Mailer}
-  alias FunkyABX.{Test, Contact, Invitation, Invitations}
+  alias FunkyABX.{Test, Contact, Invitation}
 
   # todo queue etc
 
   def test_taken(%Test{} = test, _socket_or_conn) when test.email_notification == false, do: false
 
-  def test_taken(%Test{} = test, socket_or_conn) do
+  def test_taken(%Test{} = test, _socket_or_conn) do
     test = Repo.preload(test, [:user])
-    url = Routes.test_results_public_url(socket_or_conn, FunkyABXWeb.TestResultsLive, test.slug)
+    url = FunkyABXWeb.Endpoint.url() <> ~p"/results/#{test.slug}"
 
     deliver(
       test.user.email,
@@ -31,48 +31,22 @@ defmodule FunkyABX.Notifier.Email do
     )
   end
 
-  def test_invitation(%Invitation{} = invitation, socket_or_conn) do
-    with false <- Invitations.is_email_blacklisted?(invitation.name_or_email) do
-      test = Repo.preload(invitation.test, [:user])
+  def test_invitation(%Invitation{} = invitation, _socket_or_conn) do
+    test = Repo.preload(invitation.test, [:user])
 
-      test_url =
-        Routes.test_public_url(socket_or_conn, FunkyABXWeb.TestLive, invitation.test.slug,
-          i: ShortUUID.encode!(invitation.id)
-        )
-
-      blacklist_url = Routes.blacklist_url(socket_or_conn, :add, invitation.id)
-
-      deliver(
-        invitation.name_or_email,
-        "Blind test invitation : " <> test.title,
-        """
-        Hi #{invitation.name_or_email},
-
-        You have been invited by #{test.user.email} to take the blind audio test: #{test.title}
-
-        Click here to take the test: #{test_url}
-
-        Regards,
-        FunkyABX
-
-        If you don't want to receive email invitations from us, you can add your email to the blacklist here : #{blacklist_url}
-        """
-      )
-    end
-  end
-
-  def blacklist_confirmation(%Invitation{} = invitation, socket_or_conn) do
-    blacklist_url = Routes.blacklist_url(socket_or_conn, :remove, invitation.id)
+    test_url =
+      FunkyABXWeb.Endpoint.url() <>
+        ~p"/test/#{invitation.test.slug}?i=#{ShortUUID.encode!(invitation.id)}"
 
     deliver(
       invitation.name_or_email,
-      "FunkyABX - Email blacklisted",
+      "Blind test invitation : " <> test.title,
       """
       Hi #{invitation.name_or_email},
 
-      Your email has been successfully added to the blacklist.
+      You have been invited by #{test.user.email} to take the blind audio test: #{test.title}
 
-      If you want to revert your decision later, use this link: #{blacklist_url}
+      Click here to take the test: #{test_url}
 
       Regards,
       FunkyABX
@@ -108,7 +82,7 @@ defmodule FunkyABX.Notifier.Email do
   end
 
   # Delivers the email using the application mailer.
-  defp deliver(recipient, subject, body, body_html \\ nil) do
+  def deliver(recipient, subject, body, body_html \\ nil) do
     email =
       new()
       |> to(recipient)

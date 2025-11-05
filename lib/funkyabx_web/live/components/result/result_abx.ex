@@ -25,24 +25,24 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
 
     ~H"""
     <div style="min-height: 200px">
-      <h4 class="mt-3 header-neon"><%= dgettext("test", "ABX") %></h4>
+      <h4 class="mt-3 header-neon">{dgettext("test", "ABX")}</h4>
 
       <div :if={@visitor_guesses != nil} class="mb-3">
-        <%= raw(
+        {raw(
           dgettext("test", "Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>",
             visitor_guesses: @visitor_guesses,
             nb_of_rounds: @test.nb_of_rounds
           )
-        ) %>
+        )}
         <i :if={@visitor_guesses == @test.nb_of_rounds} class="bi bi-hand-thumbs-up"></i>
       </div>
 
       <div
-        :if={@test.local === false and @test.hide_global_results == false}
+        :if={@test.local === false && @test.hide_global_results == false}
         class="tracks my-2 mb-1 track-results results"
       >
         <div :if={Kernel.length(@abx) == 0} class="alert alert-info alert-thin">
-          <%= dgettext("test", "No test taken ... yet!") %>
+          {dgettext("test", "No test taken ... yet!")}
         </div>
         <%= for {%{correct: guess, count: count}, i} <- @abx |> Enum.with_index(1) do %>
           <div class="track my-1 d-flex flex-wrap justify-content-between align-items-center">
@@ -50,16 +50,16 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
               <%= if (guess < 4) do %>
                 <i class={"bi bi-trophy-fill trophy-#{i}"}></i>
               <% else %>
-                #<%= i %>
+                #{i}
               <% end %>
             </div>
             <div class="p-3 ps-1 text-end">
-              <%= raw(
+              {raw(
                 dgettext("test", "Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>",
                   guess: guess,
                   nb_of_rounds: @test.nb_of_rounds
                 )
-              ) %>
+              )}
             </div>
 
             <div class="d-flex flex-grow-1 justify-content-end align-items-center">
@@ -68,26 +68,26 @@ defmodule FunkyABXWeb.TestResultAbxComponent do
                 class="p-3 flex-grow-1 text-sm-end text-start pe-5 small"
               >
                 <%= if @is_another_session == true do %>
-                  <%= dgettext("test", "Scored") %>
+                  {dgettext("test", "Scored")}
                 <% else %>
-                  <%= dgettext("test", "Your score!") %>
+                  {dgettext("test", "Your score!")}
                 <% end %>
               </div>
             </div>
             <div class="p-3 ps-0 text-end">
-              <%= dngettext("test", "%{count} time", "%{count} times", count) %>
+              {dngettext("test", "%{count} time", "%{count} times", count)}
             </div>
           </div>
         <% end %>
       </div>
       <div :if={Kernel.length(@test.tracks) == 2} class="text-white-50 small">
-        <i class="bi bi-info-circle"></i>&nbsp;&nbsp;<%= raw(
+        <i class="bi bi-info-circle"></i>&nbsp;&nbsp;{raw(
           dgettext(
             "test",
             "Minimum correct answers to be considered better than random guesses: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">source</a>)</small>",
             minimum: @minimum_correct
           )
-        ) %>
+        )}
       </div>
     </div>
     """

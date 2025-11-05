@@ -13,15 +13,15 @@ const TestResultsHook = {
     this.audio = null;
     this.ctrlPressed = false;
 
-    // ensure the visitor has not already taken the test, otherwise report to the LV
-    if (cookies.has(`${COOKIE_TEST_TAKEN}_${testId}`) === false
-      && cookies.get(`${COOKIE_TEST_TAKEN}_${testId}`) !== 'true'
-      && localStorage[`${testId}_taken`] === undefined
-      && localStorage.getItem(`${testId}_taken`) !== 'true') {
+    // ensure the visitor has already taken the test, otherwise report to the LV
+    if ((cookies.has(`${COOKIE_TEST_TAKEN}_${testId}`) === false
+      || cookies.get(`${COOKIE_TEST_TAKEN}_${testId}`) !== 'true')
+      && (localStorage.getItem(`${testId}_taken`) === null
+      || localStorage.getItem(`${testId}_taken`) !== 'true')) {
       this.pushEvent('test_not_taken', {});
     }
     // Send visitor test data to the result page
-    if (localStorage[testId] !== undefined) {
+    if (localStorage.getItem(testId) !== null) {
       const results = JSON.parse(localStorage.getItem(testId));
       this.pushEvent('results', results);
     }
@@ -32,8 +32,8 @@ const TestResultsHook = {
     }
 
     // note: not sure why ls has "_id" and not the cookie. Keeping it for retro-compatibility.
-    if (localStorage[`${testId}_taken_session_id`] !== undefined) {
-      this.pushEvent('session_id', localStorage[`${testId}_taken_session_id`]);
+    if (localStorage.getItem(`${testId}_taken_session_id`) !== null) {
+      this.pushEvent('session_id', localStorage.getItem(`${testId}_taken_session_id`));
     } else if (cookies.has(`${COOKIE_TEST_TAKEN}_${testId}_session`) === true) {
       this.pushEvent('session_id', cookies.get(`${COOKIE_TEST_TAKEN}_${testId}_session`));
     }
