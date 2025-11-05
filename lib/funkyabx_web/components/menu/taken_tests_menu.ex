@@ -18,20 +18,28 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        <%= dgettext("test", "Tests taken") %>
+        {dgettext("test", "Tests taken")}
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownTakenTestsMenuLink">
         <%= for test <- @tests do %>
           <li class="navbar-tests">
             <div class="d-flex w-100">
               <div class="px-3 flex-grow-1 text-truncate" style="width: 250px">
-                <%= link(test.title, to: ~p"/test/#{test.slug}") %>
+                <.link
+                  href={~p"/test/#{test.slug}"}
+                  class="text-base-content/80 hover:text-primary"
+                >
+                  {test.title}
+                </.link>
               </div>
               <div class="d-flex text-end navbar-tests-actions">
                 <div class="px-1">
-                  <%= link(dgettext("test", "results"),
-                    to: ~p"/results/#{test.slug}"
-                  ) %>
+                  <.link
+                    href={~p"/results/#{test.slug}"}
+                    class="text-base-content/80 hover:text-primary"
+                  >
+                    {dgettext("test", "results")}
+                  </.link>
                 </div>
               </div>
             </div>
@@ -39,7 +47,7 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
         <% end %>
 
         <li :if={length(@tests) == 0} class="navbar-tests px-2 text-center">
-          <small class="text-body-secondary"><%= dgettext("test", "No test taken (yet !)") %></small>
+          <small class="text-body-secondary">{dgettext("test", "No test taken (yet !)")}</small>
         </li>
       </ul>
     </li>

@@ -4,13 +4,14 @@ defmodule FunkyABX.MixProject do
   def project do
     [
       app: :funkyabx,
-      version: "0.4.0",
+      version: "0.54.0",
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: Mix.compilers() ++ [:phoenix_swagger],
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
+      listeners: [Phoenix.CodeReloader],
       releases: [
         prod: [
           include_executables_for: [:unix],
@@ -30,6 +31,12 @@ defmodule FunkyABX.MixProject do
     ]
   end
 
+  def cli do
+    [
+      preferred_envs: [precommit: :test]
+    ]
+  end
+
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
@@ -39,52 +46,54 @@ defmodule FunkyABX.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.7.21"},
-      {:phoenix_ecto, "~> 4.6"},
-      {:ecto_sql, "~> 3.12"},
+      {:bcrypt_elixir, "~> 3.0"},
+      {:phoenix, "~> 1.8.1"},
+      {:phoenix_ecto, "~> 4.5"},
+      {:ecto_sql, "~> 3.13"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 3.3"},
+      {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.20.0"},
-      {:phoenix_live_dashboard, "~> 0.8.0"},
-      #      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
-      #      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.19"},
-      {:finch, "~> 0.19"},
-      {:telemetry_metrics, "~> 0.6"},
+      {:phoenix_live_view, "~> 1.1.0"},
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:phoenix_live_dashboard, "~> 0.8.3"},
+      #      {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
+      #      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      #      {:heroicons,
+      #        github: "tailwindlabs/heroicons",
+      #        tag: "v2.2.0",
+      #        sparse: "optimized",
+      #        app: false,
+      #        compile: false,
+      #        depth: 1},
+      {:swoosh, "~> 1.16"},
+      {:req, "~> 0.5"},
+      {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.26"},
-      {:jason, "~> 1.4"},
-      {:ecto_autoslug_field, "~> 3.0"},
-      {:earmark, "~> 1.4.48"},
-      {:ex_aws, "~> 2.0"},
-      {:ex_aws_s3, "~> 2.0"},
-      {:auto_linker, "~> 1.0"},
-      {:hackney, "~> 1.20"},
-      {:sweet_xml, "~> 0.7.1"},
-      {:ex_cldr, "~> 2.42"},
-      {:ex_cldr_dates_times, "~> 2.22"},
-      {:ex_cldr_plugs, "~> 1.3.0"},
-      {:httpoison, "~> 1.8"},
-      {:remote_ip, "~> 1.0"},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:mock, "~> 0.3.0", only: :test},
-      # {:statistics, "~> 0.6.2"},
-      {:nebulex, "~> 2.6"},
-      {:decorator, "~> 1.4"},
-      {:mime, "~> 2.0"},
-      {:phoenix_swagger, "~> 0.8"},
-      {:ex_json_schema, "~> 0.11.1"},
-      {:mogrify, "~> 0.9.2"},
-      {:shortuuid, "~> 2.1"},
-      {:ex_machina, "~> 2.7.0", only: [:test]},
-      {:oban, "~> 2.13"},
-      {:tzdata, "~> 1.1"},
-      {:pbkdf2_elixir, "~> 2.0"},
-      {:floki, "~> 0.36.0"},
-      {:bandit, "~> 1.7"},
+      {:gettext, "~> 1.0"},
+      {:jason, "~> 1.2"},
+      {:dns_cluster, "~> 0.2.0"},
+      {:bandit, "~> 1.5"},
       {:mail, "~> 0.4"},
-      {:mua, "~> 0.2.0"}
+      {:mua, "~> 0.2.0"},
+      {:oban, "~> 2.19"},
+      {:mime, "~> 2.0"},
+      {:mogrify, "~> 0.9.3"},
+      {:ex_cldr, "~> 2.43"},
+      {:ex_cldr_dates_times, "~> 2.24"},
+      {:ex_cldr_plugs, "~> 1.3.0"},
+      {:remote_ip, "~> 1.0"},
+      {:earmark, "~> 1.4.48"},
+      {:ecto_autoslug_field, "~> 3.1"},
+      {:ex_aws, "~> 2.6"},
+      {:ex_aws_s3, "~> 2.5"},
+      {:auto_linker, "~> 1.0"},
+      {:shortuuid, "~> 4.0"},
+      {:tzdata, "~> 1.1"},
+      {:httpoison, "~> 2.0"},
+      {:pbkdf2_elixir, "~> 2.3"},
+      {:floki, ">= 0.30.0"},
+      {:phoenix_html_helpers, ">= 1.0.0"},
+      {:sweet_xml, "~> 0.7.5"}
     ]
   end
 
@@ -101,8 +110,12 @@ defmodule FunkyABX.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["esbuild.install --if-missing"],
-      "assets.build": ["esbuild default"],
-      "assets.deploy": ["cmd --cd assets node build.js --deploy", "phx.digest"]
+      "assets.build": ["compile", "esbuild funkyabx"],
+      "assets.deploy": [
+        "cmd --cd assets node build.js --deploy",
+        "phx.digest"
+      ],
+      precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
 end

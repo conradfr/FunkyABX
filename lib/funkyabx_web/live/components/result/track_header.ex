@@ -1,6 +1,6 @@
 defmodule TestResultTrackHeaderComponent do
   use Phoenix.Component
-  use Phoenix.HTML
+  import Phoenix.HTML
 
   alias Phoenix.LiveView.JS
   alias FunkyABX.{Test, Tracks}
@@ -49,16 +49,16 @@ defmodule TestResultTrackHeaderComponent do
       <%= if (@rank < 4) do %>
         <i class={"bi bi-trophy-fill trophy-#{@rank}"}></i>
       <% else %>
-        #<%= @rank %>
+        #{@rank}
       <% end %>
     </div>
     <div class="p-2 flex-grow-1 text-truncate cursor-link">
-      <%= @title %>
+      {@title}
       <span :if={@is_reference_track == false} class="text-body-secondary">
-        <%= track_index(@track_id, @tracks_order) |> raw() %>
+        {track_index(@track_id, @tracks_order) |> raw()}
       </span>
       <span :if={@is_reference_track == true} class="text-body-secondary">
-        <small> - Reference track</small>
+        <small> -   {Gettext.dgettext(FunkyABXWeb.Gettext, "test", "Reference track")}</small>
       </span>
     </div>
     """

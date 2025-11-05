@@ -7,7 +7,7 @@ import Track from './Track';
 import * as playerState from '../config/state';
 
 export default class {
-  constructor(tracks, rotateSeconds, rotate, loop, drawWaveform, ee, audioFiles) {
+  constructor(tracks, rotateSeconds, rotate, loop, volume, drawWaveform, ee, audioFiles) {
     this.ee = ee;
     this.audioFiles = audioFiles;
 
@@ -18,11 +18,13 @@ export default class {
     this.state = playerState.PLAYER_STOPPED;
     // this is more the actual state of the tracks
     this.playing = 0;
+    this.volume = volume;
 
     this.currentTrackIndex = 0;
     this.currentTime = 0;
     this.startTime = 0;
     this.maxDuration = 0;
+    this.maxDurationTrack = null;
 
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     this.ac = new AudioContext();
@@ -32,6 +34,8 @@ export default class {
     this.rotate = rotate;
     this.loop = loop;
     this.drawWaveform = drawWaveform;
+
+    this.startCueTime = null;
 
     const trackList = this.tracks;
 
@@ -101,9 +105,17 @@ export default class {
     });
 
     /* eslint-disable camelcase */
-    this.ee.on('waveform-click', (params) => {
+    this.ee.on('waveformClick', (params) => {
       const { track_hash, time } = params;
-      this.play(track_hash, time);
+      this.play(track_hash, time, true);
+    });
+
+    this.ee.on('setCueStartTime', async (params) => {
+      this.startCueTime = params;
+    });
+
+    this.ee.on('cueIsOver', async (params) => {
+      this.play(null, params || 0);
     });
 
     // ---------- LOAD ----------
@@ -124,17 +136,20 @@ export default class {
 
         this.tracks = audioBuffers.map((audioBuffer, index) => {
           /* eslint-disable max-len */
-          return new Track(trackList[index], this.drawWaveform, audioBuffer, this.ac, this.ee, this.state);
+          return new Track(trackList[index], this.drawWaveform, audioBuffer, this.volume, this.ac, this.ee, this.state);
         });
 
-        // const durations = this.tracks.map((trackObj) => trackObj.getDuration());
-
-        const maxDurationTrack = this.tracks.reduce(
+        this.maxDurationTrack = this.tracks.reduce(
           (acc, curr) => curr.getDuration() > acc.getDuration() ? curr : acc
         );
 
-        // maxDuration = Math.max(durations);
-        this.maxDuration = maxDurationTrack.getDuration();
+        /*
+          The player can't know when a cue end is reached
+          So we delegate that to the longest Track
+         */
+        this.maxDurationTrack.cueMaster = true;
+        this.maxDuration = this.maxDurationTrack.getDuration();
+
 
         /* eslint-disable no-param-reassign */
         this.tracks = this.tracks.map((trackObj) => {
@@ -162,7 +177,7 @@ export default class {
   getNextTrackIndex(from) {
     let nextTrackIndex = (from === undefined ? this.currentTrackIndex : from) + 1;
     if (nextTrackIndex >= this.tracks.length) {
-      nextTrackIndex = 0;
+      nextTrackIndex = this.tracks[0].src.reference_track === true ? 1 : 0;
     }
 
     return nextTrackIndex;
@@ -191,15 +206,19 @@ export default class {
 
   // ---------- COMMANDS ----------
 
-  play(track_hash, startTime) {
+  play(track_hash, startTime, resetRotate) {
     this.setState(playerState.PLAYER_PLAYING);
+    if (resetRotate) {
+      this.setRotate();
+    }
 
     if (track_hash !== undefined && track_hash !== null) {
       const askedTrackIndex = this.getTrackIndexFromHash(track_hash);
       if (askedTrackIndex !== undefined) {
+        // currently playing
         if (this.isPlaying() === true && (startTime === undefined || startTime === null)) {
           this.switchToTrack(askedTrackIndex, startTime);
-          this.setRotate();
+          // this.setRotate();
           return;
         }
         /* if (this.isPlaying() === true && (startTime !== undefined || startTime !== null)) {
@@ -222,7 +241,7 @@ export default class {
       }
 
       playoutPromises.push(
-        track.play(startTime)
+        track.play(startTime ?? this.startCueTime)
       );
     });
 
@@ -276,7 +295,11 @@ export default class {
 
   togglePlay(goBack) {
     if (this.state === playerState.PLAYER_PLAYING) {
-      goBack === true ? this.stop() : this.pause();
+      if (goBack) {
+        this.stop();
+      } else {
+        this.pause();
+      }
       return;
     }
 
@@ -303,8 +326,12 @@ export default class {
     let index = this.currentTrackIndex;
     do {
       nextTrackIndex = this.getNextTrackIndex(index);
+      if (nextTrackIndex === index) {
+        return;
+      }
       const nextTrack = this.tracks[nextTrackIndex];
 
+      // next track is too short
       if (this.startTime + nextTrack.getDuration() < this.currentTime) {
         index = nextTrackIndex;
         nextTrackIndex = null;
@@ -326,6 +353,7 @@ export default class {
       prevTrackIndex = this.getPrevTrackIndex(index);
       const prevTrack = this.tracks[prevTrackIndex];
 
+      // prev track is too short
       if (this.startTime + prevTrack.getDuration() < this.currentTime) {
         index = prevTrackIndex;
         prevTrackIndex = null;
@@ -340,7 +368,27 @@ export default class {
     this.setRotate();
   }
 
-  // ---------- INTERNAL----------
+  // ---------- VOLUME ----------
+
+  async setVolume(volume) {
+    this.volume = volume;
+    // we sync to tracks as they don't have access to the player
+    this.tracks.map(item => item.setVolume(volume));
+  }
+
+  // ---------- CUE ----------
+
+  async setStartCue() {
+    // we sync to tracks as they don't have access to the player
+    return await Promise.all(this.tracks.map(item => item.setStartCueTime()));
+  }
+
+  async setEndCue() {
+    // we sync to tracks as they don't have access to the player
+    return await Promise.all(this.tracks.map(item => item.setEndCueTime(this.tracks.length)));
+  }
+
+  // ---------- INTERNAL ----------
 
   switchToTrack(nextTrackIndex, goBack) {
     this.currentTrackIndex = nextTrackIndex;
@@ -374,16 +422,19 @@ export default class {
       setInterval(() => {
         let nextTrackIndex = null;
         let index = this.currentTrackIndex;
+
         do {
           nextTrackIndex = this.getNextTrackIndex(index);
           const nextTrack = this.tracks[nextTrackIndex];
 
+          // next track is too short
           if (this.startTime + nextTrack.getDuration() < this.currentTime) {
             index = nextTrackIndex;
             nextTrackIndex = null;
           }
         } while (nextTrackIndex === null && index !== this.currentTrackIndex);
 
+        // did not find a track to skip to (all others tracks too short?)
         if (nextTrackIndex === this.currentTrackIndex) {
           return;
         }

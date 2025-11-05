@@ -20,4 +20,14 @@ defmodule FunkyABX.Invitation do
 
     #    |> validate_format(:name_or_email, ~r/@/)
   end
+
+  def changeset_clicked(invitation, attrs \\ %{}) do
+    invitation
+    |> cast(attrs, [:clicked])
+  end
+
+  def changeset_test_taken(invitation, attrs \\ %{}) do
+    invitation
+    |> cast(attrs, [:test_taken])
+  end
 end

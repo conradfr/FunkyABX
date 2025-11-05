@@ -10,7 +10,7 @@ const TestHook = {
     // ensure the visitor has not already taken the test, otherwise report to the LV
     if ((cookies.has(`${COOKIE_TEST_TAKEN}_${testId}`)
         && cookies.get(`${COOKIE_TEST_TAKEN}_${testId}`) === 'true')
-      || (localStorage[`${testId}_taken`] !== undefined
+      || (localStorage.getItem(`${testId}_taken`) !== null
         && localStorage.getItem(`${testId}_taken`) === 'true')) {
       this.pushEvent('test_already_taken', {});
     }

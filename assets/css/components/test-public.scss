@@ -1,3 +1,7 @@
+.test-tracklist {
+  overflow-y: scroll;
+}
+
 .test-description, .test-tracklist-bg {
   background-color: $test-description-bg;
   border-radius: 5px;

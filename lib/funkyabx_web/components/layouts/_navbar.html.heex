@@ -1,0 +1,86 @@
+<nav class="navbar navbar-funkyabx navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">FunkyABX</a>
+    <img src={~p"/images/ukrainian_flag.svg"} alt="Peace" style="height:1rem; width:1rem" />
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div
+      class="offcanvas offcanvas-end"
+      tabindex="-1"
+      id="offcanvasNavbar"
+      aria-labelledby="offcanvasNavbarLabel"
+    >
+      <div class="offcanvas-header pe-4" style="border-bottom: 1px solid #444;">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+          {dgettext("site", "Menu")}
+        </h5>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        >
+        </button>
+      </div>
+      <div class="offcanvas-body pt-1">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/">{dgettext("site", "Home")}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href={~p"/test"}>{dgettext("site", "New test")}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href={~p"/local_test"}>
+              {dgettext("site", "New local test")}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href={~p"/gallery"}>{dgettext("site", "Gallery")}</a>
+          </li>
+          <FunkyABXWeb.UserTestsMenuComponent.display
+            conn={@conn}
+            current_user={Map.get(@current_scope || %{}, :user)}
+          />
+          <FunkyABXWeb.TakenTestsMenuComponent.display cookies={@conn.cookies} />
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {dgettext("site", "More")}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li>
+                <a class="dropdown-item" href={~p"/faq"}>{dgettext("site", "FAQ")}</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href={~p"/donate"}>
+                  {dgettext("site", "Support the site")}
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href={~p"/contact"}>
+                  {dgettext("site", "Contact")}
+                </a>
+              </li>
+            </ul>
+          </li>
+          <._user_menu {assigns} />
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

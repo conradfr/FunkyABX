@@ -13,7 +13,7 @@ defmodule BsModalComponent do
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title"><%= @title %></h5>
+            <h5 class="modal-title">{@title}</h5>
             <button
               type="button"
               class="btn-close"
@@ -23,7 +23,7 @@ defmodule BsModalComponent do
             </button>
           </div>
           <div class="modal-body">
-            <%= render_slot(@inner_block) %>
+            {render_slot(@inner_block)}
           </div>
           <div class="modal-footer">
             <button
@@ -31,7 +31,7 @@ defmodule BsModalComponent do
               class="btn btn-primary"
               phx-click={JS.dispatch("close_modal", to: "body")}
             >
-              <%= dgettext("site", "Close") %>
+              {dgettext("site", "Close")}
             </button>
           </div>
         </div>

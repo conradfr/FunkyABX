@@ -1,54 +1,67 @@
-<h3 class="header-chemyretro"><%= dgettext("site", "Contact") %></h3>
+<Layouts.app flash={@flash}>
+  <h2 class="header-chemyretro">{dgettext("site", "Contact")}</h2>
 
-<script src="https://www.google.com/recaptcha/api.js">
-</script>
+  <script src="https://www.google.com/recaptcha/api.js">
+  </script>
 
-<script>
-  function onSubmit(token) {
-    document.getElementById("form-contact").submit();
-  }
-</script>
+  <script>
+    function onSubmit(token) {
+      document.getElementById("form-contact").submit();
+    }
+  </script>
 
-<div class="row">
-  <div class="col-12 col-sm-6">
-    <%= form_for @changeset, ~p"/contact", [id: "form-contact"], fn f -> %>
-      <div class="mb-3">
-        <%= label(f, :name, dgettext("site", "Name*:"), class: "form-label") %>
-        <%= text_input(f, :name, required: true, class: "form-control") %>
-        <%= error_tag(f, :name) %>
-      </div>
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <.form
+        :let={f}
+        class="mb-2"
+        id="form-contact"
+        for={@changeset}
+        phx-submit={~p"/contact"}
+      >
+        <input
+          type="hidden"
+          name="_csrf_token"
+          value={get_csrf_token()}
+        />
+        <div class="mb-3">
+          {label(f, :name, dgettext("site", "Name*:"), class: "form-label")}
+          {text_input(f, :name, required: true, class: "form-control")}
+          {error_tag(f, :name)}
+        </div>
 
-      <div class="mb-3">
-        <%= label(f, :email, dgettext("site", "Email:"), class: "form-label") %>
-        <%= email_input(f, :email,
-          required: false,
-          class: "form-control",
-          placeholder: dgettext("site", "Optional")
-        ) %>
-        <%= error_tag(f, :email) %>
-      </div>
+        <div class="mb-3">
+          {label(f, :email, dgettext("site", "Email:"), class: "form-label")}
+          {email_input(f, :email,
+            required: false,
+            class: "form-control",
+            placeholder: dgettext("site", "Optional")
+          )}
+          {error_tag(f, :email)}
+        </div>
 
-      <div class="mb-3">
-        <%= label(f, :message, dgettext("site", "Message*:"), class: "form-label") %>
-        <%= textarea(f, :message,
-          required: true,
-          class: "form-control",
-          rows: "5",
-          placeholder: dgettext("site", "Comments, ideas, suggestions, bot spam...")
-        ) %>
-        <%= error_tag(f, :message) %>
-      </div>
+        <div class="mb-3">
+          {label(f, :message, dgettext("site", "Message*:"), class: "form-label")}
+          {textarea(f, :message,
+            required: true,
+            class: "form-control",
+            rows: "5",
+            placeholder: dgettext("site", "Comments, ideas, suggestions, bot spam...")
+          )}
+          {error_tag(f, :message)}
+        </div>
 
-      <div class="text-end">
-        <button
-          class="btn btn-secondary px-5 g-recaptcha"
-          data-sitekey={Application.fetch_env!(:funkyabx, :recaptcha_key)}
-          data-callback="onSubmit"
-          data-action="submit"
-        >
-          <%= dgettext("site", "Send") %>
-        </button>
-      </div>
-    <% end %>
+        <div class="text-end">
+          <button
+            class="btn btn-secondary px-5 g-recaptcha"
+            data-sitekey={Application.fetch_env!(:funkyabx, :recaptcha_key)}
+            data-callback="onSubmit"
+            data-action="submit"
+          >
+            {dgettext("site", "Send")}
+          </button>
+        </div>
+      </.form>
+    </div>
   </div>
-</div>
+</Layouts.app>

@@ -21,7 +21,7 @@ defmodule FunkyABXWeb do
 
   def router do
     quote do
-      use Phoenix.Router, helpers: true
+      use Phoenix.Router, helpers: false
 
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
@@ -38,12 +38,11 @@ defmodule FunkyABXWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller,
-        formats: [:html, :json],
-        layouts: [html: FunkyABXWeb.Layouts]
+      use Phoenix.Controller, formats: [:html, :json]
+
+      use Gettext, backend: FunkyABXWeb.Gettext
 
       import Plug.Conn
-       use Gettext, backend: FunkyABXWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -51,8 +50,7 @@ defmodule FunkyABXWeb do
 
   def live_view do
     quote do
-      use Phoenix.LiveView,
-        layout: {FunkyABXWeb.Layouts, :app}
+      use Phoenix.LiveView
 
       import FunkyABXWeb.DatesHelpers
       unquote(html_helpers())
@@ -82,18 +80,18 @@ defmodule FunkyABXWeb do
 
   defp html_helpers do
     quote do
+      # Translation
+      use Gettext, backend: FunkyABXWeb.Gettext
+
       # HTML escaping functionality
       import Phoenix.HTML
-      # Core UI components and translation
-      import FunkyABXWeb.CoreComponents
-       use Gettext, backend: FunkyABXWeb.Gettext
-
-      # because Phoenix hates us not using their CoreComponent / Tailscale bullshit
-      import Phoenix.HTML.{Link, Form, Format}
       import FunkyABXWeb.ErrorHelpers
+      # Core UI components
+      import FunkyABXWeb.CoreComponents
 
-      # Shortcut for generating JS commands
+      # Common modules used in templates
       alias Phoenix.LiveView.JS
+      alias FunkyABXWeb.Layouts
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
@@ -110,7 +108,7 @@ defmodule FunkyABXWeb do
   end
 
   @doc """
-  When used, dispatch to the appropriate controller/view/etc.
+  When used, dispatch to the appropriate controller/live_view/etc.
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])

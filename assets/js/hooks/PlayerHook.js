@@ -1,7 +1,12 @@
 import EventEmitter from 'eventemitter3';
 import cookies from '../utils/cookies';
 import Player from '../player/Player';
-import { COOKIE_TEST_WAVEFORM, COOKIE_TEST_ROTATE_SECONDS } from '../config/config';
+import noUiSlider from 'nouislider';
+import {
+  COOKIE_TEST_WAVEFORM,
+  COOKIE_TEST_ROTATE_SECONDS,
+  COOKIE_VOLUME
+} from '../config/config';
 
 let audioFiles = null;
 
@@ -23,6 +28,7 @@ const PlayerHook = {
         parseInt(this.el.dataset.rotateSeconds, 10) * 1000,
         this.el.dataset.rotate === 'true',
         this.el.dataset.loop === 'true',
+        cookies.get(COOKIE_VOLUME, 1),
         this.el.dataset.waveform === 'true'
         && cookies.get(COOKIE_TEST_WAVEFORM, false) !== 'false',
         this.ee,
@@ -35,6 +41,24 @@ const PlayerHook = {
     }
 
     this.player = loadPlayer(this.el.dataset.tracks);
+
+    const slider = document.getElementById('volume-slider');
+    noUiSlider.create(slider, {
+      start: cookies.get(COOKIE_VOLUME, 1) * 100,
+      connect: 'lower',
+      range: {
+        'min': 0,
+        'max': 100
+      }
+    });
+
+    slider.noUiSlider.on('set.one', (e) => {
+      const volume = (e[0] / 100).toFixed(2);
+      cookies.set(COOKIE_VOLUME, volume);
+      if (this.player) {
+        this.player.setVolume(volume);
+      }
+    });
 
     // ---------- JS EVENTS ----------
 
@@ -124,12 +148,32 @@ const PlayerHook = {
       }
     };
 
+    // NOTE we use cue instead of loop in the project to avoid naming confusion with the player loop option
+
+    this.startCue = async (event) => {
+      if (this.player === null || this.player === undefined) {
+        return;
+      }
+
+      await this.player.setStartCue();
+    };
+
+    this.endCue = async (event) => {
+      if (this.player === null || this.player === undefined) {
+        return;
+      }
+
+      await this.player.setEndCue();
+    };
+
     window.addEventListener('play', this.play, false);
     window.addEventListener('stop', this.stop, false);
     window.addEventListener('pause', this.pause, false);
     window.addEventListener('back', this.back, false);
     window.addEventListener('keyup', this.keyup, false);
     window.addEventListener('keydown', this.keydown, false);
+    window.addEventListener('start_cue', this.startCue, false);
+    window.addEventListener('end_cue', this.endCue, false);
 
     // push events from other components
     this.ee.on('push_event', (params) => {
@@ -166,7 +210,7 @@ const PlayerHook = {
       this.pushEventTo(this.el, 'stopping');
       this.player = null;
 
-      this.ee.removeAllListeners('waveform-click');
+      this.ee.removeAllListeners('waveformClick');
       this.ee.removeAllListeners('playing');
       this.ee.removeAllListeners('stopping');
       this.ee.removeAllListeners('player_state');
@@ -192,6 +236,8 @@ const PlayerHook = {
     window.removeEventListener('back', this.back, false);
     window.removeEventListener('keyup', this.keyup, false);
     window.removeEventListener('keydown', this.keydown, false);
+    window.removeEventListener('start_cue', this.startCue, false);
+    window.removeEventListener('end_cue', this.endCue, false);
   }
   /* updated() {
     console.log("editor update...")

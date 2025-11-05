@@ -33,14 +33,14 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
     <div>
       <div class="d-flex flex-row align-items-end">
         <div class="me-auto">
-          <h4 class="mt-3 header-neon"><%= dgettext("test", "Identification") %></h4>
+          <h4 class="mt-3 header-neon">{dgettext("test", "Identification")}</h4>
           <div :if={@visitor_identification_score != nil} class="mb-3">
-            <%= raw(
+            {raw(
               dgettext("test", "Your score: <strong>%{score}/%{count}</strong>",
                 score: Kernel.elem(@visitor_identification_score, 0),
                 count: length(@identifications)
               )
-            ) %>
+            )}
             <i
               :if={Kernel.elem(@visitor_identification_score, 0) == length(@identifications)}
               class="bi bi-hand-thumbs-up"
@@ -58,7 +58,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
               phx-click="toggle_detail"
               phx-target={@myself}
             >
-              <%= dgettext("test", "View details") %>&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+              {dgettext("test", "View details")}&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
             </span>
           <% else %>
             <span
@@ -66,7 +66,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
               phx-click="toggle_detail"
               phx-target={@myself}
             >
-              <%= dgettext("test", "Hide details") %>&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+              {dgettext("test", "Hide details")}&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
             </span>
           <% end %>
         </div>
@@ -74,7 +74,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
 
       <div class="tracks track-results mb-2 results">
         <div :if={Kernel.length(@identifications) == 0} class="alert alert-info alert-thin">
-          <%= dgettext("test", "No tracks guesses ... yet!") %>
+          {dgettext("test", "No tracks guesses ... yet!")}
         </div>
         <%= for {identification, i} <- @identifications |> Enum.with_index(1) do %>
           <div class={["track", "my-1", "d-flex", "flex-wrap", "align-items-center", i > 1 && "mt-4"]}>
@@ -92,24 +92,24 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                 <%= if identification.track_id == @visitor_identified[identification.track_id] do %>
                   <i class="bi bi-check color-correct"></i>&nbsp;
                   <%= if @is_another_session == true do %>
-                    <%= dgettext("test", "This track was identified correctly") %>
+                    {dgettext("test", "This track was identified correctly")}
                   <% else %>
-                    <%= dgettext("test", "You identified this track correctly!") %>
+                    {dgettext("test", "You identified this track correctly!")}
                   <% end %>
                 <% else %>
                   <i class="bi bi-x color-incorrect"></i>&nbsp;
                   <%= if @is_another_session == true do %>
-                    <%= dgettext("test", "This track was identified as") %>
+                    {dgettext("test", "This track was identified as")}
                   <% else %>
-                    <%= dgettext("test", "You identified this track as") %>
-                  <% end %>&nbsp;<%= Tracks.find_track(
+                    {dgettext("test", "You identified this track as")}
+                  <% end %>&nbsp;{Tracks.find_track(
                     @visitor_identified[identification.track_id],
                     @test.tracks
-                  ).title %>
+                  ).title}
                 <% end %>
               <% else %>
                 <small :if={i == 1 and @is_another_session == false} class="text-body-secondary">
-                  <%= dgettext("test", "You did not participate in this test") %>
+                  {dgettext("test", "You did not participate in this test")}
                 </small>
               <% end %>
             </div>
@@ -130,13 +130,13 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                       identification.track_id != guess["track_guessed_id"] && "bi-x" &&
                         "color-incorrect"
                     ]}>
-                    </i> <%= guess["title"] %>
+                    </i> {guess["title"]}
                   </div>
                   <div class="p-1 ps-0 text-end text-body-secondary">
-                    <small><%= dgettext("test", "at") %></small>
+                    <small>{dgettext("test", "at")}</small>
                   </div>
                   <div class="p-2 ps-0 text-end">
-                    <%= percent_of(guess["count"], identification.total_guess) %>%
+                    {percent_of(guess["count"], identification.total_guess)}%
                   </div>
                 </div>
               <% else %>
@@ -156,13 +156,13 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                       identification.track_id != guess["track_guessed_id"] && "bi-x" &&
                         "color-incorrect"
                     ]}>
-                    </i><%= guess["title"] %>
+                    </i>{guess["title"]}
                   </div>
                   <div class="p-1 ps-0 text-end text-body-secondary">
-                    <small><%= dgettext("test", "at") %></small>
+                    <small>{dgettext("test", "at")}</small>
                   </div>
                   <div class="p-2 ps-0 text-end">
-                    <%= percent_of(guess["count"], identification.total_guess) %>%
+                    {percent_of(guess["count"], identification.total_guess)}%
                   </div>
                 </div>
               <% end %>

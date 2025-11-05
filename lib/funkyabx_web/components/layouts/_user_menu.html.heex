@@ -3,7 +3,7 @@
     class={[
       "nav-link",
       "dropdown-toggle",
-      @current_user && "funkyabx-connected"
+      @current_scope && @current_scope.user && "funkyabx-connected"
     ]}
     href="#"
     id="navbarDropdownUserMenuLink"
@@ -11,30 +11,47 @@
     data-bs-toggle="dropdown"
     aria-expanded="false"
   >
-    <i class="bi bi-person-circle"></i>&nbsp;&nbsp;<%= dgettext("user", "User") %>
+    <span :if={@current_scope}>
+      <i class="bi bi-person-circle"></i>&nbsp;&nbsp;{@current_scope.user.email}
+    </span>
+    <span :if={!@current_scope}>
+      <i class="bi bi-person-circle"></i>&nbsp;&nbsp;{dgettext("user", "User")}
+    </span>
   </a>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUserMenuLink">
-    <%= if @current_user do %>
-      <li class="px-3 mb-2"><%= @current_user.email %></li>
-      <li><hr class="dropdown-divider" style="background-color: white;" /></li>
+    <%= if @current_scope do %>
       <li>
-        <%= link(dgettext("user", "Settings"), to: ~p"/users/settings", class: "dropdown-item") %>
-      </li>
-      <li class="visually-hidden">
-        <%= link(dgettext("user", "Api keys"),
-          to: ~p"/users/settings/api_key",
-          class: "dropdown-item"
-        ) %>
+        <.link
+          href={~p"/users/settings"}
+          class="dropdown-item"
+        >
+          {dgettext("user", "Settings")}
+        </.link>
       </li>
       <li>
-        <%= link(dgettext("user", "Log out"), to: ~p"/users/log_out", class: "dropdown-item") %>
+        <.link
+          href={~p"/users/log-out"}
+          class="dropdown-item"
+        >
+          {dgettext("user", "Log out")}
+        </.link>
       </li>
     <% else %>
       <li>
-        <%= link(dgettext("user", "Register"), to: ~p"/users/register", class: "dropdown-item") %>
+        <.link
+          href={~p"/users/register"}
+          class="dropdown-item"
+        >
+          {dgettext("user", "Register")}
+        </.link>
       </li>
       <li>
-        <%= link(dgettext("user", "Log in"), to: ~p"/users/log_in", class: "dropdown-item") %>
+        <.link
+          href={~p"/users/log-in"}
+          class="dropdown-item"
+        >
+          {dgettext("user", "Log in")}
+        </.link>
       </li>
     <% end %>
   </ul>

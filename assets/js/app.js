@@ -1,12 +1,8 @@
-/* eslint-env browser */
-
-// We import the CSS which is extracted to its own file by esbuild.
-// Remove this line if you add a your own CSS build pipeline (e.g postcss).
-import '../css/app.scss';
-
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
 // import "./user_socket.js"
+
+import '../css/app.scss';
 
 // You can include dependencies in two ways.
 //
@@ -20,83 +16,37 @@ import '../css/app.scss';
 //
 //     import "some-package"
 //
+// If you have dependencies that try to import CSS, esbuild will generate a separate `app.css` file.
+// To load it, simply add a second `<link>` to your `root.html.heex` file.
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
-import "phoenix_html";
+import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import { Socket } from "phoenix";
-import { LiveSocket } from "phoenix_live_view";
-import topbar from "../vendor/topbar";
+import {Socket} from "phoenix"
+import {LiveSocket} from "phoenix_live_view"
+// import {hooks as colocatedHooks} from "phoenix-colocated/funkyabx"
+import topbar from "../vendor/topbar"
 
-// ---------- TEMP ----------
-// adapted from ChatGPT
-
-import { COOKIE_TTL } from './config/config';
-
-let cookies = document.cookie.split(';');
-let renamed = false;
-
-for (let i = 0; i < cookies.length; i++) {
-  let cookie = cookies[i];
-  let eqPos = cookie.indexOf('=');
-  let name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
-
-  let newName = '';
-  let value = '';
-
-  if (name.startsWith('funkyabx_test_')) {
-    newName = name.substring('funkyabx_test_'.length);
-    value = eqPos > -1 ? cookie.substr(eqPos + 1) : '';
-
-    if (!newName.endsWith('_tracks_order')) {
-      document.cookie = newName + "=" + value + `;expires=${COOKIE_TTL};path=/`;
-    }
-
-    // Delete the old cookie
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
-
-    renamed = true;
-  } else if (name.startsWith('funkyabx_')) {
-    newName = name.substring('funkyabx_'.length);
-    value = eqPos > -1 ? cookie.substr(eqPos + 1) : "";
-    document.cookie = newName + "=" + value + ";path=/";
-
-    // Delete the old cookie
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
-
-    renamed = true;
-  } else if (name.endsWith('_tracks_order')) {
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
-  }
-}
-
-if (renamed === true) {
-  location.reload();
-}
-
-// ---------- END TEMP ----------
-
-// App hooks
-import BsToastHook from './hooks/BsToastHook';
-import BsModalHook from './hooks/BsModalHook';
-import GlobalHook from './hooks/GlobalHook';
-import TestHook from './hooks/TestHook';
-import LocalTestFormHook from './hooks/LocalTestFormHook';
-import TestFormHook from './hooks/TestFormHook';
-import TestResultsHook from './hooks/TestResultsHook';
-import PlayerHook from './hooks/PlayerHook';
+import GlobalHook from './hooks/GlobalHook'
+import AutoDismissFlash from './hooks/AutoDismissFlashHook'
+import BsModalHook from './hooks/BsModalHook'
+import TestHook from './hooks/TestHook'
+import LocalTestFormHook from './hooks/LocalTestFormHook'
+import TestFormHook from './hooks/TestFormHook'
+import TestResultsHook from './hooks/TestResultsHook'
+import PlayerHook from './hooks/PlayerHook'
 
 const audioFiles = {};
-const Hooks = {};
+const Hooks = {}
 
-Hooks.BsToast = BsToastHook;
-Hooks.BsModal = BsModalHook;
-Hooks.Global = GlobalHook;
-Hooks.Test = TestHook;
-Hooks.LocalTestForm = LocalTestFormHook;
-Hooks.TestForm = TestFormHook;
-Hooks.TestResults = TestResultsHook;
-Hooks.Player = PlayerHook;
+Hooks.Global = GlobalHook
+Hooks.AutoDismissFlash = AutoDismissFlash
+Hooks.BsModal = BsModalHook
+Hooks.Test = TestHook
+Hooks.LocalTestForm = LocalTestFormHook
+Hooks.TestForm = TestFormHook
+Hooks.TestResults = TestResultsHook
+Hooks.Player = PlayerHook
 
 /*
   Audio files need to be global as some browser needs them to come from user action
@@ -106,28 +56,64 @@ Hooks.Player.setAudioFiles(audioFiles);
 Hooks.LocalTestForm.setAudioFiles(audioFiles);
 Hooks.TestResults.setAudioFiles(audioFiles);
 
-const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content')
-const liveSocket = new LiveSocket('/live', Socket, {
-  hooks: Hooks,
+const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+const liveSocket = new LiveSocket("/live", Socket, {
+  longPollFallbackMs: 2500,
   params: {
     _csrf_token: csrfToken,
-    page_id: Math?.floor(Math.random() * 100000000000000000000),
     locale: Intl.NumberFormat().resolvedOptions().locale,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-  }
-});
+  },
+  // hooks: {...colocatedHooks, ...Hooks},
+  hooks: Hooks,
+})
 
 // Show progress bar on live navigation and form submits
-topbar.config({ barColors: {0: '#29d'}, shadowColor: 'rgba(0, 0, 0, .3)' });
-window.addEventListener('phx:page-loading-start', _info => topbar.show(300));
-window.addEventListener('phx:page-loading-stop', _info => topbar.hide());
+topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
+window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
+window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
 // connect if there are any LiveViews on the page
-liveSocket.connect();
+liveSocket.connect()
 
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+// The lines below enable quality of life phoenix_live_reload
+// development features:
+//
+//     1. stream server logs to the browser console
+//     2. click on elements to jump to their definitions in your code editor
+//
+if (process.env.NODE_ENV === "development") {
+  window.addEventListener("phx:live_reload:attached", ({detail: reloader}) => {
+    // Enable server log streaming to client.
+    // Disable with reloader.disableServerLogs()
+    reloader.enableServerLogs()
+
+    // Open configured PLUG_EDITOR at file:line of the clicked element's HEEx component
+    //
+    //   * click with "c" key pressed to open at caller location
+    //   * click with "d" key pressed to open at function component definition location
+    let keyDown
+    window.addEventListener("keydown", e => keyDown = e.key)
+    window.addEventListener("keyup", e => keyDown = null)
+    window.addEventListener("click", e => {
+      if(keyDown === "c"){
+        e.preventDefault()
+        e.stopImmediatePropagation()
+        reloader.openEditorAtCaller(e.target)
+      } else if(keyDown === "d"){
+        e.preventDefault()
+        e.stopImmediatePropagation()
+        reloader.openEditorAtDef(e.target)
+      }
+    }, true)
+
+    window.liveReloader = reloader
+  })
+}
 

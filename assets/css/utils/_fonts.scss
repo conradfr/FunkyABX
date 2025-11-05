@@ -1,4 +1,4 @@
-
+// logo
 @font-face {
   font-family: barqish;
   font-style: normal;
@@ -16,6 +16,22 @@
   font-weight: 400;
   font-display: swap;
   src: url('/assets/fonts/TypoGraphica.otf') format('opentype');
+}
+
+@font-face {
+  font-family: funky-regular;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/Brigast-Yzooy.otf') format('opentype');
+}
+
+@font-face {
+  font-family: funky-simple;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/funky.regular.otf') format('opentype');
 }
 
 @font-face {

@@ -29,9 +29,15 @@ const LocalTestFormHook = {
     });
 
     this.handleEvent('revalidate', () => {
-      document.getElementById('test-form_type_regular').dispatchEvent(
-        new Event("input", {bubbles: true})
-      )
+      // timeout helps when multiple files selected
+      setTimeout(() => {
+        const elem = document.getElementById('test-form_type_regular');
+        if (elem) {
+          elem.dispatchEvent(
+            new Event('input', {bubbles: true})
+          )
+        }
+      }, 500);
     });
 
     // ---------- DRAG & DROP ----------
@@ -70,14 +76,21 @@ const LocalTestFormHook = {
         multiple: true,
       });
 
-      files.forEach(async file => {
+      let counter = 0;
+      for (const file of files) {
         if (isAllowedExt(file.name)) {
           const id = self.crypto.randomUUID();
           audioFiles[id] = file;
-
+          counter++;
           this.pushEvent('track_added', { id: id, filename: file.name });
         }
-      });
+      }
+
+      setTimeout(() => {
+        document.getElementById('test-form_type_regular').dispatchEvent(
+          new Event('input', {bubbles: true})
+        )
+      }, counter * 500);
     };
 
     this.fileButton.addEventListener('click', this.fileClick, false);
@@ -89,14 +102,21 @@ const LocalTestFormHook = {
     this.folderClick = async () => {
       const folder = await directoryOpen();
 
-      folder.forEach(async file => {
+      let counter = 0;
+      for (const file of folder) {
         if (isAllowedExt(file.name)) {
           const id = self.crypto.randomUUID();
           audioFiles[id] = file;
-
+          counter++;
           this.pushEvent('track_added', { id: id, filename: file.name });
         }
-      });
+      }
+
+      setTimeout(() => {
+        document.getElementById('test-form_type_regular').dispatchEvent(
+          new Event('input', {bubbles: true})
+        )
+      }, counter * 35);
     };
 
     this.folderButton.addEventListener('click', this.folderClick, false);

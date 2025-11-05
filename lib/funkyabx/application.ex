@@ -8,22 +8,17 @@ defmodule FunkyABX.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      FunkyABX.Cache,
-      # Start the Telemetry supervisor
       FunkyABXWeb.Telemetry,
-      {Registry, [keys: :unique, name: FunkyABXRegistry]},
-      # Start the Ecto repository
       FunkyABX.Repo,
-      # Start the PubSub system
+      {DNSCluster, query: Application.get_env(:funkyabx, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: FunkyABX.PubSub},
-      # Start Finch
+      # Start a worker by calling: FunkyABX.Worker.start_link(arg)
+      # {FunkyABX.Worker, arg},
       {Finch, name: FunkyABX.Finch},
       {Task.Supervisor, name: FunkyABX.TaskSupervisor},
       {Oban, Application.fetch_env!(:funkyabx, Oban)},
-      # Start the Endpoint (http/https)
+      # Start to serve requests, typically the last entry
       FunkyABXWeb.Endpoint
-      # Start a worker by calling: FunkyABX.Worker.start_link(arg)
-      # {FunkyABX.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

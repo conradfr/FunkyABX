@@ -1,36 +1,24 @@
 defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2, dynamic: 2, limit: 3]
   import Ecto.Changeset, only: [get_field: 2]
-  use Nebulex.Caching
 
   alias Ecto.UUID
   alias Ecto.Changeset
   alias FunkyABX.Repo
-  alias FunkyABX.{Cache, Test, Stats}
+  alias FunkyABX.{Test, Stats}
   alias FunkyABX.{PickDetails, StarDetails, RankDetails, IdentificationDetails, AbxDetails}
-  alias FunkyABX.Accounts.User
 
   @min_test_created_minutes 15
-
-  @cache_test_ttl :timer.minutes(15)
-  @cache_tests_ttl :timer.minutes(5)
-  @cache_user_ttl :timer.minutes(5)
-  @cache_gallery_ttl :timer.minutes(5)
-  @cache_gallery_home_ttl :timer.minutes(1)
-  @cache_gallery_key "gallery"
-  @cache_gallery_key "gallery_home"
-
   @demo_slugs ["demo", "abx-demo"]
+  @default_gallery_pagination 14
 
   # ---------- GET ----------
 
-  @decorate cacheable(cache: Cache, key: {Test, id}, opts: [ttl: @cache_test_ttl])
   def get(id) when is_binary(id) do
     Repo.get(Test, id)
     |> Repo.preload([:tracks, :user, :invitations])
   end
 
-  @decorate cacheable(cache: Cache, key: {Test, slug}, opts: [ttl: @cache_test_ttl])
   def get_by_slug(slug) when is_binary(slug) do
     Repo.get_by(Test, slug: slug)
     |> Repo.preload([:tracks, :user, :invitations])
@@ -42,8 +30,6 @@ defmodule FunkyABX.Tests do
     |> Repo.preload([:tracks, :user, :invitations], force: true)
   end
 
-  # todo also use limit as key
-  @decorate cacheable(cache: Cache, key: "user_test_#{user.id}", opts: [ttl: @cache_user_ttl])
   def get_of_user(user, limit) do
     query =
       from(t in Test,
@@ -56,14 +42,17 @@ defmodule FunkyABX.Tests do
     Repo.all(query)
   end
 
-  @decorate cacheable(cache: Cache, key: @cache_gallery_key, opts: [ttl: @cache_gallery_ttl])
-  def get_for_gallery() do
+  def get_for_gallery(type \\ :regular, page \\ 1, how_many \\ @default_gallery_pagination)
+      when is_atom(type) and is_number(page) and is_number(how_many) do
     query =
       from t in Test,
         where:
-          t.public == true and is_nil(t.deleted_at) and
+          t.type == ^type and
+            t.public == true and is_nil(t.deleted_at) and
             t.inserted_at < ago(@min_test_created_minutes, "minute"),
         order_by: [desc: t.inserted_at],
+        limit: ^how_many,
+        offset: ^((page - 1) * @default_gallery_pagination),
         select: t,
         preload: [tracks: :test]
 
@@ -76,11 +65,20 @@ defmodule FunkyABX.Tests do
     end)
   end
 
-  @decorate cacheable(
-              cache: Cache,
-              key: [@cache_gallery_home_ttl, number],
-              opts: [ttl: @cache_gallery_home_ttl]
-            )
+  def pages_for_gallery(type \\ :regular) when is_atom(type) do
+    query =
+      from t in Test,
+        where:
+          t.type == ^type and
+            t.public == true and is_nil(t.deleted_at) and
+            t.inserted_at < ago(@min_test_created_minutes, "minute"),
+        select: count()
+
+    query
+    |> Repo.one()
+    |> then(&div(&1 + @default_gallery_pagination - 1, @default_gallery_pagination))
+  end
+
   def get_random(number \\ 3) do
     query =
       from t in Test,
@@ -122,12 +120,6 @@ defmodule FunkyABX.Tests do
     Repo.one(query)
   end
 
-  # todo also use limit as key
-  @decorate cacheable(
-              cache: Cache,
-              key: "tests_list_#{:crypto.hash(:sha256, test_ids)}",
-              opts: [ttl: @cache_tests_ttl]
-            )
   def get_tests_from_ids(test_ids, limit \\ nil) do
     query =
       from(t in Test,
@@ -146,12 +138,6 @@ defmodule FunkyABX.Tests do
     Repo.all(query)
   end
 
-  # todo also use limit as key
-  @decorate cacheable(
-              cache: Cache,
-              key: "tests_access_list_#{:crypto.hash(:sha256, test_ids ++ access_key_ids)}",
-              opts: [ttl: @cache_tests_ttl]
-            )
   def get_tests_from_ids_and_access_key_ids(test_ids, access_key_ids, limit \\ nil) do
     query =
       from(t in Test,
@@ -168,21 +154,6 @@ defmodule FunkyABX.Tests do
       end
 
     Repo.all(query)
-  end
-
-  # ---------- CACHE ----------
-
-  def clean_get_test_cache(%Test{} = test) do
-    Cache.delete({Test, test.id})
-    Cache.delete({Test, test.slug})
-
-    if test.public == true do
-      Cache.delete(@cache_gallery_key)
-    end
-  end
-
-  def clean_get_user_cache(%User{} = user) do
-    Cache.delete("user_test_#{user.id}")
   end
 
   # ---------- BUILD ----------
@@ -312,11 +283,11 @@ defmodule FunkyABX.Tests do
   def form_data_from_params(data, params) do
     %{
       identification:
-        Map.get(params, "identification", false) || Map.get(data, "identification", false),
-      rating: Map.get(params, "rating") || Map.get(data, "rating", true),
-      regular_type: Map.get(params, "regular_type") || Map.get(data, "regular_type", :pick),
+        Map.get(params, "identification", false) || Map.get(data, :identification, false),
+      rating: Map.get(params, "rating") || Map.get(data, :rating, true),
+      regular_type: Map.get(params, "regular_type") || Map.get(data, :regular_type, :pick),
       tracks: data["tracks"],
-      type: Map.get(params, "type") || Map.get(data, "type", :regular)
+      type: Map.get(params, "type") || Map.get(data, :type, :regular)
     }
   end
 

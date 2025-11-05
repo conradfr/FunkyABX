@@ -1,0 +1,32 @@
+@import 'nouislider/dist/nouislider.css';
+
+#volume-slider {
+  height: 7px;
+  border: none;
+  width: 5.313rem;
+}
+
+#volume-slider .noUi-connect {
+  background: $secondary;
+}
+
+#volume-slider .noUi-handle::before, #volume-slider .noUi-handle::after {
+  content: none;
+}
+
+#volume-slider .noUi-handle {
+  box-shadow: none;
+  border: none;
+  height: 14px;
+  width: 14px;
+  top: -4px;
+  right: -7px; /* half the width */
+  border-radius: 9px;
+  background: lighten($secondary, 10%);
+}
+
+#volume-slider.noUi-target, .noUi-target {
+  background-color: lighten($secondary, 70%) !important;
+  box-shadow: none !important;
+  border: none;
+}

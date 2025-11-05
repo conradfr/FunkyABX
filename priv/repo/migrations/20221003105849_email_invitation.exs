@@ -18,10 +18,5 @@ defmodule FunkyABX.Repo.Migrations.Invitation do
       add :user_id, references("users", on_delete: :delete_all)
       timestamps()
     end
-
-    create table("email_blacklist", primary_key: false) do
-      add :email, :string, primary_key: true, null: false
-      timestamps()
-    end
   end
 end
