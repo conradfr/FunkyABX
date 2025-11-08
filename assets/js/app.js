@@ -35,6 +35,7 @@ import LocalTestFormHook from './hooks/LocalTestFormHook'
 import TestFormHook from './hooks/TestFormHook'
 import TestResultsHook from './hooks/TestResultsHook'
 import PlayerHook from './hooks/PlayerHook'
+import OutputSelectorHook from './hooks/OutputSelectorHook'
 
 const audioFiles = {};
 const Hooks = {}
@@ -47,6 +48,7 @@ Hooks.LocalTestForm = LocalTestFormHook
 Hooks.TestForm = TestFormHook
 Hooks.TestResults = TestResultsHook
 Hooks.Player = PlayerHook
+Hooks.OutputSelector = OutputSelectorHook
 
 /*
   Audio files need to be global as some browser needs them to come from user action

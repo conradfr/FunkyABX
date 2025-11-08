@@ -1,6 +1,9 @@
 /* eslint-env browser */
 
-import { COOKIE_TEST_WAVEFORM } from '../config/config';
+import {
+  COOKIE_TEST_WAVEFORM,
+  COOKIE_DEVICE
+} from '../config/config';
 import cookies from '../utils/cookies';
 import LoaderFactory from './loader/LoaderFactory';
 import Track from './Track';
@@ -386,6 +389,17 @@ export default class {
   async setEndCue() {
     // we sync to tracks as they don't have access to the player
     return await Promise.all(this.tracks.map(item => item.setEndCueTime(this.tracks.length)));
+  }
+
+  // ---------- OUTPUT DEVICE ----------
+
+  setOutputDevice(deviceId) {
+    this.ac.setSinkId(deviceId);
+    /*
+    cookies.set(COOKIE_DEVICE_SAVE, true);
+    cookies.set(COOKIE_DEVICE, deviceId);
+    */
+    sessionStorage.setItem(COOKIE_DEVICE, deviceId);
   }
 
   // ---------- INTERNAL ----------

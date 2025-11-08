@@ -293,7 +293,7 @@ defmodule FunkyABXWeb.TestLive do
        test_closed: false,
        rotate_init: true,
        loop_init: true,
-       embed: nil,
+       embed: nil
      })
      |> push_event("set_warning_local_test_reload", %{set: true})}
   end

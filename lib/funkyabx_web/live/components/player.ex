@@ -109,6 +109,11 @@ defmodule FunkyABXWeb.PlayerComponent do
                 </small>
               </div>
             <% end %>
+            <.live_component
+              :if={@output_selector_available}
+              id="output-selector-comp"
+              module={OutputSelectorComponent}
+            />
             <div id="volume-slider-wrapper" phx-update="ignore" class="d-none d-sm-block ms-3">
               <div id="volume-slider"></div>
             </div>
@@ -339,7 +344,8 @@ defmodule FunkyABXWeb.PlayerComponent do
        rotate_seconds: 5,
        playing: false,
        playingTime: 0,
-       played: false
+       played: false,
+       output_selector_available: false
      })}
   end
 
@@ -514,9 +520,26 @@ defmodule FunkyABXWeb.PlayerComponent do
     loop = Map.has_key?(player_params, "inputLoopCheckbox")
 
     {:noreply,
-      socket
-      |> assign(loop: loop)
-      |> push_event("loop", %{loop: loop})}
+     socket
+     |> assign(loop: loop)
+     |> push_event("loop", %{loop: loop})}
+  end
+
+  # because of the <form> tag output selection is send to the player component instead of the output selector.
+  # so we relay it here as workaround
+  @impl true
+  def handle_event(
+        "change_player_settings",
+        %{"_target" => ["output-select"], "output-select" => device_id} = _player_params,
+        socket
+      ) do
+    send_update(OutputSelectorComponent, id: "output-selector-comp", selected_device: device_id)
+    {:noreply, push_event(socket, "output_device_selected", %{device_id: device_id})}
+  end
+
+  @impl true
+  def handle_event("output_selector_detected", _params, socket) do
+    {:noreply, assign(socket, output_selector_available: true)}
   end
 
   # ---------- UI ----------
