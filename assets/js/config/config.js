@@ -18,6 +18,7 @@ export const COOKIE_TEST_ROTATE_SECONDS = 'rotate_seconds';
 export const COOKIE_TEST_ROTATE = 'rotate';
 export const COOKIE_TEST_WAVEFORM = 'waveform';
 export const COOKIE_VOLUME = 'test-volume';
+export const COOKIE_DEVICE = 'player-device';
 
 // ---------- CUE ----------
 

@@ -58,7 +58,7 @@ defmodule TestResultTrackHeaderComponent do
         {track_index(@track_id, @tracks_order) |> raw()}
       </span>
       <span :if={@is_reference_track == true} class="text-body-secondary">
-        <small> -   {Gettext.dgettext(FunkyABXWeb.Gettext, "test", "Reference track")}</small>
+        <small> -    {Gettext.dgettext(FunkyABXWeb.Gettext, "test", "Reference track")}</small>
       </span>
     </div>
     """

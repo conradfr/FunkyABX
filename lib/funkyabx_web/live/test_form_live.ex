@@ -113,7 +113,12 @@ defmodule FunkyABXWeb.TestFormLive do
                         <i
                           class="bi bi-info-circle text-body-secondary ms-2"
                           data-bs-toggle="tooltip"
-                          title={dgettext("site", "Use rotate=0 and loop=0 to set rotating and looping as off by default")}
+                          title={
+                            dgettext(
+                              "site",
+                              "Use rotate=0 and loop=0 to set rotating and looping as off by default"
+                            )
+                          }
                         >
                         </i>
                       </div>
