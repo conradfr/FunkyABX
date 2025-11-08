@@ -5,7 +5,7 @@ import noUiSlider from 'nouislider';
 import {
   COOKIE_TEST_WAVEFORM,
   COOKIE_TEST_ROTATE_SECONDS,
-  COOKIE_VOLUME
+  COOKIE_VOLUME, COOKIE_DEVICE
 } from '../config/config';
 
 let audioFiles = null;
@@ -60,9 +60,26 @@ const PlayerHook = {
       }
     });
 
+    if ('setSinkId' in AudioContext.prototype) {
+      this.pushEventTo(this.el, 'output_selector_detected', {});
+
+      if (sessionStorage.getItem(COOKIE_DEVICE)) {
+        try {
+          // if current session has device saved, we simulate select option click to set it
+          this.pushEventTo(
+            this.el,
+            'change_player_settings',
+            {'_target': ['output-select'], 'output-select': cookies.get(COOKIE_DEVICE)}
+          );
+        } catch(e) {
+          console.log(e.message);
+        }
+      }
+    }
+
     // ---------- JS EVENTS ----------
 
-    this.play = (event) => {
+    this.play = async (event) => {
       const { track_hash } = event.detail;
 
       if (this.ctrlPressed === true) {
@@ -226,6 +243,12 @@ const PlayerHook = {
           // container: 'body'
         });
       });
+    });
+
+    this.handleEvent('output_device_selected', (params) => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.setOutputDevice(params.device_id);
+      }
     });
   },
   destroyed() {
