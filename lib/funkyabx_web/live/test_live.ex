@@ -50,7 +50,7 @@ defmodule FunkyABXWeb.TestLive do
           <div class="col-12">
             <div class="d-flex justify-content-between">
               <div class="flex-grow-1">
-                <h3 class="mb-1 header-funky" id="test-header" phx-hook="Test" data-testid={@test.id}>
+                <h3 class="mb-2 header-funky" id="test-header" phx-hook="Test" data-testid={@test.id}>
                   {@test.title}
                 </h3>
                 <h5 :if={@test.author != nil} class="header-funky-simple">
@@ -61,17 +61,6 @@ defmodule FunkyABXWeb.TestLive do
                 <div
                   :if={@test.local == false and @test.type != :listening}
                   class="fs-7 text-body-secondary header-texgyreadventor"
-                  title={
-                    if @test.view_count != nil,
-                      do:
-                        dngettext(
-                          "test",
-                          "Test played %{count} time",
-                          "Test played %{count} times",
-                          @test.view_count
-                        ),
-                      else: ""
-                  }
                 >
                   {raw(
                     dngettext(
@@ -84,24 +73,33 @@ defmodule FunkyABXWeb.TestLive do
                 </div>
 
                 <div
-                  :if={@test.local == false}
-                  class="d-flex justify-content-start justify-content-md-end"
-                >
-                  <div class="fs-7 me-2 text-white-50 header-texgyreadventor">
-                    <time title={@test.inserted_at} datetime={@test.inserted_at}>
-                      <small>
-                        {raw(
-                          dgettext(
-                            "test",
-                            "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
-                            created_at: @test.inserted_at,
-                            created_at_format:
-                              format_date(@test.inserted_at, timezone: @timezone, format: :short)
-                          )
-                        )}
-                      </small>
-                    </time>
-                  </div>
+                  :if={@test.local == false and @test.view_count != nil}
+                  class="fs-7 text-body-secondary header-texgyreadventor"
+                ><small>
+                  {raw(
+                    dngettext(
+                      "test",
+                      "Test played <strong>%{count}</strong> time",
+                      "Test played <strong>%{count}</strong> times",
+                      @test.view_count
+                    )
+                  )}</small>
+                </div>
+
+                <div :if={@test.local == false} class="fs-7 me-2 text-white-50 header-texgyreadventor">
+                  <time title={@test.inserted_at} datetime={@test.inserted_at}>
+                    <small>
+                      {raw(
+                        dgettext(
+                          "test",
+                          "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>",
+                          created_at: @test.inserted_at,
+                          created_at_format:
+                            format_date(@test.inserted_at, timezone: @timezone, format: :short)
+                        )
+                      )}
+                    </small>
+                  </time>
                 </div>
 
                 <div
