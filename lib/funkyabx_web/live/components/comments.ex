@@ -145,7 +145,7 @@ defmodule CommentsComponent do
 
   # This is a hack to respond to a refresh comments from the LiveView
   @impl true
-  def update(%{update_comments: true} = assigns, socket) do
+  def update(%{update_comments: true} = _assigns, socket) do
     {:ok, assign(socket, :comments, Comments.get_comments(socket.assigns.test))}
   end
 
@@ -167,7 +167,7 @@ defmodule CommentsComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"comment" => comment_params, "_target" => target}, socket) do
+  def handle_event("validate", %{"comment" => comment_params, "_target" => _target}, socket) do
     changeset = Comment.changeset(socket.assigns.comment, comment_params)
 
     {:noreply,
