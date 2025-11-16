@@ -14,6 +14,10 @@ defmodule FunkyABXWeb.TestResultsLive do
     <Layouts.app flash={@flash}>
       <div class="row" id="test-results-global" phx-hook="Global">
         <div class="col-12">
+          <div :if={@test_closed == true} class="alert alert-info mb-4">
+            <i class="bi bi-info-circle"></i>&nbsp;&nbsp; {dgettext("test", "This test is closed.")}
+          </div>
+
           <div class="d-flex justify-content-between">
             <div class="flex-grow-1">
               <h3
@@ -204,13 +208,23 @@ defmodule FunkyABXWeb.TestResultsLive do
           >{dgettext "test", "Create a new local test"}</.link>
         </div>
       </div>
+
+      <.live_component
+        :if={@test.local == false and @test.allow_comments}
+        module={CommentsComponent}
+        id="comments-comp"
+        user={@current_user}
+        test={@test}
+        timezone={@timezone}
+        ip_address={@ip_address}
+      />
     </Layouts.app>
     """
   end
 
   # Local test
   @impl true
-  def mount(%{"data" => data, "choices" => choices} = params, _session, socket) do
+  def mount(%{"data" => data, "choices" => choices} = params, session, socket) do
     test_data =
       data
       |> Base.url_decode64!()
@@ -251,12 +265,13 @@ defmodule FunkyABXWeb.TestResultsLive do
        test: test,
        tracks: tracks,
        result_modules: result_modules,
-       current_user_id: nil,
+       current_user: nil,
        view_description: false,
        view_test_tracks: false,
        visitor_choices: choices_taken,
        play_track_id: nil,
        test_taken_times: nil,
+       test_closed: false,
        test_data: data,
        tracks_order: tracks_order,
        is_another_session: false,
@@ -293,6 +308,12 @@ defmodule FunkyABXWeb.TestResultsLive do
             {true, session_id, choices}
         end
 
+      current_user =
+        case Map.get(socket.assigns, :current_scope, %{}) do
+          %{} = scope ->  Map.get(scope, :user, nil)
+          _ -> nil
+        end
+
       {:ok,
        assign(socket, %{
          page_title:
@@ -303,7 +324,7 @@ defmodule FunkyABXWeb.TestResultsLive do
          test: test,
          tracks: nil,
          result_modules: result_modules,
-         current_user_id: Map.get(session, "current_user_id"),
+         current_user: current_user,
          view_description: false,
          view_test_tracks: false,
          visitor_choices: choices,
@@ -311,10 +332,12 @@ defmodule FunkyABXWeb.TestResultsLive do
          tracks_order: nil,
          is_another_session: is_another_session,
          test_taken_times: Tests.get_how_many_taken(test),
+         test_closed: Tests.is_closed?(test),
          play_track_id: nil,
          embed: embed,
+         ip_address: Map.get(session, "visitor_ip", nil),
          is_test_creator_or_has_access_key:
-           (Map.get(session, "current_user_id") == test.user_id and test.user_id != nil) or
+           (current_user != nil and current_user.id == test.user_id and test.user_id != nil) or
              (Map.get(params, "key") != nil and Map.get(params, "key") == test.access_key)
        })}
     else
@@ -458,6 +481,16 @@ defmodule FunkyABXWeb.TestResultsLive do
      socket
      |> put_flash(:error, dgettext("test", "This test has been deleted :("))
      |> redirect(to: ~p"/info" <> Utils.embedize_url(socket.assigns.embed))}
+  end
+
+  # as a LiveComponent can't receive message from PubSub we intercept it there
+  @impl true
+  def handle_info(%{event: "comment_posted"} = _payload, %{assigns: %{test: test}} = socket) do
+    if test.allow_comments == true do
+      send_update(CommentsComponent, id: "comments-comp", update_comments: true)
+    end
+
+    {:noreply, socket}
   end
 
   @impl true

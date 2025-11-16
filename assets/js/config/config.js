@@ -14,6 +14,7 @@ export const COOKIE_PARAMS = {
 export const COOKIE_TEST_TAKEN = 'taken';
 export const COOKIE_TEST_BYPASS = 'bypass';
 export const COOKIE_TEST_AUTHOR = 'author';
+export const COOKIE_COMMENT_AUTHOR = 'comment-author';
 export const COOKIE_TEST_ROTATE_SECONDS = 'rotate_seconds';
 export const COOKIE_TEST_ROTATE = 'rotate';
 export const COOKIE_TEST_WAVEFORM = 'waveform';

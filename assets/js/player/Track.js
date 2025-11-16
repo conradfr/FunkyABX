@@ -111,7 +111,7 @@ export default class {
   }
 
   getDuration() {
-    if (this.buffer === null) {
+    if (!this.buffer) {
       return 0;
     }
 

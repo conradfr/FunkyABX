@@ -37,7 +37,9 @@ defmodule OutputSelectorComponent do
               </select>
             </div>
             <div :if={@selected_device} class="small mb-2">
-              {dgettext("test", "Currently selected: %{device}", device: get_device_label(@selected_device, @devices))}
+              {dgettext("test", "Currently selected: %{device}",
+                device: get_device_label(@selected_device, @devices)
+              )}
             </div>
           </div>
         </div>

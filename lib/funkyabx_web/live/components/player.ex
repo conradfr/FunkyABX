@@ -393,11 +393,12 @@ defmodule FunkyABXWeb.PlayerComponent do
           )
       end
 
+    send(self(), {:put_flash, [:error, flash_text]})
+
     {:noreply,
      socket
      |> assign(tracks_loaded: false)
-     |> push_event("set_warning_local_test_reload", %{set: false})
-     |> put_flash(:error, flash_text)}
+     |> push_event("set_warning_local_test_reload", %{set: false})}
   end
 
   @impl true

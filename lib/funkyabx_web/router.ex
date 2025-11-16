@@ -37,8 +37,11 @@ defmodule FunkyABXWeb.Router do
   scope "/", FunkyABXWeb do
     pipe_through [:browser, :test_password]
 
-    live "/test/:slug", TestLive, as: :test_public
-    live "/results/:slug", TestResultsLive, as: :test_results_public
+    live_session :current_user_test_one,
+                 on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
+      live "/test/:slug", TestLive, as: :test_public
+      live "/results/:slug", TestResultsLive, as: :test_results_public
+    end
   end
 
   scope "/", FunkyABXWeb do
@@ -55,16 +58,16 @@ defmodule FunkyABXWeb.Router do
     get "/auth/:slug", TestController, :password
     post "/auth/:slug", TestController, :password_verify
 
-    live "/info", FlashLive, as: :info
-    live "/gallery", GalleryLive, :gallery
 
     get "/img/results/:filename", TestController, :image
 
-    live "/results/:slug/:key", TestResultsLive, as: :test_results_private
+    live_session :current_user_test_two,
+                 on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
+      live "/info", FlashLive, as: :info
+      live "/gallery", GalleryLive, :gallery
 
-    live "/local_test/results/:data/:choices", TestResultsLive
-    live "/local_test/results/:data/:choices/:tracks_order", TestResultsLive
-    live "/local_test/:data", TestLive, as: :local_test
+      live "/results/:slug/:key", TestResultsLive, as: :test_results_private
+    end
   end
 
   # Other scopes may use custom stacks.
@@ -75,10 +78,18 @@ defmodule FunkyABXWeb.Router do
   scope "/", FunkyABXWeb do
     pipe_through [:browser, :form]
 
-    live "/edit/:slug/:key", TestFormLive, as: :test_edit_private
-    live "/test", TestFormLive, as: :test_new
-    live "/local_test/edit/:data", LocalTestFormLive, as: :local_test_edit
-    live "/local_test", LocalTestFormLive, as: :local_test_new
+    live_session :current_user_form,
+                 on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
+      live "/edit/:slug/:key", TestFormLive, as: :test_edit_private
+      live "/test", TestFormLive, as: :test_new
+
+      # local test has to be grouped together otherwise LV generates another page load and audio files are lost
+      live "/local_test/edit/:data", LocalTestFormLive, as: :local_test_edit
+      live "/local_test", LocalTestFormLive, as: :local_test_new
+      live "/local_test/results/:data/:choices", TestResultsLive
+      live "/local_test/results/:data/:choices/:tracks_order", TestResultsLive
+      live "/local_test/:data", TestLive, as: :local_test
+    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

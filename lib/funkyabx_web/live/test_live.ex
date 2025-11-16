@@ -75,15 +75,17 @@ defmodule FunkyABXWeb.TestLive do
                 <div
                   :if={@test.local == false and @test.view_count != nil}
                   class="fs-7 text-body-secondary header-texgyreadventor"
-                ><small>
-                  {raw(
-                    dngettext(
-                      "test",
-                      "Test played <strong>%{count}</strong> time",
-                      "Test played <strong>%{count}</strong> times",
-                      @test.view_count
-                    )
-                  )}</small>
+                >
+                  <small>
+                    {raw(
+                      dngettext(
+                        "test",
+                        "Test played <strong>%{count}</strong> time",
+                        "Test played <strong>%{count}</strong> times",
+                        @test.view_count
+                      )
+                    )}
+                  </small>
                 </div>
 
                 <div :if={@test.local == false} class="fs-7 me-2 text-white-50 header-texgyreadventor">
@@ -249,6 +251,16 @@ defmodule FunkyABXWeb.TestLive do
           </div>
         </div>
       <% end %>
+
+      <.live_component
+        :if={@test.local == false and @test.type == :listening and @test.allow_comments}
+        module={CommentsComponent}
+        id="comments-comp"
+        user={@current_user}
+        test={@test}
+        timezone={@timezone}
+        ip_address={@ip_address}
+      />
     </Layouts.app>
     """
   end
@@ -278,6 +290,7 @@ defmodule FunkyABXWeb.TestLive do
      socket
      |> assign(%{
        page_title: "Local test",
+       current_user: nil,
        test_data: data,
        test: test,
        tracks: tracks,
@@ -346,9 +359,16 @@ defmodule FunkyABXWeb.TestLive do
           Map.get(session, "test_taken_" <> slug, false)
       end
 
+    current_user =
+      case Map.get(socket.assigns, :current_scope, %{}) do
+        %{} = scope ->  Map.get(scope, :user, nil)
+        _ -> nil
+      end
+
     {:ok,
      assign(socket, %{
        page_title: String.slice(test.title, 0..@title_max_length),
+       current_user: current_user,
        timezone: timezone,
        ip_address: Map.get(session, "visitor_ip", nil),
        test: test,
@@ -473,6 +493,16 @@ defmodule FunkyABXWeb.TestLive do
      |> redirect(
        to: ~p"/test/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
      )}
+  end
+
+  # as a LiveComponent can't receive message from PubSub we intercept it there
+  @impl true
+  def handle_info(%{event: "comment_posted"} = _payload, %{assigns: %{test: test}} = socket) do
+    if test.type == :listening and test.allow_comments == true do
+      send_update(CommentsComponent, id: "comments-comp", update_comments: true)
+    end
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -652,7 +682,7 @@ defmodule FunkyABXWeb.TestLive do
 
       spawn(fn ->
         FunkyABXWeb.Endpoint.broadcast!(test.id, "test_taken", nil)
-        FunkyABX.Notifier.Email.test_taken(test, socket)
+        FunkyABX.Notifier.Email.test_taken(test)
         Invitations.test_taken(invitation_id, test)
       end)
 

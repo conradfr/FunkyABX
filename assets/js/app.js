@@ -34,6 +34,7 @@ import TestHook from './hooks/TestHook'
 import LocalTestFormHook from './hooks/LocalTestFormHook'
 import TestFormHook from './hooks/TestFormHook'
 import TestResultsHook from './hooks/TestResultsHook'
+import CommentsHook from './hooks/CommentsHook'
 import PlayerHook from './hooks/PlayerHook'
 import OutputSelectorHook from './hooks/OutputSelectorHook'
 
@@ -47,6 +48,7 @@ Hooks.Test = TestHook
 Hooks.LocalTestForm = LocalTestFormHook
 Hooks.TestForm = TestFormHook
 Hooks.TestResults = TestResultsHook
+Hooks.Comments = CommentsHook
 Hooks.Player = PlayerHook
 Hooks.OutputSelector = OutputSelectorHook
 

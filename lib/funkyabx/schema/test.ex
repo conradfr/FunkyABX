@@ -4,7 +4,17 @@ defmodule FunkyABX.Test do
   alias Ecto.UUID
   alias FunkyABX.Accounts.User
   alias FunkyABX.Test.TitleSlug
-  alias FunkyABX.{Tests, Track, RankDetails, PickDetails, IdentificationDetails, Invitation}
+
+  alias FunkyABX.{
+    Tests,
+    Track,
+    RankDetails,
+    PickDetails,
+    IdentificationDetails,
+    Invitation,
+    Comment
+  }
+
   alias FunkyABX.Tests.Validators
   alias __MODULE__
 
@@ -43,6 +53,8 @@ defmodule FunkyABX.Test do
     field(:deleted_at, :naive_datetime)
     field(:normalization, :boolean)
     field(:email_notification, :boolean, default: false)
+    field(:email_notification_comments, :boolean, default: false)
+    field(:allow_comments, :boolean, default: false)
     field(:upload_url, :string, virtual: true)
     field(:local, :boolean, virtual: true, default: false)
     field(:embed, :boolean, virtual: true, default: false)
@@ -54,6 +66,7 @@ defmodule FunkyABX.Test do
     has_many(:rank_details, RankDetails)
     has_many(:pick_details, PickDetails)
     has_many(:identification_details, IdentificationDetails)
+    has_many(:comments, Comment)
     belongs_to(:user, User)
     timestamps()
   end
@@ -75,6 +88,8 @@ defmodule FunkyABX.Test do
       hide_global_results: false,
       ip_address: Map.get(params, :ip_address, nil),
       to_close_at_timezone: Map.get(params, :to_close_at_timezone, nil),
+      email_notification_comments: false,
+      allow_comments: true,
       invitations: []
     }
   end
@@ -118,6 +133,8 @@ defmodule FunkyABX.Test do
       :to_close_at,
       :email_notification,
       :upload_url,
+      :email_notification_comments,
+      :allow_comments,
       :ip_address
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2, required: true)
@@ -168,7 +185,9 @@ defmodule FunkyABX.Test do
       :to_close_at_enabled,
       :to_close_at,
       :email_notification,
-      :upload_url
+      :upload_url,
+      :email_notification_comments,
+      :allow_comments
     ])
     |> cast_assoc(:tracks, with: &Track.changeset/2, required: true)
     |> Validators.validate_general_type()

@@ -59,7 +59,7 @@ defmodule FunkyABXWeb.CoreComponents do
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       phx-hook="AutoDismissFlash"
       class={[
-        "toast align-items-center border-0",
+        "toast align-items-center border-0 mb-2",
         "show",
         @kind == :info && "text-bg-info",
         @kind == :success && "text-bg-success",
