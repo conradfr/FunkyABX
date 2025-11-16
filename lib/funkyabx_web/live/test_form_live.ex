@@ -391,7 +391,6 @@ defmodule FunkyABXWeb.TestFormLive do
                       type="text"
                       label={dgettext("test", "Created by")}
                       placeholder={dgettext("test", "(optional)")}
-                      required
                     />
                   </div>
                 </div>
@@ -1241,8 +1240,6 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @impl true
   def handle_info(%{event: "comment_posted"} = _payload, socket) do
-    test = Tests.get(socket.assigns.test.id)
-
     {:noreply,
      socket
      |> put_flash(:success, dgettext("test", "Someone just commented on this test!"))}

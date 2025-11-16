@@ -224,7 +224,7 @@ defmodule FunkyABXWeb.TestResultsLive do
 
   # Local test
   @impl true
-  def mount(%{"data" => data, "choices" => choices} = params, session, socket) do
+  def mount(%{"data" => data, "choices" => choices} = params, _session, socket) do
     test_data =
       data
       |> Base.url_decode64!()

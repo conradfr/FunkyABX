@@ -15,10 +15,10 @@ defmodule FunkyABX.Notifier.Email do
       url = FunkyABXWeb.Endpoint.url() <> ~p"/results/#{test.slug}"
 
       deliver(
-        test.user.email,
+        user.email,
         "Test taken - " <> test.title,
         """
-        Hi #{test.user.email},
+        Hi #{user.email},
 
         Someone completed your test #{test.title}!
 

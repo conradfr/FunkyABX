@@ -1,8 +1,7 @@
 defmodule FunkyABX.Comments do
   require Logger
-  import Ecto.Query, only: [from: 2, dynamic: 2, limit: 3]
+  import Ecto.Query, only: [from: 2]
 
-  alias Ecto.UUID
   alias FunkyABX.Repo
   alias FunkyABX.{Test, Comment}
   alias FunkyABX.Notifier.Email
