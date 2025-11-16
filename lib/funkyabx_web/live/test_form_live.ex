@@ -613,10 +613,38 @@ defmodule FunkyABXWeb.TestFormLive do
 
                 <div class="form-check mb-3">
                   <.input
+                    field={f[:allow_comments]}
+                    type="checkbox"
+                    label={dgettext("test", "Allow comments")}
+                  />
+                  <div class="form-text">
+                    {dgettext(
+                      "test",
+                      "Comments are displayed on the results page (except for listening tests)"
+                    )}
+                  </div>
+                </div>
+
+                <div class="form-check mb-3">
+                  <.input
                     field={f[:email_notification]}
                     type="checkbox"
                     disabled={@test.user == nil}
                     label={dgettext("test", "Notify me by email when a test is taken")}
+                  />
+                  <div :if={@test.user == nil} class="form-text">
+                    {dgettext("test", "Available only for logged in users")}
+                  </div>
+                </div>
+
+                <div class="form-check mb-3">
+                  <.input
+                    field={f[:email_notification_comments]}
+                    type="checkbox"
+                    disabled={@test.user == nil}
+                    label={
+                      dgettext("test", "Notify me by email when someone post a comment on a test")
+                    }
                   />
                   <div :if={@test.user == nil} class="form-text">
                     {dgettext("test", "Available only for logged in users")}
@@ -649,19 +677,8 @@ defmodule FunkyABXWeb.TestFormLive do
                   <.input
                     field={f[:password_enabled]}
                     type="checkbox"
+                    label={dgettext("test", "Password protected")}
                   />
-                  <label class="form-check-label">
-                    <input
-                      type="hidden"
-                      id={input_id(f, :password)}
-                      name={input_name(f, :password)}
-                      value={input_value(f, :password)}
-                    />
-                    &nbsp;&nbsp;{dgettext(
-                      "test",
-                      "Password protected"
-                    )}
-                  </label>
                   <div class="form-text">
                     {dgettext(
                       "test",
@@ -1220,6 +1237,15 @@ defmodule FunkyABXWeb.TestFormLive do
     {:noreply,
      socket
      |> put_flash(:success, dgettext("test", "Someone just took this test!"))}
+  end
+
+  @impl true
+  def handle_info(%{event: "comment_posted"} = _payload, socket) do
+    test = Tests.get(socket.assigns.test.id)
+
+    {:noreply,
+     socket
+     |> put_flash(:success, dgettext("test", "Someone just commented on this test!"))}
   end
 
   @impl true

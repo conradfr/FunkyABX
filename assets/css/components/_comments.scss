@@ -1,0 +1,16 @@
+.comment-author {
+  font-size: 0.875rem;
+}
+.comment-text {
+  background-color: $test-description-bg;
+  border-radius: 5px;
+  font-size: 0.938rem;
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}

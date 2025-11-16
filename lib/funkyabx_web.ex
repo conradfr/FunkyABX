@@ -52,6 +52,11 @@ defmodule FunkyABXWeb do
     quote do
       use Phoenix.LiveView
 
+      # https://andrewtimberlake.com/blog/2025/01/set-flash-from-live-component
+      def handle_info({:put_flash, [type, message]}, socket) do
+        {:noreply, put_flash(socket, type, message)}
+      end
+
       import FunkyABXWeb.DatesHelpers
       unquote(html_helpers())
     end
@@ -61,6 +66,7 @@ defmodule FunkyABXWeb do
     quote do
       use Phoenix.LiveComponent
 
+      import FunkyABXWeb.DatesHelpers
       unquote(html_helpers())
     end
   end
