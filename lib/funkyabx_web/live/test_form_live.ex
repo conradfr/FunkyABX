@@ -438,7 +438,7 @@ defmodule FunkyABXWeb.TestFormLive do
                 <div class="fs-8 mb-2 text-body-secondary ms-4 mb-1">
                   <i class="bi bi-info-circle"></i>&nbsp;&nbsp;Select at least one option
                 </div>
-                <div class="form-check ms-4">
+                <div class="form-check">
                   <.input
                     field={f[:rating]}
                     type="checkbox"
@@ -446,7 +446,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     disabled={!@test_updatable or get_field(@changeset, :type) !== :regular}
                   />
 
-                  <div class="form-check mt-2 ms-1">
+                  <div class="form-check mt-2 ms-4">
                     <label class="form-check-label">
                       <input
                         type="radio"
@@ -466,7 +466,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     </div>
                   </div>
 
-                  <div class="form-check ms-1">
+                  <div class="form-check ms-4">
                     <label class="form-check-label">
                       <input
                         type="radio"
@@ -489,7 +489,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     </div>
                   </div>
 
-                  <div class="form-check ms-1">
+                  <div class="form-check ms-4">
                     <label class="form-check-label">
                       <input
                         type="radio"
@@ -507,7 +507,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <div class="form-text mb-2">
                       {dgettext("test", "People will be asked to rank the tracks")}
                     </div>
-                    <div class="form-check ms-4">
+                    <div>
                       <.input
                         field={f[:ranking_only_extremities]}
                         type="checkbox"
@@ -524,7 +524,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     </div>
                   </div>
                 </div>
-                <div class="form-check ms-4">
+                <div class="form-check">
                   <.input
                     field={f[:identification]}
                     type="checkbox"
@@ -551,7 +551,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   <div class="form-text mb-2 ps-4">
                     {dgettext("test", "People will have to guess which track is cloned for n rounds")}
                   </div>
-                  <div class="row ms-5 mb-1">
+                  <div class="row ms-4 mb-1">
                     <label for="test[nb_of_rounds]" class="col-6 col-sm-4 col-form-label ps-0">
                       {dgettext("test", "Number of rounds:")}
                     </label>
@@ -566,7 +566,7 @@ defmodule FunkyABXWeb.TestFormLive do
                       />
                     </div>
                   </div>
-                  <div class="form-check mt-2 ms-5 mb-3">
+                  <div class="form-check mt-2 mb-3">
                     <.input
                       field={f[:anonymized_track_title]}
                       type="checkbox"
