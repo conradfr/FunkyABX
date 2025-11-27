@@ -315,12 +315,11 @@ defmodule FunkyABXWeb.LocalTestFormLive do
         <div class="mb-2 rounded-3 form-unit">
           <.inputs_for :let={fp} field={f[:tracks]}>
             <div class={"row p-2 mx-0#{unless input_value(fp, :id) == nil, do: " mb-2"}"}>
-              <input
-                type="hidden"
-                id={input_id(fp, :id)}
-                name={input_name(fp, :id)}
-                value={input_value(fp, :id)}
-              />
+              <.input field={fp[:id]} type="hidden" />
+              <.input field={fp[:filename]} type="hidden" />
+              <.input field={fp[:original_filename]} type="hidden" />
+
+              <%!-- boolean does not seems supported by core_component hidden input --%>
 
               <input
                 type="hidden"
@@ -334,20 +333,6 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                 id={input_id(fp, :local_url)}
                 name={input_name(fp, :local_url)}
                 value={to_string(input_value(fp, :local_url))}
-              />
-
-              <input
-                type="hidden"
-                id={input_id(fp, :filename)}
-                name={input_name(fp, :filename)}
-                value={input_value(fp, :filename)}
-              />
-
-              <input
-                type="hidden"
-                id={input_id(fp, :original_filename)}
-                name={input_name(fp, :original_filename)}
-                value={input_value(fp, :original_filename)}
               />
 
               <label class="col-sm-1 col-form-label">
