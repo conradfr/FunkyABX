@@ -100,12 +100,8 @@ defmodule CommentsComponent do
         id="comment-form"
         class="mt-3"
       >
-        <input
-          type="hidden"
-          id={input_id(f, :test_id)}
-          name={input_name(f, :test_id)}
-          value={input_value(f, :test_id)}
-        />
+        <.input field={f[:test_id]} type="hidden" />
+
 
         <div class="mb-2 col-md-4">
           <.input

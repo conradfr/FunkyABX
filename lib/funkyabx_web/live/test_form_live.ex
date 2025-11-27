@@ -27,12 +27,7 @@ defmodule FunkyABXWeb.TestFormLive do
         id="test-form"
         phx-hook="TestForm"
       >
-        <input
-          type="hidden"
-          id={input_id(f, :access_key)}
-          name={input_name(f, :access_key)}
-          value={input_value(f, :access_key)}
-        />
+        <.input field={f[:access_key]} type="hidden" />
 
         <div class="row">
           <div class="col-12 order-md-1 order-2">
@@ -685,12 +680,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     )}
                   </div>
                 </div>
-                <input
-                  type="hidden"
-                  id={input_id(f, :password_length)}
-                  name={input_name(f, :password_length)}
-                  value={input_value(f, :password_length)}
-                />
+                <.input field={f[:password_length]} type="hidden" />
                 <%= if @test.password_enabled == true and @test.password_length != nil do %>
                   <div class="form-check mt-2 mb-3">
                     {dgettext("test", "Current:")}&nbsp;
@@ -911,50 +901,18 @@ defmodule FunkyABXWeb.TestFormLive do
           <div class={["mb-2 py-1 rounded-3 form-unit", track_count(@changeset) === 0 && "d-none"]}>
             <.inputs_for :let={fp} field={f[:tracks]}>
               <%= if input_value(fp, :id) != nil do %>
-                <input
-                  type="hidden"
-                  id={input_id(fp, :id)}
-                  name={input_name(fp, :id)}
-                  value={input_value(fp, :id)}
-                />
-
-                <input
-                  type="hidden"
-                  id={input_id(fp, :delete)}
-                  name={input_name(fp, :delete)}
-                  value={input_value(fp, :delete)}
-                />
+                <.input field={fp[:id]} type="hidden" />
+                <.input field={fp[:delete]} type="hidden" />
               <% else %>
-                <input
-                  type="hidden"
-                  id={input_id(fp, :temp_id)}
-                  name={input_name(fp, :temp_id)}
-                  value={input_value(fp, :temp_id)}
-                />
+                <.input field={fp[:temp_id]} type="hidden" />
               <% end %>
 
               <%= if input_value(fp, :url) != nil do %>
-                <input
-                  type="hidden"
-                  id={input_id(fp, :url)}
-                  name={input_name(fp, :url)}
-                  value={input_value(fp, :url)}
-                />
+                <.input field={fp[:url]} type="hidden" />
               <% end %>
 
-              <input
-                type="hidden"
-                id={input_id(fp, :original_filename)}
-                name={input_name(fp, :original_filename)}
-                value={input_value(fp, :original_filename)}
-              />
-
-              <input
-                type="hidden"
-                id={input_id(fp, :filename)}
-                name={input_name(fp, :filename)}
-                value={input_value(fp, :filename)}
-              />
+              <.input field={fp[:original_filename]} type="hidden" />
+              <.input field={fp[:filename]} type="hidden" />
 
               <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
                 <div class={["row p-2 mx-0", input_value(fp, :id) != nil && " mb-2"]}>
