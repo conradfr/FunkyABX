@@ -1,5 +1,6 @@
 defmodule FunkyABXWeb.PlayerComponent do
   use FunkyABXWeb, :live_component
+  require Logger
 
   alias Phoenix.LiveView.JS
   alias FunkyABX.{Tracks, Tests}
@@ -438,10 +439,11 @@ defmodule FunkyABXWeb.PlayerComponent do
         %{assigns: %{test: test, played: played}} = socket
       ) do
     spawn(fn ->
-      if Map.get(socket.assigns, :current_round, 1) < 2 and
-           Map.get(socket.assigns, :increment_view_counter, true) == true and
-           played == false,
-         do: Tests.increment_view_counter(test)
+      if Map.get(socket.assigns, :increment_view_counter, true) == true
+        and Map.get(socket.assigns, :current_round, 1) < 2 and played == false do
+        Tests.increment_view_counter(test)
+        Logger.info("Test played (#{test.slug})")
+      end
     end)
 
     {:noreply, assign(socket, playing: true, played: true)}
