@@ -100,6 +100,7 @@ defmodule FunkyABX.Test do
       type: :regular,
       local: true,
       title: "Local test",
+      slug: "local-test",
       nb_of_rounds: 10,
       anonymized_track_title: false,
       tracks: []

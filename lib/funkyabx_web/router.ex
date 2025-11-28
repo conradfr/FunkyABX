@@ -38,7 +38,7 @@ defmodule FunkyABXWeb.Router do
     pipe_through [:browser, :test_password]
 
     live_session :current_user_test_one,
-                 on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
+      on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
       live "/test/:slug", TestLive, as: :test_public
       live "/results/:slug", TestResultsLive, as: :test_results_public
     end
@@ -58,11 +58,10 @@ defmodule FunkyABXWeb.Router do
     get "/auth/:slug", TestController, :password
     post "/auth/:slug", TestController, :password_verify
 
-
     get "/img/results/:filename", TestController, :image
 
     live_session :current_user_test_two,
-                 on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
+      on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
       live "/info", FlashLive, as: :info
       live "/gallery", GalleryLive, :gallery
 
@@ -79,7 +78,7 @@ defmodule FunkyABXWeb.Router do
     pipe_through [:browser, :form]
 
     live_session :current_user_form,
-                 on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
+      on_mount: [{FunkyABXWeb.UserAuth, :mount_current_scope}] do
       live "/edit/:slug/:key", TestFormLive, as: :test_edit_private
       live "/test", TestFormLive, as: :test_new
 

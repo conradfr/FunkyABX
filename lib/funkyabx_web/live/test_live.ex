@@ -361,7 +361,7 @@ defmodule FunkyABXWeb.TestLive do
 
     current_user =
       case Map.get(socket.assigns, :current_scope, %{}) do
-        %{} = scope ->  Map.get(scope, :user, nil)
+        %{} = scope -> Map.get(scope, :user, nil)
         _ -> nil
       end
 

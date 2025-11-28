@@ -102,7 +102,6 @@ defmodule CommentsComponent do
       >
         <.input field={f[:test_id]} type="hidden" />
 
-
         <div class="mb-2 col-md-4">
           <.input
             field={f[:author]}

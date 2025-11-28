@@ -28,7 +28,7 @@ defmodule FunkyABXWeb.TestResultsLive do
               >
                 {@test.title}
               </h3>
-              <h5 :if={@test.author != nil} class="header-funky">
+              <h5 :if={@test.author != nil} class="header-funky-simple">
                 {dgettext("test", "By %{author}", author: @test.author)}
               </h5>
             </div>
@@ -56,6 +56,22 @@ defmodule FunkyABXWeb.TestResultsLive do
                     @test_taken_times
                   )
                 )}
+              </div>
+
+              <div
+                  :if={@test.local == false and @test.view_count != nil}
+                  class="fs-7 text-body-secondary header-texgyreadventor"
+              >
+                <small>
+                  {raw(
+                    dngettext(
+                      "test",
+                      "Test played <strong>%{count}</strong> time",
+                      "Test played <strong>%{count}</strong> times",
+                      @test.view_count
+                    )
+                  )}
+                </small>
               </div>
 
               <div
@@ -310,7 +326,7 @@ defmodule FunkyABXWeb.TestResultsLive do
 
       current_user =
         case Map.get(socket.assigns, :current_scope, %{}) do
-          %{} = scope ->  Map.get(scope, :user, nil)
+          %{} = scope -> Map.get(scope, :user, nil)
           _ -> nil
         end
 
