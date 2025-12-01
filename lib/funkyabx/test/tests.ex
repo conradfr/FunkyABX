@@ -1,6 +1,7 @@
 defmodule FunkyABX.Tests do
   import Ecto.Query, only: [from: 2, dynamic: 2, limit: 3]
   import Ecto.Changeset, only: [get_field: 2]
+  require Logger
 
   alias Ecto.UUID
   alias Ecto.Changeset
@@ -359,13 +360,23 @@ defmodule FunkyABX.Tests do
 
   # ---------- RESULTS ----------
 
-  def parse_session_id(session_id) when session_id == nil, do: nil
+  def parse_session_id(session_id)
+
+  def parse_session_id(nil), do: nil
 
   def parse_session_id(session_id) when is_binary(session_id) do
-    unless String.contains?(session_id, "-") == true do
-      ShortUUID.decode!(session_id)
-    else
-      session_id
+    try do
+      # backward compat
+      if String.contains?(session_id, "-") == false do
+        ShortUUID.decode!(session_id)
+      else
+        # old session id
+        session_id
+      end
+    rescue
+      e in ArgumentError ->
+        Logger.warning("Error parsing session_id #{session_id}")
+        session_id
     end
   end
 
