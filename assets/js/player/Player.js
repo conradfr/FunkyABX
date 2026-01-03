@@ -5,6 +5,7 @@ import {
   COOKIE_DEVICE
 } from '../config/config';
 import cookies from '../utils/cookies';
+import time from '../utils/time';
 import LoaderFactory from './loader/LoaderFactory';
 import Track from './Track';
 import * as playerState from '../config/state';
@@ -24,8 +25,8 @@ export default class {
     this.volume = volume;
 
     this.currentTrackIndex = 0;
-    this.currentTime = 0;
-    this.startTime = 0;
+    this.currentTime = 0.0;
+    this.startTime = 0.0;
     this.maxDuration = 0;
     this.maxDurationTrack = null;
 
@@ -49,8 +50,8 @@ export default class {
       // playing is starting
       if (this.playing === 1) {
         this.ee.emit('push_event', { event: 'playing', data: {} });
-        this.startTime = this.ac.currentTime;
-        this.currentTime = this.ac.currentTime;
+        this.startTime = time.getTimeInMs();
+        this.currentTime = time.getTimeInMs();
       }
     });
 
@@ -259,7 +260,7 @@ export default class {
       /* eslint-disable operator-linebreak */
       this.timeInterval =
         setInterval(() => {
-          this.currentTime = this.ac.currentTime;
+          this.currentTime = time.getTimeInMs();
           this.tracks.forEach((track) => {
             track.refreshTimeline();
           });
@@ -376,7 +377,11 @@ export default class {
   async setVolume(volume) {
     this.volume = volume;
     // we sync to tracks as they don't have access to the player
-    this.tracks.map(item => item.setVolume(volume));
+    this.tracks.map(item => {
+      if (item instanceof Track) {
+        item.setVolume(volume)
+      }
+    });
   }
 
   // ---------- CUE ----------
@@ -438,11 +443,18 @@ export default class {
         let index = this.currentTrackIndex;
 
         do {
+          console.log('------');
           nextTrackIndex = this.getNextTrackIndex(index);
+          console.log(nextTrackIndex);
           const nextTrack = this.tracks[nextTrackIndex];
+
+          console.log(this.startTime);
+          console.log(nextTrack.getDuration());
+          console.log(this.currentTime);
 
           // next track is too short
           if (this.startTime + nextTrack.getDuration() < this.currentTime) {
+            console.log('TOO SHORT ??');
             index = nextTrackIndex;
             nextTrackIndex = null;
           }
