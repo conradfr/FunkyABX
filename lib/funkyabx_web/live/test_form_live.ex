@@ -1242,7 +1242,7 @@ defmodule FunkyABXWeb.TestFormLive do
 
     case update do
       {:ok, test} ->
-        Logger.info("Test updated")
+        Logger.info("Test updated (#{socket.assigns.test.slug})")
 
         FunkyABXWeb.Endpoint.broadcast!(socket.assigns.test.id, "test_updated", nil)
 

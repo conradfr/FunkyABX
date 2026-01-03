@@ -59,8 +59,8 @@ defmodule FunkyABXWeb.TestResultsLive do
               </div>
 
               <div
-                  :if={@test.local == false and @test.view_count != nil}
-                  class="fs-7 text-body-secondary header-texgyreadventor"
+                :if={@test.local == false and @test.view_count != nil}
+                class="fs-7 text-body-secondary header-texgyreadventor"
               >
                 <small>
                   {raw(
