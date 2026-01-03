@@ -24,7 +24,6 @@ const listDevices = async (forceAsk) => {
   return Promise.resolve(options);
 }
 
-
 export default {
   listDevices
 };
