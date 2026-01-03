@@ -15,6 +15,7 @@ defmodule FunkyABXWeb.PlayerComponent do
   attr :choices_taken, :map, required: false, default: %{}
   attr :test_already_taken, :boolean, required: false, default: false
   attr :increment_view_counter, :boolean, default: true
+  attr :display_track_name_tooltip, :boolean, default: false
   attr :loop, :boolean, default: true
   attr :rotate, :boolean, default: true
 
@@ -276,6 +277,17 @@ defmodule FunkyABXWeb.PlayerComponent do
                 <div :if={track.reference_track == true}>{dgettext("test", "Reference")}</div>
                 <div :if={track.reference_track != true}>
                   {dgettext("test", "Track %{track_index}", track_index: i)}
+                  <span :if={@display_track_name_tooltip == true}>&nbsp;&nbsp;
+                    <small>
+                      <i
+                        class="bi bi-info-circle"
+                        title={track.title}
+                        role="button"
+                        data-bs-toggle="tooltip"
+                        data-bs-title={track.title}>
+                      </i>
+                    </small>
+                  </span>
                 </div>
               </div>
             <% end %>

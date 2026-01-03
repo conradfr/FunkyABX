@@ -18,6 +18,9 @@ const PlayerHook = {
   mounted() {
     // ---------- INIT ----------
 
+    this.tooltipTriggerList = [].slice.call(this.el.parentNode.parentNode.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    this.tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+
     this.ee = new EventEmitter();
     this.ctrlPressed = false;
 
