@@ -17,12 +17,10 @@ export default class {
       // todo refactor as module constants ?
       this.barWidth = 2;
       this.barSpace = 1;
-      this.cueBarLength = 7;
       this.color = '#383838';
       this.colorActive = '#0e778c';
       this.colorPast = '#333333';
       this.colorPastActive = '#0c758a';
-      this.colorCue = '#c44811';
 
       this.amp = canvas.height / 2;
       this.nbOfBars = Math.round(this.width / (this.barWidth + this.barSpace));
@@ -36,6 +34,10 @@ export default class {
     this.tlColor = 'white';
     this.tlColorPast = '#888';
     this.tlColorPastActive = '#40A8BDFF';
+
+    // Cue
+    this.cueBarLength = 7;
+    this.colorCue = '#c44811';
 
     this.seconds = Math.round(this.audioData.length / buffer.sampleRate);
     this.nbPixelsPerSecond = Math.round(this.width / this.seconds);
@@ -179,8 +181,6 @@ export default class {
   }
 
   // ---------- CUE ----------
-
-  // todo understand why the color & carets do not work on ABX tests
 
   drawCue(startCuePixel, endCuePixel, ctx) {
     // ensure cue start point is not after the end of this particular track
