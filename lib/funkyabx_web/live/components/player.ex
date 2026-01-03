@@ -439,8 +439,8 @@ defmodule FunkyABXWeb.PlayerComponent do
         %{assigns: %{test: test, played: played}} = socket
       ) do
     spawn(fn ->
-      if Map.get(socket.assigns, :increment_view_counter, true) == true
-        and Map.get(socket.assigns, :current_round, 1) < 2 and played == false do
+      if Map.get(socket.assigns, :increment_view_counter, true) == true and
+           Map.get(socket.assigns, :current_round, 1) < 2 and played == false do
         Tests.increment_view_counter(test)
         Logger.info("Test played (#{test.slug})")
       end

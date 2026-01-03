@@ -5,7 +5,7 @@ defmodule FunkyABX.MixProject do
     [
       app: :funkyabx,
       version: "0.54.0",
-      elixir: "~> 1.16",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
