@@ -160,6 +160,7 @@ defmodule FunkyABXWeb.TestResultsLive do
             choices_taken={@visitor_choices}
             test_already_taken={true}
             increment_view_counter={false}
+            display_track_name_tooltip={true}
           />
         <% end %>
       <% end %>
