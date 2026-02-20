@@ -92,6 +92,7 @@ defmodule FunkyABXWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       import FunkyABXWeb.ErrorHelpers
+      import FunkyABXWeb.DatesHelpers
       # Core UI components
       import FunkyABXWeb.CoreComponents
 
