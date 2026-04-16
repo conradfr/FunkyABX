@@ -6,7 +6,7 @@ defmodule FunkyABXWeb.PageController do
   alias FunkyABX.Utils
 
   def home(conn, _params) do
-    tests_gallery = Tests.get_random()
+    tests_gallery = Tests.get_homepage()
 
     render(conn, :index, tests_gallery: tests_gallery)
   end
