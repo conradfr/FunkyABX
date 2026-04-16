@@ -1,0 +1,1225 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:78
+#: lib/funkyabx_web/live/components/result/result_star.ex:146
+#, elixir-autogen, elixir-format
+msgid "%{count} time"
+msgid_plural "%{count} times"
+msgstr[0] "%{count} fois"
+msgstr[1] "%{count} fois"
+
+#: lib/funkyabx_web/live/components/result/result_rank.ex:142
+#: lib/funkyabx_web/live/components/result/result_rank.ex:165
+#, elixir-autogen, elixir-format
+msgid "%{count} votes as #%{rank}"
+msgstr "%{count} votes en #%{rank}"
+
+#: lib/funkyabx_web/live/test_form_live.ex:228
+#, elixir-autogen, elixir-format
+msgid "(if you don't take the test)"
+msgstr "(si vous ne passez pas le test)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:378
+#, elixir-autogen, elixir-format
+msgid "(mandatory)"
+msgstr "(obligatoire)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:388
+#: lib/funkyabx_web/live/test_form_live.ex:397
+#, elixir-autogen, elixir-format
+msgid "(optional)"
+msgstr "(optionnel)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:86
+#, elixir-autogen, elixir-format
+msgid "(share this link)"
+msgstr "(partagez ce lien)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:159
+#, elixir-autogen, elixir-format
+msgid "(this page)"
+msgstr "(cette page)"
+
+#: lib/funkyabx_web/live/components/result/result_rank.ex:148
+#, elixir-autogen, elixir-format
+msgid "<small>You ranked this track:</small> %{rank}"
+msgstr "<small>You avez classé cette piste:</small> %{rank}"
+
+#: lib/funkyabx_web/live/components/player.ex:104
+#, elixir-autogen, elixir-format
+msgid "<strong>Mouse/touch:</strong><ul><li>Click on play icon or track number to switch and/or start playing (+ctrl to rewind)</li><li>Click on a timeline/waveform to go to a specific time & track</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>"
+msgstr "<strong>Souris/touché:</strong><ul><li>Cliquez sur l'icône de lecture ou le numéro de piste pour switcher et/ou démarrer la lecture (+ctrl pour rembobiner)</li><li>Cliquez sur la timeline/forme d'onde pour aller à un temps et/ou piste spécifiques</li></ul><strong>Raccourcis clavier:</strong><ul><li>espace: lecture/pause</li><li>flèches: précédent/suivant</li><li>1-9: switcher de piste (alt/option: +10)</li><li>ctrl+touche: commande + précédent</li><li>w: montrer/cacher la forme d'onde</li></ul>"
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:28
+#, elixir-autogen, elixir-format
+msgid "ABX"
+msgstr "ABX"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:172
+#: lib/funkyabx_web/live/test_form_live.ex:544
+#, elixir-autogen, elixir-format
+msgid "ABX test"
+msgstr "Test ABX"
+
+#: lib/funkyabx_web/live/test_form_live.ex:306
+#: lib/funkyabx_web/live/test_list_live.ex:21
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "Actions"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:303
+#: lib/funkyabx_web/live/test_form_live.ex:862
+#, elixir-autogen, elixir-format
+msgid "Add"
+msgstr "Ajouter"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:265
+#: lib/funkyabx_web/live/test_form_live.ex:823
+#, elixir-autogen, elixir-format
+msgid "Add file from url:"
+msgstr "Ajouter un fichier par url:"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:232
+#, elixir-autogen, elixir-format
+msgid "Add file(s):"
+msgstr "Ajouter fichier(s)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:666
+#, elixir-autogen, elixir-format
+msgid "Allow a visitor to take the test multiple times"
+msgstr "Autoriser un visiteur à passer un test plusieurs fois"
+
+#: lib/funkyabx_web/live/test_form_live.ex:612
+#, elixir-autogen, elixir-format
+msgid "Allow comments"
+msgstr "Autoriser les commentaires"
+
+#: lib/funkyabx_web/live/components/invitation.ex:41
+#, elixir-autogen, elixir-format
+msgid "An email will be sent if you enter a valid address, otherwise an invitation link will be generated. Use \",\" to separate multiple names/addresses."
+msgstr "Un courriel sera envoyé si vous entrez une adresse valide, sinon un lien d'invitation sera généré. Utilisez \",\" pour séparer des adresses/noms multiples."
+
+#: lib/funkyabx_web/live/components/invitation.ex:47
+#, elixir-autogen, elixir-format
+msgid "An invitation link will be generated. Use \",\" to separate multiple names."
+msgstr "Une lien d'invitation sera généré. Utilisez \",\" pour séparer plusiers noms."
+
+#: lib/funkyabx_web/live/test_form_live.ex:770
+#, elixir-autogen, elixir-format
+msgid "Apply EBU R128 loudness normalization during upload (wav files only)"
+msgstr "Applique une normalisation du volume sonore EBU R128 au momement du téléchargement (fichiers wav seulement)"
+
+#: lib/funkyabx_web/live/test_live.ex:196
+#, elixir-autogen, elixir-format
+msgid "Are you sure you want to check the results? You won't be able to participate afterwards."
+msgstr "Êtes-vous sûr de vouloir consulter les résultats ? Vous ne pourrez plus participer au test ensuite."
+
+#: lib/funkyabx_web/live/test_form_live.ex:630
+#: lib/funkyabx_web/live/test_form_live.ex:644
+#, elixir-autogen, elixir-format
+msgid "Available only for logged in users"
+msgstr "Disponible pour les utilisateurs enregistrés uniquement"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:58
+#: lib/funkyabx_web/live/test_form_live.ex:429
+#, elixir-autogen, elixir-format
+msgid "Blind test"
+msgstr "Test à l'aveugle"
+
+#: lib/funkyabx_web/live/gallery_live.ex:82
+#: lib/funkyabx_web/live/test_live.ex:57
+#: lib/funkyabx_web/live/test_results_live.ex:32
+#, elixir-autogen, elixir-format
+msgid "By %{author}"
+msgstr "Par %{author}"
+
+#: lib/funkyabx_web/live/test_live.ex:229
+#, elixir-autogen, elixir-format
+msgid "Check the results"
+msgstr "Voir les résultats"
+
+#: lib/funkyabx_web/live/components/invitation.ex:62
+#, elixir-autogen, elixir-format
+msgid "Clicked"
+msgstr "Cliqué"
+
+#: lib/funkyabx_web/live/test_form_live.ex:320
+#, elixir-autogen, elixir-format
+msgid "Close the test"
+msgstr "Fermer le test"
+
+#: lib/funkyabx_web/live/test_form_live.ex:707
+#, elixir-autogen, elixir-format
+msgid "Close the test at date/time"
+msgstr "Fermer le test à la date"
+
+#: lib/funkyabx_web/live/test_form_live.ex:615
+#, elixir-autogen, elixir-format
+msgid "Comments are displayed on the results page (except for listening tests)"
+msgstr "Les commentaires sont affichés sur la page de résultats (sauf pour les tests d'écoute)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1354
+#, elixir-autogen, elixir-format
+msgid "Copied to clipboard"
+msgstr "Copié dans le presse-papiers"
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:58
+#, elixir-autogen, elixir-format
+msgid "Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>"
+msgstr "Suppositions correctes: <strong>%{guess} / %{nb_of_rounds}</strong>"
+
+#: lib/funkyabx_web/live/test_live.ex:185
+#: lib/funkyabx_web/live/test_results_live.ex:225
+#, elixir-autogen, elixir-format
+msgid "Create a new local test"
+msgstr "Créer un nouveau test local"
+
+#: lib/funkyabx_web/live/flash_live.ex:9
+#: lib/funkyabx_web/live/test_form_live.ex:36
+#, elixir-autogen, elixir-format
+msgid "Create a new test"
+msgstr "Créer un nouveau test"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:408
+#, elixir-autogen, elixir-format
+msgid "Create local test"
+msgstr "Créer un test local"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1168
+#, elixir-autogen, elixir-format
+msgid "Create test"
+msgstr "Créer un test"
+
+#: lib/funkyabx_web/live/test_list_live.ex:17
+#, elixir-autogen, elixir-format
+msgid "Created"
+msgstr "Créé"
+
+#: lib/funkyabx_web/live/test_form_live.ex:387
+#, elixir-autogen, elixir-format
+msgid "Created by"
+msgstr "Créé par"
+
+#: lib/funkyabx_web/live/components/player.ex:141
+#, elixir-autogen, elixir-format
+msgid "Cue end"
+msgstr "Fin de la boucle"
+
+#: lib/funkyabx_web/live/components/player.ex:133
+#, elixir-autogen, elixir-format
+msgid "Cue start"
+msgstr "Début de la boucle"
+
+#: lib/funkyabx_web/live/test_form_live.ex:686
+#, elixir-autogen, elixir-format
+msgid "Current:"
+msgstr "Actuel:"
+
+#: lib/funkyabx_web/live/components/output_selector.ex:40
+#, elixir-autogen, elixir-format
+msgid "Currently selected: %{device}"
+msgstr "Actuellement sélectionné: %{device}"
+
+#: lib/funkyabx_web/live/components/player.ex:312
+#: lib/funkyabx_web/live/components/player.ex:314
+#, elixir-autogen, elixir-format
+msgid "Decoding..."
+msgstr "Décodage ..."
+
+#: lib/funkyabx_web/live/test_form_live.ex:345
+#, elixir-autogen, elixir-format
+msgid "Delete the test"
+msgstr "Supprimer le test"
+
+#: lib/funkyabx_web/live/test_form_live.ex:396
+#, elixir-autogen, elixir-format
+msgid "Description"
+msgstr "Description"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:108
+#: lib/funkyabx_web/live/test_form_live.ex:480
+#, elixir-autogen, elixir-format
+msgid "Each track will have a 1-5 star rating (usually NOT the best choice !)"
+msgstr "Chaque piste aura un classement entre 1 et 5 étoiles (généralement PAS le meilleur choix de test !)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:38
+#, elixir-autogen, elixir-format
+msgid "Edit a test"
+msgstr "Modifier le test"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1102
+#, elixir-autogen, elixir-format
+msgid "Edit test - %{title}"
+msgstr "Modifier le test - %{title}"
+
+#: lib/funkyabx_web/live/test_form_live.ex:92
+#, elixir-autogen, elixir-format
+msgid "Embed"
+msgstr "Intégré"
+
+#: lib/funkyabx_web/live/test_form_live.ex:697
+#, elixir-autogen, elixir-format
+msgid "Enter new password"
+msgstr "Entrez un nouveau mot de passe"
+
+#: lib/funkyabx_web/live/components/player.ex:321
+#, elixir-autogen, elixir-format
+msgid "Error"
+msgstr "Erreur"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:354
+#: lib/funkyabx_web/live/test_form_live.ex:955
+#, elixir-autogen, elixir-format
+msgid "File:"
+msgstr "Fichier:"
+
+#: lib/funkyabx_web/live/gallery_live.ex:11
+#, elixir-autogen, elixir-format
+msgid "Gallery"
+msgstr "Gallerie"
+
+#: lib/funkyabx_web/live/components/invitation.ex:37
+#, elixir-autogen, elixir-format
+msgid "Generate invitation"
+msgstr "Générer une invitation"
+
+#: lib/funkyabx_web/live/test_form_live.ex:355
+#, elixir-autogen, elixir-format
+msgid "Generate invitations"
+msgstr "Générer des invitations"
+
+#: lib/funkyabx_web/live/test_form_live.ex:655
+#, elixir-autogen, elixir-format
+msgid "Global results and stats of the test will be hidden (even for you)"
+msgstr "Les résultats globaux et les stats d'un test seront cachés (même pour vous)"
+
+#: lib/funkyabx_web/live/test_results_live.ex:205
+#, elixir-autogen, elixir-format
+msgid "Global results have been hidden by test creator."
+msgstr "Les résultats globaux du test ont été cachés par le créateur du test."
+
+#: lib/funkyabx_web/live/test_live.ex:178
+#: lib/funkyabx_web/live/test_results_live.ex:213
+#, elixir-autogen, elixir-format
+msgid "Go back to the test form"
+msgstr "Retourner au formulaire du test"
+
+#: lib/funkyabx_web/live/test_results_live.ex:134
+#, elixir-autogen, elixir-format
+msgid "Hide description"
+msgstr "Cacher la description"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:69
+#: lib/funkyabx_web/live/components/result/result_rank.ex:82
+#: lib/funkyabx_web/live/components/result/result_star.ex:51
+#, elixir-autogen, elixir-format
+msgid "Hide details"
+msgstr "Cacher les détails"
+
+#: lib/funkyabx_web/live/test_live.ex:241
+#, elixir-autogen, elixir-format
+msgid "Hide titles and shuffle tracks"
+msgstr "Cacher les titres et mélanger les pistes"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:196
+#: lib/funkyabx_web/live/test_form_live.ex:568
+#, elixir-autogen, elixir-format
+msgid "Hide tracks' title"
+msgstr "Cacher les titres de pistes"
+
+#: lib/funkyabx_web/live/test_results_live.ex:152
+#, elixir-autogen, elixir-format
+msgid "Hide your test"
+msgstr "Cacher votre test"
+
+#: lib/funkyabx_web/live/components/test/track_rank.ex:18
+#, elixir-autogen, elixir-format
+msgid "I rank this track..."
+msgstr "Je classe cette piste ..."
+
+#: lib/funkyabx_web/live/components/test/track_star.ex:16
+#, elixir-autogen, elixir-format
+msgid "I rate this track..."
+msgstr "Je note cette piste ..."
+
+#: lib/funkyabx_web/live/components/test/track_abx.ex:30
+#: lib/funkyabx_web/live/components/test/track_identification.ex:19
+#, elixir-autogen, elixir-format
+msgid "I think this is..."
+msgstr "Je pense que c'est ..."
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:36
+#, elixir-autogen, elixir-format
+msgid "Identification"
+msgstr "Identification"
+
+#: lib/funkyabx_web/live/test_form_live.ex:45
+#, elixir-autogen, elixir-format
+msgid "If you're making a one-off test for yourself, consider making a <a href=\"%{link}\">local test</a>, it's quicker and avoids uploading your files."
+msgstr "Si vous faites un test juste pour vous, envosagez de faire <a href=\"%{link}\">un test local</a>, cela est plus rapide et ne télécharge pas vos fichiers."
+
+#: lib/funkyabx_web/live/test_results_live.ex:182
+#, elixir-autogen, elixir-format
+msgid "Image:"
+msgstr "Image:"
+
+#: lib/funkyabx_web/live/test_form_live.ex:370
+#, elixir-autogen, elixir-format
+msgid "Infos"
+msgstr "Infos"
+
+#: lib/funkyabx_web/live/test_form_live.ex:601
+#, elixir-autogen, elixir-format
+msgid "It will be published in the gallery 15 minutes after its creation"
+msgstr "Le test sera publié 15 minutes après sa création"
+
+#: lib/funkyabx_web/live/components/invitation.ex:61
+#, elixir-autogen, elixir-format
+msgid "Link"
+msgstr "Lien"
+
+#: lib/funkyabx_web/live/test_form_live.ex:75
+#, elixir-autogen, elixir-format
+msgid "Links"
+msgstr "Liens"
+
+#: lib/funkyabx_web/live/components/player.ex:307
+#, elixir-autogen, elixir-format
+msgid "Loading ... %{progress}%"
+msgstr "Chargement ... %{progress}%"
+
+#: lib/funkyabx_web/live/components/player.ex:91
+#, elixir-autogen, elixir-format
+msgid "Loading tracks..."
+msgstr "Chargement des pistes ..."
+
+#: lib/funkyabx_web/live/components/player.ex:88
+#: lib/funkyabx_web/live/local_test_form_live.ex:400
+#: lib/funkyabx_web/live/test_form_live.ex:1029
+#, elixir-autogen, elixir-format
+msgid "Loading..."
+msgstr "Chargement ..."
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:27
+#, elixir-autogen, elixir-format
+msgid "Local test"
+msgstr "Test local"
+
+#: lib/funkyabx_web/live/test_results_live.ex:281
+#, elixir-autogen, elixir-format
+msgid "Local test results"
+msgstr "Résultats du test local"
+
+#: lib/funkyabx_web/live/components/player.ex:158
+#, elixir-autogen, elixir-format
+msgid "Loop"
+msgstr "Boucle"
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:85
+#, elixir-autogen, elixir-format
+msgid "Minimum correct answers to be considered better than random guesses: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">source</a>)</small>"
+msgstr "Nombre de réponses correctes pour être considéré meilleur que des choix au hasard: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">source</a>)</small>"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:186
+#: lib/funkyabx_web/live/test_form_live.ex:558
+#, elixir-autogen, elixir-format
+msgid "Must be between be 1 to 10"
+msgstr "Doit être entre 1 et 10"
+
+#: lib/funkyabx_web/live/components/invitation.ex:60
+#, elixir-autogen, elixir-format
+msgid "Name"
+msgstr "Nom"
+
+#: lib/funkyabx_web/live/components/invitation.ex:59
+#, elixir-autogen, elixir-format
+msgid "Name or email"
+msgstr "Nom ou courriel"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:343
+#: lib/funkyabx_web/live/test_form_live.ex:924
+#, elixir-autogen, elixir-format
+msgid "Name:*"
+msgstr "Nom*:"
+
+#: lib/funkyabx_web/live/components/invitation.ex:104
+#, elixir-autogen, elixir-format
+msgid "No invitation sent yet."
+msgstr "Pas d'invitations envoyées pour l'instant."
+
+#: lib/funkyabx_web/live/components/result/result_rank.ex:159
+#, elixir-autogen, elixir-format
+msgid "No other ranking"
+msgstr "Pas d'autre classement"
+
+#: lib/funkyabx_web/live/gallery_live.ex:123
+#, elixir-autogen, elixir-format
+msgid "No public tests yet :("
+msgstr "Pas de test publics jusqu'à présent :("
+
+#: lib/funkyabx_web/live/components/result/result_rank.ex:89
+#, elixir-autogen, elixir-format
+msgid "No ranking done ... yet!"
+msgstr "Pas de classement effectué ... pour l'instant !"
+
+#: lib/funkyabx_web/live/components/result/result_star.ex:58
+#, elixir-autogen, elixir-format
+msgid "No rating done ... yet!"
+msgstr "Pas de notation effectuée ... pour l'instant !"
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:45
+#, elixir-autogen, elixir-format
+msgid "No test taken ... yet!"
+msgstr "Pas de tests passés ... pour l'instant !"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:212
+#: lib/funkyabx_web/live/test_form_live.ex:584
+#, elixir-autogen, elixir-format
+msgid "No test, only listening"
+msgstr "Pas de test, seulement de lécoute"
+
+#: lib/funkyabx_web/live/components/result/result_pick.ex:35
+#, elixir-autogen, elixir-format
+msgid "No track picked ... yet!"
+msgstr "Pas de piste choisie ... pour l'instant !"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:77
+#, elixir-autogen, elixir-format
+msgid "No tracks guesses ... yet!"
+msgstr "Pas de pistes devinées ... pour l'instant !"
+
+#: lib/funkyabx_web/live/test_form_live.ex:627
+#, elixir-autogen, elixir-format
+msgid "Notify me by email when a test is taken"
+msgstr "Me notifier par courriel quand un test est passé"
+
+#: lib/funkyabx_web/live/test_form_live.ex:640
+#, elixir-autogen, elixir-format
+msgid "Notify me by email when someone post a comment on a test"
+msgstr "Me notifier par courriel quand un commentaire est posté sur un test"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:179
+#: lib/funkyabx_web/live/test_form_live.ex:551
+#, elixir-autogen, elixir-format
+msgid "Number of rounds:"
+msgstr "Nombre de rounds:"
+
+#: lib/funkyabx_web/live/components/player.ex:399
+#, elixir-autogen, elixir-format
+msgid "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test."
+msgstr "One or more tracks couldn't be loaded. Si vous avez rafraîchi la page, vous devez créer un nouveau test."
+
+#: lib/funkyabx_web/live/components/player.ex:405
+#, elixir-autogen, elixir-format
+msgid "One or more tracks couldn't be loaded. Please refresh the page to try again."
+msgstr "UOne or more tracks couldn't be loaded. Merci de rafraîchir la page pour réessayer."
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:145
+#: lib/funkyabx_web/live/test_form_live.ex:517
+#, elixir-autogen, elixir-format
+msgid "Only for tests with 10+ tracks"
+msgstr "Seulement pour les tests avec 10 pistes ou plus"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:137
+#: lib/funkyabx_web/live/test_form_live.ex:509
+#, elixir-autogen, elixir-format
+msgid "Only rank the top/bottom three tracks"
+msgstr "Classer seulement les trois premières et dernières pistes"
+
+#: lib/funkyabx_web/live/test_form_live.ex:592
+#, elixir-autogen, elixir-format
+msgid "Options"
+msgstr "Options"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:251
+#, elixir-autogen, elixir-format
+msgid "Or drag and drop files here"
+msgstr "Ou glissez & déposez les fichiers ici"
+
+#: lib/funkyabx_web/live/test_form_live.ex:674
+#, elixir-autogen, elixir-format
+msgid "Password protected"
+msgstr "Protégé par un mot de passe"
+
+#: lib/funkyabx_web/controllers/test_html/password.html.heex:37
+#, elixir-autogen, elixir-format
+msgid "Password:"
+msgstr "Mot de passe:"
+
+#: lib/funkyabx_web/live/components/player.ex:56
+#: lib/funkyabx_web/live/components/player.ex:59
+#, elixir-autogen, elixir-format
+msgid "Pause"
+msgstr "Pause"
+
+#: lib/funkyabx_web/live/test_form_live.ex:503
+#, elixir-autogen, elixir-format
+msgid "People will be asked to rank the tracks"
+msgstr "Les pistes devront être classées"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:175
+#: lib/funkyabx_web/live/test_form_live.ex:547
+#, elixir-autogen, elixir-format
+msgid "People will have to guess which track is cloned for n rounds"
+msgstr "Il faudra deviner quelle piste est dupliquée pour n rounds"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:158
+#: lib/funkyabx_web/live/test_form_live.ex:530
+#, elixir-autogen, elixir-format
+msgid "People will have to identify the anonymized tracks"
+msgstr "Il faudra identifier les pistes anonymisées"
+
+#: lib/funkyabx_web/live/test_form_live.ex:460
+#, elixir-autogen, elixir-format
+msgid "People will have to pick their preferred track"
+msgstr "Il faudra choisir sa piste préférée"
+
+#: lib/funkyabx_web/live/components/test/track_pick.ex:27
+#, elixir-autogen, elixir-format
+msgid "Pick this track as favorite"
+msgstr "Choisir comme piste favorite"
+
+#: lib/funkyabx_web/live/components/result/result_pick.ex:88
+#, elixir-autogen, elixir-format
+msgid "Picked %{count} time"
+msgid_plural "Picked %{count} times"
+msgstr[0] "Choisie %{count} fois"
+msgstr[1] "Choisie %{count} fois"
+
+#: lib/funkyabx_web/live/components/result/result_pick.ex:32
+#: lib/funkyabx_web/live/local_test_form_live.ex:85
+#: lib/funkyabx_web/live/test_form_live.ex:457
+#, elixir-autogen, elixir-format
+msgid "Picking"
+msgstr "Choisir"
+
+#: lib/funkyabx_web/live/components/player.ex:65
+#: lib/funkyabx_web/live/components/player.ex:75
+#, elixir-autogen, elixir-format
+msgid "Play"
+msgstr "Lecture"
+
+#: lib/funkyabx_web/live/components/player.ex:98
+#, elixir-autogen, elixir-format
+msgid "Player controls"
+msgstr "Contrôles lecteur"
+
+#: lib/funkyabx_web/live/test_form_live.ex:104
+#, elixir-autogen, elixir-format
+msgid "Player only"
+msgstr "Seulement le Lecteur"
+
+#: lib/funkyabx_web/live/test_results_live.ex:366
+#: lib/funkyabx_web/live/test_results_live.ex:382
+#, elixir-autogen, elixir-format
+msgid "Please take the test before checking the results."
+msgstr "Merci de passer le test avant de consulter les résultats"
+
+#: lib/funkyabx_web/live/test_form_live.ex:879
+#, elixir-autogen, elixir-format
+msgid "Please use descriptive names to have relevant results for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page (as seen on the <a target=\"_blank\" href=\"/test/demo\">demo</a>)."
+msgstr "Merci d'utiliser des titres descriptifs pour avoir des résultats pertinents pour les visiteurs. Les pistes sont <u>anonymisées</u> sur la page de test (comme vu sur le <a target=\"_blank\" href=\"/test/demo\">test démo</a>)."
+
+#: lib/funkyabx_web/live/test_form_live.ex:894
+#, elixir-autogen, elixir-format
+msgid "Please use descriptive names."
+msgstr "Merci d'utiliser des titres descriptifs."
+
+#: lib/funkyabx_web/live/components/result/result_rank.ex:35
+#: lib/funkyabx_web/live/local_test_form_live.ex:128
+#: lib/funkyabx_web/live/test_form_live.ex:500
+#, elixir-autogen, elixir-format
+msgid "Ranking"
+msgstr "Classement"
+
+#: lib/funkyabx_web/live/components/result/result_star.ex:31
+#: lib/funkyabx_web/live/local_test_form_live.ex:68
+#: lib/funkyabx_web/live/test_form_live.ex:440
+#, elixir-autogen, elixir-format
+msgid "Rating"
+msgstr "Notation"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:154
+#: lib/funkyabx_web/live/test_form_live.ex:526
+#, elixir-autogen, elixir-format
+msgid "Recognition test"
+msgstr "Test d'identification"
+
+#: lib/funkyabx_web/live/components/player.ex:277
+#: lib/funkyabx_web/live/local_test_form_live.ex:377
+#: lib/funkyabx_web/live/test_form_live.ex:1001
+#, elixir-autogen, elixir-format
+msgid "Reference"
+msgstr "Référence"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:384
+#, elixir-autogen, elixir-format
+msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
+msgstr "Piste de référence (sans traitement) qui ne fera pas partie du test mais sera jouable en parallèle de celles du test."
+
+#: lib/funkyabx_web/live/test_form_live.ex:332
+#, elixir-autogen, elixir-format
+msgid "Reopen the test"
+msgstr "Réouvrir le test"
+
+#: lib/funkyabx_web/live/test_list_live.ex:20
+#, elixir-autogen, elixir-format
+msgid "Results"
+msgstr "Résultats"
+
+#: lib/funkyabx_web/live/test_live.ex:248
+#, elixir-autogen, elixir-format
+msgid "Reveal tracks titles"
+msgstr "Révéler le nom des pistes"
+
+#: lib/funkyabx_web/live/components/player.ex:124
+#, elixir-autogen, elixir-format
+msgid "Round %{current_round} / %{nb_of_rounds}"
+msgstr "Round %{current_round} / %{nb_of_rounds}"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1038
+#, elixir-autogen, elixir-format
+msgid "Save test"
+msgstr "Sauvegarder le test"
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:71
+#, elixir-autogen, elixir-format
+msgid "Scored"
+msgstr "Score"
+
+#: lib/funkyabx_web/live/components/output_selector.ex:12
+#: lib/funkyabx_web/live/components/output_selector.ex:21
+#: lib/funkyabx_web/live/components/output_selector.ex:27
+#, elixir-autogen, elixir-format
+msgid "Select an output device"
+msgstr "Choisir une sortie"
+
+#: lib/funkyabx_web/live/test_form_live.ex:797
+#, elixir-autogen, elixir-format
+msgid "Select file(s) to upload:"
+msgstr "Choisir les fichiers à envoyer"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:236
+#, elixir-autogen, elixir-format
+msgid "Select files"
+msgstr "Choisir les fichiers"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:244
+#, elixir-autogen, elixir-format
+msgid "Select folder"
+msgstr "Choisir un dossier"
+
+#: lib/funkyabx_web/live/test_results_live.ex:176
+#, elixir-autogen, elixir-format
+msgid "Share:"
+msgstr "Partager:"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1203
+#, elixir-autogen, elixir-format
+msgid "Someone just commented on this test!"
+msgstr "Quelqu'un vient de commenter le test !"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1196
+#: lib/funkyabx_web/live/test_live.ex:440
+#: lib/funkyabx_web/live/test_results_live.ex:489
+#, elixir-autogen, elixir-format
+msgid "Someone just took this test!"
+msgstr "Quelqu'un vient de passer le test !"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:105
+#: lib/funkyabx_web/live/test_form_live.ex:477
+#, elixir-autogen, elixir-format
+msgid "Stars"
+msgstr "Étoiles"
+
+#: lib/funkyabx_web/live/components/player.ex:41
+#, elixir-autogen, elixir-format
+msgid "Start back"
+msgstr "Recommencer"
+
+#: lib/funkyabx_web/live/components/player.ex:81
+#, elixir-autogen, elixir-format
+msgid "Stop"
+msgstr "Stop"
+
+#: lib/funkyabx_web/live/test_live.ex:211
+#, elixir-autogen, elixir-format
+msgid "Submit my choices"
+msgstr "Soumettre mes choix"
+
+#: lib/funkyabx_web/live/test_form_live.ex:750
+#, elixir-autogen, elixir-format
+msgid "Supported formats: wav, mp3, aac, flac ... "
+msgstr "Formats pris en charg: wav, mp3, aac, flac ..."
+
+#: lib/funkyabx_web/live/components/player.ex:176
+#, elixir-autogen, elixir-format
+msgid "Switch track every"
+msgstr "Changer de piste toutes les"
+
+#: lib/funkyabx_web/live/test_live.ex:221
+#: lib/funkyabx_web/live/test_results_live.ex:219
+#, elixir-autogen, elixir-format
+msgid "Take the test again"
+msgstr "Passer le test de nouveau"
+
+#: lib/funkyabx_web/live/components/invitation.ex:63
+#: lib/funkyabx_web/live/test_list_live.ex:19
+#, elixir-autogen, elixir-format
+msgid "Taken"
+msgstr "Passé"
+
+#: lib/funkyabx_web/live/test_form_live.ex:103
+#, elixir-autogen, elixir-format
+msgid "Test"
+msgstr "Test"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1124
+#, elixir-autogen, elixir-format
+msgid "Test authentication failed. Please log in or check your link."
+msgstr "L'authentification a échoué. Veuillez vous connecter ou vérifier votre lien."
+
+#: lib/funkyabx_web/live/test_live.ex:121
+#: lib/funkyabx_web/live/test_results_live.ex:112
+#, elixir-autogen, elixir-format
+msgid "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>"
+msgstr "Le test ferme le <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>"
+
+#: lib/funkyabx_web/live/test_live.ex:95
+#: lib/funkyabx_web/live/test_results_live.ex:85
+#, elixir-autogen, elixir-format
+msgid "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>"
+msgstr "Test créé le <time datetime=\"%{created_at}\">%{created_at_format}</time>"
+
+#: lib/funkyabx_web/live/test_form_live.ex:158
+#, elixir-autogen, elixir-format
+msgid "Test edit page"
+msgstr "Page de modification du test"
+
+#: lib/funkyabx_web/live/gallery_live.ex:102
+#, elixir-autogen, elixir-format
+msgid "Test is closed"
+msgstr "Le test est clôturé"
+
+#: lib/funkyabx_web/live/test_results_live.ex:42
+#, elixir-autogen, elixir-format
+msgid "Test played %{count} time"
+msgid_plural "Test played %{count} times"
+msgstr[0] "Test joué %{count} times"
+msgstr[1] "Test joué %{count} times"
+
+#: lib/funkyabx_web/live/test_form_live.ex:67
+#: lib/funkyabx_web/live/test_live.ex:81
+#: lib/funkyabx_web/live/test_results_live.ex:67
+#, elixir-autogen, elixir-format
+msgid "Test played <strong>%{count}</strong> time"
+msgid_plural "Test played <strong>%{count}</strong> times"
+msgstr[0] "Test joué <strong>%{count}</strong> fois"
+msgstr[1] "Test joué <strong>%{count}</strong> fois"
+
+#: lib/funkyabx_web/live/test_form_live.ex:226
+#, elixir-autogen, elixir-format
+msgid "Test private results page"
+msgstr "Page de résultats privée"
+
+#: lib/funkyabx_web/live/test_form_live.ex:85
+#, elixir-autogen, elixir-format
+msgid "Test public page"
+msgstr "Page de test publique"
+
+#: lib/funkyabx_web/live/test_results_live.ex:337
+#, elixir-autogen, elixir-format
+msgid "Test results - %{test_title}"
+msgstr "Resultats du test - %{test_title}"
+
+#: lib/funkyabx_web/live/gallery_live.ex:107
+#, elixir-autogen, elixir-format
+msgid "Test taken %{count} time"
+msgid_plural "Test taken %{count} times"
+msgstr[0] "Test passé %{count} fois"
+msgstr[1] "Test passé %{count} fois"
+
+#: lib/funkyabx_web/live/test_live.ex:66
+#: lib/funkyabx_web/live/test_results_live.ex:52
+#, elixir-autogen, elixir-format
+msgid "Test taken <strong>%{count}</strong> time"
+msgid_plural "Test taken <strong>%{count}</strong> times"
+msgstr[0] "Test passé <strong>%{count}</strong> fois"
+msgstr[1] "Test passé <strong>%{count}</strong> fois"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:46
+#: lib/funkyabx_web/live/test_form_live.ex:409
+#, elixir-autogen, elixir-format
+msgid "Test type"
+msgstr "Type de test"
+
+#: lib/funkyabx_web/live/test_form_live.ex:412
+#, elixir-autogen, elixir-format
+msgid "Test type can't be changed once at least one person has taken the test."
+msgstr "Le type de test ne peut être changé une fois qu'au moins une personne a passé le test."
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:280
+#, elixir-autogen, elixir-format
+msgid "The file will be downloaded once you submit, not served from the original url"
+msgstr "Le fichier sera téléchargé dès que le formulaire sera soumis, et non servis depuis son url"
+
+#: lib/funkyabx_web/live/test_live.ex:488
+#, elixir-autogen, elixir-format
+msgid "The page has been reloaded because the test has been updated by its creator."
+msgstr "La page a été rechargée car le créateur du test l'a mis à jour."
+
+#: lib/funkyabx_web/live/test_form_live.ex:1216
+#, elixir-autogen, elixir-format
+msgid "The test has been opened from an invitation."
+msgstr "Ce test a été ouvert depuis une invitation"
+
+#: lib/funkyabx_web/live/test_form_live.ex:598
+#, elixir-autogen, elixir-format
+msgid "The test is public"
+msgstr "Le test est public"
+
+#: lib/funkyabx_web/live/test_form_live.ex:677
+#, elixir-autogen, elixir-format
+msgid "The test will require a password to be taken (public tests will be modified as private)"
+msgstr "Le test demandera un mot de passe pour être passé (les tests publics seront modifiés comme privés)"
+
+#: lib/funkyabx_web/live/test_form_live.ex:710
+#, elixir-autogen, elixir-format
+msgid "The test won't be able to be taken after this date/time, but results will still be available"
+msgstr "Le test ne pourra plus être passé après cette date, mais les résultats demereuront accessibles"
+
+#: lib/funkyabx_web/live/test_live.ex:478
+#: lib/funkyabx_web/live/test_results_live.ex:499
+#, elixir-autogen, elixir-format
+msgid "This test has been deleted :("
+msgstr "Ce test a été supprimé :("
+
+#: lib/funkyabx_web/live/test_live.ex:448
+#, elixir-autogen, elixir-format
+msgid "This test has been reopened."
+msgstr "Ce test a été réouvert"
+
+#: lib/funkyabx_web/live/test_results_live.ex:18
+#, elixir-autogen, elixir-format
+msgid "This test is closed."
+msgstr "Ce test est clôturé."
+
+#: lib/funkyabx_web/live/test_live.ex:399
+#: lib/funkyabx_web/live/test_live.ex:461
+#, elixir-autogen, elixir-format
+msgid "This test is closed. <a href=\"%{link}\">Check the results</a>"
+msgstr "Ce test est clôturé. <a href=\"%{link}\">Consulter les résultats</a>"
+
+#: lib/funkyabx_web/controllers/test_html/password.html.heex:7
+#, elixir-autogen, elixir-format
+msgid "This test requires a password."
+msgstr "Ce test demande un mot de passe."
+
+#: lib/funkyabx_web/live/components/test/track_pick.ex:16
+#, elixir-autogen, elixir-format
+msgid "This track is my favorite"
+msgstr "Cette piste est ma préférée"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:102
+#, elixir-autogen, elixir-format
+msgid "This track was identified as"
+msgstr "Cette piste a été identifiée à"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:95
+#, elixir-autogen, elixir-format
+msgid "This track was identified correctly"
+msgstr "Cette piste a été identifiée avec succès"
+
+#: lib/funkyabx_web/live/components/result/result_pick.ex:81
+#, elixir-autogen, elixir-format
+msgid "This track was picked"
+msgstr "Cette piste a été choisie"
+
+#: lib/funkyabx_web/live/components/result/result_rank.ex:128
+#, elixir-autogen, elixir-format
+msgid "This track was ranked: %{rank}"
+msgstr "Cette piste a été classée: %{rank}"
+
+#: lib/funkyabx_web/live/components/result/result_star.ex:97
+#, elixir-autogen, elixir-format
+msgid "This track was rated:"
+msgstr "Cette piste a été notée:"
+
+#: lib/funkyabx_web/live/test_list_live.ex:16
+#, elixir-autogen, elixir-format
+msgid "Title"
+msgstr "Titre"
+
+#: lib/funkyabx_web/live/test_form_live.ex:377
+#, elixir-autogen, elixir-format
+msgid "Title*"
+msgstr "Titre*"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1640
+#, elixir-autogen, elixir-format
+msgid "Too large"
+msgstr "Trop volumineuse"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:339
+#: lib/funkyabx_web/live/test_form_live.ex:920
+#, elixir-autogen, elixir-format
+msgid "Track #%{track_index}"
+msgstr "Piste #%{track_index}"
+
+#: lib/funkyabx_web/live/components/test/track_abx.ex:21
+#, elixir-autogen, elixir-format
+msgid "Track %{guess}"
+msgstr "Piste %{guess}"
+
+#: lib/funkyabx_web/live/components/player.ex:279
+#, elixir-autogen, elixir-format
+msgid "Track %{track_index}"
+msgstr "Piste %{track_index}"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:222
+#, elixir-autogen, elixir-format
+msgid "Tracks"
+msgstr "Pistes"
+
+#: lib/funkyabx_web/live/test_form_live.ex:743
+#, elixir-autogen, elixir-format
+msgid "Tracks can't be added or removed once at least one person has taken the test."
+msgstr "Des pistes ne peuvent pas être ajoutées ou enlevées après qu'au moins une personne a passé le test."
+
+#: lib/funkyabx_web/live/test_form_live.ex:779
+#, elixir-autogen, elixir-format
+msgid "True Peak -1dB, target -24dB"
+msgstr "True Peak -1dB, target -24dB"
+
+#: lib/funkyabx_web/live/test_form_live.ex:736
+#, elixir-autogen, elixir-format
+msgid "Two tracks minimum"
+msgstr "Deux pistes minimum"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1047
+#, elixir-autogen, elixir-format
+msgid "Update test"
+msgstr "Mettre à jour le test"
+
+#: lib/funkyabx_web/live/components/comments.ex:70
+#, elixir-autogen, elixir-format
+msgid "Updated on <time datetime=\"%{updated_at}\">%{updated_at_format}</time>"
+msgstr "Mis à jour le <time datetime=\"%{updated_at}\">%{updated_at_format}</time>"
+
+#: lib/funkyabx_web/live/test_form_live.ex:935
+#, elixir-autogen, elixir-format
+msgid "Upload"
+msgstr "Télécharger"
+
+#: lib/funkyabx_web/controllers/test_html/password.html.heex:47
+#, elixir-autogen, elixir-format
+msgid "Verify"
+msgstr "Vérifier"
+
+#: lib/funkyabx_web/live/test_results_live.ex:130
+#, elixir-autogen, elixir-format
+msgid "View description"
+msgstr "Voir la description"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:61
+#: lib/funkyabx_web/live/components/result/result_rank.ex:74
+#: lib/funkyabx_web/live/components/result/result_star.ex:43
+#, elixir-autogen, elixir-format
+msgid "View details"
+msgstr "Voir les détails"
+
+#: lib/funkyabx_web/live/test_results_live.ex:148
+#, elixir-autogen, elixir-format
+msgid "View your test"
+msgstr "Voir votre test"
+
+#: lib/funkyabx_web/live/test_list_live.ex:18
+#, elixir-autogen, elixir-format
+msgid "Views"
+msgstr "Vues"
+
+#: lib/funkyabx_web/live/flash_live.ex:10
+#, elixir-autogen, elixir-format
+msgid "Visit the gallery"
+msgstr "Voir la gallerie"
+
+#: lib/funkyabx_web/live/test_form_live.ex:652
+#, elixir-autogen, elixir-format
+msgid "Visitors can only see their own test results."
+msgstr "Les visiteurs peuvent seulement voir leur résultats"
+
+#: lib/funkyabx_web/live/test_form_live.ex:756
+#, elixir-autogen, elixir-format
+msgid "Wav files are converted to flac (16bits 48k)."
+msgstr "Les fichiers wav sont convertis en flac (16bits 48k)."
+
+#: lib/funkyabx_web/live/flash_live.ex:8
+#, elixir-autogen, elixir-format
+msgid "What do you want to do now?"
+msgstr "Que souhaitez-vous faire maintenant ?"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:112
+#, elixir-autogen, elixir-format
+msgid "You did not participate in this test"
+msgstr "Vous n'avez pas participé à ce test"
+
+#: lib/funkyabx_web/live/test_live.ex:29
+#: lib/funkyabx_web/live/test_live.ex:559
+#, elixir-autogen, elixir-format
+msgid "You have already taken this test (or chosen to not take it). <a href=\"%{results_url}\">Check the results</a>."
+msgstr "Vous avez déjà participé à ce test (ou choisi de ne pas le faire). <a href=\"%{results_url}\">Consulter les résultats</a>."
+
+#: lib/funkyabx_web/live/test_live.ex:20
+#: lib/funkyabx_web/live/test_live.ex:553
+#, elixir-autogen, elixir-format
+msgid "You have already taken this test (or chosen to not take it). What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>."
+msgstr "Vous avez déjà participé à ce test (ou choisi de ne pas le faire). Que souhaitez-vous faire ? <a href=\"%{results_url}\">Consulter les résultats</a> ou <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>supprimer votre précédent test et le passer une nouvelle fois</a>."
+
+#: lib/funkyabx_web/live/test_form_live.ex:1644
+#, elixir-autogen, elixir-format
+msgid "You have selected an unacceptable file type"
+msgstr "Vous avez choisi un type de fichier non pris en charge"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1641
+#, elixir-autogen, elixir-format
+msgid "You have selected too many files"
+msgstr "Vous avez sélectionné trop de fichiers"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:104
+#, elixir-autogen, elixir-format
+msgid "You identified this track as"
+msgstr "Vous avez identifié cette piste comme"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:97
+#, elixir-autogen, elixir-format
+msgid "You identified this track correctly!"
+msgstr "Vous avez identifé cette piste avec succès "
+
+#: lib/funkyabx_web/live/components/result/result_pick.ex:69
+#: lib/funkyabx_web/live/components/result/result_pick.ex:83
+#, elixir-autogen, elixir-format
+msgid "You picked this track"
+msgstr "Vous avez choisi cette piste"
+
+#: lib/funkyabx_web/live/components/result/result_rank.ex:132
+#, elixir-autogen, elixir-format
+msgid "You ranked this track: %{rank}"
+msgstr "Vous avez classé cette piste: %{rank}"
+
+#: lib/funkyabx_web/live/components/result/result_star.ex:99
+#, elixir-autogen, elixir-format
+msgid "You rated this track:"
+msgstr "Vous avez noté cette piste:"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:131
+#, elixir-autogen, elixir-format
+msgid "You will be asked to rank the tracks"
+msgstr "Vous devrez classer les pistes"
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:88
+#, elixir-autogen, elixir-format
+msgid "You will have to pick their preferred track"
+msgstr "Vous devrez choisir votre piste préférée"
+
+#: lib/funkyabx_web/live/test_live.ex:415
+#, elixir-autogen, elixir-format
+msgid "Your invitation has already been redeemed. <a href=\"%{link}\">Take the test anonymously instead</a>."
+msgstr "Votre invitation a déjà été utilisée. <a href=\"%{link}\">Passer le test anonymement à la place</a>."
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:73
+#, elixir-autogen, elixir-format
+msgid "Your score!"
+msgstr "Votre score !"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:39
+#, elixir-autogen, elixir-format
+msgid "Your score: <strong>%{score}/%{count}</strong>"
+msgstr "Votre score: <strong>%{score}/%{count}</strong>"
+
+#: lib/funkyabx_web/live/components/result/result_abx.ex:32
+#, elixir-autogen, elixir-format
+msgid "Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>"
+msgstr "Votre score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>"
+
+#: lib/funkyabx_web/live/test_live.ex:519
+#: lib/funkyabx_web/live/test_live.ex:703
+#, elixir-autogen, elixir-format
+msgid "Your submission has been registered!"
+msgstr "Votre test a bien été enregistré !"
+
+#: lib/funkyabx_web/live/test_live.ex:710
+#, elixir-autogen, elixir-format
+msgid "Your test can't be submitted. Please try again or reload the page"
+msgstr "Votre test ne peut être soumis. Merci d'essayer de nouveau ou de recharger la page"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1332
+#, elixir-autogen, elixir-format
+msgid "Your test has been successfully created!"
+msgstr "Votre test a été créé avec succès !"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1457
+#, elixir-autogen, elixir-format
+msgid "Your test has been successfully deleted."
+msgstr "Votre test a été supprimé avec succès."
+
+#: lib/funkyabx_web/live/test_form_live.ex:1269
+#, elixir-autogen, elixir-format
+msgid "Your test has been successfully updated!"
+msgstr "Votre test a été mis à jour avec succès !"
+
+#: lib/funkyabx_web/live/test_form_live.ex:1429
+#, elixir-autogen, elixir-format
+msgid "Your test has been successfully updated."
+msgstr "Votre test a été mis à jour avec succès."
+
+#: lib/funkyabx_web/live/test_results_live.ex:173
+#, elixir-autogen, elixir-format
+msgid "Your test:"
+msgstr "Votre test:"
+
+#: lib/funkyabx_web/live/components/result/result_identification.ex:136
+#: lib/funkyabx_web/live/components/result/result_identification.ex:162
+#, elixir-autogen, elixir-format
+msgid "at"
+msgstr "à"
+
+#: lib/funkyabx_web/live/test_list_live.ex:44
+#, elixir-autogen, elixir-format
+msgid "edit / delete"
+msgstr "modifier / supprimer"
+
+#: lib/funkyabx_web/live/test_results_live.ex:178
+#, elixir-autogen, elixir-format
+msgid "link to my results"
+msgstr "Lien vers mes résultats"
+
+#: lib/funkyabx_web/live/test_results_live.ex:184
+#, elixir-autogen, elixir-format
+msgid "my results"
+msgstr "mes résultats"
+
+#: lib/funkyabx_web/live/components/player.ex:318
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Done"
+msgstr "Fait"
+
+#: lib/funkyabx_web/live/test_live.ex:40
+#, elixir-autogen, elixir-format, fuzzy
+msgid "This test is closed. <a href=\"%{link}\">Check the results</a>."
+msgstr "Ce test est clôturé. <a href=\"%{link}\">Consulter les résultats</a>"
+
+#: lib/funkyabx_web/live/test_live.ex:202
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Check the results without participating"
+msgstr "Voir les résultats sans participer"

@@ -1,0 +1,439 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "%{global_count} tests created so far..."
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:52
+#, elixir-autogen, elixir-format
+msgid "%{tests} tests and %{local_tests} local tests"
+msgstr ""
+
+#: lib/funkyabx_web/live/gallery_live.ex:42
+#, elixir-autogen, elixir-format
+msgid "ABX tests"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_footer.html.heex:5
+#: lib/funkyabx_web/controllers/page_html/about.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "About"
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:317
+#: lib/funkyabx_web/live/test_form_live.ex:329
+#: lib/funkyabx_web/live/test_form_live.ex:342
+#: lib/funkyabx_web/live/test_form_live.ex:973
+#, elixir-autogen, elixir-format
+msgid "Are you sure?"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/about.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "Audio files are uploaded to the cloud provider <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> in Paris, France. Files are deleted when a test is deleted."
+msgstr ""
+
+#: lib/funkyabx_web/live/gallery_live.ex:26
+#, elixir-autogen, elixir-format
+msgid "Audio tests"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/invitation.ex:91
+#, elixir-autogen, elixir-format
+msgid "Check results"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:69
+#, elixir-autogen, elixir-format
+msgid "Choose the best kind of test for you:<br>stars, ranking, recognition, abx..."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/bs_modal.ex:21
+#: lib/funkyabx_web/live/components/bs_modal.ex:34
+#, elixir-autogen, elixir-format
+msgid "Close"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/contact.html.heex:49
+#, elixir-autogen, elixir-format
+msgid "Comments, ideas, suggestions, bot spam..."
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:76
+#: lib/funkyabx_web/controllers/page_html/contact.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Contact"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/about.html.heex:23
+#, elixir-autogen, elixir-format
+msgid "Cookies are used to store a test identifier when it's created without an account, and store visitor's choices when a test is taken."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/invitation.ex:72
+#: lib/funkyabx_web/live/test_form_live.ex:139
+#: lib/funkyabx_web/live/test_form_live.ex:173
+#: lib/funkyabx_web/live/test_form_live.ex:201
+#: lib/funkyabx_web/live/test_form_live.ex:243
+#: lib/funkyabx_web/live/test_form_live.ex:273
+#, elixir-autogen, elixir-format
+msgid "Copy to clipboard"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:88
+#, elixir-autogen, elixir-format
+msgid "Create a local test »"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:29
+#, elixir-autogen, elixir-format
+msgid "Create a test"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:76
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:98
+#, elixir-autogen, elixir-format
+msgid "Create a test »"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:22
+#, elixir-autogen, elixir-format
+msgid "Create shoutouts to rank your favorite compressors, eqs, saturation plugins, microphones, instruments, etc ... or even whole mixes!"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:8
+#, elixir-autogen, elixir-format
+msgid "Demo screenshot"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/donate.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Donate"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/donate.html.heex:20
+#, elixir-autogen, elixir-format
+msgid "Donate on Paypal"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/login.ex:78
+#, elixir-autogen, elixir-format
+msgid "Email"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/contact.html.heex:34
+#, elixir-autogen, elixir-format
+msgid "Email:"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:67
+#, elixir-autogen, elixir-format
+msgid "FAQ"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/about.html.heex:39
+#, elixir-autogen, elixir-format
+msgid "For more information, read the <a href=\"%{faq_url}\">FAQ</a>"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:107
+#, elixir-autogen, elixir-format
+msgid "From the gallery"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/donate.html.heex:7
+#, elixir-autogen, elixir-format
+msgid "FunkyABX is a free service but storing and serving audio files is actually not free."
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/about.html.heex:8
+#, elixir-autogen, elixir-format
+msgid "FunkyABX is a independent website to make audio blind tests, made in Paris, France by <a target=\"_blank\" href=\"http://www.funkybits.fr/\">Funkybits</a>."
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:47
+#: lib/funkyabx_web/live/gallery_live.ex:171
+#, elixir-autogen, elixir-format
+msgid "Gallery"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/donate.html.heex:26
+#: lib/funkyabx_web/controllers/page_html/donate.html.heex:27
+#, elixir-autogen, elixir-format
+msgid "Got spare change?"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:36
+#, elixir-autogen, elixir-format
+msgid "Home"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/donate.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "If you like this app you can support it with your hard-earned money :)"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:95
+#, elixir-autogen, elixir-format
+msgid "Invitations"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:96
+#, elixir-autogen, elixir-format
+msgid "Invites people<br>and view their results"
+msgstr ""
+
+#: lib/funkyabx_web/live/gallery_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "Listening"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:82
+#, elixir-autogen, elixir-format
+msgid "Local tests"
+msgstr ""
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:33
+#, elixir-autogen, elixir-format
+msgid "Local tests are ephemeral tests that can't be shared and are using your files locally."
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:23
+#, elixir-autogen, elixir-format
+msgid "Menu"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/contact.html.heex:44
+#, elixir-autogen, elixir-format
+msgid "Message*:"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:63
+#, elixir-autogen, elixir-format
+msgid "More"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/invitation.ex:21
+#: lib/funkyabx_web/live/components/invitation.ex:24
+#, elixir-autogen, elixir-format
+msgid "Name"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/invitation.ex:21
+#: lib/funkyabx_web/live/components/invitation.ex:24
+#, elixir-autogen, elixir-format
+msgid "Name or email"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/contact.html.heex:28
+#, elixir-autogen, elixir-format
+msgid "Name*:"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:43
+#, elixir-autogen, elixir-format
+msgid "New local test"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:39
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:110
+#, elixir-autogen, elixir-format
+msgid "New test"
+msgstr ""
+
+#: lib/funkyabx_web/live/gallery_live.ex:148
+#: lib/funkyabx_web/live/gallery_live.ex:152
+#, elixir-autogen, elixir-format
+msgid "Next"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/about.html.heex:28
+#, elixir-autogen, elixir-format
+msgid "No data usage is collected or sold."
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:149
+#: lib/funkyabx_web/live/test_form_live.ex:183
+#: lib/funkyabx_web/live/test_form_live.ex:213
+#: lib/funkyabx_web/live/test_form_live.ex:253
+#: lib/funkyabx_web/live/test_form_live.ex:287
+#, elixir-autogen, elixir-format
+msgid "Open in a new tab"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/contact.html.heex:38
+#, elixir-autogen, elixir-format
+msgid "Optional"
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:809
+#, elixir-autogen, elixir-format
+msgid "Or drag and drop files here"
+msgstr ""
+
+#: lib/funkyabx_web/live/gallery_live.ex:137
+#: lib/funkyabx_web/live/gallery_live.ex:141
+#, elixir-autogen, elixir-format
+msgid "Previous"
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:1008
+#, elixir-autogen, elixir-format
+msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/contact.html.heex:61
+#, elixir-autogen, elixir-format
+msgid "Send"
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:1056
+#, elixir-autogen, elixir-format
+msgid "Send an invitation"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/about.html.heex:31
+#, elixir-autogen, elixir-format
+msgid "Source code of this project is available <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">on Github</a>."
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:71
+#, elixir-autogen, elixir-format
+msgid "Support the site"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:41
+#, elixir-autogen, elixir-format
+msgid "Take the demo test"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:145
+#, elixir-autogen, elixir-format
+msgid "Take the test"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:41
+#, elixir-autogen, elixir-format
+msgid "Test played"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:66
+#, elixir-autogen, elixir-format
+msgid "Test type"
+msgstr ""
+
+#: lib/funkyabx_web/live/gallery_live.ex:131
+#, elixir-autogen, elixir-format
+msgid "Tests pagination"
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:839
+#, elixir-autogen, elixir-format
+msgid "The file will be downloaded once you submit, not served from the original url"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/error_html/404.html.heex:7
+#, elixir-autogen, elixir-format
+msgid "This page does not exist or has been deleted."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/test/track_abx.ex:82
+#, elixir-autogen, elixir-format
+msgid "Track %{choice}"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:138
+#: lib/funkyabx_web/live/gallery_live.ex:94
+#, elixir-autogen, elixir-format
+msgid "Tracks:"
+msgstr ""
+
+#: lib/funkyabx_web/live/local_test_form_live.ex:405
+#: lib/funkyabx_web/live/test_form_live.ex:1044
+#, elixir-autogen, elixir-format
+msgid "Updating ..."
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:112
+#, elixir-autogen, elixir-format
+msgid "Use rotate=0 and loop=0 to set rotating and looping as off by default"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:84
+#, elixir-autogen, elixir-format
+msgid "Use your local files to create an ephemeral shoutout in seconds"
+msgstr ""
+
+#: lib/funkyabx_web/live/gallery_live.ex:116
+#, elixir-autogen, elixir-format
+msgid "View test"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_controller.ex:66
+#, elixir-autogen, elixir-format
+msgid "Your message has been sent."
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:34
+#, elixir-autogen, elixir-format
+msgid "or create a local test"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:45
+#, elixir-autogen, elixir-format
+msgid "or take the ABX demo test"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:25
+#: lib/funkyabx_web/live/test_list_live.ex:11
+#: lib/funkyabx_web/live/test_list_live.ex:66
+#, elixir-autogen, elixir-format, fuzzy
+msgid "My tests"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:120
+#, elixir-autogen, elixir-format
+msgid "All my tests"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/taken_tests_menu.ex:50
+#, elixir-autogen, elixir-format
+msgid "No test taken (yet !)"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:98
+#, elixir-autogen, elixir-format
+msgid "No tests (yet!)"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/taken_tests_menu.ex:21
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Tests taken"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:53
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:75
+#, elixir-autogen, elixir-format
+msgid "edit"
+msgstr ""
+
+#: lib/funkyabx_web/components/menu/taken_tests_menu.ex:41
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:63
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:67
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:85
+#: lib/funkyabx_web/components/menu/user_tests_menu.ex:89
+#, elixir-autogen, elixir-format
+msgid "results"
+msgstr ""

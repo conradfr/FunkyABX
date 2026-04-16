@@ -1,6 +1,5 @@
 defmodule CommentsComponent do
   use FunkyABXWeb, :live_component
-  import Phoenix.HTML.Form
   alias FunkyABX.Repo
   use PhoenixHTMLHelpers
 
@@ -19,7 +18,7 @@ defmodule CommentsComponent do
     <div class="test-comments my-5" phx-hook="Comments" id="comments">
       <h5 class="header-neon mb-3">{dgettext("comments", "Comments")}</h5>
       <div :if={length(@comments) == 0} class="fs-7 text-body-secondary">
-        {dgettext("test", "No comments yet.")}
+        {dgettext("comments", "No comments yet.")}
       </div>
       <div :if={length(@comments) > 0} class="row">
         <div class="col-md-8">
@@ -90,7 +89,7 @@ defmodule CommentsComponent do
         </div>
       </div>
 
-      <h5 class="header-neon mt-4 mb-2">{dgettext("test", "Post a comment")}</h5>
+      <h5 class="header-neon mt-4 mb-2">{dgettext("comments", "Post a comment")}</h5>
       <.form
         :let={f}
         for={@changeset}
@@ -106,7 +105,7 @@ defmodule CommentsComponent do
           <.input
             field={f[:author]}
             type="text"
-            label={dgettext("test", "Name:")}
+            label={dgettext("comments", "Name:")}
             required
           />
         </div>
@@ -115,7 +114,7 @@ defmodule CommentsComponent do
           <.input
             field={f[:comment]}
             type="textarea"
-            label={dgettext("test", "Comment")}
+            label={dgettext("comments", "Comment")}
             rows="5"
           />
         </div>
@@ -126,7 +125,7 @@ defmodule CommentsComponent do
           phx-disable-with="Saving..."
           disabled={!@changeset.valid?}
         >
-          {dgettext("test", "Post comment")}
+          {dgettext("comments", "Post comment")}
         </button>
       </.form>
     </div>

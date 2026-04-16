@@ -9,9 +9,11 @@ defmodule FunkyABXWeb.Router do
 
     plug Cldr.Plug.PutLocale,
       apps: [:cldr, :gettext],
-      from: [:accept_language, :cookie, :session, :query],
+      from: [:cookie, :session, :accept_language, :query],
       gettext: FunkyABXWeb.Gettext,
       cldr: FunkyABX.Cldr
+
+    plug Cldr.Plug.PutSession
 
     plug :fetch_live_flash
     plug :put_root_layout, html: {FunkyABXWeb.Layouts, :root}
@@ -54,6 +56,8 @@ defmodule FunkyABXWeb.Router do
 
     get "/contact", PageController, :contact
     post "/contact", PageController, :contact_submit
+
+    get "/locale/:locale", PageController, :set_locale
 
     get "/auth/:slug", TestController, :password
     post "/auth/:slug", TestController, :password_verify

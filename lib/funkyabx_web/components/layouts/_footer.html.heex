@@ -3,5 +3,28 @@
     ©2021-{DateTime.utc_now().year}
     <a target="_blank" href="http://www.funkybits.fr">FunkyBits</a>
     - <a href={~p"/about"}>{dgettext("site", "About")}</a>
+    - <% locale_flags = [
+      {"en", "gb", "English"},
+      {"fr", "fr", "Français"},
+      {"es", "es", "Español"}
+    ]
+
+    current_locale = Gettext.get_locale() %>
+
+    <%= for {locale, flag, locale_name} <- locale_flags, locale != current_locale do %>
+      <a
+        title={locale_name}
+        href={~p"/locale/#{locale}"}
+        class="me-1"
+        onclick={"this.href='/locale/#{locale}?return_to='+encodeURIComponent(location.pathname+location.search); return true;"}
+      >
+        <img
+          class="gb-flag gb-flag--micro"
+          loading="lazy"
+          src={"/images/flags/#{flag}.svg"}
+          alt={locale}
+        />
+      </a>
+    <% end %>
   </div>
 </footer>

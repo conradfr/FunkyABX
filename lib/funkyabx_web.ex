@@ -58,6 +58,7 @@ defmodule FunkyABXWeb do
       end
 
       import FunkyABXWeb.DatesHelpers
+      on_mount FunkyABXWeb.RestoreLocale
       unquote(html_helpers())
     end
   end

@@ -1,0 +1,82 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/funkyabx_web/live/components/comments.ex:247
+#, elixir-autogen, elixir-format
+msgid "An error occurred."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:48
+#, elixir-autogen, elixir-format
+msgid "Are you sure you want to delete this comment?"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:20
+#, elixir-autogen, elixir-format
+msgid "Comments"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:60
+#, elixir-autogen, elixir-format
+msgid "Posted on <time datetime=\"%{created_at}\">%{created_at_format}</time>"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:272
+#, elixir-autogen, elixir-format
+msgid "Your comment has been deleted."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:222
+#, elixir-autogen, elixir-format
+msgid "Your comment has been posted."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:231
+#, elixir-autogen, elixir-format
+msgid "Your comment has been updated."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:54
+#, elixir-autogen, elixir-format
+msgid "delete comment"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:39
+#, elixir-autogen, elixir-format
+msgid "edit comment"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:118
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Comment"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:109
+#, elixir-autogen, elixir-format
+msgid "Name:"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:22
+#, elixir-autogen, elixir-format
+msgid "No comments yet."
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:93
+#, elixir-autogen, elixir-format
+msgid "Post a comment"
+msgstr ""
+
+#: lib/funkyabx_web/live/components/comments.ex:129
+#, elixir-autogen, elixir-format
+msgid "Post comment"
+msgstr ""

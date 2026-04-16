@@ -85,8 +85,8 @@ defmodule FunkyABX.Tests do
       from t in Test,
         where:
           t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
-          t.inserted_at < ago(@min_test_created_minutes, "minute") and
-          t.slug not in @demo_slugs,
+            t.inserted_at < ago(@min_test_created_minutes, "minute") and
+            t.slug not in @demo_slugs,
         order_by: [desc: t.inserted_at],
         limit: 2,
         select: t,
@@ -96,31 +96,25 @@ defmodule FunkyABX.Tests do
       query
       |> Repo.all()
 
-    IO.puts("========================================")
-
     exclude_ids =
       last_two
       |> Enum.map(& &1.id)
-      |> IO.inspect()
 
     query =
       from t in Test,
-      where:
-        t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
-        t.inserted_at < ago(@min_test_created_minutes, "minute") and
-        t.slug not in @demo_slugs and
-        t.id not in ^exclude_ids,
-      order_by: fragment("RANDOM()"),
-      limit: 4,
-      select: t,
-      preload: [tracks: :test]
+        where:
+          t.public == true and is_nil(t.closed_at) and is_nil(t.deleted_at) and
+            t.inserted_at < ago(@min_test_created_minutes, "minute") and
+            t.slug not in @demo_slugs and
+            t.id not in ^exclude_ids,
+        order_by: fragment("RANDOM()"),
+        limit: 4,
+        select: t,
+        preload: [tracks: :test]
 
     random =
       query
       |> Repo.all()
-
-    IO.puts("----------------------------------------")
-    IO.puts("#{inspect length(last_two ++ random) }")
 
     last_two ++ random
   end

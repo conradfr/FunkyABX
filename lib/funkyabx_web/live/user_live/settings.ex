@@ -104,7 +104,7 @@ defmodule FunkyABXWeb.UserLive.Settings do
             }
             phx-click="delete_account"
           >
-            <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{dgettext("test", "Delete account")}
+            <i class="bi bi-x-circle"></i>&nbsp;&nbsp;{dgettext("user", "Delete account")}
           </button>
         </div>
       </div>

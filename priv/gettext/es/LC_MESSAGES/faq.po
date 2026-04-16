@@ -1,0 +1,137 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:145
+#, elixir-autogen, elixir-format
+msgid "A test has copyrighted material I want removed."
+msgstr "Un test tiene material con derechos de autor que quiero que se elimine."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:176
+#, elixir-autogen, elixir-format
+msgid "Alternatively you can host your own FunkyABX version by using the <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">Github repo</a>."
+msgstr "Alternativamente, puedes alojar tu propia versión de FunkyABX utilizando el <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">repositorio de Github</a>."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:34
+#, elixir-autogen, elixir-format
+msgid "Audio files are uploaded to the cloud provider <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> in Paris, France. Files are deleted when a test is deleted."
+msgstr "Los archivos de audio se suben al proveedor en la nube <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> en París, Francia. Los archivos se eliminan cuando se borra un test."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:162
+#, elixir-autogen, elixir-format
+msgid "Can I use an alternative hosting provider for my audio files?"
+msgstr "¿Puedo usar un proveedor de alojamiento alternativo para mis archivos de audio?"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:89
+#, elixir-autogen, elixir-format
+msgid "Differences without an account:"
+msgstr "Diferencias sin una cuenta:"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:77
+#, elixir-autogen, elixir-format
+msgid "Do I need to create an account?"
+msgstr "¿Necesito crear una cuenta?"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "Everything is free. There's no ads and no usage data is collected and sold."
+msgstr "Todo es gratuito. No hay anuncios y no se recopilan ni venden datos de uso."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "FAQ"
+msgstr "FAQ"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:41
+#, elixir-autogen, elixir-format
+msgid "Files used for local tests are not transmitted to any servers. Even their filenames are not stored anywhere."
+msgstr "Los archivos utilizados para tests locales no se transmiten a ningún servidor. Ni siquiera sus nombres de archivo se almacenan en ningún lugar."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "FunkyABX is an independent website to make audio blind tests with different ranking methods."
+msgstr "FunkyABX es un sitio web independiente para hacer tests ciegos de audio con diferentes métodos de clasificación."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:51
+#, elixir-autogen, elixir-format
+msgid "How much does it cost?"
+msgstr "¿Cuánto cuesta?"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:65
+#, elixir-autogen, elixir-format
+msgid "If you find this webapp useful you can help cover the hosting costs by donating your spare change <a href=\"%{url}\">here</a>."
+msgstr "Si encuentras útil esta aplicación web, puedes ayudar a cubrir los costes de alojamiento donando tu suelto <a href=\"%{url}\">aquí</a>."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:169
+#, elixir-autogen, elixir-format
+msgid "Not currently but maybe in the future. One of the problem is the need to have a functioning CORS, which if you're a web developer know it's always tricky."
+msgstr "Actualmente no, pero quizás en el futuro. Uno de los problemas es la necesidad de tener un CORS funcional, que como cualquier desarrollador web sabe, siempre es complicado."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:135
+#, elixir-autogen, elixir-format
+msgid "Please note that as the site is developed for free and on our spare time we have to take into account the time, cost of development, testing and support of any new feature."
+msgstr "Ten en cuenta que el sitio se desarrolla de forma gratuita y en nuestro tiempo libre, por lo que debemos considerar el tiempo, el coste de desarrollo, las pruebas y el soporte de cualquier nueva función."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:152
+#, elixir-autogen, elixir-format
+msgid "Use the contact form to report it."
+msgstr "Usa el formulario de contacto para informarlo."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:84
+#, elixir-autogen, elixir-format
+msgid "We worked hard to make the experience with and without an account the same as much as possible."
+msgstr "Trabajamos duro para que la experiencia con y sin cuenta sea la misma en la medida de lo posible."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:107
+#, elixir-autogen, elixir-format
+msgid "What count as a \"view\" for my tests?"
+msgstr "¿Qué cuenta como una \"visita\" para mis tests?"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:9
+#, elixir-autogen, elixir-format
+msgid "What is FunkyABX?"
+msgstr "¿Qué es FunkyABX?"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:113
+#, elixir-autogen, elixir-format
+msgid "When the visitor plays at least one track."
+msgstr "Cuando el visitante reproduce al menos una pista."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:26
+#, elixir-autogen, elixir-format
+msgid "Where are the audio files stored?"
+msgstr "¿Dónde se almacenan los archivos de audio?"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:119
+#, elixir-autogen, elixir-format
+msgid "Would you implement my great feature idea?"
+msgstr "¿Implementarías mi gran idea de función?"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:127
+#, elixir-autogen, elixir-format
+msgid "Yes why not, maybe, it has been done before, try the <a href=\"%{url}\">contact form</a>."
+msgstr "Sí, ¿por qué no?, tal vez, se ha hecho antes, prueba el <a href=\"%{url}\">formulario de contacto</a>."
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:92
+#, elixir-autogen, elixir-format
+msgid "You can't get an email when someone takes one of your tests"
+msgstr "No puedes recibir un correo cuando alguien realiza uno de tus tests"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:94
+#, elixir-autogen, elixir-format
+msgid "You can't get generate and/or send invitations"
+msgstr "No puedes generar y/o enviar invitaciones"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:96
+#, elixir-autogen, elixir-format
+msgid "Your list of tests is limited to the ones created on the same device."
+msgstr "Tu lista de tests está limitada a los creados en el mismo dispositivo."

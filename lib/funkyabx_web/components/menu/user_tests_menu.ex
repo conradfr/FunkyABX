@@ -22,7 +22,7 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        {dgettext("test", "My tests")}
+        {dgettext("site", "My tests")}
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownTestsMenuLink">
         <%= for test <- @tests do %>
@@ -50,7 +50,7 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
                       href={~p"/edit/#{test.slug}"}
                       class="text-base-content/80 hover:text-primary"
                     >
-                      {dgettext("test", "edit")}
+                      {dgettext("site", "edit")}
                     </.link>
                   </div>
                   <div class="text-body-secondary">|</div>
@@ -60,11 +60,11 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
                         href={~p"/results/#{test.slug}"}
                         class="text-base-content/80 hover:text-primary disabled"
                       >
-                        {dgettext("test", "results")}
+                        {dgettext("site", "results")}
                       </.link>
                     </div>
                   <% else %>
-                    <div class="px-1 text-body-secondary">{dgettext("test", "results")}</div>
+                    <div class="px-1 text-body-secondary">{dgettext("site", "results")}</div>
                   <% end %>
                 <% else %>
                   <div class="px-1">
@@ -72,7 +72,7 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
                       href={~p"/edit/#{test.slug}/#{test.access_key}"}
                       class="text-base-content/80 hover:text-primary disabled"
                     >
-                      {dgettext("test", "edit")}
+                      {dgettext("site", "edit")}
                     </.link>
                   </div>
                   <div class="text-body-secondary">|</div>
@@ -82,11 +82,11 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
                         href={~p"/results/#{test.slug}/#{test.access_key}"}
                         class="text-base-content/80 hover:text-primary disabled"
                       >
-                        {dgettext("test", "results")}
+                        {dgettext("site", "results")}
                       </.link>
                     </div>
                   <% else %>
-                    <div class="px-1 text-body-secondary">{dgettext("test", "results")}</div>
+                    <div class="px-1 text-body-secondary">{dgettext("site", "results")}</div>
                   <% end %>
                 <% end %>
               </div>
@@ -95,7 +95,7 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
         <% end %>
         <%= if Kernel.length(@tests) == 0 do %>
           <li class="navbar-tests px-2 text-center">
-            <small class="text-body-secondary">{dgettext("test", "No tests (yet !)")}</small>
+            <small class="text-body-secondary">{dgettext("site", "No tests (yet!)")}</small>
           </li>
         <% else %>
           <%= if @current_user do %>
@@ -107,7 +107,7 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
                     href={~p"/test"}
                     class="text-base-content/80 hover:text-primary disabled"
                   >
-                    {dgettext("test", "New test")}
+                    {dgettext("site", "New test")}
                   </.link>
                 </small>
               </div>
@@ -117,7 +117,7 @@ defmodule FunkyABXWeb.UserTestsMenuComponent do
                     href={~p"/user/tests"}
                     class="text-base-content/80 hover:text-primary disabled"
                   >
-                    {dgettext("test", "All my tests")}
+                    {dgettext("site", "All my tests")}
                   </.link>
                 </small>
               </div>

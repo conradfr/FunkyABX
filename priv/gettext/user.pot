@@ -1,0 +1,174 @@
+## This file is a PO Template file.
+##
+## "msgid"s here are often extracted from source code.
+## Add new messages manually only if they're dynamic
+## messages that can't be statically extracted.
+##
+## Run "mix gettext.extract" to bring this file up to
+## date. Leave "msgstr"s empty as changing them here has no
+## effect: edit them in PO (.po) files instead.
+#
+msgid ""
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:13
+#, elixir-autogen, elixir-format
+msgid "Account Settings"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:90
+#, elixir-autogen, elixir-format
+msgid "All your tests, results and audio files will be deleted."
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/registration.ex:13
+#, elixir-autogen, elixir-format
+msgid "Already registered?"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:175
+#: lib/funkyabx_web/live/user_live/settings.ex:185
+#, elixir-autogen, elixir-format
+msgid "An error occurred. Your email address has NOT been updated."
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:100
+#, elixir-autogen, elixir-format
+msgid "Are you sure you want to delete your account and all data associated with?"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:17
+#, elixir-autogen, elixir-format
+msgid "Change email"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:41
+#, elixir-autogen, elixir-format
+msgid "Change password"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/registration.ex:45
+#, elixir-autogen, elixir-format
+msgid "Confirm password"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/registration.ex:53
+#, elixir-autogen, elixir-format
+msgid "Create an account"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:87
+#: lib/funkyabx_web/live/user_live/settings.ex:107
+#, elixir-autogen, elixir-format
+msgid "Delete account"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/login.ex:91
+#, elixir-autogen, elixir-format
+msgid "Don't have an account? Register here"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/login.ex:37
+#: lib/funkyabx_web/live/user_live/registration.ex:26
+#, elixir-autogen, elixir-format
+msgid "Email"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/login.ex:128
+#, elixir-autogen, elixir-format
+msgid "If your email is in our system, you will receive instructions for logging in shortly"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/user_session_controller.ex:43
+#, elixir-autogen, elixir-format
+msgid "Invalid email or password"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/confirmation.ex:36
+#, elixir-autogen, elixir-format
+msgid "Keep me logged in on this device"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_user_menu.html.heex:53
+#: lib/funkyabx_web/live/user_live/confirmation.ex:27
+#: lib/funkyabx_web/live/user_live/login.ex:10
+#: lib/funkyabx_web/live/user_live/login.ex:59
+#, elixir-autogen, elixir-format
+msgid "Log in"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/registration.ex:15
+#, elixir-autogen, elixir-format
+msgid "Log in to your account now."
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/login.ex:85
+#, elixir-autogen, elixir-format
+msgid "Log in with link in email"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/confirmation.ex:39
+#, elixir-autogen, elixir-format
+msgid "Log me in only this time"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_user_menu.html.heex:36
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/user_session_controller.ex:72
+#, elixir-autogen, elixir-format
+msgid "Logged out successfully."
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/login.ex:46
+#: lib/funkyabx_web/live/user_live/registration.ex:36
+#, elixir-autogen, elixir-format
+msgid "Password"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_user_menu.html.heex:45
+#, elixir-autogen, elixir-format
+msgid "Register"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/login.ex:54
+#, elixir-autogen, elixir-format
+msgid "Remember me"
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_user_menu.html.heex:28
+#, elixir-autogen, elixir-format
+msgid "Settings"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/registration.ex:11
+#, elixir-autogen, elixir-format
+msgid "Sign in"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/user_session_controller.ex:27
+#, elixir-autogen, elixir-format
+msgid "The link is invalid or it has expired."
+msgstr ""
+
+#: lib/funkyabx_web/components/layouts/_user_menu.html.heex:18
+#, elixir-autogen, elixir-format
+msgid "User"
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/confirmation.ex:11
+#, elixir-autogen, elixir-format
+msgid "Welcome %{email}"
+msgstr ""
+
+#: lib/funkyabx_web/controllers/user_session_controller.ex:66
+#, elixir-autogen, elixir-format
+msgid "Your account has been successfully marked for deletion. An email will be sent once confirmed."
+msgstr ""
+
+#: lib/funkyabx_web/live/user_live/settings.ex:168
+#, elixir-autogen, elixir-format
+msgid "Your email address has been updated."
+msgstr ""

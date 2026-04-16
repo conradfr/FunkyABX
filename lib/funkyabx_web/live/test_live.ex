@@ -39,8 +39,8 @@ defmodule FunkyABXWeb.TestLive do
         <i class="bi bi-x-circle"></i>&nbsp;&nbsp; {raw(
           dgettext(
             "test",
-            "This test is closed. <a href=\"%{results_url}\">Check the results</a>.",
-            results_url: ~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)
+            "This test is closed. <a href=\"%{link}\">Check the results</a>.",
+            link: ~p"/results/#{@test.slug}" <> Utils.embedize_url(@embed)
           )
         )}
       </div>
@@ -199,7 +199,7 @@ defmodule FunkyABXWeb.TestLive do
                         )
                       }
                     >
-                      {gettext("Check the results without participating")}
+                      {dgettext("test", "Check the results without participating")}
                     </button>
                   </div>
                 <% end %>
@@ -460,8 +460,8 @@ defmodule FunkyABXWeb.TestLive do
        :info,
        dgettext(
          "test",
-         "This test is closed. <a href=\"%{results_url}\">Check the results</a>",
-         results_url:
+         "This test is closed. <a href=\"%{link}\">Check the results</a>",
+         link:
            ~p"/results/#{socket.assigns.test.slug}" <> Utils.embedize_url(socket.assigns.embed)
        )
        |> raw()

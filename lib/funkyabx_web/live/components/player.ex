@@ -88,7 +88,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                 <span class="visually-hidden">{dgettext("test", "Loading...")}</span>
               </div>
               <span class="text-body-secondary ms-2">
-                <small>{dgettext("test", "Loading tracks ...")}</small>
+                <small>{dgettext("test", "Loading tracks...")}</small>
               </span>
             <% else %>
               <div class="ms-3 text-body-secondary" role="status">
@@ -277,14 +277,16 @@ defmodule FunkyABXWeb.PlayerComponent do
                 <div :if={track.reference_track == true}>{dgettext("test", "Reference")}</div>
                 <div :if={track.reference_track != true}>
                   {dgettext("test", "Track %{track_index}", track_index: i)}
-                  <span :if={@display_track_name_tooltip == true}>&nbsp;&nbsp;
+                  <span :if={@display_track_name_tooltip == true}>
+                    &nbsp;&nbsp;
                     <small>
                       <i
                         class="bi bi-info-circle"
                         title={track.title}
                         role="button"
                         data-bs-toggle="tooltip"
-                        data-bs-title={track.title}>
+                        data-bs-title={track.title}
+                      >
                       </i>
                     </small>
                   </span>
@@ -313,7 +315,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                   </div>
                 </small>
                 <small :if={get_track_state(track.hash, @tracks_state) == :finished}>
-                  {dgettext("test", "Done ")} <i class="bi bi-check"></i>
+                  {dgettext("test", "Done")} <i class="bi bi-check"></i>
                 </small>
                 <small :if={get_track_state(track.hash, @tracks_state) == :error}>
                   {dgettext("test", "Error")} <i class="bi bi-x-circle"></i>

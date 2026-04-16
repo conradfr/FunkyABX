@@ -497,7 +497,7 @@ defmodule FunkyABXWeb.TestFormLive do
                             get_field(@changeset, :type) !== :regular
                         }
                       />
-                      {dgettext("test", "Ranking ")}
+                      {dgettext("test", "Ranking")}
                     </label>
                     <div class="form-text mb-2">
                       {dgettext("test", "People will be asked to rank the tracks")}

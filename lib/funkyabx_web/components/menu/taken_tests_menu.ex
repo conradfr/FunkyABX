@@ -18,7 +18,7 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        {dgettext("test", "Tests taken")}
+        {dgettext("site", "Tests taken")}
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownTakenTestsMenuLink">
         <%= for test <- @tests do %>
@@ -38,7 +38,7 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
                     href={~p"/results/#{test.slug}"}
                     class="text-base-content/80 hover:text-primary"
                   >
-                    {dgettext("test", "results")}
+                    {dgettext("site", "results")}
                   </.link>
                 </div>
               </div>
@@ -47,7 +47,7 @@ defmodule FunkyABXWeb.TakenTestsMenuComponent do
         <% end %>
 
         <li :if={length(@tests) == 0} class="navbar-tests px-2 text-center">
-          <small class="text-body-secondary">{dgettext("test", "No test taken (yet !)")}</small>
+          <small class="text-body-secondary">{dgettext("site", "No test taken (yet !)")}</small>
         </li>
       </ul>
     </li>

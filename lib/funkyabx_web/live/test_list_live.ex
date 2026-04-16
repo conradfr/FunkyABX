@@ -8,7 +8,7 @@ defmodule FunkyABXWeb.TestListLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <h3 class="header-chemyretro">{dgettext("test", "My tests")}</h3>
+    <h3 class="header-chemyretro">{dgettext("site", "My tests")}</h3>
     <div>
       <table class="table">
         <thead>
@@ -63,7 +63,7 @@ defmodule FunkyABXWeb.TestListLive do
        assign(
          socket,
          %{
-           page_title: dgettext("test", "My tests"),
+           page_title: dgettext("site", "My tests"),
            tests: tests
          }
        )}

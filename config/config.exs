@@ -93,9 +93,10 @@ config :phoenix, :json_library, Jason
 
 config :funkyabx, FunkyABXWeb.Gettext,
   default_locale: "en",
-  locales: ~w(en fr)
+  locales: ~w(en fr es)
 
 config :ex_cldr,
+  locales: ["en", "fr", "es"],
   default_locale: "en",
   default_backend: FunkyABX.Cldr
 

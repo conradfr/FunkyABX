@@ -5,10 +5,32 @@ defmodule FunkyABXWeb.PageController do
   alias FunkyABX.Tests
   alias FunkyABX.Utils
 
+  @locale_cookie "locale"
+  @locale_cookie_max_age 365 * 24 * 60 * 60
+
   def home(conn, _params) do
     tests_gallery = Tests.get_homepage()
 
     render(conn, :index, tests_gallery: tests_gallery)
+  end
+
+  def set_locale(conn, %{"locale" => locale} = params) do
+    if locale in Cldr.known_gettext_locale_names(FunkyABX.Cldr) do
+      return_to =
+        case Map.get(params, "return_to") do
+          "/" <> _ = path -> path
+          _ -> "/"
+        end
+
+      conn
+      |> put_resp_cookie(@locale_cookie, locale,
+        max_age: @locale_cookie_max_age,
+        same_site: "Lax"
+      )
+      |> redirect(to: return_to)
+    else
+      redirect(conn, to: "/")
+    end
   end
 
   def about(conn, _params) do
