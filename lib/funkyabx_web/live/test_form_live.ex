@@ -14,6 +14,8 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @title_max_length 100
 
+  @references_title ["Reference", "Référence", "Referencia"]
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -531,12 +533,12 @@ defmodule FunkyABXWeb.TestFormLive do
                   </div>
                 </div>
 
-                <div class="form-check disabled ps-0 mt-4 mb-2">
-                  <label class="form-check-label">
+                <div class="form-check mt-3">
+                  <label class="form-check-label mt-3">
                     <input
                       type="radio"
                       name={input_name(f, :type)}
-                      class="radio radio-xs me-2"
+                      class="form-check-input"
                       value="abx"
                       checked={get_field(@changeset, :type) == :abx}
                       disabled={!@test_updatable}
@@ -571,7 +573,7 @@ defmodule FunkyABXWeb.TestFormLive do
                   </div>
                 </div>
 
-                <div class="form-check disabled mt-4">
+                <div class="form-check mt-4">
                   <label class="form-check-label">
                     <input
                       type="radio"
@@ -1562,12 +1564,14 @@ defmodule FunkyABXWeb.TestFormLive do
       socket.assigns.uploads.tracks.entries
       |> Enum.reject(fn e -> e.uuid in existing_ids end)
       |> Enum.map(fn e ->
+        title = Tracks.filename_to_title(e.client_name)
         %{
           "test_id" => socket.assigns.test.id,
           "temp_id" => e.uuid,
-          "title" => Tracks.filename_to_title(e.client_name),
+          "title" => title,
           "original_filename" => e.client_name,
-          "filename" => e.client_name
+          "filename" => e.client_name,
+          "reference_track" => title in @references_title
         }
       end)
 
