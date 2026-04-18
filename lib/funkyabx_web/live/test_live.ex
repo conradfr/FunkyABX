@@ -669,7 +669,7 @@ defmodule FunkyABXWeb.TestLive do
       choices_cleaned = Tests.clean_choices(choices, tracks, test)
 
       tracks_order =
-        if test.type == :regular do
+        if test.type != :regular do
           tracks
           |> Enum.filter(fn t -> t.reference_track == false end)
           |> Enum.with_index(1)
@@ -733,8 +733,11 @@ defmodule FunkyABXWeb.TestLive do
         %{assigns: %{test: test, tracks: tracks}} = socket
       )
       when test.anonymized_track_title == false do
-    tracks = Enum.shuffle(tracks)
     test = %{test | anonymized_track_title: true}
+    tracks =
+      tracks
+      |> Enum.shuffle()
+      |> Enum.sort_by(fn track -> !track.reference_track end)
 
     send_update_after(
       PlayerComponent,

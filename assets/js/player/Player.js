@@ -443,18 +443,11 @@ export default class {
         let index = this.currentTrackIndex;
 
         do {
-          console.log('------');
           nextTrackIndex = this.getNextTrackIndex(index);
-          console.log(nextTrackIndex);
           const nextTrack = this.tracks[nextTrackIndex];
-
-          console.log(this.startTime);
-          console.log(nextTrack.getDuration());
-          console.log(this.currentTime);
 
           // next track is too short
           if (this.startTime + nextTrack.getDuration() < this.currentTime) {
-            console.log('TOO SHORT ??');
             index = nextTrackIndex;
             nextTrackIndex = null;
           }
