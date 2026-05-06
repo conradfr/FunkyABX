@@ -9,6 +9,10 @@ const DownloadTestFilesHook = {
       const { title, url } = params;
       const ext = new URL(url).pathname.split('.').pop();
 
+      console.log(title);
+      console.log(url);
+      console.log(ext);
+
       const a = document.createElement('a');
       a.href = url;
       a.download = `${title}.${ext}`;
