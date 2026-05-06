@@ -46,6 +46,8 @@ defmodule FunkyABX.Test do
     field(:ip_address, :binary)
     field(:hide_global_results, :boolean, default: false)
     field(:allow_retake, :boolean, default: false)
+    field(:allow_download_files, :boolean, default: false)
+    field(:download_files_counter, :integer, default: 0)
     field(:to_close_at_enabled, :boolean, default: false)
     field(:to_close_at, :naive_datetime)
     field(:to_close_at_timezone, :string, virtual: true, default: "Etc/UTC")
@@ -129,6 +131,7 @@ defmodule FunkyABX.Test do
       :identification,
       :normalization,
       :allow_retake,
+      :allow_download_files,
       :hide_global_results,
       :to_close_at_enabled,
       :to_close_at,
@@ -182,6 +185,7 @@ defmodule FunkyABX.Test do
       :identification,
       :normalization,
       :allow_retake,
+      :allow_download_files,
       :hide_global_results,
       :to_close_at_enabled,
       :to_close_at,

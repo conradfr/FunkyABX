@@ -73,6 +73,16 @@ defmodule FunkyABXWeb.TestFormLive do
                           @test.view_count
                         )
                       )}
+                      <%= if @test.allow_download_files == true do %>
+                        {raw(
+                          dngettext(
+                            "test",
+                            ", files downloaded <strong>%{count}</strong> time",
+                            ", files downloaded <strong>%{count}</strong> times",
+                            @test.download_files_counter
+                          )
+                        )}
+                      <% end %>
                     </div>
                     {dgettext("test", "Links")}
                   </legend>
@@ -666,6 +676,19 @@ defmodule FunkyABXWeb.TestFormLive do
                     field={f[:allow_retake]}
                     type="checkbox"
                     label={dgettext("test", "Allow a visitor to take the test multiple times")}
+                  />
+                </div>
+
+                <div class="form-check mb-3">
+                  <.input
+                    field={f[:allow_download_files]}
+                    type="checkbox"
+                    label={
+                      dgettext(
+                        "test",
+                        "Allow visitors to download the audio files (after taking the test)"
+                      )
+                    }
                   />
                 </div>
 
@@ -1565,6 +1588,7 @@ defmodule FunkyABXWeb.TestFormLive do
       |> Enum.reject(fn e -> e.uuid in existing_ids end)
       |> Enum.map(fn e ->
         title = Tracks.filename_to_title(e.client_name)
+
         %{
           "test_id" => socket.assigns.test.id,
           "temp_id" => e.uuid,

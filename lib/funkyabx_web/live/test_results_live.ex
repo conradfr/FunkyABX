@@ -78,7 +78,7 @@ defmodule FunkyABXWeb.TestResultsLive do
                 :if={@test.local == false}
                 class="d-flex justify-content-start justify-content-md-end"
               >
-                <div class="fs-7 me-2 text-white-50 header-texgyreadventor">
+                <div class="fs-7 text-white-50 header-texgyreadventor">
                   <time title={@test.inserted_at} datetime={@test.inserted_at}>
                     <small>
                       {raw(
@@ -164,6 +164,12 @@ defmodule FunkyABXWeb.TestResultsLive do
           />
         <% end %>
       <% end %>
+
+      <.live_component
+        module={DownloadTestFilesComponent}
+        id="download-files"
+        test={@test}
+      />
 
       <div
         :if={@test.local == false and @is_another_session == false and @session_id != nil}

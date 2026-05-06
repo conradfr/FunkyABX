@@ -88,7 +88,7 @@ defmodule FunkyABXWeb.TestLive do
                   </small>
                 </div>
 
-                <div :if={@test.local == false} class="fs-7 me-2 text-white-50 header-texgyreadventor">
+                <div :if={@test.local == false} class="fs-7 text-white-50 header-texgyreadventor">
                   <time title={@test.inserted_at} datetime={@test.inserted_at}>
                     <small>
                       {raw(
@@ -232,21 +232,36 @@ defmodule FunkyABXWeb.TestLive do
               <% end %>
             <% end %>
 
-            <div :if={@test_params.has_choices == false} class="px-1">
-              <button
-                :if={@test.anonymized_track_title == false}
-                phx-click="hide_and_shuffle_tracks"
-                class="btn btn-sm btn-outline-dark"
-              >
-                {dgettext("test", "Hide titles and shuffle tracks")}
-              </button>
-              <button
-                :if={@test.anonymized_track_title == true}
-                phx-click="hide_and_shuffle_tracks"
-                class="btn btn-sm btn-outline-dark"
-              >
-                {dgettext("test", "Reveal tracks titles")}
-              </button>
+            <div
+              :if={@test_params.has_choices == false}
+              class={[
+                "px-1",
+                @test.local == false && "w-100 d-flex justify-content-between align-items-center"
+              ]}
+            >
+              <.live_component
+                module={DownloadTestFilesComponent}
+                id="download-files"
+                test={@test}
+                class=""
+              />
+
+              <div>
+                <button
+                  :if={@test.anonymized_track_title == false}
+                  phx-click="hide_and_shuffle_tracks"
+                  class="btn btn-sm btn-outline-dark"
+                >
+                  {dgettext("test", "Hide titles and shuffle tracks")}
+                </button>
+                <button
+                  :if={@test.anonymized_track_title == true}
+                  phx-click="hide_and_shuffle_tracks"
+                  class="btn btn-sm btn-outline-dark"
+                >
+                  {dgettext("test", "Reveal tracks titles")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -734,6 +749,7 @@ defmodule FunkyABXWeb.TestLive do
       )
       when test.anonymized_track_title == false do
     test = %{test | anonymized_track_title: true}
+
     tracks =
       tracks
       |> Enum.shuffle()

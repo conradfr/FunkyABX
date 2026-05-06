@@ -11,12 +11,12 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:58
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:57
 #, elixir-autogen, elixir-format
 msgid "%{global_count} tests created so far..."
 msgstr "%{global_count} tests creados hasta ahora..."
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:52
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:51
 #, elixir-autogen, elixir-format
 msgid "%{tests} tests and %{local_tests} local tests"
 msgstr "%{tests} tests y %{local_tests} tests locales"
@@ -26,16 +26,16 @@ msgstr "%{tests} tests y %{local_tests} tests locales"
 msgid "ABX tests"
 msgstr "Tests ABX"
 
-#: lib/funkyabx_web/components/layouts/_footer.html.heex:5
+#: lib/funkyabx_web/components/layouts/_footer.html.heex:6
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "About"
 msgstr "Acerca de"
 
-#: lib/funkyabx_web/live/test_form_live.ex:317
 #: lib/funkyabx_web/live/test_form_live.ex:329
-#: lib/funkyabx_web/live/test_form_live.ex:342
-#: lib/funkyabx_web/live/test_form_live.ex:973
+#: lib/funkyabx_web/live/test_form_live.ex:341
+#: lib/funkyabx_web/live/test_form_live.ex:354
+#: lib/funkyabx_web/live/test_form_live.ex:998
 #, elixir-autogen, elixir-format
 msgid "Are you sure?"
 msgstr "¿Estás seguro?"
@@ -55,7 +55,7 @@ msgstr "Tests de audio"
 msgid "Check results"
 msgstr "Ver resultados"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:69
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:68
 #, elixir-autogen, elixir-format
 msgid "Choose the best kind of test for you:<br>stars, ranking, recognition, abx..."
 msgstr "Elige el tipo de test que mejor te convenga:<br>estrellas, clasificación, reconocimiento, abx..."
@@ -83,16 +83,16 @@ msgid "Cookies are used to store a test identifier when it's created without an 
 msgstr "Las cookies se utilizan para almacenar un identificador de test cuando se crea sin cuenta, y guardar las respuestas del visitante cuando se realiza un test."
 
 #: lib/funkyabx_web/live/components/invitation.ex:72
-#: lib/funkyabx_web/live/test_form_live.ex:139
-#: lib/funkyabx_web/live/test_form_live.ex:173
-#: lib/funkyabx_web/live/test_form_live.ex:201
-#: lib/funkyabx_web/live/test_form_live.ex:243
-#: lib/funkyabx_web/live/test_form_live.ex:273
+#: lib/funkyabx_web/live/test_form_live.ex:151
+#: lib/funkyabx_web/live/test_form_live.ex:185
+#: lib/funkyabx_web/live/test_form_live.ex:213
+#: lib/funkyabx_web/live/test_form_live.ex:255
+#: lib/funkyabx_web/live/test_form_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Copy to clipboard"
 msgstr "Copiar al portapapeles"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:88
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:87
 #, elixir-autogen, elixir-format
 msgid "Create a local test »"
 msgstr "Crear un test local »"
@@ -102,8 +102,8 @@ msgstr "Crear un test local »"
 msgid "Create a test"
 msgstr "Crear un test"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:76
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:98
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:75
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:97
 #, elixir-autogen, elixir-format
 msgid "Create a test »"
 msgstr "Crear un test »"
@@ -148,7 +148,7 @@ msgstr "FAQ"
 msgid "For more information, read the <a href=\"%{faq_url}\">FAQ</a>"
 msgstr "Para más información, lee las <a href=\"%{faq_url}\">FAQ</a>"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:107
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:106
 #, elixir-autogen, elixir-format
 msgid "From the gallery"
 msgstr "De la galería"
@@ -185,12 +185,12 @@ msgstr "Inicio"
 msgid "If you like this app you can support it with your hard-earned money :)"
 msgstr "Si te gusta esta aplicación puedes apoyarla con tu dinero bien ganado :)"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:95
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:94
 #, elixir-autogen, elixir-format
 msgid "Invitations"
 msgstr "Invitaciones"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:96
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:95
 #, elixir-autogen, elixir-format
 msgid "Invites people<br>and view their results"
 msgstr "Invita a personas<br>y consulta sus resultados"
@@ -200,7 +200,7 @@ msgstr "Invita a personas<br>y consulta sus resultados"
 msgid "Listening"
 msgstr "Escuchando"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:82
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:81
 #, elixir-autogen, elixir-format
 msgid "Local tests"
 msgstr "Tests locales"
@@ -264,11 +264,11 @@ msgstr "Siguiente"
 msgid "No data usage is collected or sold."
 msgstr "No se recopila ni vende ningún dato de uso."
 
-#: lib/funkyabx_web/live/test_form_live.ex:149
-#: lib/funkyabx_web/live/test_form_live.ex:183
-#: lib/funkyabx_web/live/test_form_live.ex:213
-#: lib/funkyabx_web/live/test_form_live.ex:253
-#: lib/funkyabx_web/live/test_form_live.ex:287
+#: lib/funkyabx_web/live/test_form_live.ex:161
+#: lib/funkyabx_web/live/test_form_live.ex:195
+#: lib/funkyabx_web/live/test_form_live.ex:225
+#: lib/funkyabx_web/live/test_form_live.ex:265
+#: lib/funkyabx_web/live/test_form_live.ex:299
 #, elixir-autogen, elixir-format
 msgid "Open in a new tab"
 msgstr "Abrir en una nueva pestaña"
@@ -278,7 +278,7 @@ msgstr "Abrir en una nueva pestaña"
 msgid "Optional"
 msgstr "Opcional"
 
-#: lib/funkyabx_web/live/test_form_live.ex:809
+#: lib/funkyabx_web/live/test_form_live.ex:834
 #, elixir-autogen, elixir-format
 msgid "Or drag and drop files here"
 msgstr "O arrastra y suelta archivos aquí"
@@ -289,7 +289,7 @@ msgstr "O arrastra y suelta archivos aquí"
 msgid "Previous"
 msgstr "Anterior"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1008
+#: lib/funkyabx_web/live/test_form_live.ex:1033
 #, elixir-autogen, elixir-format
 msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
 msgstr "Pista de referencia / sin procesar que no formará parte del test pero se puede reproducir junto a las demás."
@@ -299,7 +299,7 @@ msgstr "Pista de referencia / sin procesar que no formará parte del test pero s
 msgid "Send"
 msgstr "Enviar"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1056
+#: lib/funkyabx_web/live/test_form_live.ex:1081
 #, elixir-autogen, elixir-format
 msgid "Send an invitation"
 msgstr "Enviar una invitación"
@@ -314,12 +314,12 @@ msgstr "El código fuente de este proyecto está disponible <a target=\"_blank\"
 msgid "Support the site"
 msgstr "Apoya el sitio"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:41
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:40
 #, elixir-autogen, elixir-format
 msgid "Take the demo test"
 msgstr "Hacer el test de demostración"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:145
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:144
 #, elixir-autogen, elixir-format
 msgid "Take the test"
 msgstr "Hacer el test"
@@ -329,7 +329,7 @@ msgstr "Hacer el test"
 msgid "Test played"
 msgstr "Test realizado"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:66
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:65
 #, elixir-autogen, elixir-format
 msgid "Test type"
 msgstr "Tipo de test"
@@ -339,7 +339,7 @@ msgstr "Tipo de test"
 msgid "Tests pagination"
 msgstr "Paginación de tests"
 
-#: lib/funkyabx_web/live/test_form_live.ex:839
+#: lib/funkyabx_web/live/test_form_live.ex:864
 #, elixir-autogen, elixir-format
 msgid "The file will be downloaded once you submit, not served from the original url"
 msgstr "El archivo se descargará una vez que lo envíes, no se servirá desde la URL original"
@@ -354,24 +354,24 @@ msgstr "Esta página no existe o ha sido eliminada."
 msgid "Track %{choice}"
 msgstr "Pista %{choice}"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:138
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:137
 #: lib/funkyabx_web/live/gallery_live.ex:94
 #, elixir-autogen, elixir-format
 msgid "Tracks:"
 msgstr "Pistas:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:405
-#: lib/funkyabx_web/live/test_form_live.ex:1044
+#: lib/funkyabx_web/live/test_form_live.ex:1069
 #, elixir-autogen, elixir-format
 msgid "Updating ..."
 msgstr "Actualizando ..."
 
-#: lib/funkyabx_web/live/test_form_live.ex:112
+#: lib/funkyabx_web/live/test_form_live.ex:124
 #, elixir-autogen, elixir-format
 msgid "Use rotate=0 and loop=0 to set rotating and looping as off by default"
 msgstr "Usa rotate=0 y loop=0 para desactivar la rotación y el bucle por defecto"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:84
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:83
 #, elixir-autogen, elixir-format
 msgid "Use your local files to create an ephemeral shoutout in seconds"
 msgstr "Usa tus archivos locales para crear un test efímero en segundos"
@@ -391,7 +391,7 @@ msgstr "Tu mensaje ha sido enviado."
 msgid "or create a local test"
 msgstr "o crear un test local"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:45
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:44
 #, elixir-autogen, elixir-format
 msgid "or take the ABX demo test"
 msgstr "o hacer el test de demostración ABX"
