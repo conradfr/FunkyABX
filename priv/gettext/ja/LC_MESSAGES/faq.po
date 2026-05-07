@@ -1,0 +1,137 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:145
+#, elixir-autogen, elixir-format
+msgid "A test has copyrighted material I want removed."
+msgstr "テストに著作権のある素材があるので削除してほしい。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:176
+#, elixir-autogen, elixir-format
+msgid "Alternatively you can host your own FunkyABX version by using the <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">Github repo</a>."
+msgstr "<a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">Githubリポジトリ</a>を使って自分でFunkyABXをホストすることもできます。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:34
+#, elixir-autogen, elixir-format
+msgid "Audio files are uploaded to the cloud provider <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> in Paris, France. Files are deleted when a test is deleted."
+msgstr "音声ファイルはフランス・パリの<a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a>にアップロードされます。テスト削除時にファイルも削除されます。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:162
+#, elixir-autogen, elixir-format
+msgid "Can I use an alternative hosting provider for my audio files?"
+msgstr "音声ファイルに別のホスティングを使えますか？"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:89
+#, elixir-autogen, elixir-format
+msgid "Differences without an account:"
+msgstr "アカウントなしの場合の違い:"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:77
+#, elixir-autogen, elixir-format
+msgid "Do I need to create an account?"
+msgstr "アカウント登録は必要ですか？"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "Everything is free. There's no ads and no usage data is collected and sold."
+msgstr "すべて無料です。広告はなく、利用データの収集・販売も行っていません。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "FAQ"
+msgstr "よくある質問"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:41
+#, elixir-autogen, elixir-format
+msgid "Files used for local tests are not transmitted to any servers. Even their filenames are not stored anywhere."
+msgstr "ローカルテストのファイルはサーバーに送信されません。ファイル名も一切保存されません。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "FunkyABX is an independent website to make audio blind tests with different ranking methods."
+msgstr "FunkyABXは様々なランキング方式でオーディオブラインドテストができる独立系サイトです。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:51
+#, elixir-autogen, elixir-format
+msgid "How much does it cost?"
+msgstr "費用はかかりますか？"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:65
+#, elixir-autogen, elixir-format
+msgid "If you find this webapp useful you can help cover the hosting costs by donating your spare change <a href=\"%{url}\">here</a>."
+msgstr "このアプリが役に立ったら、<a href=\"%{url}\">こちら</a>からホスティング費用への寄付をお願いします。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:169
+#, elixir-autogen, elixir-format
+msgid "Not currently but maybe in the future. One of the problem is the need to have a functioning CORS, which if you're a web developer know it's always tricky."
+msgstr "現時点では未対応ですが、将来的には検討中です。CORSの設定が必要で、Web開発者ならご存知の通り厄介な問題です。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:135
+#, elixir-autogen, elixir-format
+msgid "Please note that as the site is developed for free and on our spare time we have to take into account the time, cost of development, testing and support of any new feature."
+msgstr "本サイトは無償・余暇で開発しているため、新機能の開発・テスト・サポートにかかる時間とコストを考慮する必要があります。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:152
+#, elixir-autogen, elixir-format
+msgid "Use the contact form to report it."
+msgstr "お問い合わせフォームからご報告ください。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:84
+#, elixir-autogen, elixir-format
+msgid "We worked hard to make the experience with and without an account the same as much as possible."
+msgstr "アカウントの有無に関わらず同じ体験ができるよう努めています。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:107
+#, elixir-autogen, elixir-format
+msgid "What count as a \"view\" for my tests?"
+msgstr "テストの「閲覧」はどうカウントされますか？"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:9
+#, elixir-autogen, elixir-format
+msgid "What is FunkyABX?"
+msgstr "FunkyABXとは？"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:113
+#, elixir-autogen, elixir-format
+msgid "When the visitor plays at least one track."
+msgstr "訪問者が1トラック以上再生した時点でカウントされます。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:26
+#, elixir-autogen, elixir-format
+msgid "Where are the audio files stored?"
+msgstr "音声ファイルはどこに保存されますか？"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:119
+#, elixir-autogen, elixir-format
+msgid "Would you implement my great feature idea?"
+msgstr "新機能のリクエストはできますか？"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:127
+#, elixir-autogen, elixir-format
+msgid "Yes why not, maybe, it has been done before, try the <a href=\"%{url}\">contact form</a>."
+msgstr "ぜひ、<a href=\"%{url}\">お問い合わせフォーム</a>からお気軽にどうぞ。"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:92
+#, elixir-autogen, elixir-format
+msgid "You can't get an email when someone takes one of your tests"
+msgstr "テスト受験時のメール通知が届きません"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:94
+#, elixir-autogen, elixir-format
+msgid "You can't get generate and/or send invitations"
+msgstr "招待の作成・送信ができません"
+
+#: lib/funkyabx_web/controllers/page_html/faq.html.heex:96
+#, elixir-autogen, elixir-format
+msgid "Your list of tests is limited to the ones created on the same device."
+msgstr "テスト一覧は同じデバイスで作成したものに限られます。"

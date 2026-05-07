@@ -1,0 +1,82 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: lib/funkyabx_web/live/components/comments.ex:246
+#, elixir-autogen, elixir-format
+msgid "An error occurred."
+msgstr "エラーが発生しました。"
+
+#: lib/funkyabx_web/live/components/comments.ex:47
+#, elixir-autogen, elixir-format
+msgid "Are you sure you want to delete this comment?"
+msgstr "このコメントを削除しますか？"
+
+#: lib/funkyabx_web/live/components/comments.ex:19
+#, elixir-autogen, elixir-format
+msgid "Comments"
+msgstr "コメント"
+
+#: lib/funkyabx_web/live/components/comments.ex:59
+#, elixir-autogen, elixir-format
+msgid "Posted on <time datetime=\"%{created_at}\">%{created_at_format}</time>"
+msgstr "<time datetime=\"%{created_at}\">%{created_at_format}</time> に投稿"
+
+#: lib/funkyabx_web/live/components/comments.ex:271
+#, elixir-autogen, elixir-format
+msgid "Your comment has been deleted."
+msgstr "コメントを削除しました。"
+
+#: lib/funkyabx_web/live/components/comments.ex:221
+#, elixir-autogen, elixir-format
+msgid "Your comment has been posted."
+msgstr "コメントを投稿しました。"
+
+#: lib/funkyabx_web/live/components/comments.ex:230
+#, elixir-autogen, elixir-format
+msgid "Your comment has been updated."
+msgstr "コメントを更新しました。"
+
+#: lib/funkyabx_web/live/components/comments.ex:53
+#, elixir-autogen, elixir-format
+msgid "delete comment"
+msgstr "コメント削除"
+
+#: lib/funkyabx_web/live/components/comments.ex:38
+#, elixir-autogen, elixir-format
+msgid "edit comment"
+msgstr "コメント編集"
+
+#: lib/funkyabx_web/live/components/comments.ex:117
+#, elixir-autogen, elixir-format
+msgid "Comment"
+msgstr "コメント"
+
+#: lib/funkyabx_web/live/components/comments.ex:108
+#, elixir-autogen, elixir-format
+msgid "Name:"
+msgstr "名前:"
+
+#: lib/funkyabx_web/live/components/comments.ex:21
+#, elixir-autogen, elixir-format
+msgid "No comments yet."
+msgstr "コメントはまだありません。"
+
+#: lib/funkyabx_web/live/components/comments.ex:92
+#, elixir-autogen, elixir-format
+msgid "Post a comment"
+msgstr "コメントする"
+
+#: lib/funkyabx_web/live/components/comments.ex:128
+#, elixir-autogen, elixir-format
+msgid "Post comment"
+msgstr "投稿"

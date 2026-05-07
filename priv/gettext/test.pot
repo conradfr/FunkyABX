@@ -92,7 +92,7 @@ msgstr ""
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:232
 #, elixir-autogen, elixir-format
-msgid "Add file(s):"
+msgid "Add:"
 msgstr ""
 
 #: lib/funkyabx_web/live/test_form_live.ex:678
@@ -169,7 +169,7 @@ msgstr ""
 msgid "Comments are displayed on the results page (except for listening tests)"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1379
+#: lib/funkyabx_web/live/test_form_live.ex:1383
 #, elixir-autogen, elixir-format
 msgid "Copied to clipboard"
 msgstr ""
@@ -712,7 +712,7 @@ msgstr ""
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:236
 #, elixir-autogen, elixir-format
-msgid "Select files"
+msgid "Select files (audio or zip)"
 msgstr ""
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:244
@@ -966,7 +966,7 @@ msgstr ""
 msgid "Title*"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1668
+#: lib/funkyabx_web/live/test_form_live.ex:1672
 #, elixir-autogen, elixir-format
 msgid "Too large"
 msgstr ""
@@ -1086,12 +1086,12 @@ msgstr ""
 msgid "You have already taken this test (or chosen to not take it). What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>."
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1672
+#: lib/funkyabx_web/live/test_form_live.ex:1676
 #, elixir-autogen, elixir-format
 msgid "You have selected an unacceptable file type"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1669
+#: lib/funkyabx_web/live/test_form_live.ex:1673
 #, elixir-autogen, elixir-format
 msgid "You have selected too many files"
 msgstr ""
@@ -1163,12 +1163,12 @@ msgstr ""
 msgid "Your test can't be submitted. Please try again or reload the page"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1357
+#: lib/funkyabx_web/live/test_form_live.ex:1361
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully created!"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1482
+#: lib/funkyabx_web/live/test_form_live.ex:1486
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully deleted."
 msgstr ""
@@ -1178,7 +1178,7 @@ msgstr ""
 msgid "Your test has been successfully updated!"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1454
+#: lib/funkyabx_web/live/test_form_live.ex:1458
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully updated."
 msgstr ""

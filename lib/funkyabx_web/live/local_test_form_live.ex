@@ -228,14 +228,14 @@ defmodule FunkyABXWeb.LocalTestFormLive do
           <fieldset class="form-group mb-3">
             <div class="form-unit p-3 pb-2 rounded-3" id="local_files_drop_zone">
               <div class="row form-unit pb-1 rounded-3">
-                <label class="col-sm-3 col-form-label text-start text-md-end">
-                  {dgettext("test", "Add file(s):")}
+                <label class="col-sm-2 col-form-label text-start text-md-end">
+                  {dgettext("test", "Add:")}
                 </label>
                 <div class="col text-center">
                   <button id="local-file-picker" type="button" class="btn btn-info px-4">
                     <i class="bi bi-file-earmark-music"></i>&nbsp;&nbsp;{dgettext(
                       "test",
-                      "Select files"
+                      "Select files (audio or zip)"
                     )}
                   </button>
                 </div>
@@ -516,6 +516,10 @@ defmodule FunkyABXWeb.LocalTestFormLive do
           |> push_event("store_params_and_redirect", %{
             "url" => ~p"/local_test/#{test_encoded}",
             "params" => [
+              %{
+                "name" => "type",
+                "value" => test_params["type"]
+              },
               %{
                 "name" => "identification",
                 "value" => test_params["identification"]

@@ -1,0 +1,33 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: lib/funkyabx_web/components/core_components.ex:383
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "操作"
+
+#: lib/funkyabx_web/components/layouts.ex:105
+#: lib/funkyabx_web/components/layouts.ex:117
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr "再接続中"
+
+#: lib/funkyabx_web/components/layouts.ex:112
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr "エラーが発生しました"
+
+#: lib/funkyabx_web/components/layouts.ex:100
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr "インターネットに接続できません"

@@ -92,8 +92,8 @@ msgstr "Ajouter un fichier par url:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:232
 #, elixir-autogen, elixir-format
-msgid "Add file(s):"
-msgstr "Ajouter fichier(s)"
+msgid "Add:"
+msgstr "Ajouter:"
 
 #: lib/funkyabx_web/live/test_form_live.ex:678
 #, elixir-autogen, elixir-format
@@ -169,7 +169,7 @@ msgstr "Fermer le test à la date"
 msgid "Comments are displayed on the results page (except for listening tests)"
 msgstr "Les commentaires sont affichés sur la page de résultats (sauf pour les tests d'écoute)"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1379
+#: lib/funkyabx_web/live/test_form_live.ex:1383
 #, elixir-autogen, elixir-format
 msgid "Copied to clipboard"
 msgstr "Copié dans le presse-papiers"
@@ -708,12 +708,12 @@ msgstr "Choisir une sortie"
 #: lib/funkyabx_web/live/test_form_live.ex:822
 #, elixir-autogen, elixir-format
 msgid "Select file(s) to upload:"
-msgstr "Choisir les fichiers à envoyer"
+msgstr "Choisir les fichiers à envoyer:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:236
 #, elixir-autogen, elixir-format
-msgid "Select files"
-msgstr "Choisir les fichiers"
+msgid "Select files (audio or zip)"
+msgstr "Choisir les fichiers (audio ou zip)"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:244
 #, elixir-autogen, elixir-format
@@ -966,7 +966,7 @@ msgstr "Titre"
 msgid "Title*"
 msgstr "Titre*"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1668
+#: lib/funkyabx_web/live/test_form_live.ex:1672
 #, elixir-autogen, elixir-format
 msgid "Too large"
 msgstr "Trop volumineuse"
@@ -1086,12 +1086,12 @@ msgstr "Vous avez déjà participé à ce test (ou choisi de ne pas le faire). <
 msgid "You have already taken this test (or chosen to not take it). What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>."
 msgstr "Vous avez déjà participé à ce test (ou choisi de ne pas le faire). Que souhaitez-vous faire ? <a href=\"%{results_url}\">Consulter les résultats</a> ou <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>supprimer votre précédent test et le passer une nouvelle fois</a>."
 
-#: lib/funkyabx_web/live/test_form_live.ex:1672
+#: lib/funkyabx_web/live/test_form_live.ex:1676
 #, elixir-autogen, elixir-format
 msgid "You have selected an unacceptable file type"
 msgstr "Vous avez choisi un type de fichier non pris en charge"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1669
+#: lib/funkyabx_web/live/test_form_live.ex:1673
 #, elixir-autogen, elixir-format
 msgid "You have selected too many files"
 msgstr "Vous avez sélectionné trop de fichiers"
@@ -1163,12 +1163,12 @@ msgstr "Votre test a bien été enregistré !"
 msgid "Your test can't be submitted. Please try again or reload the page"
 msgstr "Votre test ne peut être soumis. Merci d'essayer de nouveau ou de recharger la page"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1357
+#: lib/funkyabx_web/live/test_form_live.ex:1361
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully created!"
 msgstr "Votre test a été créé avec succès !"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1482
+#: lib/funkyabx_web/live/test_form_live.ex:1486
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully deleted."
 msgstr "Votre test a été supprimé avec succès."
@@ -1178,7 +1178,7 @@ msgstr "Votre test a été supprimé avec succès."
 msgid "Your test has been successfully updated!"
 msgstr "Votre test a été mis à jour avec succès !"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1454
+#: lib/funkyabx_web/live/test_form_live.ex:1458
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully updated."
 msgstr "Votre test a été mis à jour avec succès."

@@ -1341,6 +1341,10 @@ defmodule FunkyABXWeb.TestFormLive do
           |> push_event("store_params", %{
             "params" => [
               %{
+                "name" => "type",
+                "value" => test_params["type"]
+              },
+              %{
                 "name" => "identification",
                 "value" => test_params["identification"]
               },

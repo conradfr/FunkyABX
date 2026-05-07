@@ -8,29 +8,29 @@
 ### to merge POT files into PO files.
 msgid ""
 msgstr ""
-"Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n>1);\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:57
 #, elixir-autogen, elixir-format
 msgid "%{global_count} tests created so far..."
-msgstr "%{global_count} tests créés jusqu'à présent ..."
+msgstr "現在 %{global_count} 件のテストが作成されています"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:51
 #, elixir-autogen, elixir-format
 msgid "%{tests} tests and %{local_tests} local tests"
-msgstr "%{tests} tests and %{local_tests} tests locaux"
+msgstr "%{tests} テスト、%{local_tests} ローカルテスト"
 
 #: lib/funkyabx_web/live/gallery_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "ABX tests"
-msgstr "Tests ABX"
+msgstr "ABXテスト"
 
 #: lib/funkyabx_web/components/layouts/_footer.html.heex:6
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "About"
-msgstr "À propos"
+msgstr "このサイトについて"
 
 #: lib/funkyabx_web/live/test_form_live.ex:329
 #: lib/funkyabx_web/live/test_form_live.ex:341
@@ -38,49 +38,49 @@ msgstr "À propos"
 #: lib/funkyabx_web/live/test_form_live.ex:998
 #, elixir-autogen, elixir-format
 msgid "Are you sure?"
-msgstr "Êtes-vous sûr?"
+msgstr "よろしいですか？"
 
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:16
 #, elixir-autogen, elixir-format
 msgid "Audio files are uploaded to the cloud provider <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> in Paris, France. Files are deleted when a test is deleted."
-msgstr "Les fichiers sont transférés sur la plateforme cloud <a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a> à Paris, France. Les fichiers sont supprimés quand un test est supprimé."
+msgstr "音声ファイルはフランス・パリの<a target=\"_blank\" href=\"https://www.scaleway.com/\">Scaleway</a>にアップロードされます。テスト削除時にファイルも削除されます。"
 
 #: lib/funkyabx_web/live/gallery_live.ex:26
 #, elixir-autogen, elixir-format
 msgid "Audio tests"
-msgstr "Tests audio"
+msgstr "オーディオテスト"
 
 #: lib/funkyabx_web/live/components/invitation.ex:91
 #, elixir-autogen, elixir-format
 msgid "Check results"
-msgstr "Voir les résultats"
+msgstr "結果を見る"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:68
 #, elixir-autogen, elixir-format
 msgid "Choose the best kind of test for you:<br>stars, ranking, recognition, abx..."
-msgstr "Choisissez le meilleur type de test pour vous: étoiles, classements, identification, abx ..."
+msgstr "最適なテスト形式を選択:<br>スター評価、ランキング、識別、ABX..."
 
 #: lib/funkyabx_web/live/components/bs_modal.ex:21
 #: lib/funkyabx_web/live/components/bs_modal.ex:34
 #, elixir-autogen, elixir-format
 msgid "Close"
-msgstr "Fermer"
+msgstr "閉じる"
 
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:49
 #, elixir-autogen, elixir-format
 msgid "Comments, ideas, suggestions, bot spam..."
-msgstr "Commentaires, idéés, suggestions, spam bot ..."
+msgstr "コメント、アイデア、ご提案など..."
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:76
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "Contact"
-msgstr "Contact"
+msgstr "お問い合わせ"
 
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:23
 #, elixir-autogen, elixir-format
 msgid "Cookies are used to store a test identifier when it's created without an account, and store visitor's choices when a test is taken."
-msgstr "Les cookies sont utilisés pour conserver les tests créés sans compte, et conserver le choix des tests effectués par les visiteurs."
+msgstr "Cookieはアカウントなしで作成したテストのID保存と、テスト受験時の選択内容の保存に使用されます。"
 
 #: lib/funkyabx_web/live/components/invitation.ex:72
 #: lib/funkyabx_web/live/test_form_live.ex:151
@@ -90,179 +90,179 @@ msgstr "Les cookies sont utilisés pour conserver les tests créés sans compte,
 #: lib/funkyabx_web/live/test_form_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Copy to clipboard"
-msgstr "Copier dans le presse-papiers"
+msgstr "コピー"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:87
 #, elixir-autogen, elixir-format
 msgid "Create a local test »"
-msgstr "Créer un test local"
+msgstr "ローカルテストを作成 »"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:29
 #, elixir-autogen, elixir-format
 msgid "Create a test"
-msgstr "Créer un test"
+msgstr "テストを作成"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:75
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:97
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Create a test »"
-msgstr "Créer un test »"
+msgstr "テストを作成 »"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:22
 #, elixir-autogen, elixir-format
 msgid "Create shoutouts to rank your favorite compressors, eqs, saturation plugins, microphones, instruments, etc ... or even whole mixes!"
-msgstr "Créez des comparaisons pour classer vos compresseurs, eqs, plugins, micros, instruments, etc ... ou même des mixs entiers !"
+msgstr "コンプレッサー、EQ、サチュレーション、マイク、楽器、ミックス全体などをランキングしよう！"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:8
 #, elixir-autogen, elixir-format
 msgid "Demo screenshot"
-msgstr "Copie d'écran de la démo"
+msgstr "デモスクリーンショット"
 
 #: lib/funkyabx_web/controllers/page_html/donate.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "Donate"
-msgstr "Aider le site"
+msgstr "寄付"
 
 #: lib/funkyabx_web/controllers/page_html/donate.html.heex:20
 #, elixir-autogen, elixir-format
 msgid "Donate on Paypal"
-msgstr "Donner sur PayPal"
+msgstr "PayPalで寄付"
 
 #: lib/funkyabx_web/live/user_live/login.ex:78
 #, elixir-autogen, elixir-format
 msgid "Email"
-msgstr "Email"
+msgstr "メール"
 
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:34
 #, elixir-autogen, elixir-format
 msgid "Email:"
-msgstr "Courriel:"
+msgstr "メール:"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:67
 #, elixir-autogen, elixir-format
 msgid "FAQ"
-msgstr "FAQ"
+msgstr "よくある質問"
 
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:39
 #, elixir-autogen, elixir-format
 msgid "For more information, read the <a href=\"%{faq_url}\">FAQ</a>"
-msgstr "Pour plus d'informations, consultez <a href=\"%{faq_url}\">la FAQ</a>"
+msgstr "詳しくは<a href=\"%{faq_url}\">よくある質問</a>をご覧ください"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:106
 #, elixir-autogen, elixir-format
 msgid "From the gallery"
-msgstr "Depuis la gallerie"
+msgstr "ギャラリーから"
 
 #: lib/funkyabx_web/controllers/page_html/donate.html.heex:7
 #, elixir-autogen, elixir-format
 msgid "FunkyABX is a free service but storing and serving audio files is actually not free."
-msgstr "FunkyABX est un service gratuit mais héberger les fichiers audio a un coût."
+msgstr "FunkyABXは無料サービスですが、音声ファイルのホスティングには費用がかかっています。"
 
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:8
 #, elixir-autogen, elixir-format
 msgid "FunkyABX is a independent website to make audio blind tests, made in Paris, France by <a target=\"_blank\" href=\"http://www.funkybits.fr/\">Funkybits</a>."
-msgstr "FunkyABX est un site indépendant pour réaliser des tests audio à l'aveugle, créer depuis Paris en France par <a target=\"_blank\" href=\"http://www.funkybits.fr/\">Funkybits</a>."
+msgstr "FunkyABXはフランス・パリの<a target=\"_blank\" href=\"http://www.funkybits.fr/\">Funkybits</a>が開発したオーディオブラインドテスト用の独立系サイトです。"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:47
 #: lib/funkyabx_web/live/gallery_live.ex:171
 #, elixir-autogen, elixir-format
 msgid "Gallery"
-msgstr "Gallerie"
+msgstr "ギャラリー"
 
 #: lib/funkyabx_web/controllers/page_html/donate.html.heex:26
 #: lib/funkyabx_web/controllers/page_html/donate.html.heex:27
 #, elixir-autogen, elixir-format
 msgid "Got spare change?"
-msgstr "Vous avez de la monnaie ?"
+msgstr "少額でもご支援を！"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:36
 #, elixir-autogen, elixir-format
 msgid "Home"
-msgstr "Accueil"
+msgstr "ホーム"
 
 #: lib/funkyabx_web/controllers/page_html/donate.html.heex:13
 #, elixir-autogen, elixir-format
 msgid "If you like this app you can support it with your hard-earned money :)"
-msgstr "Si vous appréciez cette app vous pouvez l'aider avec votre argent durement gagné :)"
+msgstr "このアプリが気に入ったら、ぜひご支援ください :)"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:94
 #, elixir-autogen, elixir-format
 msgid "Invitations"
-msgstr "Invitations"
+msgstr "招待"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:95
 #, elixir-autogen, elixir-format
 msgid "Invites people<br>and view their results"
-msgstr "Invitez des gens <br>et voyez leur résultat"
+msgstr "ユーザーを招待して<br>結果を確認"
 
 #: lib/funkyabx_web/live/gallery_live.ex:56
 #, elixir-autogen, elixir-format
 msgid "Listening"
-msgstr "Écoute"
+msgstr "リスニング"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:81
 #, elixir-autogen, elixir-format
 msgid "Local tests"
-msgstr "Test locaux"
+msgstr "ローカルテスト"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:33
 #, elixir-autogen, elixir-format
 msgid "Local tests are ephemeral tests that can't be shared and are using your files locally."
-msgstr "Les tests locaux sont des tests éphémères qui ne peuvent être partagés et utilisent vos fichiers locaux."
+msgstr "ローカルテストは共有不可の一時的なテストで、ファイルはローカルのまま使用されます。"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:23
 #, elixir-autogen, elixir-format
 msgid "Menu"
-msgstr "Menu"
+msgstr "メニュー"
 
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:44
 #, elixir-autogen, elixir-format
 msgid "Message*:"
-msgstr "Message*:"
+msgstr "メッセージ*:"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:63
 #, elixir-autogen, elixir-format
 msgid "More"
-msgstr "Plus"
+msgstr "その他"
 
 #: lib/funkyabx_web/live/components/invitation.ex:21
 #: lib/funkyabx_web/live/components/invitation.ex:24
 #, elixir-autogen, elixir-format
 msgid "Name"
-msgstr "Nom"
+msgstr "名前"
 
 #: lib/funkyabx_web/live/components/invitation.ex:21
 #: lib/funkyabx_web/live/components/invitation.ex:24
 #, elixir-autogen, elixir-format
 msgid "Name or email"
-msgstr "Nom ou email"
+msgstr "名前またはメール"
 
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:28
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Name*:"
-msgstr "Nom"
+msgstr "名前*:"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:43
 #, elixir-autogen, elixir-format
 msgid "New local test"
-msgstr "Nouveau test local"
+msgstr "新規ローカルテスト"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:39
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:110
 #, elixir-autogen, elixir-format
 msgid "New test"
-msgstr "Nouveau test"
+msgstr "新規テスト"
 
 #: lib/funkyabx_web/live/gallery_live.ex:148
 #: lib/funkyabx_web/live/gallery_live.ex:152
 #, elixir-autogen, elixir-format
 msgid "Next"
-msgstr "Suivant"
+msgstr "次へ"
 
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:28
 #, elixir-autogen, elixir-format
 msgid "No data usage is collected or sold."
-msgstr "Aucunes données ne sont collectées ou vendues."
+msgstr "利用データの収集・販売は行っていません。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:161
 #: lib/funkyabx_web/live/test_form_live.ex:195
@@ -271,163 +271,163 @@ msgstr "Aucunes données ne sont collectées ou vendues."
 #: lib/funkyabx_web/live/test_form_live.ex:299
 #, elixir-autogen, elixir-format
 msgid "Open in a new tab"
-msgstr "Ouvrir dans un nouvel onglet"
+msgstr "新しいタブで開く"
 
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:38
 #, elixir-autogen, elixir-format
 msgid "Optional"
-msgstr "Optionnel"
+msgstr "任意"
 
 #: lib/funkyabx_web/live/test_form_live.ex:834
 #, elixir-autogen, elixir-format
 msgid "Or drag and drop files here"
-msgstr "Ou glissez-déposez vos fichiers ici"
+msgstr "またはここにファイルをドロップ"
 
 #: lib/funkyabx_web/live/gallery_live.ex:137
 #: lib/funkyabx_web/live/gallery_live.ex:141
 #, elixir-autogen, elixir-format
 msgid "Previous"
-msgstr "Précédent"
+msgstr "前へ"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1033
 #, elixir-autogen, elixir-format
 msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
-msgstr "Piste de référence (sans traitement) qui ne fera pas partie du test mais sera jouable en parallèle de celles du test."
+msgstr "テスト対象外のリファレンス／未処理トラック。他のトラックと並行して再生可能です。"
 
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:61
 #, elixir-autogen, elixir-format
 msgid "Send"
-msgstr "Envoyer"
+msgstr "送信"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1081
 #, elixir-autogen, elixir-format
 msgid "Send an invitation"
-msgstr "Envoyer une invitation"
+msgstr "招待を送る"
 
 #: lib/funkyabx_web/controllers/page_html/about.html.heex:31
 #, elixir-autogen, elixir-format
 msgid "Source code of this project is available <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">on Github</a>."
-msgstr "Le code source de ce projet est disponible <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">sur Github</a>."
+msgstr "ソースコードは<a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">Github</a>で公開されています。"
 
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:71
 #, elixir-autogen, elixir-format
 msgid "Support the site"
-msgstr "Aider le site"
+msgstr "サイトを支援"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:40
 #, elixir-autogen, elixir-format
 msgid "Take the demo test"
-msgstr "Essayer le test démo"
+msgstr "デモテストを試す"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:144
 #, elixir-autogen, elixir-format
 msgid "Take the test"
-msgstr "Passez le test"
+msgstr "テストを受ける"
 
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:41
 #, elixir-autogen, elixir-format
 msgid "Test played"
-msgstr "Test joué"
+msgstr "テスト再生済み"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:65
 #, elixir-autogen, elixir-format
 msgid "Test type"
-msgstr "Type de test"
+msgstr "テスト形式"
 
 #: lib/funkyabx_web/live/gallery_live.ex:131
 #, elixir-autogen, elixir-format
 msgid "Tests pagination"
-msgstr "Pagination des tests"
+msgstr "テスト一覧ページ"
 
 #: lib/funkyabx_web/live/test_form_live.ex:864
 #, elixir-autogen, elixir-format
 msgid "The file will be downloaded once you submit, not served from the original url"
-msgstr "Le fichier sera téléchargé une fois soumis, et non utilisé depuis son url"
+msgstr "ファイルは送信時にダウンロードされ、元のURLからは配信されません"
 
 #: lib/funkyabx_web/controllers/error_html/404.html.heex:7
 #, elixir-autogen, elixir-format
 msgid "This page does not exist or has been deleted."
-msgstr "Cette page n'existe pas ou a été supprimée."
+msgstr "このページは存在しないか、削除されました。"
 
 #: lib/funkyabx_web/live/components/test/track_abx.ex:82
 #, elixir-autogen, elixir-format
 msgid "Track %{choice}"
-msgstr "Piste %{choice}"
+msgstr "トラック %{choice}"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:137
 #: lib/funkyabx_web/live/gallery_live.ex:94
 #, elixir-autogen, elixir-format
 msgid "Tracks:"
-msgstr "Pistes:"
+msgstr "トラック:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:405
 #: lib/funkyabx_web/live/test_form_live.ex:1069
 #, elixir-autogen, elixir-format
 msgid "Updating ..."
-msgstr "Mise à jour ..."
+msgstr "更新中..."
 
 #: lib/funkyabx_web/live/test_form_live.ex:124
 #, elixir-autogen, elixir-format
 msgid "Use rotate=0 and loop=0 to set rotating and looping as off by default"
-msgstr "Utilisez rotate=0 et loop=0 pour désactiver la rotation et la boucle par défaut"
+msgstr "rotate=0、loop=0でローテーションとループをデフォルトOFFに設定"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:83
 #, elixir-autogen, elixir-format
 msgid "Use your local files to create an ephemeral shoutout in seconds"
-msgstr "Utilisez vos fichiers locaux pour créer un test éphémère en quelques secondes"
+msgstr "ローカルファイルで簡単にテストを作成"
 
 #: lib/funkyabx_web/live/gallery_live.ex:116
 #, elixir-autogen, elixir-format
 msgid "View test"
-msgstr "Voir le test"
+msgstr "テストを見る"
 
 #: lib/funkyabx_web/controllers/page_controller.ex:66
 #, elixir-autogen, elixir-format
 msgid "Your message has been sent."
-msgstr "Votre message a bien été envoyé."
+msgstr "メッセージを送信しました。"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:34
 #, elixir-autogen, elixir-format
 msgid "or create a local test"
-msgstr "ou créer un test local"
+msgstr "またはローカルテストを作成"
 
 #: lib/funkyabx_web/controllers/page_html/index.html.heex:44
 #, elixir-autogen, elixir-format
 msgid "or take the ABX demo test"
-msgstr "ou passer le test démo"
+msgstr "またはABXデモテストを試す"
 
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:25
 #: lib/funkyabx_web/live/test_list_live.ex:11
 #: lib/funkyabx_web/live/test_list_live.ex:66
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "My tests"
-msgstr "Mes tests"
+msgstr "マイテスト"
 
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:120
 #, elixir-autogen, elixir-format
 msgid "All my tests"
-msgstr "Tous mes tests"
+msgstr "すべてのテスト"
 
 #: lib/funkyabx_web/components/menu/taken_tests_menu.ex:50
 #, elixir-autogen, elixir-format
 msgid "No test taken (yet !)"
-msgstr "Pas de test passé(pour l'instant !)"
+msgstr "まだテストを受けていません"
 
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:98
 #, elixir-autogen, elixir-format
 msgid "No tests (yet!)"
-msgstr "Pas de tests (pour l'instant !)"
+msgstr "テストはまだありません"
 
 #: lib/funkyabx_web/components/menu/taken_tests_menu.ex:21
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Tests taken"
-msgstr "Type de test"
+msgstr "受験済みテスト"
 
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:53
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:75
 #, elixir-autogen, elixir-format
 msgid "edit"
-msgstr "éditer"
+msgstr "編集"
 
 #: lib/funkyabx_web/components/menu/taken_tests_menu.ex:41
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:63
@@ -436,4 +436,4 @@ msgstr "éditer"
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:89
 #, elixir-autogen, elixir-format
 msgid "results"
-msgstr "résultats"
+msgstr "結果"

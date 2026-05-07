@@ -8,816 +8,813 @@
 ### to merge POT files into PO files.
 msgid ""
 msgstr ""
-"Language: en\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:78
 #: lib/funkyabx_web/live/components/result/result_star.ex:146
 #, elixir-autogen, elixir-format
 msgid "%{count} time"
 msgid_plural "%{count} times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{count}回"
 
 #: lib/funkyabx_web/live/components/result/result_rank.ex:142
 #: lib/funkyabx_web/live/components/result/result_rank.ex:165
 #, elixir-autogen, elixir-format
 msgid "%{count} votes as #%{rank}"
-msgstr ""
+msgstr "%{count}票で#%{rank}位"
 
 #: lib/funkyabx_web/live/test_form_live.ex:240
 #, elixir-autogen, elixir-format
 msgid "(if you don't take the test)"
-msgstr ""
+msgstr "(テストを受けない場合)"
 
 #: lib/funkyabx_web/live/test_form_live.ex:390
 #, elixir-autogen, elixir-format
 msgid "(mandatory)"
-msgstr ""
+msgstr "(必須)"
 
 #: lib/funkyabx_web/live/test_form_live.ex:400
 #: lib/funkyabx_web/live/test_form_live.ex:409
 #, elixir-autogen, elixir-format
 msgid "(optional)"
-msgstr ""
+msgstr "(任意)"
 
 #: lib/funkyabx_web/live/test_form_live.ex:98
 #, elixir-autogen, elixir-format
 msgid "(share this link)"
-msgstr ""
+msgstr "(このリンクを共有)"
 
 #: lib/funkyabx_web/live/test_form_live.ex:171
 #, elixir-autogen, elixir-format
 msgid "(this page)"
-msgstr ""
+msgstr "(このページ)"
 
 #: lib/funkyabx_web/live/components/result/result_rank.ex:148
 #, elixir-autogen, elixir-format
 msgid "<small>You ranked this track:</small> %{rank}"
-msgstr ""
+msgstr "<small>あなたの順位:</small> %{rank}"
 
 #: lib/funkyabx_web/live/components/player.ex:104
 #, elixir-autogen, elixir-format
 msgid "<strong>Mouse/touch:</strong><ul><li>Click on play icon or track number to switch and/or start playing (+ctrl to rewind)</li><li>Click on a timeline/waveform to go to a specific time & track</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>"
-msgstr ""
+msgstr "<strong>マウス／タッチ:</strong><ul><li>再生アイコンまたはトラック番号をクリックで切替・再生 (+Ctrlで巻き戻し)</li><li>タイムライン／波形をクリックで特定の位置・トラックへ移動</li></ul><strong>キーボードショートカット:</strong><ul><li>スペース: 再生／一時停止</li><li>矢印: 前／次</li><li>1-9: トラック切替 (Alt/Option: +10)</li><li>Ctrl+キー: コマンド+巻き戻し</li><li>W: 波形の表示切替</li></ul>"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:28
 #, elixir-autogen, elixir-format
 msgid "ABX"
-msgstr ""
+msgstr "ABX"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:172
 #: lib/funkyabx_web/live/test_form_live.ex:556
 #, elixir-autogen, elixir-format
 msgid "ABX test"
-msgstr ""
+msgstr "ABXテスト"
 
 #: lib/funkyabx_web/live/test_form_live.ex:318
 #: lib/funkyabx_web/live/test_list_live.ex:21
 #, elixir-autogen, elixir-format
 msgid "Actions"
-msgstr ""
+msgstr "操作"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:303
 #: lib/funkyabx_web/live/test_form_live.ex:887
 #, elixir-autogen, elixir-format
 msgid "Add"
-msgstr ""
+msgstr "追加"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:265
 #: lib/funkyabx_web/live/test_form_live.ex:848
 #, elixir-autogen, elixir-format
 msgid "Add file from url:"
-msgstr ""
+msgstr "URLからファイルを追加:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:232
 #, elixir-autogen, elixir-format
 msgid "Add:"
-msgstr ""
+msgstr "追加:"
 
 #: lib/funkyabx_web/live/test_form_live.ex:678
 #, elixir-autogen, elixir-format
 msgid "Allow a visitor to take the test multiple times"
-msgstr ""
+msgstr "複数回の受験を許可"
 
 #: lib/funkyabx_web/live/test_form_live.ex:624
 #, elixir-autogen, elixir-format
 msgid "Allow comments"
-msgstr ""
+msgstr "コメントを許可"
 
 #: lib/funkyabx_web/live/components/invitation.ex:41
 #, elixir-autogen, elixir-format
 msgid "An email will be sent if you enter a valid address, otherwise an invitation link will be generated. Use \",\" to separate multiple names/addresses."
-msgstr ""
+msgstr "有効なメールアドレスにはメールが送信され、それ以外は招待リンクが生成されます。複数入力は「,」で区切ってください。"
 
 #: lib/funkyabx_web/live/components/invitation.ex:47
 #, elixir-autogen, elixir-format
 msgid "An invitation link will be generated. Use \",\" to separate multiple names."
-msgstr ""
+msgstr "招待リンクが生成されます。複数の名前は「,」で区切ってください。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:795
 #, elixir-autogen, elixir-format
 msgid "Apply EBU R128 loudness normalization during upload (wav files only)"
-msgstr ""
+msgstr "アップロード時にEBU R128ラウドネスノーマライズを適用 (wavのみ)"
 
 #: lib/funkyabx_web/live/test_live.ex:196
 #, elixir-autogen, elixir-format
 msgid "Are you sure you want to check the results? You won't be able to participate afterwards."
-msgstr ""
+msgstr "結果を確認しますか？確認後は参加できなくなります。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:642
 #: lib/funkyabx_web/live/test_form_live.ex:656
 #, elixir-autogen, elixir-format
 msgid "Available only for logged in users"
-msgstr ""
+msgstr "ログインユーザー限定"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:58
 #: lib/funkyabx_web/live/test_form_live.ex:441
 #, elixir-autogen, elixir-format
 msgid "Blind test"
-msgstr ""
+msgstr "ブラインドテスト"
 
 #: lib/funkyabx_web/live/gallery_live.ex:82
 #: lib/funkyabx_web/live/test_live.ex:57
 #: lib/funkyabx_web/live/test_results_live.ex:32
 #, elixir-autogen, elixir-format
 msgid "By %{author}"
-msgstr ""
+msgstr "%{author} 作成"
 
 #: lib/funkyabx_web/live/test_live.ex:229
 #, elixir-autogen, elixir-format
 msgid "Check the results"
-msgstr ""
+msgstr "結果を見る"
 
 #: lib/funkyabx_web/live/components/invitation.ex:62
 #, elixir-autogen, elixir-format
 msgid "Clicked"
-msgstr ""
+msgstr "クリック済み"
 
 #: lib/funkyabx_web/live/test_form_live.ex:332
 #, elixir-autogen, elixir-format
 msgid "Close the test"
-msgstr ""
+msgstr "テストを締切る"
 
 #: lib/funkyabx_web/live/test_form_live.ex:732
 #, elixir-autogen, elixir-format
 msgid "Close the test at date/time"
-msgstr ""
+msgstr "日時指定で締切る"
 
 #: lib/funkyabx_web/live/test_form_live.ex:627
 #, elixir-autogen, elixir-format
 msgid "Comments are displayed on the results page (except for listening tests)"
-msgstr ""
+msgstr "コメントは結果ページに表示されます（リスニングテストを除く）"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1383
 #, elixir-autogen, elixir-format
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "コピーしました"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:58
 #, elixir-autogen, elixir-format
 msgid "Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>"
-msgstr ""
+msgstr "正解数: <strong>%{guess} / %{nb_of_rounds}</strong>"
 
 #: lib/funkyabx_web/live/test_live.ex:185
 #: lib/funkyabx_web/live/test_results_live.ex:231
 #, elixir-autogen, elixir-format
 msgid "Create a new local test"
-msgstr ""
+msgstr "新規ローカルテストを作成"
 
 #: lib/funkyabx_web/live/flash_live.ex:9
 #: lib/funkyabx_web/live/test_form_live.ex:38
 #, elixir-autogen, elixir-format
 msgid "Create a new test"
-msgstr ""
+msgstr "新規テストを作成"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:408
 #, elixir-autogen, elixir-format
 msgid "Create local test"
-msgstr ""
+msgstr "ローカルテスト作成"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1193
 #, elixir-autogen, elixir-format
 msgid "Create test"
-msgstr ""
+msgstr "テスト作成"
 
 #: lib/funkyabx_web/live/test_list_live.ex:17
 #, elixir-autogen, elixir-format
 msgid "Created"
-msgstr ""
+msgstr "作成日"
 
 #: lib/funkyabx_web/live/test_form_live.ex:399
 #, elixir-autogen, elixir-format
 msgid "Created by"
-msgstr ""
+msgstr "作成者"
 
 #: lib/funkyabx_web/live/components/player.ex:141
 #, elixir-autogen, elixir-format
 msgid "Cue end"
-msgstr ""
+msgstr "キュー終了"
 
 #: lib/funkyabx_web/live/components/player.ex:133
 #, elixir-autogen, elixir-format
 msgid "Cue start"
-msgstr ""
+msgstr "キュー開始"
 
 #: lib/funkyabx_web/live/test_form_live.ex:711
 #, elixir-autogen, elixir-format
 msgid "Current:"
-msgstr ""
+msgstr "現在:"
 
 #: lib/funkyabx_web/live/components/output_selector.ex:40
 #, elixir-autogen, elixir-format
 msgid "Currently selected: %{device}"
-msgstr ""
+msgstr "選択中: %{device}"
 
 #: lib/funkyabx_web/live/components/player.ex:312
 #: lib/funkyabx_web/live/components/player.ex:314
 #, elixir-autogen, elixir-format
 msgid "Decoding..."
-msgstr ""
+msgstr "デコード中..."
 
 #: lib/funkyabx_web/live/test_form_live.ex:357
 #, elixir-autogen, elixir-format
 msgid "Delete the test"
-msgstr ""
+msgstr "テストを削除"
 
 #: lib/funkyabx_web/live/test_form_live.ex:408
 #, elixir-autogen, elixir-format
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:108
 #: lib/funkyabx_web/live/test_form_live.ex:492
 #, elixir-autogen, elixir-format
 msgid "Each track will have a 1-5 star rating (usually NOT the best choice !)"
-msgstr ""
+msgstr "各トラックを1〜5つ星で評価（通常は最適な方式ではありません！）"
 
 #: lib/funkyabx_web/live/test_form_live.ex:40
 #, elixir-autogen, elixir-format
 msgid "Edit a test"
-msgstr ""
+msgstr "テストを編集"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1127
 #, elixir-autogen, elixir-format
 msgid "Edit test - %{title}"
-msgstr ""
+msgstr "テスト編集 - %{title}"
 
 #: lib/funkyabx_web/live/test_form_live.ex:104
 #, elixir-autogen, elixir-format
 msgid "Embed"
-msgstr ""
+msgstr "埋め込み"
 
 #: lib/funkyabx_web/live/test_form_live.ex:722
 #, elixir-autogen, elixir-format
 msgid "Enter new password"
-msgstr ""
+msgstr "新しいパスワードを入力"
 
 #: lib/funkyabx_web/live/components/player.ex:321
 #, elixir-autogen, elixir-format
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:354
 #: lib/funkyabx_web/live/test_form_live.ex:980
 #, elixir-autogen, elixir-format
 msgid "File:"
-msgstr ""
+msgstr "ファイル:"
 
 #: lib/funkyabx_web/live/gallery_live.ex:11
 #, elixir-autogen, elixir-format
 msgid "Gallery"
-msgstr ""
+msgstr "ギャラリー"
 
 #: lib/funkyabx_web/live/components/invitation.ex:37
 #, elixir-autogen, elixir-format
 msgid "Generate invitation"
-msgstr ""
+msgstr "招待を作成"
 
 #: lib/funkyabx_web/live/test_form_live.ex:367
 #, elixir-autogen, elixir-format
 msgid "Generate invitations"
-msgstr ""
+msgstr "招待を作成"
 
 #: lib/funkyabx_web/live/test_form_live.ex:667
 #, elixir-autogen, elixir-format
 msgid "Global results and stats of the test will be hidden (even for you)"
-msgstr ""
+msgstr "テストの全体結果と統計が非表示になります（あなた自身にも）"
 
 #: lib/funkyabx_web/live/test_results_live.ex:211
 #, elixir-autogen, elixir-format
 msgid "Global results have been hidden by test creator."
-msgstr ""
+msgstr "全体結果は作成者により非表示にされています。"
 
 #: lib/funkyabx_web/live/test_live.ex:178
 #: lib/funkyabx_web/live/test_results_live.ex:219
 #, elixir-autogen, elixir-format
 msgid "Go back to the test form"
-msgstr ""
+msgstr "テスト編集に戻る"
 
 #: lib/funkyabx_web/live/test_results_live.ex:134
 #, elixir-autogen, elixir-format
 msgid "Hide description"
-msgstr ""
+msgstr "説明を隠す"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:69
 #: lib/funkyabx_web/live/components/result/result_rank.ex:82
 #: lib/funkyabx_web/live/components/result/result_star.ex:51
 #, elixir-autogen, elixir-format
 msgid "Hide details"
-msgstr ""
+msgstr "詳細を隠す"
 
 #: lib/funkyabx_web/live/test_live.ex:255
 #, elixir-autogen, elixir-format
 msgid "Hide titles and shuffle tracks"
-msgstr ""
+msgstr "タイトルを隠してシャッフル"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:196
 #: lib/funkyabx_web/live/test_form_live.ex:580
 #, elixir-autogen, elixir-format
 msgid "Hide tracks' title"
-msgstr ""
+msgstr "トラック名を隠す"
 
 #: lib/funkyabx_web/live/test_results_live.ex:152
 #, elixir-autogen, elixir-format
 msgid "Hide your test"
-msgstr ""
+msgstr "テストを非公開にする"
 
 #: lib/funkyabx_web/live/components/test/track_rank.ex:18
 #, elixir-autogen, elixir-format
 msgid "I rank this track..."
-msgstr ""
+msgstr "このトラックの順位..."
 
 #: lib/funkyabx_web/live/components/test/track_star.ex:16
 #, elixir-autogen, elixir-format
 msgid "I rate this track..."
-msgstr ""
+msgstr "このトラックの評価..."
 
 #: lib/funkyabx_web/live/components/test/track_abx.ex:30
 #: lib/funkyabx_web/live/components/test/track_identification.ex:19
 #, elixir-autogen, elixir-format
 msgid "I think this is..."
-msgstr ""
+msgstr "これは..."
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:36
 #, elixir-autogen, elixir-format
 msgid "Identification"
-msgstr ""
+msgstr "識別"
 
 #: lib/funkyabx_web/live/test_form_live.ex:47
 #, elixir-autogen, elixir-format
 msgid "If you're making a one-off test for yourself, consider making a <a href=\"%{link}\">local test</a>, it's quicker and avoids uploading your files."
-msgstr ""
+msgstr "自分用の一回限りのテストなら、<a href=\"%{link}\">ローカルテスト</a>がおすすめです。ファイルのアップロードが不要で素早く作成できます。"
 
 #: lib/funkyabx_web/live/test_results_live.ex:188
 #, elixir-autogen, elixir-format
 msgid "Image:"
-msgstr ""
+msgstr "画像:"
 
 #: lib/funkyabx_web/live/test_form_live.ex:382
 #, elixir-autogen, elixir-format
 msgid "Infos"
-msgstr ""
+msgstr "情報"
 
 #: lib/funkyabx_web/live/test_form_live.ex:613
 #, elixir-autogen, elixir-format
 msgid "It will be published in the gallery 15 minutes after its creation"
-msgstr ""
+msgstr "作成から15分後にギャラリーに公開されます"
 
 #: lib/funkyabx_web/live/components/invitation.ex:61
 #, elixir-autogen, elixir-format
 msgid "Link"
-msgstr ""
+msgstr "リンク"
 
 #: lib/funkyabx_web/live/test_form_live.ex:87
 #, elixir-autogen, elixir-format
 msgid "Links"
-msgstr ""
+msgstr "リンク"
 
 #: lib/funkyabx_web/live/components/player.ex:307
 #, elixir-autogen, elixir-format
 msgid "Loading ... %{progress}%"
-msgstr ""
+msgstr "読込中... %{progress}%"
 
 #: lib/funkyabx_web/live/components/player.ex:91
 #, elixir-autogen, elixir-format
 msgid "Loading tracks..."
-msgstr ""
+msgstr "トラック読込中..."
 
 #: lib/funkyabx_web/live/components/player.ex:88
 #: lib/funkyabx_web/live/local_test_form_live.ex:400
 #: lib/funkyabx_web/live/test_form_live.ex:1054
 #, elixir-autogen, elixir-format
 msgid "Loading..."
-msgstr ""
+msgstr "読込中..."
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:27
 #, elixir-autogen, elixir-format
 msgid "Local test"
-msgstr ""
+msgstr "ローカルテスト"
 
 #: lib/funkyabx_web/live/test_results_live.ex:287
 #, elixir-autogen, elixir-format
 msgid "Local test results"
-msgstr ""
+msgstr "ローカルテスト結果"
 
 #: lib/funkyabx_web/live/components/player.ex:158
 #, elixir-autogen, elixir-format
 msgid "Loop"
-msgstr ""
+msgstr "ループ"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:85
 #, elixir-autogen, elixir-format
 msgid "Minimum correct answers to be considered better than random guesses: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">source</a>)</small>"
-msgstr ""
+msgstr "ランダム推測を上回るための最低正解数: <strong>%{minimum}</strong> <small class=\"text-extra-muted\">(<a href=\"https://en.wikipedia.org/wiki/ABX_test#Confidence\" class=\"text-extra-muted\">出典</a>)</small>"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:186
 #: lib/funkyabx_web/live/test_form_live.ex:570
 #, elixir-autogen, elixir-format
 msgid "Must be between be 1 to 10"
-msgstr ""
+msgstr "1〜10の範囲で指定してください"
 
 #: lib/funkyabx_web/live/components/invitation.ex:60
 #, elixir-autogen, elixir-format
 msgid "Name"
-msgstr ""
+msgstr "名前"
 
 #: lib/funkyabx_web/live/components/invitation.ex:59
 #, elixir-autogen, elixir-format
 msgid "Name or email"
-msgstr ""
+msgstr "名前またはメール"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:343
 #: lib/funkyabx_web/live/test_form_live.ex:949
 #, elixir-autogen, elixir-format
 msgid "Name:*"
-msgstr ""
+msgstr "名前:*"
 
 #: lib/funkyabx_web/live/components/invitation.ex:104
 #, elixir-autogen, elixir-format
 msgid "No invitation sent yet."
-msgstr ""
+msgstr "招待はまだ送信されていません。"
 
 #: lib/funkyabx_web/live/components/result/result_rank.ex:159
 #, elixir-autogen, elixir-format
 msgid "No other ranking"
-msgstr ""
+msgstr "他のランキングなし"
 
 #: lib/funkyabx_web/live/gallery_live.ex:123
 #, elixir-autogen, elixir-format
 msgid "No public tests yet :("
-msgstr ""
+msgstr "公開テストはまだありません :("
 
 #: lib/funkyabx_web/live/components/result/result_rank.ex:89
 #, elixir-autogen, elixir-format
 msgid "No ranking done ... yet!"
-msgstr ""
+msgstr "まだランキングがありません！"
 
 #: lib/funkyabx_web/live/components/result/result_star.ex:58
 #, elixir-autogen, elixir-format
 msgid "No rating done ... yet!"
-msgstr ""
+msgstr "まだ評価がありません！"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:45
 #, elixir-autogen, elixir-format
 msgid "No test taken ... yet!"
-msgstr ""
+msgstr "まだ受験されていません！"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:212
 #: lib/funkyabx_web/live/test_form_live.ex:596
 #, elixir-autogen, elixir-format
 msgid "No test, only listening"
-msgstr ""
+msgstr "テストなし、リスニングのみ"
 
 #: lib/funkyabx_web/live/components/result/result_pick.ex:35
 #, elixir-autogen, elixir-format
 msgid "No track picked ... yet!"
-msgstr ""
+msgstr "まだトラックが選ばれていません！"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:77
 #, elixir-autogen, elixir-format
 msgid "No tracks guesses ... yet!"
-msgstr ""
+msgstr "まだ回答がありません！"
 
 #: lib/funkyabx_web/live/test_form_live.ex:639
 #, elixir-autogen, elixir-format
 msgid "Notify me by email when a test is taken"
-msgstr ""
+msgstr "テスト受験時にメールで通知"
 
 #: lib/funkyabx_web/live/test_form_live.ex:652
 #, elixir-autogen, elixir-format
 msgid "Notify me by email when someone post a comment on a test"
-msgstr ""
+msgstr "コメント投稿時にメールで通知"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:179
 #: lib/funkyabx_web/live/test_form_live.ex:563
 #, elixir-autogen, elixir-format
 msgid "Number of rounds:"
-msgstr ""
+msgstr "ラウンド数:"
 
 #: lib/funkyabx_web/live/components/player.ex:399
 #, elixir-autogen, elixir-format
 msgid "One or more tracks couldn't be loaded. If you have refreshed the page, you need to create a new test."
-msgstr ""
+msgstr "一部のトラックを読み込めませんでした。ページを更新した場合は、新しいテストを作成してください。"
 
 #: lib/funkyabx_web/live/components/player.ex:405
 #, elixir-autogen, elixir-format
 msgid "One or more tracks couldn't be loaded. Please refresh the page to try again."
-msgstr ""
+msgstr "一部のトラックを読み込めませんでした。ページを更新してもう一度お試しください。"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:145
 #: lib/funkyabx_web/live/test_form_live.ex:529
 #, elixir-autogen, elixir-format
 msgid "Only for tests with 10+ tracks"
-msgstr ""
+msgstr "10トラック以上のテストのみ"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:137
 #: lib/funkyabx_web/live/test_form_live.ex:521
 #, elixir-autogen, elixir-format
 msgid "Only rank the top/bottom three tracks"
-msgstr ""
+msgstr "上位／下位3トラックのみランキング"
 
 #: lib/funkyabx_web/live/test_form_live.ex:604
 #, elixir-autogen, elixir-format
 msgid "Options"
-msgstr ""
+msgstr "オプション"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:251
 #, elixir-autogen, elixir-format
 msgid "Or drag and drop files here"
-msgstr ""
+msgstr "またはここにファイルをドロップ"
 
 #: lib/funkyabx_web/live/test_form_live.ex:699
 #, elixir-autogen, elixir-format
 msgid "Password protected"
-msgstr ""
+msgstr "パスワード保護"
 
 #: lib/funkyabx_web/controllers/test_html/password.html.heex:37
 #, elixir-autogen, elixir-format
 msgid "Password:"
-msgstr ""
+msgstr "パスワード:"
 
 #: lib/funkyabx_web/live/components/player.ex:56
 #: lib/funkyabx_web/live/components/player.ex:59
 #, elixir-autogen, elixir-format
 msgid "Pause"
-msgstr ""
+msgstr "一時停止"
 
 #: lib/funkyabx_web/live/test_form_live.ex:515
 #, elixir-autogen, elixir-format
 msgid "People will be asked to rank the tracks"
-msgstr ""
+msgstr "トラックをランキングしてもらいます"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:175
 #: lib/funkyabx_web/live/test_form_live.ex:559
 #, elixir-autogen, elixir-format
 msgid "People will have to guess which track is cloned for n rounds"
-msgstr ""
+msgstr "nラウンドでどのトラックが複製されたか当ててもらいます"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:158
 #: lib/funkyabx_web/live/test_form_live.ex:542
 #, elixir-autogen, elixir-format
 msgid "People will have to identify the anonymized tracks"
-msgstr ""
+msgstr "匿名化されたトラックを識別してもらいます"
 
 #: lib/funkyabx_web/live/test_form_live.ex:472
 #, elixir-autogen, elixir-format
 msgid "People will have to pick their preferred track"
-msgstr ""
+msgstr "好みのトラックを選んでもらいます"
 
 #: lib/funkyabx_web/live/components/test/track_pick.ex:27
 #, elixir-autogen, elixir-format
 msgid "Pick this track as favorite"
-msgstr ""
+msgstr "このトラックをお気に入りに選ぶ"
 
 #: lib/funkyabx_web/live/components/result/result_pick.ex:88
 #, elixir-autogen, elixir-format
 msgid "Picked %{count} time"
 msgid_plural "Picked %{count} times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{count}回選ばれた"
 
 #: lib/funkyabx_web/live/components/result/result_pick.ex:32
 #: lib/funkyabx_web/live/local_test_form_live.ex:85
 #: lib/funkyabx_web/live/test_form_live.ex:469
 #, elixir-autogen, elixir-format
 msgid "Picking"
-msgstr ""
+msgstr "ピッキング"
 
 #: lib/funkyabx_web/live/components/player.ex:65
 #: lib/funkyabx_web/live/components/player.ex:75
 #, elixir-autogen, elixir-format
 msgid "Play"
-msgstr ""
+msgstr "再生"
 
 #: lib/funkyabx_web/live/components/player.ex:98
 #, elixir-autogen, elixir-format
 msgid "Player controls"
-msgstr ""
+msgstr "プレーヤー操作"
 
 #: lib/funkyabx_web/live/test_form_live.ex:116
 #, elixir-autogen, elixir-format
 msgid "Player only"
-msgstr ""
+msgstr "プレーヤーのみ"
 
 #: lib/funkyabx_web/live/test_results_live.ex:372
 #: lib/funkyabx_web/live/test_results_live.ex:388
 #, elixir-autogen, elixir-format
 msgid "Please take the test before checking the results."
-msgstr ""
+msgstr "結果を確認する前にテストを受けてください。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:904
 #, elixir-autogen, elixir-format
 msgid "Please use descriptive names to have relevant results for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page (as seen on the <a target=\"_blank\" href=\"/test/demo\">demo</a>)."
-msgstr ""
+msgstr "わかりやすい名前を付けてください。テストページではトラックは<u>匿名化</u>・<u>ランダム化</u>されます（<a target=\"_blank\" href=\"/test/demo\">デモ</a>参照）。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:919
 #, elixir-autogen, elixir-format
 msgid "Please use descriptive names."
-msgstr ""
+msgstr "わかりやすい名前を付けてください。"
 
 #: lib/funkyabx_web/live/components/result/result_rank.ex:35
 #: lib/funkyabx_web/live/local_test_form_live.ex:128
 #: lib/funkyabx_web/live/test_form_live.ex:512
 #, elixir-autogen, elixir-format
 msgid "Ranking"
-msgstr ""
+msgstr "ランキング"
 
 #: lib/funkyabx_web/live/components/result/result_star.ex:31
 #: lib/funkyabx_web/live/local_test_form_live.ex:68
 #: lib/funkyabx_web/live/test_form_live.ex:452
 #, elixir-autogen, elixir-format
 msgid "Rating"
-msgstr ""
+msgstr "レーティング"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:154
 #: lib/funkyabx_web/live/test_form_live.ex:538
 #, elixir-autogen, elixir-format
 msgid "Recognition test"
-msgstr ""
+msgstr "識別テスト"
 
 #: lib/funkyabx_web/live/components/player.ex:277
 #: lib/funkyabx_web/live/local_test_form_live.ex:377
 #: lib/funkyabx_web/live/test_form_live.ex:1026
 #, elixir-autogen, elixir-format
 msgid "Reference"
-msgstr ""
+msgstr "リファレンス"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:384
 #, elixir-autogen, elixir-format
 msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
-msgstr ""
+msgstr "テスト対象外のリファレンス／未処理トラック。他のトラックと並行して再生可能です。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:344
 #, elixir-autogen, elixir-format
 msgid "Reopen the test"
-msgstr ""
+msgstr "テストを再開"
 
 #: lib/funkyabx_web/live/test_list_live.ex:20
 #, elixir-autogen, elixir-format
 msgid "Results"
-msgstr ""
+msgstr "結果"
 
 #: lib/funkyabx_web/live/test_live.ex:262
 #, elixir-autogen, elixir-format
 msgid "Reveal tracks titles"
-msgstr ""
+msgstr "トラック名を表示"
 
 #: lib/funkyabx_web/live/components/player.ex:124
 #, elixir-autogen, elixir-format
 msgid "Round %{current_round} / %{nb_of_rounds}"
-msgstr ""
+msgstr "ラウンド %{current_round} / %{nb_of_rounds}"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1063
 #, elixir-autogen, elixir-format
 msgid "Save test"
-msgstr ""
+msgstr "テストを保存"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:71
 #, elixir-autogen, elixir-format
 msgid "Scored"
-msgstr ""
+msgstr "スコア"
 
 #: lib/funkyabx_web/live/components/output_selector.ex:12
 #: lib/funkyabx_web/live/components/output_selector.ex:21
 #: lib/funkyabx_web/live/components/output_selector.ex:27
 #, elixir-autogen, elixir-format
 msgid "Select an output device"
-msgstr ""
+msgstr "出力デバイスを選択"
 
 #: lib/funkyabx_web/live/test_form_live.ex:822
 #, elixir-autogen, elixir-format
 msgid "Select file(s) to upload:"
-msgstr ""
+msgstr "アップロードするファイルを選択:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "Select files (audio or zip)"
-msgstr ""
+msgstr "ファイルを選択 (音声またはzip)"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:244
 #, elixir-autogen, elixir-format
 msgid "Select folder"
-msgstr ""
+msgstr "フォルダを選択"
 
 #: lib/funkyabx_web/live/test_results_live.ex:182
 #, elixir-autogen, elixir-format
 msgid "Share:"
-msgstr ""
+msgstr "共有:"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1228
 #, elixir-autogen, elixir-format
 msgid "Someone just commented on this test!"
-msgstr ""
+msgstr "新しいコメントがあります！"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1221
 #: lib/funkyabx_web/live/test_live.ex:455
 #: lib/funkyabx_web/live/test_results_live.ex:495
 #, elixir-autogen, elixir-format
 msgid "Someone just took this test!"
-msgstr ""
+msgstr "テストが受験されました！"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:105
 #: lib/funkyabx_web/live/test_form_live.ex:489
 #, elixir-autogen, elixir-format
 msgid "Stars"
-msgstr ""
+msgstr "スター"
 
 #: lib/funkyabx_web/live/components/player.ex:41
 #, elixir-autogen, elixir-format
 msgid "Start back"
-msgstr ""
+msgstr "最初から"
 
 #: lib/funkyabx_web/live/components/player.ex:81
 #, elixir-autogen, elixir-format
 msgid "Stop"
-msgstr ""
+msgstr "停止"
 
 #: lib/funkyabx_web/live/test_live.ex:211
 #, elixir-autogen, elixir-format
 msgid "Submit my choices"
-msgstr ""
+msgstr "回答を送信"
 
 #: lib/funkyabx_web/live/test_form_live.ex:775
 #, elixir-autogen, elixir-format
 msgid "Supported formats: wav, mp3, aac, flac ... "
-msgstr ""
+msgstr "対応形式: wav, mp3, aac, flac..."
 
 #: lib/funkyabx_web/live/components/player.ex:176
 #, elixir-autogen, elixir-format
 msgid "Switch track every"
-msgstr ""
+msgstr "トラック切替間隔"
 
 #: lib/funkyabx_web/live/test_live.ex:221
 #: lib/funkyabx_web/live/test_results_live.ex:225
 #, elixir-autogen, elixir-format
 msgid "Take the test again"
-msgstr ""
+msgstr "もう一度テストを受ける"
 
 #: lib/funkyabx_web/live/components/invitation.ex:63
 #: lib/funkyabx_web/live/test_list_live.ex:19
 #, elixir-autogen, elixir-format
 msgid "Taken"
-msgstr ""
+msgstr "受験済み"
 
 #: lib/funkyabx_web/live/test_form_live.ex:115
 #, elixir-autogen, elixir-format
 msgid "Test"
-msgstr ""
+msgstr "テスト"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1149
 #, elixir-autogen, elixir-format
 msgid "Test authentication failed. Please log in or check your link."
-msgstr ""
+msgstr "テスト認証に失敗しました。ログインまたはリンクを確認してください。"
 
 #: lib/funkyabx_web/live/test_live.ex:121
 #: lib/funkyabx_web/live/test_results_live.ex:112
 #, elixir-autogen, elixir-format
 msgid "Test closing on <time datetime=\"%{to_close_at}\">%{to_close_at_format}</time>"
-msgstr ""
+msgstr "<time datetime=\"%{to_close_at}\">%{to_close_at_format}</time> に締切"
 
 #: lib/funkyabx_web/live/test_live.ex:95
 #: lib/funkyabx_web/live/test_results_live.ex:85
 #, elixir-autogen, elixir-format
 msgid "Test created on <time datetime=\"%{created_at}\">%{created_at_format}</time>"
-msgstr ""
+msgstr "<time datetime=\"%{created_at}\">%{created_at_format}</time> に作成"
 
 #: lib/funkyabx_web/live/test_form_live.ex:170
 #, elixir-autogen, elixir-format
 msgid "Test edit page"
-msgstr ""
+msgstr "テスト編集ページ"
 
 #: lib/funkyabx_web/live/gallery_live.ex:102
 #, elixir-autogen, elixir-format
 msgid "Test is closed"
-msgstr ""
+msgstr "テスト締切済み"
 
 #: lib/funkyabx_web/live/test_results_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "Test played %{count} time"
 msgid_plural "Test played %{count} times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{count}回再生"
 
 #: lib/funkyabx_web/live/test_form_live.ex:69
 #: lib/funkyabx_web/live/test_live.ex:81
@@ -825,368 +822,365 @@ msgstr[1] ""
 #, elixir-autogen, elixir-format
 msgid "Test played <strong>%{count}</strong> time"
 msgid_plural "Test played <strong>%{count}</strong> times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%{count}</strong>回再生"
 
 #: lib/funkyabx_web/live/test_form_live.ex:238
 #, elixir-autogen, elixir-format
 msgid "Test private results page"
-msgstr ""
+msgstr "テスト非公開結果ページ"
 
 #: lib/funkyabx_web/live/test_form_live.ex:97
 #, elixir-autogen, elixir-format
 msgid "Test public page"
-msgstr ""
+msgstr "テスト公開ページ"
 
 #: lib/funkyabx_web/live/test_results_live.ex:343
 #, elixir-autogen, elixir-format
 msgid "Test results - %{test_title}"
-msgstr ""
+msgstr "テスト結果 - %{test_title}"
 
 #: lib/funkyabx_web/live/gallery_live.ex:107
 #, elixir-autogen, elixir-format
 msgid "Test taken %{count} time"
 msgid_plural "Test taken %{count} times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%{count}回受験"
 
 #: lib/funkyabx_web/live/test_live.ex:66
 #: lib/funkyabx_web/live/test_results_live.ex:52
 #, elixir-autogen, elixir-format
 msgid "Test taken <strong>%{count}</strong> time"
 msgid_plural "Test taken <strong>%{count}</strong> times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>%{count}</strong>回受験"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:46
 #: lib/funkyabx_web/live/test_form_live.ex:421
 #, elixir-autogen, elixir-format
 msgid "Test type"
-msgstr ""
+msgstr "テスト形式"
 
 #: lib/funkyabx_web/live/test_form_live.ex:424
 #, elixir-autogen, elixir-format
 msgid "Test type can't be changed once at least one person has taken the test."
-msgstr ""
+msgstr "1人以上受験するとテスト形式は変更できません。"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:280
 #, elixir-autogen, elixir-format
 msgid "The file will be downloaded once you submit, not served from the original url"
-msgstr ""
+msgstr "ファイルは送信時にダウンロードされ、元のURLからは配信されません"
 
 #: lib/funkyabx_web/live/test_live.ex:503
 #, elixir-autogen, elixir-format
 msgid "The page has been reloaded because the test has been updated by its creator."
-msgstr ""
+msgstr "作成者がテストを更新したため、ページが再読み込みされました。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1241
 #, elixir-autogen, elixir-format
 msgid "The test has been opened from an invitation."
-msgstr ""
+msgstr "招待からテストが開かれました。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:610
 #, elixir-autogen, elixir-format
 msgid "The test is public"
-msgstr ""
+msgstr "テストを公開する"
 
 #: lib/funkyabx_web/live/test_form_live.ex:702
 #, elixir-autogen, elixir-format
 msgid "The test will require a password to be taken (public tests will be modified as private)"
-msgstr ""
+msgstr "テスト受験にパスワードが必要になります（公開テストは非公開に変更されます）"
 
 #: lib/funkyabx_web/live/test_form_live.ex:735
 #, elixir-autogen, elixir-format
 msgid "The test won't be able to be taken after this date/time, but results will still be available"
-msgstr ""
+msgstr "この日時以降は受験できなくなりますが、結果は引き続き閲覧可能です"
 
 #: lib/funkyabx_web/live/test_live.ex:493
 #: lib/funkyabx_web/live/test_results_live.ex:505
 #, elixir-autogen, elixir-format
 msgid "This test has been deleted :("
-msgstr ""
+msgstr "このテストは削除されました :("
 
 #: lib/funkyabx_web/live/test_live.ex:463
 #, elixir-autogen, elixir-format
 msgid "This test has been reopened."
-msgstr ""
+msgstr "テストが再開されました。"
 
 #: lib/funkyabx_web/live/test_results_live.ex:18
 #, elixir-autogen, elixir-format
 msgid "This test is closed."
-msgstr ""
+msgstr "このテストは締め切られています。"
 
 #: lib/funkyabx_web/live/test_live.ex:414
 #: lib/funkyabx_web/live/test_live.ex:476
 #, elixir-autogen, elixir-format
 msgid "This test is closed. <a href=\"%{link}\">Check the results</a>"
-msgstr ""
+msgstr "テストは締め切られています。<a href=\"%{link}\">結果を見る</a>"
 
 #: lib/funkyabx_web/controllers/test_html/password.html.heex:7
 #, elixir-autogen, elixir-format
 msgid "This test requires a password."
-msgstr ""
+msgstr "このテストにはパスワードが必要です。"
 
 #: lib/funkyabx_web/live/components/test/track_pick.ex:16
 #, elixir-autogen, elixir-format
 msgid "This track is my favorite"
-msgstr ""
+msgstr "お気に入りのトラック"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:102
 #, elixir-autogen, elixir-format
 msgid "This track was identified as"
-msgstr ""
+msgstr "このトラックの回答:"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:95
 #, elixir-autogen, elixir-format
 msgid "This track was identified correctly"
-msgstr ""
+msgstr "正解"
 
 #: lib/funkyabx_web/live/components/result/result_pick.ex:81
 #, elixir-autogen, elixir-format
 msgid "This track was picked"
-msgstr ""
+msgstr "このトラックが選ばれた"
 
 #: lib/funkyabx_web/live/components/result/result_rank.ex:128
 #, elixir-autogen, elixir-format
 msgid "This track was ranked: %{rank}"
-msgstr ""
+msgstr "このトラックの順位: %{rank}"
 
 #: lib/funkyabx_web/live/components/result/result_star.ex:97
 #, elixir-autogen, elixir-format
 msgid "This track was rated:"
-msgstr ""
+msgstr "このトラックの評価:"
 
 #: lib/funkyabx_web/live/test_list_live.ex:16
 #, elixir-autogen, elixir-format
 msgid "Title"
-msgstr ""
+msgstr "タイトル"
 
 #: lib/funkyabx_web/live/test_form_live.ex:389
 #, elixir-autogen, elixir-format
 msgid "Title*"
-msgstr ""
+msgstr "タイトル*"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1672
 #, elixir-autogen, elixir-format
 msgid "Too large"
-msgstr ""
+msgstr "サイズ超過"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:339
 #: lib/funkyabx_web/live/test_form_live.ex:945
 #, elixir-autogen, elixir-format
 msgid "Track #%{track_index}"
-msgstr ""
+msgstr "トラック #%{track_index}"
 
 #: lib/funkyabx_web/live/components/test/track_abx.ex:21
 #, elixir-autogen, elixir-format
 msgid "Track %{guess}"
-msgstr ""
+msgstr "トラック %{guess}"
 
 #: lib/funkyabx_web/live/components/player.ex:279
 #, elixir-autogen, elixir-format
 msgid "Track %{track_index}"
-msgstr ""
+msgstr "トラック %{track_index}"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:222
 #, elixir-autogen, elixir-format
 msgid "Tracks"
-msgstr ""
+msgstr "トラック"
 
 #: lib/funkyabx_web/live/test_form_live.ex:768
 #, elixir-autogen, elixir-format
 msgid "Tracks can't be added or removed once at least one person has taken the test."
-msgstr ""
+msgstr "1人以上受験するとトラックの追加・削除はできません。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:804
 #, elixir-autogen, elixir-format
 msgid "True Peak -1dB, target -24dB"
-msgstr ""
+msgstr "True Peak -1dB、ターゲット -24dB"
 
 #: lib/funkyabx_web/live/test_form_live.ex:761
 #, elixir-autogen, elixir-format
 msgid "Two tracks minimum"
-msgstr ""
+msgstr "最低2トラック必要"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1072
 #, elixir-autogen, elixir-format
 msgid "Update test"
-msgstr ""
+msgstr "テストを更新"
 
 #: lib/funkyabx_web/live/components/comments.ex:69
 #, elixir-autogen, elixir-format
 msgid "Updated on <time datetime=\"%{updated_at}\">%{updated_at_format}</time>"
-msgstr ""
+msgstr "<time datetime=\"%{updated_at}\">%{updated_at_format}</time> に更新"
 
 #: lib/funkyabx_web/live/test_form_live.ex:960
 #, elixir-autogen, elixir-format
 msgid "Upload"
-msgstr ""
+msgstr "アップロード"
 
 #: lib/funkyabx_web/controllers/test_html/password.html.heex:47
 #, elixir-autogen, elixir-format
 msgid "Verify"
-msgstr ""
+msgstr "確認"
 
 #: lib/funkyabx_web/live/test_results_live.ex:130
 #, elixir-autogen, elixir-format
 msgid "View description"
-msgstr ""
+msgstr "説明を表示"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:61
 #: lib/funkyabx_web/live/components/result/result_rank.ex:74
 #: lib/funkyabx_web/live/components/result/result_star.ex:43
 #, elixir-autogen, elixir-format
 msgid "View details"
-msgstr ""
+msgstr "詳細を表示"
 
 #: lib/funkyabx_web/live/test_results_live.ex:148
 #, elixir-autogen, elixir-format
 msgid "View your test"
-msgstr ""
+msgstr "テストを表示"
 
 #: lib/funkyabx_web/live/test_list_live.ex:18
 #, elixir-autogen, elixir-format
 msgid "Views"
-msgstr ""
+msgstr "閲覧数"
 
 #: lib/funkyabx_web/live/flash_live.ex:10
 #, elixir-autogen, elixir-format
 msgid "Visit the gallery"
-msgstr ""
+msgstr "ギャラリーを見る"
 
 #: lib/funkyabx_web/live/test_form_live.ex:664
 #, elixir-autogen, elixir-format
 msgid "Visitors can only see their own test results."
-msgstr ""
+msgstr "訪問者は自分の結果のみ閲覧可能"
 
 #: lib/funkyabx_web/live/test_form_live.ex:781
 #, elixir-autogen, elixir-format
 msgid "Wav files are converted to flac (16bits 48k)."
-msgstr ""
+msgstr "wavファイルはflac (16bit 48k) に変換されます。"
 
 #: lib/funkyabx_web/live/flash_live.ex:8
 #, elixir-autogen, elixir-format
 msgid "What do you want to do now?"
-msgstr ""
+msgstr "次に何をしますか？"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:112
 #, elixir-autogen, elixir-format
 msgid "You did not participate in this test"
-msgstr ""
+msgstr "このテストに参加していません"
 
 #: lib/funkyabx_web/live/test_live.ex:29
 #: lib/funkyabx_web/live/test_live.ex:574
 #, elixir-autogen, elixir-format
 msgid "You have already taken this test (or chosen to not take it). <a href=\"%{results_url}\">Check the results</a>."
-msgstr ""
+msgstr "このテストは受験済みです（または参加しないことを選択しました）。<a href=\"%{results_url}\">結果を見る</a>"
 
 #: lib/funkyabx_web/live/test_live.ex:20
 #: lib/funkyabx_web/live/test_live.ex:568
 #, elixir-autogen, elixir-format
 msgid "You have already taken this test (or chosen to not take it). What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>."
-msgstr ""
+msgstr "このテストは受験済みです（または参加しないことを選択しました）。<a href=\"%{results_url}\">結果を見る</a>か、<a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>前回の結果を削除してもう一度受ける</a>。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1676
 #, elixir-autogen, elixir-format
 msgid "You have selected an unacceptable file type"
-msgstr ""
+msgstr "非対応のファイル形式です"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1673
 #, elixir-autogen, elixir-format
 msgid "You have selected too many files"
-msgstr ""
+msgstr "ファイル数が多すぎます"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:104
 #, elixir-autogen, elixir-format
 msgid "You identified this track as"
-msgstr ""
+msgstr "あなたの回答:"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:97
 #, elixir-autogen, elixir-format
 msgid "You identified this track correctly!"
-msgstr ""
+msgstr "正解です！"
 
 #: lib/funkyabx_web/live/components/result/result_pick.ex:69
 #: lib/funkyabx_web/live/components/result/result_pick.ex:83
 #, elixir-autogen, elixir-format
 msgid "You picked this track"
-msgstr ""
+msgstr "あなたはこのトラックを選びました"
 
 #: lib/funkyabx_web/live/components/result/result_rank.ex:132
 #, elixir-autogen, elixir-format
 msgid "You ranked this track: %{rank}"
-msgstr ""
+msgstr "あなたの順位: %{rank}"
 
 #: lib/funkyabx_web/live/components/result/result_star.ex:99
 #, elixir-autogen, elixir-format
 msgid "You rated this track:"
-msgstr ""
+msgstr "あなたの評価:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:131
 #, elixir-autogen, elixir-format
 msgid "You will be asked to rank the tracks"
-msgstr ""
+msgstr "トラックをランキングしてください"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:88
 #, elixir-autogen, elixir-format
 msgid "You will have to pick their preferred track"
-msgstr ""
+msgstr "好みのトラックを選んでください"
 
 #: lib/funkyabx_web/live/test_live.ex:430
 #, elixir-autogen, elixir-format
 msgid "Your invitation has already been redeemed. <a href=\"%{link}\">Take the test anonymously instead</a>."
-msgstr ""
+msgstr "この招待は使用済みです。<a href=\"%{link}\">匿名でテストを受ける</a>。"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:73
 #, elixir-autogen, elixir-format
 msgid "Your score!"
-msgstr ""
+msgstr "あなたのスコア！"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:39
 #, elixir-autogen, elixir-format
 msgid "Your score: <strong>%{score}/%{count}</strong>"
-msgstr ""
+msgstr "スコア: <strong>%{score}/%{count}</strong>"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:32
 #, elixir-autogen, elixir-format
 msgid "Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>"
-msgstr ""
+msgstr "スコア: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>"
 
 #: lib/funkyabx_web/live/test_live.ex:534
 #: lib/funkyabx_web/live/test_live.ex:718
 #, elixir-autogen, elixir-format
 msgid "Your submission has been registered!"
-msgstr ""
+msgstr "回答を送信しました！"
 
 #: lib/funkyabx_web/live/test_live.ex:725
 #, elixir-autogen, elixir-format
 msgid "Your test can't be submitted. Please try again or reload the page"
-msgstr ""
+msgstr "送信できませんでした。もう一度試すかページを再読み込みしてください"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1361
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully created!"
-msgstr ""
+msgstr "テストを作成しました！"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1486
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully deleted."
-msgstr ""
+msgstr "テストを削除しました。"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1294
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully updated!"
-msgstr ""
+msgstr "テストを更新しました！"
 
 #: lib/funkyabx_web/live/test_form_live.ex:1458
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully updated."
-msgstr ""
+msgstr "テストを更新しました。"
 
 #: lib/funkyabx_web/live/test_results_live.ex:179
 #, elixir-autogen, elixir-format
 msgid "Your test:"
-msgstr ""
+msgstr "あなたのテスト:"
 
 #: lib/funkyabx_web/live/components/result/result_identification.ex:136
 #: lib/funkyabx_web/live/components/result/result_identification.ex:162
@@ -1197,46 +1191,45 @@ msgstr ""
 #: lib/funkyabx_web/live/test_list_live.ex:44
 #, elixir-autogen, elixir-format
 msgid "edit / delete"
-msgstr ""
+msgstr "編集 / 削除"
 
 #: lib/funkyabx_web/live/test_results_live.ex:184
 #, elixir-autogen, elixir-format
 msgid "link to my results"
-msgstr ""
+msgstr "結果へのリンク"
 
 #: lib/funkyabx_web/live/test_results_live.ex:190
 #, elixir-autogen, elixir-format
 msgid "my results"
-msgstr ""
+msgstr "マイ結果"
 
 #: lib/funkyabx_web/live/components/player.ex:318
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Done"
-msgstr ""
+msgstr "完了"
 
 #: lib/funkyabx_web/live/test_live.ex:40
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "This test is closed. <a href=\"%{link}\">Check the results</a>."
-msgstr ""
+msgstr "テストは締め切られています。<a href=\"%{link}\">結果を見る</a>"
 
 #: lib/funkyabx_web/live/test_live.ex:202
-#, elixir-autogen, elixir-format, fuzzy
+#, elixir-autogen, elixir-format
 msgid "Check the results without participating"
-msgstr ""
+msgstr "参加せずに結果を見る"
 
 #: lib/funkyabx_web/live/test_form_live.ex:78
 #, elixir-autogen, elixir-format
 msgid ", files downloaded <strong>%{count}</strong> time"
 msgid_plural ", files downloaded <strong>%{count}</strong> times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "、ファイルDL <strong>%{count}</strong>回"
 
 #: lib/funkyabx_web/live/test_form_live.ex:687
 #, elixir-autogen, elixir-format
 msgid "Allow visitors to download the audio files (after taking the test)"
-msgstr ""
+msgstr "受験後に音声ファイルのダウンロードを許可"
 
 #: lib/funkyabx_web/live/components/download_test_files.ex:25
 #, elixir-autogen, elixir-format
 msgid "Download audio files"
-msgstr ""
+msgstr "音声ファイルをダウンロード"
