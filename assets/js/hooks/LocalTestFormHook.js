@@ -1,4 +1,5 @@
 import { directoryOpen, fileOpen } from 'browser-fs-access';
+import JSZip from 'jszip';
 import cookies from '../utils/cookies';
 
 let audioFiles = null;
@@ -18,6 +19,34 @@ const LocalTestFormHook = {
       return ['wav', 'mp3', 'aac', 'flac'].indexOf(arr.pop()) !== -1;
     };
 
+    const getFilesFromZip = async (file) => {
+      const zip = await JSZip.loadAsync(file)
+      const files = [];
+
+      for (const [_path, entry] of Object.entries(zip.files)) {
+        if (entry.dir || !isAllowedExt(entry.name) || entry.name.startsWith('__MACOSX/')) {
+          continue;
+        }
+
+        const blob = await entry.async('blob');
+        const audioFile = new File([blob], entry.name);
+        files.push(audioFile);
+      }
+
+      return Promise.resolve(files);
+    }
+
+    const addAudioFile = (file) => {
+      if (isAllowedExt(file.name)) {
+        const id = self.crypto.randomUUID();
+        audioFiles[id] = file;
+        this.pushEvent('track_added', { id: id, filename: file.name });
+        return 1;
+      }
+
+      return 0;
+    };
+
     this.handleEvent('store_params_and_redirect', ({ url, params }) => {
       params.forEach((param) => {
         if (param.value !== null) {
@@ -34,7 +63,7 @@ const LocalTestFormHook = {
         const elem = document.getElementById('test-form_type_regular');
         if (elem) {
           elem.dispatchEvent(
-            new Event('input', {bubbles: true})
+              new Event('input', {bubbles: true})
           )
         }
       }, 500);
@@ -44,19 +73,29 @@ const LocalTestFormHook = {
 
     this.ondrop = async (event) => {
       event.preventDefault();
+      let counter = 0;
 
       for await (const item of event.dataTransfer.items) {
         if (item.kind === 'file') {
           const file = item.getAsFile();
 
-          if (isAllowedExt(file.name)) {
-            const id = self.crypto.randomUUID();
-            audioFiles[id] = file;
-
-            this.pushEvent('track_added', { id: id, filename: file.name });
+          if (file.name.endsWith('.zip')) {
+            const filesFromZip = await getFilesFromZip(file);
+            for (const fileFromZip of filesFromZip) {
+              counter += addAudioFile(fileFromZip);
+            }
+          }
+          else  {
+            counter += addAudioFile(file);
           }
         }
       }
+
+      setTimeout(() => {
+        document.getElementById('test-form_type_regular').dispatchEvent(
+            new Event('input', {bubbles: true})
+        )
+      }, counter * 500);
     };
 
     this.dropElem = document.getElementById('local_files_drop_zone');
@@ -70,25 +109,28 @@ const LocalTestFormHook = {
     this.fileButton = document.getElementById('local-file-picker');
 
     this.fileClick = async () => {
+      let counter = 0;
       const files = await fileOpen({
         mimeTypes: ['audio/*'],
-        extensions: ['.wav', '.mp3', '.aac', '.flac'],
+        extensions: ['.wav', '.mp3', '.aac', '.flac', '.zip'],
         multiple: true,
       });
 
-      let counter = 0;
       for (const file of files) {
-        if (isAllowedExt(file.name)) {
-          const id = self.crypto.randomUUID();
-          audioFiles[id] = file;
-          counter++;
-          this.pushEvent('track_added', { id: id, filename: file.name });
+        if (file.name.endsWith('.zip')) {
+          const filesFromZip = await getFilesFromZip(file);
+          for (const fileFromZip of filesFromZip) {
+            counter += addAudioFile(fileFromZip);
+          }
+        }
+        else  {
+          counter += addAudioFile(file);
         }
       }
 
       setTimeout(() => {
         document.getElementById('test-form_type_regular').dispatchEvent(
-          new Event('input', {bubbles: true})
+            new Event('input', {bubbles: true})
         )
       }, counter * 500);
     };
@@ -114,7 +156,7 @@ const LocalTestFormHook = {
 
       setTimeout(() => {
         document.getElementById('test-form_type_regular').dispatchEvent(
-          new Event('input', {bubbles: true})
+            new Event('input', {bubbles: true})
         )
       }, counter * 35);
     };

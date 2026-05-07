@@ -75,7 +75,7 @@ const PlayerHook = {
             {'_target': ['output-select'], 'output-select': cookies.get(COOKIE_DEVICE)}
           );
         } catch(e) {
-          console.log(e.message);
+          console.error(e.message);
         }
       }
     }
