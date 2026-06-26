@@ -12,7 +12,7 @@ defmodule FunkyABX.Invitation do
     belongs_to(:test, Test, type: :binary_id)
   end
 
-  def changeset(invitation, attrs \\ %{}) do
+  def changeset(invitation, %{} = attrs) do
     invitation
     |> cast(attrs, [:id, :name_or_email, :clicked, :test_taken])
     |> put_assoc(:test, attrs.test)

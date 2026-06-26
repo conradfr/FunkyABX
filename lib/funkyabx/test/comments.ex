@@ -1,5 +1,4 @@
 defmodule FunkyABX.Comments do
-  require Logger
   import Ecto.Query, only: [from: 2]
 
   alias FunkyABX.Repo

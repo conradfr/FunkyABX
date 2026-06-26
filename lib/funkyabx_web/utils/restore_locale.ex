@@ -11,7 +11,4 @@ defmodule FunkyABXWeb.RestoreLocale do
 
     {:cont, socket}
   end
-
-  # catch-all case
-  def on_mount(:default, _params, _session, socket), do: {:cont, socket}
 end

@@ -14,7 +14,7 @@ defmodule FunkyABX.Comment do
     timestamps()
   end
 
-  def new(params \\ %{}) do
+  def new(%{} = params) do
     %Comment{
       author: Map.get(params, :author, ""),
       comment: "",

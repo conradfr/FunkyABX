@@ -79,7 +79,7 @@ defmodule FunkyABX.MixProject do
       {:mime, "~> 2.0"},
       {:mogrify, "~> 0.9.3"},
       {:ex_cldr, "~> 2.43"},
-      {:ex_cldr_dates_times, "~> 2.24"},
+      {:ex_cldr_dates_times, "~> 2.25.0"},
       {:ex_cldr_plugs, "~> 1.3.0"},
       {:remote_ip, "~> 1.0"},
       {:earmark, "~> 1.4.48"},

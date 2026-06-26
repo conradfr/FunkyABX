@@ -382,7 +382,7 @@ msgstr "Infos"
 #: lib/funkyabx_web/live/test_form_live.ex:613
 #, elixir-autogen, elixir-format
 msgid "It will be published in the gallery 15 minutes after its creation"
-msgstr "Le test sera publié 15 minutes après sa création"
+msgstr "Le test sera publié dans la gallerie 15 minutes après sa création"
 
 #: lib/funkyabx_web/live/components/invitation.ex:61
 #, elixir-autogen, elixir-format

@@ -1,4 +1,4 @@
-FROM hexpm/elixir:1.19.5-erlang-28.4.1-ubuntu-jammy-20260217
+FROM hexpm/elixir:1.20.2-erlang-29.0.2-ubuntu-jammy-20260509
 
 RUN mkdir -p /scripts
 COPY ./deploy/www/docker-entry.sh /scripts
@@ -31,6 +31,8 @@ ARG PHX_SERVER=${PHX_SERVER}
 ARG PHX_HOST=${PHX_HOST}
 ARG RECAPTCHA3_KEY=${RECAPTCHA3_KEY}
 ARG RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET}
+ARG FETCHER_URL=${FETCHER_URL}
+ARG FETCHER_TOKEN=${FETCHER_TOKEN}
 
 ENV DATABASE_URL=${DATABASE_URL} \
     PORT=${PORT} \
@@ -55,7 +57,9 @@ ENV DATABASE_URL=${DATABASE_URL} \
     PHX_SERVER=${PHX_SERVER} \
     PHX_HOST=${PHX_HOST} \
     RECAPTCHA3_KEY=${RECAPTCHA3_KEY} \
-    RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET}
+    RECAPTCHA3_SECRET=${RECAPTCHA3_SECRET} \
+    FETCHER_URL=${FETCHER_URL} \
+    FETCHER_TOKEN=${FETCHER_TOKEN}
 
 RUN apt-get update && apt-get install --no-install-suggests -y \
     tzdata \
