@@ -16,7 +16,7 @@ defmodule FunkyABXWeb.TestTrackStarComponent do
           {dgettext("test", "I rate this track...")}
         </span>
       </div>
-      <div class=" p-0 p-md-3 flex-fill">
+      <div class="p-0 p-md-3 flex-fill flex-shrink-0">
         <%= for star <- 1..5 do %>
           <i
             title={star}
