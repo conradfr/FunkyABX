@@ -8,7 +8,7 @@ defmodule FunkyABXWeb.GalleryLive do
   def render(assigns) do
     ~H"""
     <h2 class="mb-4 mt-0 header-chemyretro" id="test-form-header">
-      {dgettext("test", "Gallery")}
+      {dgettext("test", "Public tests")}
     </h2>
 
     <ul class="nav nav-tabs mb-3" id="galleryTab" role="tablist">
@@ -168,7 +168,7 @@ defmodule FunkyABXWeb.GalleryLive do
      assign(
        socket,
        %{
-         page_title: dgettext("site", "Gallery"),
+         page_title: dgettext("site", "Public tests"),
          tests: tests,
          pages: pages,
          page: page,

@@ -166,7 +166,7 @@ msgstr "FunkyABXはフランス・パリの<a target=\"_blank\" href=\"http://ww
 #: lib/funkyabx_web/components/layouts/_navbar.html.heex:47
 #: lib/funkyabx_web/live/gallery_live.ex:171
 #, elixir-autogen, elixir-format
-msgid "Gallery"
+msgid "Public tests"
 msgstr "ギャラリー"
 
 #: lib/funkyabx_web/controllers/page_html/donate.html.heex:26

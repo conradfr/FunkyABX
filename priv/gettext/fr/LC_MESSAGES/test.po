@@ -286,8 +286,8 @@ msgstr "Fichier:"
 
 #: lib/funkyabx_web/live/gallery_live.ex:11
 #, elixir-autogen, elixir-format
-msgid "Gallery"
-msgstr "Gallerie"
+msgid "Public tests"
+msgstr "Tests publics"
 
 #: lib/funkyabx_web/live/components/invitation.ex:37
 #, elixir-autogen, elixir-format
