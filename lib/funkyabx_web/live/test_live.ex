@@ -684,7 +684,7 @@ defmodule FunkyABXWeb.TestLive do
       choices_cleaned = Tests.clean_choices(choices, tracks, test)
 
       tracks_order =
-        if test.type != :regular do
+        if test.type == :regular do
           tracks
           |> Enum.filter(fn t -> t.reference_track == false end)
           |> Enum.with_index(1)
