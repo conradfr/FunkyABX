@@ -27,7 +27,7 @@ const TestResultsHook = {
     }
 
     // Send track order from test session if any
-    if (sessionStorage.getItem(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`) !== undefined) {
+    if (sessionStorage.getItem(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`)) {
       this.pushEvent('tracks_order', JSON.parse(sessionStorage.getItem(`${COOKIE_TEST_TAKEN}_${testId}_tracks_order`)));
     }
 
