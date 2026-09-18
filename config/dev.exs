@@ -96,3 +96,5 @@ config :funkyabx,
   temp_folder: "priv/static/uploads/temp/",
   recaptcha_key: System.get_env("RECAPTCHA3_KEY") || nil,
   recaptcha_private: System.get_env("RECAPTCHA3_SECRET") || nil
+
+import_config "dev.secret.exs"

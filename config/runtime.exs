@@ -129,7 +129,9 @@ if config_env() == :prod do
     flac_folder: System.get_env("FLAC_FOLDER"),
     temp_folder: System.get_env("TEMP_FOLDER"),
     recaptcha_key: System.get_env("RECAPTCHA3_KEY"),
-    recaptcha_private: System.get_env("RECAPTCHA3_SECRET")
+    recaptcha_private: System.get_env("RECAPTCHA3_SECRET"),
+    fetcher_url: System.get_env("FETCHER_URL"),
+    fetcher_token: System.get_env("FETCHER_TOKEN")
 
   config :funkyabx, FunkyABX.Mailer,
     adapter: Swoosh.Adapters.Mua,

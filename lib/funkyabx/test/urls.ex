@@ -1,6 +1,7 @@
 defmodule FunkyABX.Urls do
   @parsers ["gearspace_thread", "other_url"]
   @headers ["gearspace_headers", "other_headers"]
+  @timeout 300_000
 
   # ---------- URLS ----------
 
@@ -42,23 +43,7 @@ defmodule FunkyABX.Urls do
     if String.starts_with?(url, "https://gearspace.com/") do
       {:halt,
        [
-         {"User-Agent",
-          "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0"},
-         {"Accept",
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"},
-         {"Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"},
-         {"Alt-Used", "gearspace.com"},
-         {"Connection", "keep-alive"},
-         {"Cookie",
-          "__cf_bm=E4vsZNxORSkodOVtEHJV1ejTCloDUWoLYklp4MX1.fU-1710697793-1.0.1.1-.H.0Wg6XmJuWFx3MvlCPK_IZCMkCXPPxNa2CYYSh2siahcpjss__bzLnP9oGu4R6kozoKred1TglnRxn1WGBtA; PHPSESSID=clvajt6mf5b4fhv2ggd6vrlp33; bbsessionhash=08c0cba7f3127e529501f78bfc00c9ff; bblastvisit=1710697795; bblastactivity=0"},
-         {"Upgrade-Insecure-Requests", "1"},
-         {"Sec-Fetch-Dest", "document"},
-         {"Sec-Fetch-Mode", "navigate"},
-         {"Sec-Fetch-Site", "none"},
-         {"Sec-Fetch-User", "?1"},
-         {"Cache-Control", "no-cache"},
-         {"Pragma", "no-cache"},
-         {"Referer", "https://gearspace.com/"}
+         {"Authorization", "Bearer " <> Application.fetch_env!(:funkyabx, :fetcher_token)},
        ]}
     else
       {:cont, url}
@@ -95,14 +80,21 @@ defmodule FunkyABX.Urls do
 
   defp gearspace_thread_to_urls(url) do
     try do
+      IO.puts("========================================")
+      IO.puts(Application.fetch_env!(:funkyabx, :fetcher_url) <> "/fetch-html?url=" <> URI.encode(url))
       HTTPoison.get!(
-        url,
+        Application.fetch_env!(:funkyabx, :fetcher_url) <> "/fetch-html?url=" <> URI.encode(url),
         get_headers_for_url(url),
+        timeout: @timeout,
+        recv_timeout: @timeout,
         hackney: [:insecure]
       )
+      |> IO.inspect()
       |> Map.get(:body, "")
+      |> IO.inspect()
       |> Floki.parse_document!()
       |> Floki.find("p > a")
+      |> IO.inspect()
       |> Enum.map(fn x ->
         file =
           x
@@ -118,7 +110,10 @@ defmodule FunkyABX.Urls do
         {title, "https://gearspace.com/" <> file}
       end)
     rescue
-      _ -> nil
+      e ->
+        IO.puts("###################################")
+        IO.puts("#{inspect e}")
+        nil
     end
   end
 end
