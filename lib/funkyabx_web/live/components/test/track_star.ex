@@ -29,8 +29,7 @@ defmodule FunkyABXWeb.TestTrackStarComponent do
             phx-value-track_id={@track.id}
             phx-value-star={star}
             phx-target={@myself}
-          >
-          </i>
+          ></i>
         <% end %>
       </div>
     </div>

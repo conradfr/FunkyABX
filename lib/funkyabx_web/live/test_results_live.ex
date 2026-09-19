@@ -125,43 +125,60 @@ defmodule FunkyABXWeb.TestResultsLive do
       </div>
 
       <%= if @test.description != nil do %>
-        <%= if @view_description == false do %>
-          <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_description">
-            {dgettext("test", "View description")}&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+        <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_description">
+          <%= if @view_description == false do %>
+            {dgettext("test", "View description")}
+          <% else %>
+            {dgettext("test", "Hide description")}
+          <% end %>&nbsp;&nbsp;<i class={[
+            "bi bi-arrow-right-circle reveal-caret",
+            @view_description == true && "is-open"
+          ]}></i>
+        </div>
+
+        <div class={["reveal", @view_description == true && "is-open"]}>
+          <div class="reveal-inner">
+            <TestDescriptionComponent.format
+              wrapper_class="my-2 p-3 test-description"
+              description_markdown={@test.description_markdown}
+              description={@test.description}
+            />
           </div>
-        <% else %>
-          <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_description">
-            {dgettext("test", "Hide description")}&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
-          </div>
-          <TestDescriptionComponent.format
-            wrapper_class="my-2 p-3 test-description"
-            description_markdown={@test.description_markdown}
-            description={@test.description}
-          />
-        <% end %>
+        </div>
       <% end %>
 
       <%= if Tests.can_have_player_on_results_page?(@test)
         and @tracks != nil and @tracks_order != nil and @is_another_session == false do %>
-        <%= if @view_test_tracks == false do %>
-          <div class="fs-8 mt-3 cursor-link text-body-secondary" phx-click="toggle_test_tracks">
-            {dgettext("test", "View your test")}&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
-          </div>
-        <% else %>
-          <div class="fs-8 mt-3 cursor-link text-body-secondary" phx-click="toggle_test_tracks">
-            {dgettext("test", "Hide your test")}&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
-          </div>
+        <div class="fs-8 mt-3 cursor-link text-body-secondary" phx-click="toggle_test_tracks">
+          <%= if @view_test_tracks == false do %>
+            {dgettext("test", "View your test")}
+          <% else %>
+            {dgettext("test", "Hide your test")}
+          <% end %>&nbsp;&nbsp;<i class={[
+            "bi bi-arrow-right-circle reveal-caret",
+            @view_test_tracks == true && "is-open"
+          ]}></i>
+        </div>
 
-          <.live_component
-            module={PlayerComponent}
-            id="player"
-            test={@test}
-            tracks={@tracks}
-            choices_taken={@visitor_choices}
-            test_already_taken={true}
-            increment_view_counter={false}
-            display_track_name_tooltip={true}
-          />
+        <%= if @view_test_tracks == true do %>
+          <div
+            id="test-tracks-reveal"
+            class="reveal"
+            phx-mounted={JS.add_class("is-open", to: "#test-tracks-reveal", time: 150)}
+          >
+            <div class="reveal-inner">
+              <.live_component
+                module={PlayerComponent}
+                id="player"
+                test={@test}
+                tracks={@tracks}
+                choices_taken={@visitor_choices}
+                test_already_taken={true}
+                increment_view_counter={false}
+                display_track_name_tooltip={true}
+              />
+            </div>
+          </div>
         <% end %>
       <% end %>
 
@@ -216,19 +233,19 @@ defmodule FunkyABXWeb.TestResultsLive do
           <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
             navigate={~p"/local_test/edit/#{@test_data}"}
             replace={true}
-          >{dgettext "test", "Go back to the test form"}</.link>
+          >{dgettext("test", "Go back to the test form")}</.link>
         </div>
         <div>
           <i class="bi bi-arrow-repeat color-action"></i>&nbsp;<.link
             navigate={~p"/local_test/#{@test_data}"}
             replace={true}
-          >{dgettext "test", "Take the test again"}</.link>
+          >{dgettext("test", "Take the test again")}</.link>
         </div>
         <div>
           <i class="bi bi-plus color-action"></i>&nbsp;<.link
             href={~p"/local_test"}
             class="color-action"
-          >{dgettext "test", "Create a new local test"}</.link>
+          >{dgettext("test", "Create a new local test")}</.link>
         </div>
       </div>
 

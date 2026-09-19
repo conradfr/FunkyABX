@@ -19,8 +19,7 @@ defmodule BsModalComponent do
               class="btn-close"
               phx-click={JS.dispatch("close_modal", to: "body")}
               aria-label={dgettext("site", "Close")}
-            >
-            </button>
+            ></button>
           </div>
           <div class="modal-body">
             {render_slot(@inner_block)}

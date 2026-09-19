@@ -35,8 +35,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                   "Local tests are ephemeral tests that can't be shared and are using your files locally."
                 )
               }
-            >
-            </i>
+            ></i>
           </h2>
         </div>
       </div>
@@ -249,8 +248,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                     class="bi bi-info-circle text-body-secondary"
                     data-bs-toggle="tooltip"
                     title={dgettext("test", "Or drag and drop files here")}
-                  >
-                  </i>
+                  ></i>
                 </div>
               </div>
             </div>
@@ -282,8 +280,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                             "The file will be downloaded once you submit, not served from the original url"
                           )
                         }
-                      >
-                      </i>
+                      ></i>
                     </div>
                   </div>
                 </div>
@@ -386,8 +383,7 @@ defmodule FunkyABXWeb.LocalTestFormLive do
                         "Reference / unprocessed track that will not be part of the test but playable alongside the others."
                       )
                     }
-                  >
-                  </i>
+                  ></i>
                 </label>
               </div>
             </div>

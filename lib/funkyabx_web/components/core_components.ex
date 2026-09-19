@@ -74,8 +74,7 @@ defmodule FunkyABXWeb.CoreComponents do
             @kind == :success && "bi-check-circle",
             @kind == :info && "bi-info-circle",
             @kind == :error && "bi-x-circle"
-          ]}>
-          </i>
+          ]}></i>
           {msg}
         </div>
         <button
@@ -83,8 +82,7 @@ defmodule FunkyABXWeb.CoreComponents do
           class="btn-close btn-sm btn-close-white me-2 m-auto"
           data-bs-dismiss="toast"
           aria-label="Close"
-        >
-        </button>
+        ></button>
       </div>
     </div>
     """
@@ -122,8 +120,7 @@ defmodule FunkyABXWeb.CoreComponents do
         @kind == :success && "bi-check-circle",
         @kind == :info && "bi-info-circle",
         @kind == :error && "bi-x-circle"
-      ]}>
-      </i>
+      ]}></i>
       {msg}
     </div>
     """

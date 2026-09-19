@@ -44,8 +44,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
             <i
               :if={Kernel.elem(@visitor_identification_score, 0) == length(@identifications)}
               class="bi bi-hand-thumbs-up"
-            >
-            </i>
+            ></i>
           </div>
         </div>
         <div
@@ -129,8 +128,7 @@ defmodule FunkyABXWeb.TestResultIdentificationComponent do
                         "color-correct",
                       identification.track_id != guess["track_guessed_id"] && "bi-x" &&
                         "color-incorrect"
-                    ]}>
-                    </i> {guess["title"]}
+                    ]}></i> {guess["title"]}
                   </div>
                   <div class="p-1 ps-0 text-end text-body-secondary">
                     <small>{dgettext("test", "at")}</small>

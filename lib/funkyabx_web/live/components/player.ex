@@ -106,8 +106,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                         "<strong>Mouse/touch:</strong><ul><li>Click on play icon or track number to switch and/or start playing (+ctrl to rewind)</li><li>Click on a timeline/waveform to go to a specific time & track</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>"
                       )
                     }
-                  >
-                  </i>
+                  ></i>
                 </small>
               </div>
             <% end %>
@@ -234,8 +233,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                   ]}
                   phx-click={JS.dispatch("play", to: "body", detail: %{"track_hash" => track.hash})}
                 >
-                  <i class={["bi", "bi-play-fill", @tracks_loaded == false && "text-body-secondary"]}>
-                  </i>
+                  <i class={["bi", "bi-play-fill", @tracks_loaded == false && "text-body-secondary"]}></i>
                 </button>
               <% end %>
             </div>
@@ -286,8 +284,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                         role="button"
                         data-bs-toggle="tooltip"
                         data-bs-title={track.title}
-                      >
-                      </i>
+                      ></i>
                     </small>
                   </span>
                 </div>

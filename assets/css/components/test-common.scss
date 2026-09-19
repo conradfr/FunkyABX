@@ -1,0 +1,40 @@
+// Generic reveal/collapse used by the toggles on the test and results pages.
+//
+// The panel is always rendered so that LiveView patches a class rather than
+// swapping the nodes in and out, which gives CSS something to transition.
+// `grid-template-rows: 0fr -> 1fr` animates to the content height without
+// having to hardcode one.
+
+.reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 150ms ease, opacity 100ms ease;
+
+  &.is-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+
+// The overflow clip is what makes the 0fr row actually hide the content, and it
+// keeps the inner margins from collapsing out of the closed panel.
+.reveal-inner {
+  overflow: hidden;
+}
+
+.reveal-caret {
+  display: inline-block;
+  transition: transform 150ms ease;
+
+  &.is-open {
+    transform: rotate(90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-caret {
+    transition: none;
+  }
+}

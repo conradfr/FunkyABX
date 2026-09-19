@@ -140,20 +140,24 @@ defmodule FunkyABXWeb.TestLive do
           description={@test.description}
         />
 
-        <%= if @view_tracklist == false do %>
-          <div class="fs-8 mt-2 mb-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
-            {dgettext("test", "Tracklist")}&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+        <div class="fs-8 mt-2 mb-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
+          <%= if @view_tracklist == false do %>
+            {dgettext("test", "Tracklist")}
+          <% else %>
+            {dgettext("test", "Hide tracklist")}
+          <% end %>&nbsp;&nbsp;<i class={[
+            "bi bi-arrow-right-circle reveal-caret",
+            @view_tracklist == true && "is-open"
+          ]}></i>
+        </div>
+
+        <div class={["reveal", @view_tracklist == true && "is-open"]}>
+          <div class="reveal-inner">
+            <div class="test-tracklist-bg mb-4 p-3 py-2">
+              <div :for={track <- @test.tracks} class="test-tracklist-one">- {track.title}</div>
+            </div>
           </div>
-        <% else %>
-          <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
-            {dgettext("test", "Hide tracklist")}&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
-          </div>
-          <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
-            <%= for track <- @test.tracks do %>
-              <div class="test-tracklist-one">- {track.title}</div>
-            <% end %>
-          </div>
-        <% end %>
+        </div>
       <% end %>
 
       <.live_component
@@ -175,14 +179,14 @@ defmodule FunkyABXWeb.TestLive do
               <i class="bi bi-arrow-left color-action"></i>&nbsp;<.link
                 navigate={~p"/local_test/edit/#{@test_data}"}
                 replace={true}
-              >{dgettext "test", "Go back to the test form"}</.link>
+              >{dgettext("test", "Go back to the test form")}</.link>
             </div>
 
             <div :if={@test.local == true} class="results-actions">
               <i class="bi bi-plus color-action"></i>&nbsp;<.link
                 href={~p"/local_test"}
                 class="color-action"
-              >{dgettext "test", "Create a new local test"}</.link>
+              >{dgettext("test", "Create a new local test")}</.link>
             </div>
 
             <%= unless @test_params.has_choices == false do %>
@@ -203,8 +207,14 @@ defmodule FunkyABXWeb.TestLive do
                     </button>
                   </div>
                 <% end %>
-                <div :if={@test.type != :listening and @test.local == false} class="order-0 order-sm-1 flex-fill fs-8 text-white-50 text-center">
-                  <i class="bi bi-info-circle"></i>&nbsp;&nbsp;{dgettext("test", "Tracks are in random order")}
+                <div
+                  :if={@test.type != :listening and @test.local == false}
+                  class="order-0 order-sm-1 flex-fill fs-8 text-white-50 text-center"
+                >
+                  <i class="bi bi-info-circle"></i>&nbsp;&nbsp;{dgettext(
+                    "test",
+                    "Tracks are in random order"
+                  )}
                 </div>
                 <div class="order-2 text-end px-1">
                   <button

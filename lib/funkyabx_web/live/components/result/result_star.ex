@@ -121,8 +121,7 @@ defmodule FunkyABXWeb.TestResultStarComponent do
                         star.rank < star_nb && "bi-star",
                         star.rank >= star_nb && "bi-star-fill"
                       ]}
-                    >
-                    </i>
+                    ></i>
                   <% end %>
                 </div>
               </div>

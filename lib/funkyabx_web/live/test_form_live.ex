@@ -126,8 +126,7 @@ defmodule FunkyABXWeb.TestFormLive do
                               "Use rotate=0 and loop=0 to set rotating and looping as off by default"
                             )
                           }
-                        >
-                        </i>
+                        ></i>
                       </div>
                     </label>
                     <% test_url =
@@ -832,8 +831,7 @@ defmodule FunkyABXWeb.TestFormLive do
                       class="bi bi-info-circle text-body-secondary"
                       data-bs-toggle="tooltip"
                       title={dgettext("site", "Or drag and drop files here")}
-                    >
-                    </i>
+                    ></i>
                   </div>
                 </div>
               </div>
@@ -866,8 +864,7 @@ defmodule FunkyABXWeb.TestFormLive do
                               "The file will be downloaded once you submit, not served from the original url"
                             )
                           }
-                        >
-                        </i>
+                        ></i>
                       </div>
                     </div>
                   </div>
@@ -1035,8 +1032,7 @@ defmodule FunkyABXWeb.TestFormLive do
                             "Reference / unprocessed track that will not be part of the test but playable alongside the others."
                           )
                         }
-                      >
-                      </i>
+                      ></i>
                     </label>
                   </div>
                 </div>

@@ -43,7 +43,7 @@ defmodule FunkyABX.Urls do
     if String.starts_with?(url, "https://gearspace.com/") do
       {:halt,
        [
-         {"Authorization", "Bearer " <> Application.fetch_env!(:funkyabx, :fetcher_token)},
+         {"Authorization", "Bearer " <> Application.fetch_env!(:funkyabx, :fetcher_token)}
        ]}
     else
       {:cont, url}
@@ -80,8 +80,6 @@ defmodule FunkyABX.Urls do
 
   defp gearspace_thread_to_urls(url) do
     try do
-      IO.puts("========================================")
-      IO.puts(Application.fetch_env!(:funkyabx, :fetcher_url) <> "/fetch-html?url=" <> URI.encode(url))
       HTTPoison.get!(
         Application.fetch_env!(:funkyabx, :fetcher_url) <> "/fetch-html?url=" <> URI.encode(url),
         get_headers_for_url(url),
@@ -110,10 +108,7 @@ defmodule FunkyABX.Urls do
         {title, "https://gearspace.com/" <> file}
       end)
     rescue
-      e ->
-        IO.puts("###################################")
-        IO.puts("#{inspect e}")
-        nil
+      e -> nil
     end
   end
 end
