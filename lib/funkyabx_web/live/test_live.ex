@@ -142,11 +142,11 @@ defmodule FunkyABXWeb.TestLive do
 
         <%= if @view_tracklist == false do %>
           <div class="fs-8 mt-2 mb-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
-            Tracklist&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
+            {dgettext("test", "Tracklist")}&nbsp;&nbsp;<i class="bi bi-arrow-right-circle"></i>
           </div>
         <% else %>
           <div class="fs-8 mt-2 cursor-link text-body-secondary" phx-click="toggle_tracklist">
-            Hide tracklist&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
+            {dgettext("test", "Hide tracklist")}&nbsp;&nbsp;<i class="bi bi-arrow-down-circle"></i>
           </div>
           <div class="test-tracklist-bg mt-2 mb-4 p-3 py-2">
             <%= for track <- @test.tracks do %>
@@ -188,7 +188,7 @@ defmodule FunkyABXWeb.TestLive do
             <%= unless @test_params.has_choices == false do %>
               <%= unless @test_already_taken == true or Tests.is_closed?(@test) == true do %>
                 <%= unless @test.local == true do %>
-                  <div class="px-1">
+                  <div class="order-1 order-sm-0 px-1">
                     <button
                       phx-click="no_participate"
                       class="btn btn-sm btn-outline-dark"
@@ -203,7 +203,10 @@ defmodule FunkyABXWeb.TestLive do
                     </button>
                   </div>
                 <% end %>
-                <div class="text-end px-1 _flex-fill">
+                <div :if={@test.type != :listening and @test.local == false} class="order-0 order-sm-1 flex-fill fs-8 text-white-50 text-center">
+                  <i class="bi bi-info-circle"></i>&nbsp;&nbsp;{dgettext("test", "Tracks are in random order")}
+                </div>
+                <div class="order-2 text-end px-1">
                   <button
                     phx-click="submit"
                     class={"btn btn-primary#{unless (@valid == true), do: " disabled"}"}

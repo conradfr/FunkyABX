@@ -1,0 +1,25 @@
+# Native modules and installed deps must be built inside the image,
+# never copied in from the host (wrong libc / Node ABI).
+**/node_modules
+
+# Elixir build artifacts. `mix deps.get` / `deps.compile` regenerate these in the
+# builder stage; copying the host's would overwrite them, bust the layer cache on
+# every build, and drop macOS-compiled NIFs into a Linux image.
+_build
+deps
+
+.git
+.github
+.idea
+.vscode
+.elixir_ls
+.claude
+**/.DS_Store
+
+# Dev-only secrets and local state, never part of an image.
+config/*.secret.exs
+.env
+.env.*
+*.log
+
+test
