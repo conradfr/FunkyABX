@@ -32,6 +32,7 @@ defmodule FunkyABXWeb.PlayerComponent do
           data-rotate-seconds={@rotate_seconds}
           data-rotate={to_string(@rotate)}
           data-loop={to_string(@loop)}
+          data-normalization={to_string(@normalization)}
           data-waveform={to_string(@test_params.draw_waveform)}
         >
           <div class="p-2 me-auto d-flex align-items-center">
@@ -142,6 +143,29 @@ defmodule FunkyABXWeb.PlayerComponent do
             >
               <i class="bi bi-align-end"></i>
             </button>
+          </div>
+          <div :if={@test.local == false} class="p-2">
+            <fieldset class="form-group">
+              <div class="form-check">
+                <input
+                  class="form-check-input disabled"
+                  type="checkbox"
+                  id="inputNormalizationCheckbox"
+                  name="inputNormalizationCheckbox"
+                  checked={@normalization}
+                />
+                <label class="form-check-label" for="inputLoopCheckbox">
+                  {dgettext("test", "Normalization")}
+                  &nbsp;
+                  <small>
+                    <i class="bi bi-info-circle text-body-secondary"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="True Peak -1dB, target -24dB"
+                      title="True Peak -1dB, target -24dB"></i>
+                  </small>
+                </label>
+              </div>
+            </fieldset>
           </div>
           <div class="p-2">
             <fieldset class="form-group">
@@ -353,6 +377,7 @@ defmodule FunkyABXWeb.PlayerComponent do
        current_track: nil,
        rotate: true,
        loop: true,
+       normalization: false,
        rotate_seconds: 5,
        playing: false,
        playingTime: 0,
@@ -368,6 +393,7 @@ defmodule FunkyABXWeb.PlayerComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(normalization: assigns.test.normalization == true)
      |> assign(tracks_loaded: socket.assigns.tracks_loaded)
      |> assign(choices_modules: choices_modules)
      |> assign_new(:choices_taken, fn ->
@@ -492,6 +518,20 @@ defmodule FunkyABXWeb.PlayerComponent do
   end
 
   # ---------- PLAYER SETTINGS ----------
+
+  @impl true
+  def handle_event(
+        "change_player_settings",
+        %{"_target" => ["inputNormalizationCheckbox"]} = player_params,
+        socket
+      ) do
+    normalization = Map.has_key?(player_params, "inputNormalizationCheckbox")
+
+    {:noreply,
+      socket
+      |> assign(normalization: normalization)
+      |> push_event("normalization", %{normalization: normalization})}
+  end
 
   @impl true
   def handle_event(

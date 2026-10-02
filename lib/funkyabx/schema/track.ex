@@ -17,7 +17,7 @@ defmodule FunkyABX.Track do
     field(:url, :string, virtual: true)
     field(:local, :boolean, virtual: true, default: false)
     field(:local_url, :boolean, virtual: true, default: false)
-    field(:normalization, :boolean, default: nil)
+    field(:loudness, :map, default: nil)
     field(:reference_track, :boolean, default: false)
     belongs_to(:test, Test, type: :binary_id)
     has_many(:pick, Pick)
@@ -35,7 +35,7 @@ defmodule FunkyABX.Track do
       :temp_id,
       :local,
       :local_url,
-      :normalization,
+      :loudness,
       :reference_track
     ])
     #    |> validate_required([:title])

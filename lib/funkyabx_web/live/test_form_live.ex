@@ -11,6 +11,7 @@ defmodule FunkyABXWeb.TestFormLive do
   alias FunkyABX.Tests.FormUtils
   alias FunkyABX.{Accounts, Utils, Urls, Tests, Files, Tracks, TestClosingWorker}
   alias FunkyABX.{Test, Track}
+  alias FunkyABX.Analyzer.Loudness
 
   @title_max_length 100
 
@@ -793,7 +794,7 @@ defmodule FunkyABXWeb.TestFormLive do
                       label={
                         dgettext(
                           "test",
-                          "Apply EBU R128 loudness normalization during upload (files are converted to flac)"
+                          "Enable EBU R128 loudness normalization by default on test player (can be disabled by visitor)"
                         )
                       }
                     />
@@ -1698,16 +1699,11 @@ defmodule FunkyABXWeb.TestFormLive do
   # ---------- FORM UTILS ----------
 
   defp consume_and_update_form_tracks_params(test_params, socket) do
-    normalization =
-      socket.assigns.test
-      |> Test.changeset_update(test_params)
-      |> get_field(:normalization)
-
     updated_tracks =
       test_params
       |> Map.get("tracks", %{})
-      # normalization is only set server side, when the file is processed
-      |> Map.new(fn {k, t} -> {k, Map.delete(t, "normalization")} end)
+      # loudness is only set server side, when the file is processed
+      |> Map.new(fn {k, t} -> {k, Map.delete(t, "loudness")} end)
       # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
@@ -1717,27 +1713,24 @@ defmodule FunkyABXWeb.TestFormLive do
             consume_uploaded_entry(socket, upload_entry, fn %{path: path} ->
               filename_dest = Files.get_destination_filename(upload_entry.client_name)
 
-              final_filename_dest =
-                Files.save(
-                  path,
-                  Path.join([socket.assigns.test.id, filename_dest]),
-                  [],
-                  normalization
-                )
+              loudness = Loudness.analyze(path)
 
-              {:ok, {upload_entry.client_name, final_filename_dest}}
+              final_filename_dest =
+                Files.save(path, Path.join([socket.assigns.test.id, filename_dest]))
+
+              {:ok, {upload_entry.client_name, final_filename_dest, loudness}}
             end)
           else
             nil
           end
 
         case upload_consumed do
-          {original_filename, filename} ->
+          {original_filename, filename, loudness} ->
             updated_track =
               Map.merge(t, %{
                 "filename" => filename,
                 "original_filename" => original_filename,
-                "normalization" => normalization == true
+                "loudness" => loudness
               })
 
             Map.put(acc, k, updated_track)
@@ -1751,7 +1744,7 @@ defmodule FunkyABXWeb.TestFormLive do
         with false <- Map.has_key?(t, "id"),
              url when url != nil <- Map.get(t, "url"),
              downloaded when downloaded != :error <-
-               Tracks.import_track_url(t, socket.assigns.test.id, normalization) do
+               Tracks.import_track_url(t, socket.assigns.test.id) do
           Map.put(acc, k, downloaded)
         else
           :error ->

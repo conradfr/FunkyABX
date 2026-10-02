@@ -4,6 +4,11 @@ FROM hexpm/elixir:1.20.4-erlang-29.1.1-ubuntu-jammy-20260810
 ENV TZ=Europe/Paris
 ENV DEBIAN_FRONTEND=noninteractive
 
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV ELIXIR_ERL_OPTIONS="+fnu"
+
 EXPOSE 4000
 EXPOSE 4001
 

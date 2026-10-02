@@ -4,6 +4,11 @@ FROM hexpm/elixir:1.20.4-erlang-29.1.1-ubuntu-jammy-20260810 AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV ELIXIR_ERL_OPTIONS="+fnu"
+
 # Build-time toolchain only: the C compiler for the bcrypt/pbkdf2 NIFs and the
 # Node toolchain for the asset bundle. None of it is carried into the runtime
 # stage, which only needs the release and its shared libraries.
@@ -64,6 +69,11 @@ FROM ubuntu:jammy
 EXPOSE 80
 
 ARG DEBIAN_FRONTEND=noninteractive
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV ELIXIR_ERL_OPTIONS="+fnu"
 
 # ffmpeg backs the wav -> flac conversion, imagemagick backs mogrify, and the
 # optimizers back the image pipeline. The release bundles its own ERTS, so no

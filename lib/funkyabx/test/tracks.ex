@@ -3,6 +3,7 @@ defmodule FunkyABX.Tracks do
 
   alias FunkyABX.{Test, Track}
   alias FunkyABX.{Files, Download}
+  alias FunkyABX.Analyzer.Loudness
 
   @download_task_timeout 300_000
   @download_flor_local_expiration_days 1
@@ -17,7 +18,8 @@ defmodule FunkyABX.Tracks do
         url: get_media_url(t, test),
         hash: t.hash,
         local: t.local,
-        reference_track: t.reference_track
+        reference_track: t.reference_track,
+        loudness: t.loudness
       }
       # keep id only for local tests (to avoid cheating)
       |> Kernel.then(fn
@@ -197,7 +199,7 @@ defmodule FunkyABX.Tracks do
     end
   end
 
-  def import_track_url(track, test_id, normalization) do
+  def import_track_url(track, test_id) do
     try do
       task = Task.Supervisor.async(FunkyABX.TaskSupervisor, Download, :from_url, [track["url"]])
       result = Task.await(task, @download_task_timeout)
@@ -211,7 +213,8 @@ defmodule FunkyABX.Tracks do
             |> Files.get_destination_filename()
             |> (&Path.join([test_id, &1])).()
 
-          final_filename_dest = Files.save(download_path, filename_dest, [], normalization)
+          loudness = Loudness.analyze(download_path)
+          final_filename_dest = Files.save(download_path, filename_dest)
           File.rm(download_path)
 
           Map.merge(track, %{
@@ -219,7 +222,7 @@ defmodule FunkyABX.Tracks do
             "filename" => final_filename_dest,
             "original_filename" => original_filename,
             "title" => url_to_title(track["url"], Map.get(track, "title")),
-            "normalization" => normalization == true
+            "loudness" => loudness
           })
 
         _ ->
@@ -239,8 +242,7 @@ defmodule FunkyABX.Tracks do
   # tracks with base64 data
   def parse_and_import_tracks_from_api(
         %{"data" => data, "filename" => filename} = track_params,
-        test_id,
-        normalization
+        test_id
       )
       when is_binary(data) and is_binary(filename) do
     {:ok, track_data} = Base.decode64(data)
@@ -253,13 +255,9 @@ defmodule FunkyABX.Tracks do
 
     filename_dest = Files.get_destination_filename(filename)
 
-    final_filename_dest =
-      Files.save(
-        temp_path,
-        Path.join([test_id, filename_dest]),
-        [],
-        normalization
-      )
+    loudness = Loudness.analyze(temp_path)
+
+    final_filename_dest = Files.save(temp_path, Path.join([test_id, filename_dest]))
 
     File.rm(temp_path)
 
@@ -267,18 +265,17 @@ defmodule FunkyABX.Tracks do
       "filename" => final_filename_dest,
       "original_filename" => filename,
       "title" => filename_to_title(filename, Map.get(track_params, "title")),
-      "normalization" => normalization == true
+      "loudness" => loudness
     })
   end
 
   # tracks with url
   def parse_and_import_tracks_from_api(
         %{"url" => url, "filename" => filename} = track_params,
-        test_id,
-        normalization
+        test_id
       )
       when is_binary(url) and is_binary(filename) do
     track_params
-    |> import_track_url(test_id, normalization)
+    |> import_track_url(test_id)
   end
 end

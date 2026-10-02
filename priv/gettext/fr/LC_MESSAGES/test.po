@@ -117,8 +117,8 @@ msgstr "Une lien d'invitation sera généré. Utilisez \",\" pour séparer plusi
 
 #: lib/funkyabx_web/live/test_form_live.ex:795
 #, elixir-autogen, elixir-format
-msgid "Apply EBU R128 loudness normalization during upload (files are converted to flac)"
-msgstr "Applique une normalisation du volume sonore EBU R128 au momement du téléchargement (les fichiers sont convertis en flac)"
+msgid "Enable EBU R128 loudness normalization by default on test player (can be disabled by visitor)"
+msgstr "Activer la normalisation du volume sonore EBU R128 par défaut (les visiteurs peuvent le désactiver)"
 
 #: lib/funkyabx_web/live/test_live.ex:196
 #, elixir-autogen, elixir-format
@@ -523,7 +523,7 @@ msgstr "One or more tracks couldn't be loaded. Si vous avez rafraîchi la page, 
 #: lib/funkyabx_web/live/components/player.ex:405
 #, elixir-autogen, elixir-format
 msgid "One or more tracks couldn't be loaded. Please refresh the page to try again."
-msgstr "UOne or more tracks couldn't be loaded. Merci de rafraîchir la page pour réessayer."
+msgstr "One or more tracks couldn't be loaded. Merci de rafraîchir la page pour réessayer."
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:145
 #: lib/funkyabx_web/live/test_form_live.ex:529

@@ -4,14 +4,22 @@ import Timeline from './Timeline';
 import * as playerState from '../config/state';
 import { CUE_OVER_TOLERANCE } from '../config/config'
 
+// Loudness normalization: a constant gain bringing the track to the common target loudness set by the player.
+// The true peak of a track must stay below this max, which limits how loud it can be made.
+const NORMALIZATION_MAX_TRUE_PEAK = -1;
+
 export default class {
-  constructor(src, drawWaveform, buffer, volume, ac, ee, initialState) {
+  constructor(src, drawWaveform, buffer, volume, normalization, ac, ee, initialState) {
     this.src = src;
     this.buffer = buffer;
     this.ac = ac;
     this.ee = ee;
 
     this.volume = volume;
+    this.normalization = normalization;
+    // set by player, common to all tracks
+    this.normalizationTarget = null;
+    this.normalizationGain = 1;
     this.gainNode = null;
     this.active = false;
     this.source = null;
@@ -49,19 +57,88 @@ export default class {
   // ---------- UTILS ----------
 
   setActive(active) {
-    if (this.source !== null && this.gainNode !== null) {
-      this.gainNode.gain.value = active ? this.volume : 0;
+    this.active = active;
+    if (this.source !== null) {
+      this.applyGain();
     }
 
-    this.active = active;
     this.refreshTimeline();
   }
 
   setVolume(volume) {
     this.volume = volume;
+    this.applyGain();
+  }
+
+  setNormalization(normalization) {
+    this.normalization = normalization;
+    this.applyGain();
+  }
+
+  setNormalizationTarget(target) {
+    this.normalizationTarget = target;
+    this.normalizationGain = this.computeNormalizationGain();
+    this.applyGain();
+  }
+
+  applyGain() {
     if (this.gainNode !== null && this.gainNode.gain) {
-      this.gainNode.gain.value = this.active ? this.volume : 0;
+      this.gainNode.gain.value = this.getGain();
     }
+  }
+
+  getGain() {
+    if (!this.active) {
+      return 0;
+    }
+
+    return this.normalization ? this.volume * this.normalizationGain : this.volume;
+  }
+
+  // Loudest level (LUFS) this track can reach without its true peak going over the max,
+  // null when the loudness analysis is missing or unusable
+  getMaxReachableLoudness() {
+    const loudness = this.getLoudness();
+    if (loudness === null || !Number.isFinite(loudness.integrated)) {
+      return null;
+    }
+
+    const { integrated, true_peak: truePeak } = loudness;
+
+    // without true peak we can't know if a boost would clip, so the track can only be attenuated
+    return Number.isFinite(truePeak)
+      ? integrated + (NORMALIZATION_MAX_TRUE_PEAK - truePeak)
+      : integrated;
+  }
+
+  // linear gain bringing the track to the common target, 1 (no change) when it can't be computed
+  computeNormalizationGain() {
+    const maxReachableLoudness = this.getMaxReachableLoudness();
+    if (this.normalizationTarget === null || maxReachableLoudness === null) {
+      return 1;
+    }
+
+    // the common target should never exceed what the track can reach, but we cap it anyway as a safety
+    const gainDb = Math.min(this.normalizationTarget, maxReachableLoudness) - this.getLoudness().integrated;
+
+    return 10 ** (gainDb / 20);
+  }
+
+  getLoudness() {
+    if (!this.src) {
+      return null;
+    }
+
+    let { loudness } = this.src;
+    if (typeof loudness === 'string') {
+      try {
+        loudness = JSON.parse(loudness);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    return loudness !== null && typeof loudness === 'object' ? loudness : null;
   }
 
   setStartCueTime() {
@@ -155,7 +232,7 @@ export default class {
     this.gainNode = this.ac.createGain();
     this.source.connect(this.gainNode);
     this.gainNode.connect(this.ac.destination);
-    this.gainNode.gain.value = this.active ? this.volume : 0;
+    this.applyGain();
 
     this.sourceCtrl = Date.now();
 

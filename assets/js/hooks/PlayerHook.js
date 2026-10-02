@@ -32,6 +32,7 @@ const PlayerHook = {
         this.el.dataset.rotate === 'true',
         this.el.dataset.loop === 'true',
         cookies.get(COOKIE_VOLUME, 1),
+        this.el.dataset.normalization === 'true',
         this.el.dataset.waveform === 'true'
         && cookies.get(COOKIE_TEST_WAVEFORM, false) !== 'false',
         this.ee,
@@ -202,6 +203,13 @@ const PlayerHook = {
     });
 
     // ---------- SERVER EVENTS ----------
+
+    this.handleEvent('normalization', (params) => {
+      if (this.player !== null && this.player !== undefined) {
+        this.player.normalization = params.normalization === true;
+        this.player.setNormalization(params.normalization);
+      }
+    });
 
     this.handleEvent('loop', (params) => {
       if (this.player !== null && this.player !== undefined) {

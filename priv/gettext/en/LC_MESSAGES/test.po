@@ -117,7 +117,7 @@ msgstr ""
 
 #: lib/funkyabx_web/live/test_form_live.ex:795
 #, elixir-autogen, elixir-format
-msgid "Apply EBU R128 loudness normalization during upload (files are converted to flac)"
+msgid "Enable EBU R128 loudness normalization by default on test player (can be disabled by visitor)"
 msgstr ""
 
 #: lib/funkyabx_web/live/test_live.ex:196

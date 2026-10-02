@@ -10,8 +10,11 @@ import LoaderFactory from './loader/LoaderFactory';
 import Track from './Track';
 import * as playerState from '../config/state';
 
+// Preferred loudness for normalization, lowered when a track can't reach it without its true peak going over the max
+const NORMALIZATION_TARGET_LUFS = -24;
+
 export default class {
-  constructor(tracks, rotateSeconds, rotate, loop, volume, drawWaveform, ee, audioFiles) {
+  constructor(tracks, rotateSeconds, rotate, loop, volume, normalization, drawWaveform, ee, audioFiles) {
     this.ee = ee;
     this.audioFiles = audioFiles;
 
@@ -37,6 +40,7 @@ export default class {
     this.rotateSeconds = rotateSeconds;
     this.rotate = rotate;
     this.loop = loop;
+    this.normalization = normalization;
     this.drawWaveform = drawWaveform;
 
     this.startCueTime = null;
@@ -140,8 +144,10 @@ export default class {
 
         this.tracks = audioBuffers.map((audioBuffer, index) => {
           /* eslint-disable max-len */
-          return new Track(trackList[index], this.drawWaveform, audioBuffer, this.volume, this.ac, this.ee, this.state);
+          return new Track(trackList[index], this.drawWaveform, audioBuffer, this.volume, this.normalization, this.ac, this.ee, this.state);
         });
+
+        this.setNormalizationTarget();
 
         this.maxDurationTrack = this.tracks.reduce(
           (acc, curr) => curr.getDuration() > acc.getDuration() ? curr : acc
@@ -380,6 +386,35 @@ export default class {
     this.tracks.map(item => {
       if (item instanceof Track) {
         item.setVolume(volume)
+      }
+    });
+  }
+
+  async setNormalization(normalization) {
+    // we sync to tracks as they don't have access to the player
+    this.tracks.map(item => {
+      if (item instanceof Track) {
+        item.setNormalization(normalization)
+      }
+    });
+  }
+
+  /*
+    All tracks are brought to the same loudness: the preferred target, or lower if a track can't reach it.
+    If one track has no usable loudness analysis, none are normalized as they couldn't be matched.
+   */
+  setNormalizationTarget() {
+    const levels = this.tracks
+      .filter(item => item instanceof Track)
+      .map(item => item.getMaxReachableLoudness());
+
+    const target = levels.length > 0 && levels.every(level => level !== null)
+      ? Math.min(NORMALIZATION_TARGET_LUFS, ...levels)
+      : null;
+
+    this.tracks.map(item => {
+      if (item instanceof Track) {
+        item.setNormalizationTarget(target)
       }
     });
   }
