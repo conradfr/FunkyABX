@@ -116,8 +116,8 @@ msgstr "招待リンクが生成されます。複数の名前は「,」で区�
 
 #: lib/funkyabx_web/live/test_form_live.ex:795
 #, elixir-autogen, elixir-format
-msgid "Apply EBU R128 loudness normalization during upload (wav files only)"
-msgstr "アップロード時にEBU R128ラウドネスノーマライズを適用 (wavのみ)"
+msgid "Apply EBU R128 loudness normalization during upload (files are converted to flac)"
+msgstr "アップロード時にEBU R128ラウドネスノーマライズを適用 (flacに変換されます)"
 
 #: lib/funkyabx_web/live/test_live.ex:196
 #, elixir-autogen, elixir-format

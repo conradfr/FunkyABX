@@ -97,4 +97,8 @@ config :funkyabx,
   recaptcha_key: System.get_env("RECAPTCHA3_KEY") || nil,
   recaptcha_private: System.get_env("RECAPTCHA3_SECRET") || nil
 
-import_config "dev.secret.exs"
+# Optional: excluded from the Docker build context by .dockerignore,
+# then provided at runtime through the compose bind mount.
+if File.exists?(Path.join(__DIR__, "dev.secret.exs")) do
+  import_config "dev.secret.exs"
+end

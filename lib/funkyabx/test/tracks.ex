@@ -218,7 +218,8 @@ defmodule FunkyABX.Tracks do
             "url" => track["url"],
             "filename" => final_filename_dest,
             "original_filename" => original_filename,
-            "title" => url_to_title(track["url"], Map.get(track, "title"))
+            "title" => url_to_title(track["url"], Map.get(track, "title")),
+            "normalization" => normalization == true
           })
 
         _ ->
@@ -265,7 +266,8 @@ defmodule FunkyABX.Tracks do
     Map.merge(track_params, %{
       "filename" => final_filename_dest,
       "original_filename" => filename,
-      "title" => filename_to_title(filename, Map.get(track_params, "title"))
+      "title" => filename_to_title(filename, Map.get(track_params, "title")),
+      "normalization" => normalization == true
     })
   end
 

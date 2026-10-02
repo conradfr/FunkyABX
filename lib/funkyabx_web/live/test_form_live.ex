@@ -793,7 +793,7 @@ defmodule FunkyABXWeb.TestFormLive do
                       label={
                         dgettext(
                           "test",
-                          "Apply EBU R128 loudness normalization during upload (wav files only)"
+                          "Apply EBU R128 loudness normalization during upload (files are converted to flac)"
                         )
                       }
                     />
@@ -1706,6 +1706,8 @@ defmodule FunkyABXWeb.TestFormLive do
     updated_tracks =
       test_params
       |> Map.get("tracks", %{})
+      # normalization is only set server side, when the file is processed
+      |> Map.new(fn {k, t} -> {k, Map.delete(t, "normalization")} end)
       # uploads
       |> Enum.reduce(%{}, fn {k, t}, acc ->
         upload_entry = get_upload_entry(t["temp_id"], socket.assigns.uploads.tracks.entries)
@@ -1732,7 +1734,11 @@ defmodule FunkyABXWeb.TestFormLive do
         case upload_consumed do
           {original_filename, filename} ->
             updated_track =
-              Map.merge(t, %{"filename" => filename, "original_filename" => original_filename})
+              Map.merge(t, %{
+                "filename" => filename,
+                "original_filename" => original_filename,
+                "normalization" => normalization == true
+              })
 
             Map.put(acc, k, updated_track)
 

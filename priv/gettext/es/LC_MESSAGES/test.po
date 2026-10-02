@@ -117,8 +117,8 @@ msgstr "Se generará un enlace de invitación. Usa \",\" para separar varios nom
 
 #: lib/funkyabx_web/live/test_form_live.ex:795
 #, elixir-autogen, elixir-format
-msgid "Apply EBU R128 loudness normalization during upload (wav files only)"
-msgstr "Aplicar normalización de volumen EBU R128 durante la subida (solo archivos wav)"
+msgid "Apply EBU R128 loudness normalization during upload (files are converted to flac)"
+msgstr "Aplicar normalización de volumen EBU R128 durante la subida (los archivos se convierten a flac)"
 
 #: lib/funkyabx_web/live/test_live.ex:196
 #, elixir-autogen, elixir-format
