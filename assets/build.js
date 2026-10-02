@@ -21,7 +21,11 @@ const plugins = [
 
 // Define esbuild options
 let opts = {
-  entryPoints: ["js/app.js"],
+  // the loudness worker has to be a separate file, it's loaded by the player (see player/tools/loudnessAnalyzer.js)
+  entryPoints: {
+    "app": "js/app.js",
+    "workers/loudness": "js/player/tools/loudness.worker.js",
+  },
   bundle: true,
   logLevel: "info",
   target: "es2022",

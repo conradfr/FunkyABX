@@ -8,7 +8,7 @@ import cookies from '../utils/cookies';
 import time from '../utils/time';
 import LoaderFactory from './loader/LoaderFactory';
 import Track from './Track';
-import analyzeLoudness from './tools/loudness';
+import analyzeTracksLoudness from './tools/loudnessAnalyzer';
 import * as playerState from '../config/state';
 
 // Preferred loudness for normalization, lowered when a track can't reach it without its true peak going over the max
@@ -142,11 +142,11 @@ export default class {
     });
 
     Promise.all(this.loadPromises)
-      .then((audioBuffers) => {
+      .then(async (audioBuffers) => {
         if (this.local) {
+          const loudness = await analyzeTracksLoudness(audioBuffers);
           trackList.forEach((trackInfo, index) => {
-            trackInfo.loudness = analyzeLoudness(audioBuffers[index]);
-            console.log(trackInfo.loudness);
+            trackInfo.loudness = loudness[index];
           });
         }
 
