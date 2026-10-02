@@ -36,7 +36,8 @@ const PlayerHook = {
         this.el.dataset.waveform === 'true'
         && cookies.get(COOKIE_TEST_WAVEFORM, false) !== 'false',
         this.ee,
-        audioFiles
+        audioFiles,
+        this.el.dataset.local === 'true'
       );
     };
 

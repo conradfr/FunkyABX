@@ -8,15 +8,18 @@ import cookies from '../utils/cookies';
 import time from '../utils/time';
 import LoaderFactory from './loader/LoaderFactory';
 import Track from './Track';
+import analyzeLoudness from './tools/loudness';
 import * as playerState from '../config/state';
 
 // Preferred loudness for normalization, lowered when a track can't reach it without its true peak going over the max
 const NORMALIZATION_TARGET_LUFS = -24;
 
 export default class {
-  constructor(tracks, rotateSeconds, rotate, loop, volume, normalization, drawWaveform, ee, audioFiles) {
+  constructor(tracks, rotateSeconds, rotate, loop, volume, normalization, drawWaveform, ee, audioFiles, local) {
     this.ee = ee;
     this.audioFiles = audioFiles;
+    // local test: tracks have no loudness analysis from the server, it's done here once decoded
+    this.local = local === true;
 
     this.rotateInterval = null;
     this.timeInterval = null;
@@ -140,6 +143,13 @@ export default class {
 
     Promise.all(this.loadPromises)
       .then((audioBuffers) => {
+        if (this.local) {
+          trackList.forEach((trackInfo, index) => {
+            trackInfo.loudness = analyzeLoudness(audioBuffers[index]);
+            console.log(trackInfo.loudness);
+          });
+        }
+
         this.ee.emit('push_event', { event: 'tracks_loaded', data: {} });
 
         this.tracks = audioBuffers.map((audioBuffer, index) => {

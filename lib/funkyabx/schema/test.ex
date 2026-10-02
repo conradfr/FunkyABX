@@ -105,6 +105,7 @@ defmodule FunkyABX.Test do
       slug: "local-test",
       nb_of_rounds: 10,
       anonymized_track_title: false,
+      normalization: false,
       tracks: []
     }
   end

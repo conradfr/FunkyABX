@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@audio/loudness": "^1.2.3",
     "bootstrap": "^5.3.8",
     "browser-fs-access": "^0.38.0",
     "eventemitter3": "^5.0.1",

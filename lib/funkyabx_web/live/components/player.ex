@@ -33,6 +33,7 @@ defmodule FunkyABXWeb.PlayerComponent do
           data-rotate={to_string(@rotate)}
           data-loop={to_string(@loop)}
           data-normalization={to_string(@normalization)}
+          data-local={to_string(@test.local)}
           data-waveform={to_string(@test_params.draw_waveform)}
         >
           <div class="p-2 me-auto d-flex align-items-center">
@@ -144,7 +145,7 @@ defmodule FunkyABXWeb.PlayerComponent do
               <i class="bi bi-align-end"></i>
             </button>
           </div>
-          <div :if={@test.local == false} class="p-2">
+          <div class="p-2">
             <fieldset class="form-group">
               <div class="form-check">
                 <input
