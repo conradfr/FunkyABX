@@ -782,7 +782,7 @@ defmodule FunkyABXWeb.TestFormLive do
             </div>
           <% end %>
 
-          <fieldset class="form-group mb-3">
+          <fieldset :if={get_field(@changeset, :type) != :abx} class="form-group mb-3">
             <div class="form-unit p-3 rounded-3">
               <div class="form-check">
                 <div class="d-flex justify-content-between">
@@ -803,7 +803,7 @@ defmodule FunkyABXWeb.TestFormLive do
                     <small>
                       <i class="bi bi-info-circle"></i>&nbsp; {dgettext(
                         "test",
-                        "True Peak -1dB, target -24dB"
+                        "True Peak -1dB, target -18dB"
                       )}
                     </small>
                   </div>
@@ -892,10 +892,7 @@ defmodule FunkyABXWeb.TestFormLive do
         </div>
 
         <div
-          :if={
-            get_field(@changeset, :type) != :listening and
-              track_count(@changeset) > 0
-          }
+          :if={track_count(@changeset) > 0}
           class="alert alert-warning alert-thin"
         >
           <i class="bi bi-info-circle"></i>&nbsp;&nbsp; {raw(
@@ -1257,7 +1254,10 @@ defmodule FunkyABXWeb.TestFormLive do
   # ---------- INDIRECT FORM EVENTS ----------
 
   def handle_info({:update, %{"test" => test_params}}, socket) do
-    updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
+    updated_test_params =
+      test_params
+      |> disable_normalization_for_abx(socket.assigns.test)
+      |> consume_and_update_form_tracks_params(socket)
 
     update_changeset = Test.changeset_update(socket.assigns.changeset, updated_test_params)
     update = Repo.update(update_changeset)
@@ -1296,7 +1296,10 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   def handle_info({:save, %{"test" => test_params}}, socket) do
-    updated_test_params = consume_and_update_form_tracks_params(test_params, socket)
+    updated_test_params =
+      test_params
+      |> disable_normalization_for_abx(socket.assigns.test)
+      |> consume_and_update_form_tracks_params(socket)
 
     insert =
       socket.assigns.test
@@ -1390,6 +1393,7 @@ defmodule FunkyABXWeb.TestFormLive do
       |> List.last()
       |> FormUtils.update_test_params(test_params)
       |> FormUtils.update_reference_track_params(target)
+      |> disable_normalization_for_abx(socket.assigns.test)
       |> build_upload_tracks(socket)
 
     changeset =
@@ -1697,6 +1701,14 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   # ---------- FORM UTILS ----------
+
+  # ABX tests should not use normalization. The checkbox is hidden for them so its value isn't sent anymore,
+  defp disable_normalization_for_abx(test_params, %Test{} = test) do
+    case Map.get(test_params, "type", to_string(test.type)) do
+      "abx" -> Map.put(test_params, "normalization", "false")
+      _ -> test_params
+    end
+  end
 
   defp consume_and_update_form_tracks_params(test_params, socket) do
     updated_tracks =

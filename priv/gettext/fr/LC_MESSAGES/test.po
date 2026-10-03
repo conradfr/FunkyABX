@@ -999,8 +999,8 @@ msgstr "Des pistes ne peuvent pas être ajoutées ou enlevées après qu'au moin
 
 #: lib/funkyabx_web/live/test_form_live.ex:804
 #, elixir-autogen, elixir-format
-msgid "True Peak -1dB, target -24dB"
-msgstr "True Peak -1dB, target -24dB"
+msgid "True Peak -1dB, target -18dB"
+msgstr "True Peak -1dB, target -18dB"
 
 #: lib/funkyabx_web/live/test_form_live.ex:761
 #, elixir-autogen, elixir-format

@@ -999,7 +999,7 @@ msgstr ""
 
 #: lib/funkyabx_web/live/test_form_live.ex:804
 #, elixir-autogen, elixir-format
-msgid "True Peak -1dB, target -24dB"
+msgid "True Peak -1dB, target -18dB"
 msgstr ""
 
 #: lib/funkyabx_web/live/test_form_live.ex:761

@@ -12,7 +12,7 @@ import analyzeTracksLoudness from './tools/loudnessAnalyzer';
 import * as playerState from '../config/state';
 
 // Preferred loudness for normalization, lowered when a track can't reach it without its true peak going over the max
-const NORMALIZATION_TARGET_LUFS = -24;
+const NORMALIZATION_TARGET_LUFS = -18;
 
 export default class {
   constructor(tracks, rotateSeconds, rotate, loop, volume, normalization, drawWaveform, ee, audioFiles, local) {

@@ -145,7 +145,7 @@ defmodule FunkyABXWeb.PlayerComponent do
               <i class="bi bi-align-end"></i>
             </button>
           </div>
-          <div class="p-2">
+          <div :if={@test.type != :abx} class="p-2">
             <fieldset class="form-group">
               <div class="form-check">
                 <input
@@ -161,8 +161,8 @@ defmodule FunkyABXWeb.PlayerComponent do
                   <small>
                     <i class="bi bi-info-circle text-body-secondary"
                       data-bs-toggle="tooltip"
-                      data-bs-title="True Peak -1dB, target -24dB"
-                      title="True Peak -1dB, target -24dB"></i>
+                      data-bs-title="True Peak -1dB, target -18dB"
+                      title="True Peak -1dB, target -18dB"></i>
                   </small>
                 </label>
               </div>

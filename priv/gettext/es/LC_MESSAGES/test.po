@@ -999,8 +999,8 @@ msgstr "Las pistas no se pueden añadir o eliminar una vez que al menos una pers
 
 #: lib/funkyabx_web/live/test_form_live.ex:804
 #, elixir-autogen, elixir-format
-msgid "True Peak -1dB, target -24dB"
-msgstr "True Peak -1dB, objetivo -24dB"
+msgid "True Peak -1dB, target -18dB"
+msgstr "True Peak -1dB, objetivo -18dB"
 
 #: lib/funkyabx_web/live/test_form_live.ex:761
 #, elixir-autogen, elixir-format
