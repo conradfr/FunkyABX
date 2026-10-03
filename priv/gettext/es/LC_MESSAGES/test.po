@@ -628,8 +628,8 @@ msgstr "Por favor, realiza el test antes de consultar los resultados."
 
 #: lib/funkyabx_web/live/test_form_live.ex:904
 #, elixir-autogen, elixir-format
-msgid "Please use descriptive names to have relevant results for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page (as seen on the <a target=\"_blank\" href=\"/test/demo\">demo</a>)."
-msgstr "Por favor, usa nombres descriptivos para obtener resultados relevantes. Las pistas son <u>anonimizadas</u> y <u>aleatorias</u> en la página del test (como se ve en la <a target=\"_blank\" href=\"/test/demo\">demostración</a>)."
+msgid "Please use <strong>descriptive names</strong> (not A/B/C or 1/2/3) to have <u>relevant results</u> for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page."
+msgstr "Por favor, usa <strong>nombres descriptivos</strong> (no A/B/C ni 1/2/3) para obtener <u>resultados relevantes</u> para los visitantes. Las pistas se <u>anonimizan</u> y se presentan en <u>orden aleatorio</u> en la página del test."
 
 #: lib/funkyabx_web/live/test_form_live.ex:919
 #, elixir-autogen, elixir-format

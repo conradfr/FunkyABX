@@ -191,7 +191,7 @@ defmodule FunkyABX.Tests.Abx do
 
   def get_minimum_score(rounds) when is_number(rounds) do
     rounds
-    |> Range.new(1)
+    |> Range.new(1, -1)
     |> Enum.reduce_while(0, fn x, acc ->
       score = factorial(rounds) * :math.pow(0.5, rounds) / (factorial(x) * factorial(rounds - x))
       total = score + acc

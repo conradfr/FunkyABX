@@ -628,7 +628,7 @@ msgstr ""
 
 #: lib/funkyabx_web/live/test_form_live.ex:904
 #, elixir-autogen, elixir-format
-msgid "Please use descriptive names to have relevant results for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page (as seen on the <a target=\"_blank\" href=\"/test/demo\">demo</a>)."
+msgid "Please use <strong>descriptive names</strong> (not A/B/C or 1/2/3) to have <u>relevant results</u> for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page."
 msgstr ""
 
 #: lib/funkyabx_web/live/test_form_live.ex:919

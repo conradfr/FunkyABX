@@ -49,7 +49,7 @@ defmodule FunkyABXWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <div class="toast-container p-3 top-0 end-0">
+    <div class="toast-container position-fixed p-3 top-0 end-0">
       <.flash_group flash={@flash} />
     </div>
 
@@ -67,7 +67,7 @@ defmodule FunkyABXWeb.Layouts do
 
   def app_alert(assigns) do
     ~H"""
-    <div class="toast-container p-3 top-0 end-0">
+    <div class="toast-container position-fixed p-3 top-0 end-0">
       <.flash_group flash={@flash} />
     </div>
 

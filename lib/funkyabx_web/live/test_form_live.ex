@@ -117,7 +117,7 @@ defmodule FunkyABXWeb.TestFormLive do
                             {dgettext("test", "Player only"), "player"}
                           ]}
                         />
-
+                        &nbsp;
                         <i
                           class="bi bi-info-circle text-body-secondary ms-2"
                           data-bs-toggle="tooltip"
@@ -893,12 +893,12 @@ defmodule FunkyABXWeb.TestFormLive do
 
         <div
           :if={track_count(@changeset) > 0}
-          class="alert alert-warning alert-thin"
+          class="alert alert-warning alert-thin text-body-emphasis"
         >
           <i class="bi bi-info-circle"></i>&nbsp;&nbsp; {raw(
             dgettext(
               "test",
-              "Please use descriptive names to have relevant results for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page (as seen on the <a target=\"_blank\" href=\"/test/demo\">demo</a>)."
+              "Please use <strong>descriptive names</strong> (not A/B/C or 1/2/3) to have <u>relevant results</u> for visitors. Tracks are <u>anonymized</u> and <u>randomized</u> on the test page."
             )
           )}
         </div>
@@ -1556,7 +1556,8 @@ defmodule FunkyABXWeb.TestFormLive do
   @impl true
   def handle_event("remove_track", %{"id" => track_id}, socket) do
     tracks =
-      socket.assigns.changeset.changes.tracks
+      socket.assigns.changeset
+      |> tracks_changesets()
       |> Enum.reject(fn %{data: track} ->
         track.temp_id == track_id
       end)
@@ -1681,7 +1682,8 @@ defmodule FunkyABXWeb.TestFormLive do
   defp set_track_title_if_empty(socket, track_id, filename)
        when is_binary(track_id) and is_binary(filename) do
     tracks =
-      socket.assigns.changeset.changes.tracks
+      socket.assigns.changeset
+      |> tracks_changesets()
       |> Enum.map(fn
         %{changes: changes, data: %{temp_id: temp_id} = track}
         when temp_id == track_id and
@@ -1698,6 +1700,15 @@ defmodule FunkyABXWeb.TestFormLive do
       |> Ecto.Changeset.put_assoc(:tracks, tracks)
 
     assign(socket, %{changeset: changeset})
+  end
+
+  # Tracks changesets to give back to put_assoc.
+  # Existing tracks missing from the last params (deleted ones) have a :replace action, put_assoc refuses them.
+  # They are left out, put_assoc marks them as replaced again as they are still in the test data.
+  defp tracks_changesets(changeset) do
+    changeset.changes
+    |> Map.get(:tracks, [])
+    |> Enum.reject(&(&1.action == :replace))
   end
 
   # ---------- FORM UTILS ----------

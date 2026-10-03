@@ -49,7 +49,6 @@ defmodule FunkyABXWeb.CoreComponents do
 
   def flash(assigns) do
     assigns = assign_new(assigns, :id, fn -> "flash-#{assigns.kind}" end)
-
     ~H"""
     <div
       :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
@@ -58,6 +57,7 @@ defmodule FunkyABXWeb.CoreComponents do
       id={@id}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       phx-hook="AutoDismissFlash"
+      data-kind={@kind}
       class={[
         "toast align-items-center border-0 mb-2",
         "show",

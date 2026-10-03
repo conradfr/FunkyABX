@@ -7,7 +7,8 @@ export default {
     setTimeout(() => {
       this.el.style.transition = 'opacity 0.5s'
       this.el.style.opacity = '0'
-      setTimeout(() => this.el.remove(), 500)
+      // clears the flash server side too: otherwise the same message put again later is not
+      setTimeout(() => this.pushEvent('lv:clear-flash', { key: this.el.dataset.kind }), 500)
     }, delayMs)
   },
 };
