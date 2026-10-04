@@ -1,9 +1,14 @@
 @import 'nouislider/dist/nouislider.css';
+@import "../theme/variables";
 
 #volume-slider {
   height: 7px;
   border: none;
   width: 5.313rem;
+}
+
+#volume-slider .noUi-connects {
+  background: $gray-200;
 }
 
 #volume-slider .noUi-connect {
