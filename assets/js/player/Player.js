@@ -40,6 +40,7 @@ export default class {
     this.ac = new AudioContext();
 
     this.tracks = tracks;
+    this.skippedTracksHash = [];
     this.rotateSeconds = rotateSeconds;
     this.rotate = rotate;
     this.loop = loop;
@@ -195,10 +196,14 @@ export default class {
   }
 
   getNextTrackIndex(from) {
-    let nextTrackIndex = (from === undefined ? this.currentTrackIndex : from) + 1;
-    if (nextTrackIndex >= this.tracks.length) {
-      nextTrackIndex = this.tracks[0].src.reference_track === true ? 1 : 0;
-    }
+    let nextTrackIndex = from === undefined ? this.currentTrackIndex : from;
+    // skipped tracks are passed over
+    do {
+      nextTrackIndex += 1;
+      if (nextTrackIndex >= this.tracks.length) {
+        nextTrackIndex = this.tracks[0].src.reference_track === true ? 1 : 0;
+      }
+    } while (this.skippedTracksHash.indexOf(this.tracks[nextTrackIndex].src.hash) !== -1);
 
     return nextTrackIndex;
   }

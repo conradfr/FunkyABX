@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 
-#: lib/funkyabx_web/components/core_components.ex:383
+#: lib/funkyabx_web/components/core_components.ex:380
 #, elixir-autogen, elixir-format
 msgid "Actions"
 msgstr ""

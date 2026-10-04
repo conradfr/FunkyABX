@@ -98,6 +98,21 @@ button.link-no-decoration, a.link-no-decoration {
   } */
 }
 
+i.hoverable {
+  &:hover {
+    font-size: 1.0638rem
+  }
+}
+
+.small {
+  i.hoverable {
+    &:hover {
+      font-size: 0.938rem
+    }
+  }
+}
+
+
 // for live view compat
 
 .hidden {

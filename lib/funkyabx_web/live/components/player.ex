@@ -264,7 +264,7 @@ defmodule FunkyABXWeb.PlayerComponent do
             </div>
             <%= if @test.anonymized_track_title == false do %>
               <div
-                class="p-2 text-truncate cursor-link"
+                class="p-2 d-flex justify-content-between align-self-center text-truncate cursor-link"
                 style="width: 300px;"
                 title={track.title}
                 phx-click={
@@ -279,11 +279,26 @@ defmodule FunkyABXWeb.PlayerComponent do
                   )
                 }
               >
-                {track.title}
+                <div>{track.title}</div>
+                <div
+                  :if={track.reference_track == false and (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))}
+                  class={["small align-self-center text-end pe-1", track.hash not in @skipped_tracks && "text-muted", track.hash in @skipped_tracks && "text-danger"]}
+                  style="min-width: 25px"
+                  title={dgettext("test", "Exclude the track from the rotation")}
+                  phx-click={
+                    JS.dispatch(
+                      "skip_track_toggle",
+                      to: "body",
+                      detail: %{"track_hash" => track.hash}
+                    )
+                  }
+                >
+                  <i class="bi bi-ban hoverable"></i>
+                </div>
               </div>
             <% else %>
               <div
-                class="p-2 cursor-link"
+                class="p-2 d-flex align-items-stretch justify-content-between align-self-center text-truncate cursor-link"
                 style={"min-width: #{if @test.type == :listening, do: "300", else: "100"}px"}
                 phx-click={
                   JS.dispatch(
@@ -312,6 +327,21 @@ defmodule FunkyABXWeb.PlayerComponent do
                       ></i>
                     </small>
                   </span>
+                </div>
+                <div
+                  :if={track.reference_track == false and (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))}
+                  class={["small align-self-center text-end pe-1", track.hash not in @skipped_tracks && "text-muted", track.hash in @skipped_tracks && "text-danger"]}
+                  style="min-width: 25px"
+                  title={dgettext("test", "Exclude the track from the rotation")}
+                  phx-click={
+                    JS.dispatch(
+                      "skip_track_toggle",
+                      to: "body",
+                      detail: %{"track_hash" => track.hash}
+                    )
+                  }
+                >
+                  <i class="bi bi-ban hoverable"></i>
                 </div>
               </div>
             <% end %>
@@ -376,6 +406,7 @@ defmodule FunkyABXWeb.PlayerComponent do
        tracks_loading: %{},
        tracks_loaded: false,
        current_track: nil,
+       skipped_tracks: [],
        rotate: true,
        loop: true,
        normalization: false,
@@ -502,6 +533,11 @@ defmodule FunkyABXWeb.PlayerComponent do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("skipped_tracks", %{"tracks_hash" => tracks_hash} = _params, socket) do
+    {:noreply, assign(socket, skipped_tracks: tracks_hash)}
+  end
+
   # Restore custom setting of visitor when player is loaded
   # (duplicated code from below)
   @impl true
@@ -620,5 +656,12 @@ defmodule FunkyABXWeb.PlayerComponent do
       true -> 0
       false -> 1
     end
+  end
+
+  # A track can still be skipped when at least two tracks remain active, the reference track is not counted
+  defp can_skip_tracks?(tracks, skipped_tracks) when is_list(tracks) and is_list(skipped_tracks) do
+    tracks
+    |> Enum.count(&(&1.reference_track != true and &1.hash not in skipped_tracks))
+    |> Kernel.>=(2)
   end
 end

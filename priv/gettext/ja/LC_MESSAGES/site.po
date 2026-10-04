@@ -35,7 +35,7 @@ msgstr "このサイトについて"
 #: lib/funkyabx_web/live/test_form_live.ex:329
 #: lib/funkyabx_web/live/test_form_live.ex:341
 #: lib/funkyabx_web/live/test_form_live.ex:354
-#: lib/funkyabx_web/live/test_form_live.ex:998
+#: lib/funkyabx_web/live/test_form_live.ex:993
 #, elixir-autogen, elixir-format
 msgid "Are you sure?"
 msgstr "よろしいですか？"
@@ -61,7 +61,7 @@ msgid "Choose the best kind of test for you:<br>stars, ranking, recognition, abx
 msgstr "最適なテスト形式を選択:<br>スター評価、ランキング、識別、ABX..."
 
 #: lib/funkyabx_web/live/components/bs_modal.ex:21
-#: lib/funkyabx_web/live/components/bs_modal.ex:34
+#: lib/funkyabx_web/live/components/bs_modal.ex:33
 #, elixir-autogen, elixir-format
 msgid "Close"
 msgstr "閉じる"
@@ -71,7 +71,7 @@ msgstr "閉じる"
 msgid "Comments, ideas, suggestions, bot spam..."
 msgstr "コメント、アイデア、ご提案など..."
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:76
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:75
 #: lib/funkyabx_web/controllers/page_html/contact.html.heex:2
 #, elixir-autogen, elixir-format
 msgid "Contact"
@@ -138,7 +138,7 @@ msgstr "メール"
 msgid "Email:"
 msgstr "メール:"
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:67
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:66
 #, elixir-autogen, elixir-format
 msgid "FAQ"
 msgstr "よくある質問"
@@ -163,7 +163,7 @@ msgstr "FunkyABXは無料サービスですが、音声ファイルのホステ�
 msgid "FunkyABX is a independent website to make audio blind tests, made in Paris, France by <a target=\"_blank\" href=\"http://www.funkybits.fr/\">Funkybits</a>."
 msgstr "FunkyABXはフランス・パリの<a target=\"_blank\" href=\"http://www.funkybits.fr/\">Funkybits</a>が開発したオーディオブラインドテスト用の独立系サイトです。"
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:47
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:46
 #: lib/funkyabx_web/live/gallery_live.ex:171
 #, elixir-autogen, elixir-format
 msgid "Public tests"
@@ -175,7 +175,7 @@ msgstr "ギャラリー"
 msgid "Got spare change?"
 msgstr "少額でもご支援を！"
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:36
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:35
 #, elixir-autogen, elixir-format
 msgid "Home"
 msgstr "ホーム"
@@ -220,7 +220,7 @@ msgstr "メニュー"
 msgid "Message*:"
 msgstr "メッセージ*:"
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:63
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:62
 #, elixir-autogen, elixir-format
 msgid "More"
 msgstr "その他"
@@ -242,12 +242,12 @@ msgstr "名前またはメール"
 msgid "Name*:"
 msgstr "名前*:"
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:43
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:42
 #, elixir-autogen, elixir-format
 msgid "New local test"
 msgstr "新規ローカルテスト"
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:39
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:38
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:110
 #, elixir-autogen, elixir-format
 msgid "New test"
@@ -289,7 +289,7 @@ msgstr "またはここにファイルをドロップ"
 msgid "Previous"
 msgstr "前へ"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1033
+#: lib/funkyabx_web/live/test_form_live.ex:1028
 #, elixir-autogen, elixir-format
 msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
 msgstr "テスト対象外のリファレンス／未処理トラック。他のトラックと並行して再生可能です。"
@@ -299,7 +299,7 @@ msgstr "テスト対象外のリファレンス／未処理トラック。他の
 msgid "Send"
 msgstr "送信"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1081
+#: lib/funkyabx_web/live/test_form_live.ex:1075
 #, elixir-autogen, elixir-format
 msgid "Send an invitation"
 msgstr "招待を送る"
@@ -309,7 +309,7 @@ msgstr "招待を送る"
 msgid "Source code of this project is available <a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">on Github</a>."
 msgstr "ソースコードは<a target=\"_blank\" href=\"https://github.com/conradfr/FunkyABX\">Github</a>で公開されています。"
 
-#: lib/funkyabx_web/components/layouts/_navbar.html.heex:71
+#: lib/funkyabx_web/components/layouts/_navbar.html.heex:70
 #, elixir-autogen, elixir-format
 msgid "Support the site"
 msgstr "サイトを支援"
@@ -339,7 +339,7 @@ msgstr "テスト形式"
 msgid "Tests pagination"
 msgstr "テスト一覧ページ"
 
-#: lib/funkyabx_web/live/test_form_live.ex:864
+#: lib/funkyabx_web/live/test_form_live.ex:863
 #, elixir-autogen, elixir-format
 msgid "The file will be downloaded once you submit, not served from the original url"
 msgstr "ファイルは送信時にダウンロードされ、元のURLからは配信されません"
@@ -360,13 +360,13 @@ msgstr "トラック %{choice}"
 msgid "Tracks:"
 msgstr "トラック:"
 
-#: lib/funkyabx_web/live/local_test_form_live.ex:405
-#: lib/funkyabx_web/live/test_form_live.ex:1069
+#: lib/funkyabx_web/live/local_test_form_live.ex:401
+#: lib/funkyabx_web/live/test_form_live.ex:1063
 #, elixir-autogen, elixir-format
 msgid "Updating ..."
 msgstr "更新中..."
 
-#: lib/funkyabx_web/live/test_form_live.ex:124
+#: lib/funkyabx_web/live/test_form_live.ex:125
 #, elixir-autogen, elixir-format
 msgid "Use rotate=0 and loop=0 to set rotating and looping as off by default"
 msgstr "rotate=0、loop=0でローテーションとループをデフォルトOFFに設定"

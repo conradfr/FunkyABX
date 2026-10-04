@@ -170,6 +170,32 @@ const PlayerHook = {
       }
     };
 
+    this.skipTrackToggle = async (event) => {
+      const { track_hash } = event.detail;
+
+      if (this.player !== null && this.player !== undefined) {
+        const index = this.player.skippedTracksHash.indexOf(track_hash);
+        if (index === -1) {
+          // at least one track must stay playable (the reference track is not part of the rotation)
+          const remaining = this.player.tracks.filter((track) => track.src.reference_track !== true
+            && track.src.hash !== track_hash
+            && this.player.skippedTracksHash.indexOf(track.src.hash) === -1);
+          if (remaining.length === 0) {
+            return;
+          }
+
+          this.player.skippedTracksHash.push(track_hash);
+        } else {
+          this.player.skippedTracksHash.splice(index, 1);
+        }
+
+        this.ee.emit('push_event', {
+          event: 'skipped_tracks',
+          data: { tracks_hash: this.player.skippedTracksHash }
+        });
+      }
+    };
+
     // NOTE we use cue instead of loop in the project to avoid naming confusion with the player loop option
 
     this.startCue = async (event) => {
@@ -194,6 +220,7 @@ const PlayerHook = {
     window.addEventListener('back', this.back, false);
     window.addEventListener('keyup', this.keyup, false);
     window.addEventListener('keydown', this.keydown, false);
+    window.addEventListener('skip_track_toggle', this.skipTrackToggle, false);
     window.addEventListener('start_cue', this.startCue, false);
     window.addEventListener('end_cue', this.endCue, false);
 
@@ -271,6 +298,7 @@ const PlayerHook = {
     window.removeEventListener('back', this.back, false);
     window.removeEventListener('keyup', this.keyup, false);
     window.removeEventListener('keydown', this.keydown, false);
+    window.removeEventListener('skip_track_toggle', this.skipTrackToggle, false);
     window.removeEventListener('start_cue', this.startCue, false);
     window.removeEventListener('end_cue', this.endCue, false);
   }
