@@ -156,13 +156,14 @@ defmodule FunkyABXWeb.PlayerComponent do
                   checked={@normalization}
                 />
                 <label class="form-check-label" for="inputLoopCheckbox">
-                  {dgettext("test", "Normalization")}
-                  &nbsp;
+                  {dgettext("test", "Normalization")} &nbsp;
                   <small>
-                    <i class="bi bi-info-circle text-body-secondary"
+                    <i
+                      class="bi bi-info-circle text-body-secondary"
                       data-bs-toggle="tooltip"
                       data-bs-title="True Peak -1dB, target -18dB"
-                      title="True Peak -1dB, target -18dB"></i>
+                      title="True Peak -1dB, target -18dB"
+                    ></i>
                   </small>
                 </label>
               </div>
@@ -281,8 +282,15 @@ defmodule FunkyABXWeb.PlayerComponent do
               >
                 <div>{track.title}</div>
                 <div
-                  :if={track.reference_track == false and (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))}
-                  class={["small align-self-center text-end pe-1", track.hash not in @skipped_tracks && "text-muted", track.hash in @skipped_tracks && "text-danger"]}
+                  :if={
+                    track.reference_track == false and
+                      (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))
+                  }
+                  class={[
+                    "small align-self-center text-end pe-1",
+                    track.hash not in @skipped_tracks && "text-muted",
+                    track.hash in @skipped_tracks && "text-danger"
+                  ]}
                   style="min-width: 25px"
                   title={dgettext("test", "Exclude the track from the rotation")}
                   phx-click={
@@ -329,8 +337,15 @@ defmodule FunkyABXWeb.PlayerComponent do
                   </span>
                 </div>
                 <div
-                  :if={track.reference_track == false and (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))}
-                  class={["small align-self-center text-end pe-1", track.hash not in @skipped_tracks && "text-muted", track.hash in @skipped_tracks && "text-danger"]}
+                  :if={
+                    track.reference_track == false and
+                      (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))
+                  }
+                  class={[
+                    "small align-self-center text-end pe-1",
+                    track.hash not in @skipped_tracks && "text-muted",
+                    track.hash in @skipped_tracks && "text-danger"
+                  ]}
                   style="min-width: 25px"
                   title={dgettext("test", "Exclude the track from the rotation")}
                   phx-click={
@@ -565,9 +580,9 @@ defmodule FunkyABXWeb.PlayerComponent do
     normalization = Map.has_key?(player_params, "inputNormalizationCheckbox")
 
     {:noreply,
-      socket
-      |> assign(normalization: normalization)
-      |> push_event("normalization", %{normalization: normalization})}
+     socket
+     |> assign(normalization: normalization)
+     |> push_event("normalization", %{normalization: normalization})}
   end
 
   @impl true
@@ -659,7 +674,8 @@ defmodule FunkyABXWeb.PlayerComponent do
   end
 
   # A track can still be skipped when at least two tracks remain active, the reference track is not counted
-  defp can_skip_tracks?(tracks, skipped_tracks) when is_list(tracks) and is_list(skipped_tracks) do
+  defp can_skip_tracks?(tracks, skipped_tracks)
+       when is_list(tracks) and is_list(skipped_tracks) do
     tracks
     |> Enum.count(&(&1.reference_track != true and &1.hash not in skipped_tracks))
     |> Kernel.>=(2)

@@ -116,8 +116,7 @@ defmodule FunkyABXWeb.TestFormLive do
                             {dgettext("test", "Test"), "test"},
                             {dgettext("test", "Player only"), "player"}
                           ]}
-                        />
-                        &nbsp;
+                        /> &nbsp;
                         <i
                           class="bi bi-info-circle text-body-secondary ms-2"
                           data-bs-toggle="tooltip"
