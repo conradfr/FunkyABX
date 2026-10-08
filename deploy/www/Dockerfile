@@ -78,11 +78,16 @@ ENV ELIXIR_ERL_OPTIONS="+fnu"
 # ffmpeg backs the wav -> flac conversion, imagemagick backs mogrify, and the
 # optimizers back the image pipeline. The release bundles its own ERTS, so no
 # Erlang or Elixir toolchain is needed here.
+# libmagickcore-6.q16-6-extra and fonts-urw-base35 are only "recommended" by
+# imagemagick, so they have to be listed: the first ships the pango: coder the
+# results image is built on, the second the fonts "Arial" resolves to.
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
     tzdata \
     ca-certificates \
     libssl3 \
     imagemagick \
+    libmagickcore-6.q16-6-extra \
+    fonts-urw-base35 \
     ffmpeg \
     jpegoptim optipng pngquant gifsicle \
     && rm -rf /var/lib/apt/lists/*
