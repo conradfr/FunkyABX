@@ -338,7 +338,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                 </div>
                 <div
                   :if={
-                    track.reference_track == false and
+                    track.reference_track == false and @test.type != :abx and
                       (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))
                   }
                   class={[
