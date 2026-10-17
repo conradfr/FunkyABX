@@ -155,6 +155,15 @@ defmodule FunkyABXWeb.TestLive do
           <div class="reveal-inner">
             <div class="test-tracklist-bg mb-4 p-3 py-2">
               <div :for={track <- @test.tracks} class="test-tracklist-one">- {track.title}</div>
+              <div
+                :if={@test.type != :listening}
+                class="small text-muted"
+              >
+                <i class="bi bi-info-circle"></i>&nbsp;&nbsp;{dgettext(
+                  "test",
+                  "Tracks in the test are in random order"
+                )}
+              </div>
             </div>
           </div>
         </div>
