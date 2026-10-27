@@ -421,7 +421,7 @@ msgstr "Pas de tests (pour l'instant !)"
 #: lib/funkyabx_web/components/menu/taken_tests_menu.ex:21
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Tests taken"
-msgstr "Type de test"
+msgstr "Tests pris"
 
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:53
 #: lib/funkyabx_web/components/menu/user_tests_menu.ex:75

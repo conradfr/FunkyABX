@@ -11,7 +11,7 @@ defmodule TestDescriptionComponent do
     ~H"""
     <div :if={@description != nil} class={@wrapper_class}>
       <%= if @description_markdown == true do %>
-        {raw(Earmark.as_html!(@description, escape: false, inner_html: true))}
+        {raw(markdown_to_html(@description))}
       <% else %>
         {@description
         |> html_escape()
@@ -21,5 +21,14 @@ defmodule TestDescriptionComponent do
       <% end %>
     </div>
     """
+  end
+
+  # Raw HTML is allowed in descriptions, but sanitized (scripts, event handlers... are removed)
+  def markdown_to_html(markdown) when is_binary(markdown) do
+    MDEx.to_html!(markdown,
+      extension: [strikethrough: true, autolink: true, table: true],
+      render: [unsafe: true],
+      sanitize: MDEx.Document.default_sanitize_options()
+    )
   end
 end

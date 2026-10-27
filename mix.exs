@@ -82,7 +82,7 @@ defmodule FunkyABX.MixProject do
       {:ex_cldr_dates_times, "~> 2.25.0"},
       {:ex_cldr_plugs, "~> 1.4.0"},
       {:remote_ip, "~> 1.0"},
-      {:earmark, "~> 1.4.48"},
+      {:mdex, "~> 0.12"},
       {:ecto_autoslug_field, "~> 3.1"},
       {:ex_aws, "~> 2.7"},
       {:ex_aws_s3, "~> 2.5"},

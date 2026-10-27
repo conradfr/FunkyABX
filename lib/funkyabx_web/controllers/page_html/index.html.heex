@@ -118,10 +118,9 @@
                 <div class="mt-2 small px-3">
                   <%= if test.description_markdown == true do %>
                     {raw(
-                      Earmark.as_html!(test.description |> text_max_length(),
-                        escape: false,
-                        inner_html: true
-                      )
+                      test.description
+                      |> text_max_length()
+                      |> TestDescriptionComponent.markdown_to_html()
                     )}
                   <% else %>
                     {test.description
