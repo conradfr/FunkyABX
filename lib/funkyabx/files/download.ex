@@ -10,96 +10,32 @@ defmodule FunkyABX.Download do
 
     file_path = local_path(url)
 
-    {:ok, fd} = File.open(file_path, [:write, :binary])
+    clean_url =
+      url
+      |> filter()
+      |> URI.decode()
+      |> URI.encode()
 
-    try do
-      clean_url =
-        url
-        |> filter()
-        |> URI.decode()
-        |> URI.encode()
+    headers = Urls.get_headers_for_url(clean_url)
 
-      headers = Urls.get_headers_for_url(clean_url)
+    clean_url
+    |> Req.get(
+      headers: headers,
+      into: File.stream!(file_path),
+      # Retrying would append to the partially written file
+      retry: false,
+      receive_timeout: @timeout,
+      connect_options: [
+        timeout: @timeout,
+        transport_opts: [verify: :verify_none]
+      ]
+    )
+    |> case do
+      {:ok, _resp} ->
+        {Path.basename(url), file_path}
 
-      resp =
-        clean_url
-        |> HTTPoison.get!(
-          headers,
-          stream_to: self(),
-          async: :once,
-          timeout: @timeout,
-          recv_timeout: @timeout,
-          hackney: [
-            # Couldn't get the redirect to work with async so we manage it "manually" below
-            # follow_redirect: true,
-            # force_redirect: true,
-            pool: :download,
-            insecure: true
-          ]
-        )
-
-      async_download = fn resp, fd, download_fn ->
-        resp_id = resp.id
-
-        receive do
-          %HTTPoison.AsyncStatus{code: _status_code, id: ^resp_id} ->
-            HTTPoison.stream_next(resp)
-            download_fn.(resp, fd, download_fn)
-
-          %HTTPoison.AsyncHeaders{headers: headers, id: ^resp_id} ->
-            headers_location =
-              headers
-              |> Map.new()
-              |> Map.get("Location")
-
-            case headers_location do
-              location when is_binary(location) ->
-                File.close(fd)
-                File.rm(file_path)
-
-                url
-                |> URI.parse()
-                |> URI.merge(location)
-                |> URI.to_string()
-                |> from_url()
-
-              _ ->
-                HTTPoison.stream_next(resp)
-                download_fn.(resp, fd, download_fn)
-            end
-
-          %HTTPoison.AsyncChunk{chunk: chunk, id: ^resp_id} ->
-            IO.binwrite(fd, chunk)
-            HTTPoison.stream_next(resp)
-            download_fn.(resp, fd, download_fn)
-
-          %HTTPoison.AsyncEnd{id: ^resp_id} ->
-            File.close(fd)
-            {Path.basename(url), file_path}
-        end
-      end
-
-      async_download.(resp, fd, async_download)
-    rescue
-      e in HTTPoison.Error ->
-        case e.reason do
-          reason when is_binary(reason) ->
-            Logger.warning("Error (#{url}): #{e.reason}")
-
-          reason when reason == :checkout_timeout ->
-            Logger.warning("Error (#{url}): checkout_timeout - restarting pool ...")
-
-            :hackney_pool.stop_pool(:download)
-
-          reason when is_tuple(reason) and tuple_size(reason) == 2 ->
-            {_error, {_error2, error_message}} = reason
-            Logger.warning("Error (#{url}): #{to_string(error_message)}")
-
-          reason ->
-            Logger.warning("Error (#{url}): #{reason}")
-        end
-
-        File.close(fd)
+      {:error, exception} ->
+        Logger.warning("Error (#{url}): #{Exception.message(exception)}")
         File.rm(file_path)
         nil
     end

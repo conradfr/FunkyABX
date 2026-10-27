@@ -80,12 +80,11 @@ defmodule FunkyABX.Urls do
 
   defp gearspace_thread_to_urls(url) do
     try do
-      HTTPoison.get!(
+      Req.get!(
         Application.fetch_env!(:funkyabx, :fetcher_url) <> "/fetch-html?url=" <> URI.encode(url),
-        get_headers_for_url(url),
-        timeout: @timeout,
-        recv_timeout: @timeout,
-        hackney: [:insecure]
+        headers: get_headers_for_url(url),
+        receive_timeout: @timeout,
+        connect_options: [timeout: @timeout, transport_opts: [verify: :verify_none]]
       )
       |> IO.inspect()
       |> Map.get(:body, "")

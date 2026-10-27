@@ -3,29 +3,16 @@ defmodule FunkyABX.Utils do
   import Phoenix.LiveView.Utils, only: [put_flash: 3]
   use Gettext, backend: FunkyABXWeb.Gettext
 
-  @headers [
-    {"Content-type", "application/x-www-form-urlencoded"},
-    {"Accept", "application/json"}
-  ]
-
   @verify_url "https://www.google.com/recaptcha/api/siteverify"
 
   def parse_recaptcha_token(nil), do: false
 
   def parse_recaptcha_token(token) do
-    body =
-      %{secret: Application.fetch_env!(:funkyabx, :recaptcha_private), response: token}
-      |> URI.encode_query()
+    form = %{secret: Application.fetch_env!(:funkyabx, :recaptcha_private), response: token}
 
-    case HTTPoison.post(@verify_url, body, @headers) do
-      {:ok, response} ->
-        body = response.body |> Jason.decode!()
-
-        if body["success"] do
-          true
-        else
-          false
-        end
+    case Req.post(@verify_url, form: form, headers: [{"Accept", "application/json"}]) do
+      {:ok, %Req.Response{body: %{"success" => true}}} ->
+        true
 
       _ ->
         false

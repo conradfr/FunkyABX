@@ -102,6 +102,8 @@ config :ex_cldr,
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
+config :ex_aws, http_client: ExAws.Request.Req
+
 config :mime, :types, %{
   #  "audio/ogg" => ["ogg"]
   "audio/flac" => ["flac"]
