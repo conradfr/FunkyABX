@@ -4,6 +4,17 @@ defmodule FunkyABXWeb.DatesHelpers do
     format: :medium
   ]
 
+  # Browsers can send invalid zones (e.g. "Etc/Unknown"), fallback to UTC
+  def timezone_from_params(nil), do: "Etc/UTC"
+
+  def timezone_from_params(connect_params) do
+    timezone = Map.get(connect_params, "timezone")
+
+    if is_binary(timezone) and Tzdata.zone_exists?(timezone),
+      do: timezone,
+      else: "Etc/UTC"
+  end
+
   def format_date_time(datetime, opts \\ [])
 
   def format_date_time(datetime, _opts) when datetime == nil, do: ""

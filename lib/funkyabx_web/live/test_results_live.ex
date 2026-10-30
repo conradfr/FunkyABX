@@ -333,10 +333,9 @@ defmodule FunkyABXWeb.TestResultsLive do
       end
 
       timezone =
-        case get_connect_params(socket) do
-          nil -> "Etc/UTC"
-          params -> Map.get(params, "timezone", "Etc/UTC")
-        end
+        socket
+        |> get_connect_params()
+        |> timezone_from_params()
 
       {is_another_session, session_id, choices} =
         case Tests.parse_session_id(Map.get(params, "s")) do

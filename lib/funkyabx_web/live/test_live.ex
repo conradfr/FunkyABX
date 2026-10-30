@@ -354,10 +354,9 @@ defmodule FunkyABXWeb.TestLive do
     embed = Map.get(session, "embedded")
 
     timezone =
-      case get_connect_params(socket) do
-        nil -> "Etc/UTC"
-        params -> Map.get(params, "timezone", "Etc/UTC")
-      end
+      socket
+      |> get_connect_params()
+      |> timezone_from_params()
 
     if connected?(socket) do
       FunkyABXWeb.Endpoint.subscribe(test.id)

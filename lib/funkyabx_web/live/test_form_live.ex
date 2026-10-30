@@ -1806,10 +1806,9 @@ defmodule FunkyABXWeb.TestFormLive do
   end
 
   defp get_timezone(socket) do
-    case get_connect_params(socket) do
-      nil -> "Etc/UTC"
-      params -> Map.get(params, "timezone", "Etc/UTC")
-    end
+    socket
+    |> get_connect_params()
+    |> timezone_from_params()
   end
 
   defp track_count(changeset) do
