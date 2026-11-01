@@ -17,7 +17,8 @@ defmodule FunkyABXWeb.TestController do
       _ ->
         conn
         |> put_status(:not_found)
-        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorView)
+        |> Phoenix.Controller.put_root_layout(false)
+        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorHTML)
         |> Phoenix.Controller.render(:"404")
         |> halt()
     end
@@ -42,7 +43,8 @@ defmodule FunkyABXWeb.TestController do
       _ ->
         conn
         |> put_status(:not_found)
-        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorView)
+        |> Phoenix.Controller.put_root_layout(false)
+        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorHTML)
         |> Phoenix.Controller.render(:"404")
         |> halt()
     end
@@ -66,7 +68,8 @@ defmodule FunkyABXWeb.TestController do
       _ ->
         conn
         |> put_status(:not_found)
-        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorView)
+        |> Phoenix.Controller.put_root_layout(false)
+        |> Phoenix.Controller.put_view(FunkyABXWeb.ErrorHTML)
         |> Phoenix.Controller.render(:"404")
         |> halt()
     end
