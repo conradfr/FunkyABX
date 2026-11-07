@@ -35,7 +35,7 @@ msgstr "このサイトについて"
 #: lib/funkyabx_web/live/test_form_live.ex:328
 #: lib/funkyabx_web/live/test_form_live.ex:340
 #: lib/funkyabx_web/live/test_form_live.ex:353
-#: lib/funkyabx_web/live/test_form_live.ex:992
+#: lib/funkyabx_web/live/test_form_live.ex:1019
 #, elixir-autogen, elixir-format
 msgid "Are you sure?"
 msgstr "よろしいですか？"
@@ -289,7 +289,7 @@ msgstr "またはここにファイルをドロップ"
 msgid "Previous"
 msgstr "前へ"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1027
+#: lib/funkyabx_web/live/test_form_live.ex:1054
 #, elixir-autogen, elixir-format
 msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
 msgstr "テスト対象外のリファレンス／未処理トラック。他のトラックと並行して再生可能です。"
@@ -299,7 +299,7 @@ msgstr "テスト対象外のリファレンス／未処理トラック。他の
 msgid "Send"
 msgstr "送信"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1074
+#: lib/funkyabx_web/live/test_form_live.ex:1102
 #, elixir-autogen, elixir-format
 msgid "Send an invitation"
 msgstr "招待を送る"
@@ -319,7 +319,7 @@ msgstr "サイトを支援"
 msgid "Take the demo test"
 msgstr "デモテストを試す"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:144
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:143
 #, elixir-autogen, elixir-format
 msgid "Take the test"
 msgstr "テストを受ける"
@@ -354,14 +354,14 @@ msgstr "このページは存在しないか、削除されました。"
 msgid "Track %{choice}"
 msgstr "トラック %{choice}"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:137
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:136
 #: lib/funkyabx_web/live/gallery_live.ex:94
 #, elixir-autogen, elixir-format
 msgid "Tracks:"
 msgstr "トラック:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:401
-#: lib/funkyabx_web/live/test_form_live.ex:1062
+#: lib/funkyabx_web/live/test_form_live.ex:1090
 #, elixir-autogen, elixir-format
 msgid "Updating ..."
 msgstr "更新中..."

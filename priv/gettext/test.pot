@@ -120,7 +120,7 @@ msgstr ""
 msgid "Enable EBU R128 loudness normalization by default on test player (can be disabled by visitor)"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:210
+#: lib/funkyabx_web/live/test_live.ex:209
 #, elixir-autogen, elixir-format
 msgid "Are you sure you want to check the results? You won't be able to participate afterwards."
 msgstr ""
@@ -144,7 +144,7 @@ msgstr ""
 msgid "By %{author}"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:252
+#: lib/funkyabx_web/live/test_live.ex:251
 #, elixir-autogen, elixir-format
 msgid "Check the results"
 msgstr ""
@@ -169,7 +169,7 @@ msgstr ""
 msgid "Comments are displayed on the results page (except for listening tests)"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1382
+#: lib/funkyabx_web/live/test_form_live.ex:1412
 #, elixir-autogen, elixir-format
 msgid "Copied to clipboard"
 msgstr ""
@@ -179,7 +179,7 @@ msgstr ""
 msgid "Correct guesses: <strong>%{guess} / %{nb_of_rounds}</strong>"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:199
+#: lib/funkyabx_web/live/test_live.ex:198
 #: lib/funkyabx_web/live/test_results_live.ex:248
 #, elixir-autogen, elixir-format
 msgid "Create a new local test"
@@ -196,7 +196,7 @@ msgstr ""
 msgid "Create local test"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1186
+#: lib/funkyabx_web/live/test_form_live.ex:1214
 #, elixir-autogen, elixir-format
 msgid "Create test"
 msgstr ""
@@ -258,7 +258,7 @@ msgstr ""
 msgid "Edit a test"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1120
+#: lib/funkyabx_web/live/test_form_live.ex:1148
 #, elixir-autogen, elixir-format
 msgid "Edit test - %{title}"
 msgstr ""
@@ -279,7 +279,7 @@ msgid "Error"
 msgstr ""
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:351
-#: lib/funkyabx_web/live/test_form_live.ex:974
+#: lib/funkyabx_web/live/test_form_live.ex:1001
 #, elixir-autogen, elixir-format
 msgid "File:"
 msgstr ""
@@ -309,7 +309,7 @@ msgstr ""
 msgid "Global results have been hidden by test creator."
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:192
+#: lib/funkyabx_web/live/test_live.ex:191
 #: lib/funkyabx_web/live/test_results_live.ex:236
 #, elixir-autogen, elixir-format
 msgid "Go back to the test form"
@@ -327,7 +327,7 @@ msgstr ""
 msgid "Hide details"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:278
+#: lib/funkyabx_web/live/test_live.ex:277
 #, elixir-autogen, elixir-format
 msgid "Hide titles and shuffle tracks"
 msgstr ""
@@ -406,7 +406,7 @@ msgstr ""
 
 #: lib/funkyabx_web/live/components/player.ex:90
 #: lib/funkyabx_web/live/local_test_form_live.ex:396
-#: lib/funkyabx_web/live/test_form_live.ex:1047
+#: lib/funkyabx_web/live/test_form_live.ex:1075
 #, elixir-autogen, elixir-format
 msgid "Loading..."
 msgstr ""
@@ -448,7 +448,7 @@ msgid "Name or email"
 msgstr ""
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:340
-#: lib/funkyabx_web/live/test_form_live.ex:943
+#: lib/funkyabx_web/live/test_form_live.ex:970
 #, elixir-autogen, elixir-format
 msgid "Name:*"
 msgstr ""
@@ -620,8 +620,8 @@ msgstr ""
 msgid "Player only"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_results_live.ex:389
-#: lib/funkyabx_web/live/test_results_live.ex:405
+#: lib/funkyabx_web/live/test_results_live.ex:388
+#: lib/funkyabx_web/live/test_results_live.ex:404
 #, elixir-autogen, elixir-format
 msgid "Please take the test before checking the results."
 msgstr ""
@@ -658,7 +658,7 @@ msgstr ""
 
 #: lib/funkyabx_web/live/components/player.ex:323
 #: lib/funkyabx_web/live/local_test_form_live.ex:374
-#: lib/funkyabx_web/live/test_form_live.ex:1020
+#: lib/funkyabx_web/live/test_form_live.ex:1047
 #, elixir-autogen, elixir-format
 msgid "Reference"
 msgstr ""
@@ -678,7 +678,7 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:285
+#: lib/funkyabx_web/live/test_live.ex:284
 #, elixir-autogen, elixir-format
 msgid "Reveal tracks titles"
 msgstr ""
@@ -688,7 +688,7 @@ msgstr ""
 msgid "Round %{current_round} / %{nb_of_rounds}"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1056
+#: lib/funkyabx_web/live/test_form_live.ex:1084
 #, elixir-autogen, elixir-format
 msgid "Save test"
 msgstr ""
@@ -725,14 +725,14 @@ msgstr ""
 msgid "Share:"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1221
+#: lib/funkyabx_web/live/test_form_live.ex:1249
 #, elixir-autogen, elixir-format
 msgid "Someone just commented on this test!"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1214
-#: lib/funkyabx_web/live/test_live.ex:478
-#: lib/funkyabx_web/live/test_results_live.ex:512
+#: lib/funkyabx_web/live/test_form_live.ex:1242
+#: lib/funkyabx_web/live/test_live.ex:476
+#: lib/funkyabx_web/live/test_results_live.ex:511
 #, elixir-autogen, elixir-format
 msgid "Someone just took this test!"
 msgstr ""
@@ -753,7 +753,7 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:234
+#: lib/funkyabx_web/live/test_live.ex:233
 #, elixir-autogen, elixir-format
 msgid "Submit my choices"
 msgstr ""
@@ -768,7 +768,7 @@ msgstr ""
 msgid "Switch track every"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:244
+#: lib/funkyabx_web/live/test_live.ex:243
 #: lib/funkyabx_web/live/test_results_live.ex:242
 #, elixir-autogen, elixir-format
 msgid "Take the test again"
@@ -785,7 +785,7 @@ msgstr ""
 msgid "Test"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1142
+#: lib/funkyabx_web/live/test_form_live.ex:1170
 #, elixir-autogen, elixir-format
 msgid "Test authentication failed. Please log in or check your link."
 msgstr ""
@@ -838,7 +838,7 @@ msgstr ""
 msgid "Test public page"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_results_live.ex:360
+#: lib/funkyabx_web/live/test_results_live.ex:359
 #, elixir-autogen, elixir-format
 msgid "Test results - %{test_title}"
 msgstr ""
@@ -874,12 +874,12 @@ msgstr ""
 msgid "The file will be downloaded once you submit, not served from the original url"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:526
+#: lib/funkyabx_web/live/test_live.ex:524
 #, elixir-autogen, elixir-format
 msgid "The page has been reloaded because the test has been updated by its creator."
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1234
+#: lib/funkyabx_web/live/test_form_live.ex:1262
 #, elixir-autogen, elixir-format
 msgid "The test has been opened from an invitation."
 msgstr ""
@@ -899,13 +899,13 @@ msgstr ""
 msgid "The test won't be able to be taken after this date/time, but results will still be available"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:516
-#: lib/funkyabx_web/live/test_results_live.ex:522
+#: lib/funkyabx_web/live/test_live.ex:514
+#: lib/funkyabx_web/live/test_results_live.ex:521
 #, elixir-autogen, elixir-format
 msgid "This test has been deleted :("
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:486
+#: lib/funkyabx_web/live/test_live.ex:484
 #, elixir-autogen, elixir-format
 msgid "This test has been reopened."
 msgstr ""
@@ -915,8 +915,8 @@ msgstr ""
 msgid "This test is closed."
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:437
-#: lib/funkyabx_web/live/test_live.ex:499
+#: lib/funkyabx_web/live/test_live.ex:435
+#: lib/funkyabx_web/live/test_live.ex:497
 #, elixir-autogen, elixir-format
 msgid "This test is closed. <a href=\"%{link}\">Check the results</a>"
 msgstr ""
@@ -966,13 +966,13 @@ msgstr ""
 msgid "Title*"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1673
+#: lib/funkyabx_web/live/test_form_live.ex:1734
 #, elixir-autogen, elixir-format
 msgid "Too large"
 msgstr ""
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:336
-#: lib/funkyabx_web/live/test_form_live.ex:939
+#: lib/funkyabx_web/live/test_form_live.ex:966
 #, elixir-autogen, elixir-format
 msgid "Track #%{track_index}"
 msgstr ""
@@ -1007,7 +1007,7 @@ msgstr ""
 msgid "Two tracks minimum"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1065
+#: lib/funkyabx_web/live/test_form_live.ex:1093
 #, elixir-autogen, elixir-format
 msgid "Update test"
 msgstr ""
@@ -1017,7 +1017,7 @@ msgstr ""
 msgid "Updated on <time datetime=\"%{updated_at}\">%{updated_at_format}</time>"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:954
+#: lib/funkyabx_web/live/test_form_live.ex:981
 #, elixir-autogen, elixir-format
 msgid "Upload"
 msgstr ""
@@ -1075,23 +1075,23 @@ msgid "You did not participate in this test"
 msgstr ""
 
 #: lib/funkyabx_web/live/test_live.ex:29
-#: lib/funkyabx_web/live/test_live.ex:597
+#: lib/funkyabx_web/live/test_live.ex:595
 #, elixir-autogen, elixir-format
 msgid "You have already taken this test (or chosen to not take it). <a href=\"%{results_url}\">Check the results</a>."
 msgstr ""
 
 #: lib/funkyabx_web/live/test_live.ex:20
-#: lib/funkyabx_web/live/test_live.ex:591
+#: lib/funkyabx_web/live/test_live.ex:589
 #, elixir-autogen, elixir-format
 msgid "You have already taken this test (or chosen to not take it). What do you to do? <a href=\"%{results_url}\">Check the results</a> or <a href=\"#\" phx-click='[[\"dispatch\",{\"event\":\"delete_test\",\"to\":\"#test-header\"}]]'>delete your previous test and take it again</a>."
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1677
+#: lib/funkyabx_web/live/test_form_live.ex:1738
 #, elixir-autogen, elixir-format
 msgid "You have selected an unacceptable file type"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1674
+#: lib/funkyabx_web/live/test_form_live.ex:1735
 #, elixir-autogen, elixir-format
 msgid "You have selected too many files"
 msgstr ""
@@ -1132,7 +1132,7 @@ msgstr ""
 msgid "You will have to pick their preferred track"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:453
+#: lib/funkyabx_web/live/test_live.ex:451
 #, elixir-autogen, elixir-format
 msgid "Your invitation has already been redeemed. <a href=\"%{link}\">Take the test anonymously instead</a>."
 msgstr ""
@@ -1152,33 +1152,33 @@ msgstr ""
 msgid "Your score: <strong>%{visitor_guesses} / %{nb_of_rounds}</strong>"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:557
-#: lib/funkyabx_web/live/test_live.ex:741
+#: lib/funkyabx_web/live/test_live.ex:555
+#: lib/funkyabx_web/live/test_live.ex:739
 #, elixir-autogen, elixir-format
 msgid "Your submission has been registered!"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:748
+#: lib/funkyabx_web/live/test_live.ex:746
 #, elixir-autogen, elixir-format
 msgid "Your test can't be submitted. Please try again or reload the page"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1360
+#: lib/funkyabx_web/live/test_form_live.ex:1390
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully created!"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1486
+#: lib/funkyabx_web/live/test_form_live.ex:1517
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully deleted."
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1290
+#: lib/funkyabx_web/live/test_form_live.ex:1319
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully updated!"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_form_live.ex:1458
+#: lib/funkyabx_web/live/test_form_live.ex:1489
 #, elixir-autogen, elixir-format
 msgid "Your test has been successfully updated."
 msgstr ""
@@ -1219,7 +1219,7 @@ msgstr ""
 msgid "This test is closed. <a href=\"%{link}\">Check the results</a>."
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:216
+#: lib/funkyabx_web/live/test_live.ex:215
 #, elixir-autogen, elixir-format
 msgid "Check the results without participating"
 msgstr ""
@@ -1251,7 +1251,7 @@ msgstr ""
 msgid "Tracklist"
 msgstr ""
 
-#: lib/funkyabx_web/live/test_live.ex:224
+#: lib/funkyabx_web/live/test_live.ex:223
 #, elixir-autogen, elixir-format
 msgid "Tracks are in random order"
 msgstr ""
@@ -1270,4 +1270,9 @@ msgstr ""
 #: lib/funkyabx_web/live/test_live.ex:162
 #, elixir-autogen, elixir-format
 msgid "Tracks in the test are in random order"
+msgstr ""
+
+#: lib/funkyabx_web/live/test_form_live.ex:961
+#, elixir-autogen, elixir-format
+msgid "Drag to reorder"
 msgstr ""

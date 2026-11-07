@@ -13,3 +13,18 @@
   }
 }
 
+
+// Tracks drag & drop reordering (SortableTracksHook)
+.track-drag-handle {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.track-sortable-ghost {
+  opacity: 0.4;
+}

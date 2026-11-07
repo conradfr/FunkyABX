@@ -35,7 +35,7 @@ msgstr "Acerca de"
 #: lib/funkyabx_web/live/test_form_live.ex:328
 #: lib/funkyabx_web/live/test_form_live.ex:340
 #: lib/funkyabx_web/live/test_form_live.ex:353
-#: lib/funkyabx_web/live/test_form_live.ex:992
+#: lib/funkyabx_web/live/test_form_live.ex:1019
 #, elixir-autogen, elixir-format
 msgid "Are you sure?"
 msgstr "¿Estás seguro?"
@@ -289,7 +289,7 @@ msgstr "O arrastra y suelta archivos aquí"
 msgid "Previous"
 msgstr "Anterior"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1027
+#: lib/funkyabx_web/live/test_form_live.ex:1054
 #, elixir-autogen, elixir-format
 msgid "Reference / unprocessed track that will not be part of the test but playable alongside the others."
 msgstr "Pista de referencia / sin procesar que no formará parte del test pero se puede reproducir junto a las demás."
@@ -299,7 +299,7 @@ msgstr "Pista de referencia / sin procesar que no formará parte del test pero s
 msgid "Send"
 msgstr "Enviar"
 
-#: lib/funkyabx_web/live/test_form_live.ex:1074
+#: lib/funkyabx_web/live/test_form_live.ex:1102
 #, elixir-autogen, elixir-format
 msgid "Send an invitation"
 msgstr "Enviar una invitación"
@@ -319,7 +319,7 @@ msgstr "Apoya el sitio"
 msgid "Take the demo test"
 msgstr "Hacer el test de demostración"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:144
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:143
 #, elixir-autogen, elixir-format
 msgid "Take the test"
 msgstr "Hacer el test"
@@ -354,14 +354,14 @@ msgstr "Esta página no existe o ha sido eliminada."
 msgid "Track %{choice}"
 msgstr "Pista %{choice}"
 
-#: lib/funkyabx_web/controllers/page_html/index.html.heex:137
+#: lib/funkyabx_web/controllers/page_html/index.html.heex:136
 #: lib/funkyabx_web/live/gallery_live.ex:94
 #, elixir-autogen, elixir-format
 msgid "Tracks:"
 msgstr "Pistas:"
 
 #: lib/funkyabx_web/live/local_test_form_live.ex:401
-#: lib/funkyabx_web/live/test_form_live.ex:1062
+#: lib/funkyabx_web/live/test_form_live.ex:1090
 #, elixir-autogen, elixir-format
 msgid "Updating ..."
 msgstr "Actualizando ..."

@@ -917,123 +917,149 @@ defmodule FunkyABXWeb.TestFormLive do
         {error_tag(f, :tracks)}
 
         <fieldset>
-          <div class={["mb-2 py-1 rounded-3 form-unit", track_count(@changeset) === 0 && "d-none"]}>
-            <.inputs_for :let={fp} field={f[:tracks]}>
-              <%= if input_value(fp, :id) != nil do %>
-                <.input field={fp[:id]} type="hidden" />
-                <.input field={fp[:delete]} type="hidden" />
-              <% else %>
-                <.input field={fp[:temp_id]} type="hidden" />
-              <% end %>
+          <div
+            id="tracks-sortable"
+            phx-hook="SortableTracks"
+            data-disabled={to_string(@test_updatable == false)}
+            class={["mb-2 py-1 rounded-3 form-unit", track_count(@changeset) === 0 && "d-none"]}
+          >
+            <%!-- skip_hidden: hidden inputs are rendered inside the wrapper so a track is a single draggable element --%>
+            <.inputs_for :let={fp} field={f[:tracks]} skip_hidden>
+              <div
+                id={"track-item-#{fp.index}"}
+                class={[
+                  Enum.member?(@tracks_to_delete, input_value(fp, :id)) == false &&
+                    "track-sortable-item"
+                ]}
+                data-track-id={input_value(fp, :id) || input_value(fp, :temp_id)}
+              >
+                <input
+                  :for={{name, value} <- fp.hidden}
+                  type="hidden"
+                  name={input_name(fp, name)}
+                  value={value}
+                />
+                <%= if input_value(fp, :id) != nil do %>
+                  <.input field={fp[:id]} type="hidden" />
+                  <.input field={fp[:delete]} type="hidden" />
+                <% else %>
+                  <.input field={fp[:temp_id]} type="hidden" />
+                <% end %>
 
-              <%= if input_value(fp, :url) != nil do %>
-                <.input field={fp[:url]} type="hidden" />
-              <% end %>
+                <%= if input_value(fp, :url) != nil do %>
+                  <.input field={fp[:url]} type="hidden" />
+                <% end %>
 
-              <.input field={fp[:original_filename]} type="hidden" />
-              <.input field={fp[:filename]} type="hidden" />
+                <.input field={fp[:original_filename]} type="hidden" />
+                <.input field={fp[:filename]} type="hidden" />
 
-              <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
-                <div class={["row p-2 mx-0", input_value(fp, :id) != nil && " mb-2"]}>
-                  <label class="col-sm-1 col-form-label">
-                    {dgettext("test", "Track #%{track_index}", track_index: fp.index + 1)}
-                  </label>
-                  <hr class="d-block d-sm-none mb-0" />
-                  <label class="col-sm-1 col-form-label text-start text-md-end">
-                    {dgettext("test", "Name:*")}
-                  </label>
-                  <div class="col-sm-4">
-                    <.input
-                      field={fp[:title]}
-                      type="text"
-                      required
-                    />
-                  </div>
-                  <%= if get_upload_entry(input_value(fp, :temp_id), @uploads.tracks.entries) != nil and get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries) > 0 do %>
-                    <label class="col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0">
-                      {dgettext("test", "Upload")}
+                <%= unless Enum.member?(@tracks_to_delete, input_value(fp, :id)) == true do %>
+                  <div class={["row p-2 mx-0", input_value(fp, :id) != nil && " mb-2"]}>
+                    <div
+                      :if={@test_updatable != false and track_count(@changeset) > 1}
+                      class="col-auto d-flex align-items-center track-drag-handle"
+                      title={dgettext("test", "Drag to reorder")}
+                    >
+                      <i class="bi bi-grip-vertical"></i>
+                    </div>
+                    <label class="col col-sm-1 col-form-label">
+                      {dgettext("test", "Track #%{track_index}", track_index: fp.index + 1)}
                     </label>
-                    <div class="col d-flex align-items-center">
-                      <progress
-                        value={
-                          get_upload_entry_progress(
+                    <hr class="d-block d-sm-none mb-0" />
+                    <label class="col-sm-1 col-form-label text-start text-md-end">
+                      {dgettext("test", "Name:*")}
+                    </label>
+                    <div class="col-sm-4">
+                      <.input
+                        field={fp[:title]}
+                        type="text"
+                        required
+                      />
+                    </div>
+                    <%= if get_upload_entry(input_value(fp, :temp_id), @uploads.tracks.entries) != nil and get_upload_entry_progress(input_value(fp, :temp_id), @uploads.tracks.entries) > 0 do %>
+                      <label class="col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0">
+                        {dgettext("test", "Upload")}
+                      </label>
+                      <div class="col d-flex align-items-center">
+                        <progress
+                          value={
+                            get_upload_entry_progress(
+                              input_value(fp, :temp_id),
+                              @uploads.tracks.entries
+                            )
+                          }
+                          max="100"
+                        >
+                          {get_upload_entry_progress(
                             input_value(fp, :temp_id),
                             @uploads.tracks.entries
-                          )
-                        }
-                        max="100"
-                      >
-                        {get_upload_entry_progress(
-                          input_value(fp, :temp_id),
-                          @uploads.tracks.entries
-                        )}%
-                      </progress>
-                    </div>
-                  <% else %>
-                    <label class="col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0">
-                      {dgettext("test", "File:")}
-                    </label>
-                    <div
-                      class="col w-100 text-truncate d-flex align-items-center"
-                      title={input_value(fp, :original_filename)}
-                    >
-                      {input_value(fp, :original_filename)}
-                    </div>
-                  <% end %>
-                  <div class="col-sm-2 d-flex flex-row-reverse" style="min-width: 62px">
-                    <%= if input_value(fp, :id) != nil do %>
-                      <button
-                        type="button"
-                        class={[
-                          "btn",
-                          "btn-dark",
-                          @test_updatable == false && " disabled"
-                        ]}
-                        data-confirm={dgettext("site", "Are you sure?")}
-                        phx-click="delete_track"
-                        phx-value-id={input_value(fp, :id)}
-                      >
-                        <i class="bi bi-trash text-danger"></i>
-                      </button>
+                          )}%
+                        </progress>
+                      </div>
                     <% else %>
-                      <button
-                        type="button"
-                        class={[
-                          "btn",
-                          "btn-dark",
-                          @test_updatable == false && " disabled"
-                        ]}
-                        phx-click="remove_track"
-                        phx-value-id={input_value(fp, :temp_id)}
+                      <label class="col-sm-1 col-form-label text-start text-md-end mt-2 mt-md-0">
+                        {dgettext("test", "File:")}
+                      </label>
+                      <div
+                        class="col w-100 text-truncate d-flex align-items-center"
+                        title={input_value(fp, :original_filename)}
                       >
-                        <i class="bi bi-trash text-danger"></i>
-                      </button>
+                        {input_value(fp, :original_filename)}
+                      </div>
                     <% end %>
+                    <div class="col-sm-2 d-flex justify-content-between flex-row-reverse" style="min-width: 62px">
+                      <%= if input_value(fp, :id) != nil do %>
+                        <button
+                          type="button"
+                          class={[
+                            "btn",
+                            "btn-dark",
+                            @test_updatable == false && " disabled"
+                          ]}
+                          data-confirm={dgettext("site", "Are you sure?")}
+                          phx-click="delete_track"
+                          phx-value-id={input_value(fp, :id)}
+                        >
+                          <i class="bi bi-trash text-danger"></i>
+                        </button>
+                      <% else %>
+                        <button
+                          type="button"
+                          class={[
+                            "btn",
+                            "btn-dark",
+                            @test_updatable == false && " disabled"
+                          ]}
+                          phx-click="remove_track"
+                          phx-value-id={input_value(fp, :temp_id)}
+                        >
+                          <i class="bi bi-trash text-danger"></i>
+                        </button>
+                      <% end %>
 
-                    <label
-                      :if={Tests.can_have_reference_track?(@changeset)}
-                      class="col-form-label pe-3"
-                    >
-                      <.input
-                        field={fp[:reference_track]}
-                        type="checkbox"
-                      />&nbsp;&nbsp;{dgettext(
-                        "test",
-                        "Reference"
-                      )} &nbsp;<i
-                        class="bi bi-info-circle text-body-secondary"
-                        data-bs-toggle="tooltip"
-                        title={
-                          dgettext(
-                            "site",
-                            "Reference / unprocessed track that will not be part of the test but playable alongside the others."
-                          )
-                        }
-                      ></i>
-                    </label>
+                      <div
+                        :if={Tests.can_have_reference_track?(@changeset)}
+                        class="col-form-label d-flex pe-3"
+                      >
+                        <.input
+                          field={fp[:reference_track]}
+                          type="checkbox"
+                          label={dgettext("test", "Reference")}
+                        />&nbsp;&nbsp;&nbsp;<i
+                          class="bi bi-info-circle text-body-secondary"
+                          data-bs-toggle="tooltip"
+                          title={
+                            dgettext(
+                              "site",
+                              "Reference / unprocessed track that will not be part of the test but playable alongside the others."
+                            )
+                          }
+                        ></i>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
             </.inputs_for>
           </div>
         </fieldset>
@@ -1257,6 +1283,7 @@ defmodule FunkyABXWeb.TestFormLive do
       test_params
       |> disable_normalization_for_abx(socket.assigns.test)
       |> consume_and_update_form_tracks_params(socket)
+      |> FormUtils.put_tracks_position()
 
     update_changeset = Test.changeset_update(socket.assigns.changeset, updated_test_params)
     update = Repo.update(update_changeset)
@@ -1299,6 +1326,7 @@ defmodule FunkyABXWeb.TestFormLive do
       test_params
       |> disable_normalization_for_abx(socket.assigns.test)
       |> consume_and_update_form_tracks_params(socket)
+      |> FormUtils.put_tracks_position()
 
     insert =
       socket.assigns.test
@@ -1394,6 +1422,7 @@ defmodule FunkyABXWeb.TestFormLive do
       |> FormUtils.update_reference_track_params(target)
       |> disable_normalization_for_abx(socket.assigns.test)
       |> build_upload_tracks(socket)
+      |> FormUtils.put_tracks_position()
 
     changeset =
       socket.assigns.test
@@ -1545,6 +1574,35 @@ defmodule FunkyABXWeb.TestFormLive do
      |> push_event("revalidate", %{})}
   end
 
+  # Reorder (persisted & new tracks), ids in the new order sent by the SortableTracks hook
+
+  @impl true
+  def handle_event("reorder_tracks", _params, socket)
+      when socket.assigns.test_updatable == false do
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("reorder_tracks", %{"ids" => ids}, socket) when is_list(ids) do
+    order = ids |> Enum.with_index() |> Map.new()
+
+    reordered_tracks =
+      socket.assigns.changeset
+      |> get_field(:tracks)
+      # stable sort: tracks not in the list (deleted / just added) keep their relative order at the end
+      |> Enum.sort_by(fn t -> Map.get(order, t.id || t.temp_id, map_size(order)) end)
+      # The position must be an actual change: put_assoc ignores a list of unchanged
+      # persisted tracks (order alone isn't a change) and the form would render the old order.
+      |> Enum.with_index()
+      |> Enum.map(fn {t, i} -> Track.changeset(t, %{position: i}) end)
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:tracks, reordered_tracks)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
   # New tracks
 
   @impl true
@@ -1606,8 +1664,9 @@ defmodule FunkyABXWeb.TestFormLive do
 
     existing_tracks =
       test_params
-      |> Map.get("tracks", [])
-      |> Enum.flat_map(fn {_k, t} ->
+      |> Map.get("tracks", %{})
+      |> FormUtils.sorted_tracks_params()
+      |> Enum.flat_map(fn t ->
         case Enum.member?(existing_ids, Map.get(t, "id") || Map.get(t, "temp_id")) do
           true -> [t]
           false -> []

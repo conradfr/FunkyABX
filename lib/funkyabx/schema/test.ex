@@ -63,7 +63,7 @@ defmodule FunkyABX.Test do
     field(:view_count, :integer, default: 0)
     field(:last_viewed_at, :naive_datetime)
     field(:archived, :boolean, default: false)
-    has_many(:tracks, Track, on_replace: :delete_if_exists)
+    has_many(:tracks, Track, on_replace: :delete_if_exists, preload_order: [asc: :position])
     has_many(:invitations, Invitation, on_replace: :delete_if_exists)
     has_many(:rank_details, RankDetails)
     has_many(:pick_details, PickDetails)

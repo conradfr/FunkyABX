@@ -38,6 +38,7 @@ import DownloadTestFilesHook from './hooks/DownloadTestFilesHook'
 import CommentsHook from './hooks/CommentsHook'
 import PlayerHook from './hooks/PlayerHook'
 import OutputSelectorHook from './hooks/OutputSelectorHook'
+import SortableTracksHook from './hooks/SortableTracksHook'
 
 
 const audioFiles = {};
@@ -54,6 +55,7 @@ Hooks.DownloadTestFiles = DownloadTestFilesHook
 Hooks.Comments = CommentsHook
 Hooks.Player = PlayerHook
 Hooks.OutputSelector = OutputSelectorHook
+Hooks.SortableTracks = SortableTracksHook
 
 /*
   Audio files need to be global as some browser needs them to come from user action
