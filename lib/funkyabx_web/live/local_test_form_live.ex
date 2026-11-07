@@ -656,6 +656,8 @@ defmodule FunkyABXWeb.LocalTestFormLive do
   # ---------- UTILS ----------
 
   defp add_track_from_filename(socket, track_id, filename) do
+    title = Tracks.filename_to_title(filename)
+
     tracks =
       Map.get(socket.assigns.changeset.changes, :tracks, socket.assigns.test.tracks)
       |> Enum.concat([
@@ -667,7 +669,8 @@ defmodule FunkyABXWeb.LocalTestFormLive do
             "local" => true,
             "original_filename" => filename,
             "filename" => filename,
-            "title" => Tracks.filename_to_title(filename)
+            "title" => title,
+            "reference_track" => Tracks.reference_title?(title)
           }
         )
       ])

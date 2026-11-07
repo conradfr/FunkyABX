@@ -15,8 +15,6 @@ defmodule FunkyABXWeb.TestFormLive do
 
   @title_max_length 100
 
-  @references_title ["Reference", "Référence", "Referencia"]
-
   @impl true
   def render(assigns) do
     ~H"""
@@ -1658,7 +1656,7 @@ defmodule FunkyABXWeb.TestFormLive do
           "title" => title,
           "original_filename" => e.client_name,
           "filename" => e.client_name,
-          "reference_track" => title in @references_title
+          "reference_track" => Tracks.reference_title?(title)
         }
       end)
 

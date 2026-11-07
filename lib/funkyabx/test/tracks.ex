@@ -139,6 +139,12 @@ defmodule FunkyABX.Tracks do
     |> :string.titlecase()
   end
 
+  # Tracks titled like this are automatically checked as reference track when added to a form
+  @reference_titles ["Reference", "Référence", "Referencia"]
+
+  def reference_title?(title) when is_binary(title), do: title in @reference_titles
+  def reference_title?(_title), do: false
+
   def import_url_for_local(track) do
     final_filename =
       track
