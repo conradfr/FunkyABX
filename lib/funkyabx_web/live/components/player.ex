@@ -280,14 +280,14 @@ defmodule FunkyABXWeb.PlayerComponent do
                   )
                 }
               >
-                <div>{track.title}</div>
+                <div class="text-truncate" style="min-width: 0">{track.title}</div>
                 <div
                   :if={
                     track.reference_track == false and
                       (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))
                   }
                   class={[
-                    "small align-self-center text-end pe-1",
+                    "small align-self-center text-end pe-1 flex-shrink-0",
                     track.hash not in @skipped_tracks && "text-muted",
                     track.hash in @skipped_tracks && "text-danger"
                   ]}
@@ -321,7 +321,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                 }
               >
                 <div :if={track.reference_track == true}>{dgettext("test", "Reference")}</div>
-                <div :if={track.reference_track != true}>
+                <div :if={track.reference_track != true} class="text-truncate" style="min-width: 0">
                   {dgettext("test", "Track %{track_index}", track_index: i)}
                   <span :if={@display_track_name_tooltip == true}>
                     &nbsp;&nbsp;
@@ -342,7 +342,7 @@ defmodule FunkyABXWeb.PlayerComponent do
                       (track.hash in @skipped_tracks or can_skip_tracks?(@tracks, @skipped_tracks))
                   }
                   class={[
-                    "small align-self-center text-end pe-1",
+                    "small align-self-center text-end pe-1 flex-shrink-0",
                     track.hash not in @skipped_tracks && "text-muted",
                     track.hash in @skipped_tracks && "text-danger"
                   ]}
