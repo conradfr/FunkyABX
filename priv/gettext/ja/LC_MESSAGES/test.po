@@ -1269,3 +1269,8 @@ msgstr "テスト内のトラックの順番はランダムです"
 #, elixir-autogen, elixir-format
 msgid "Drag to reorder"
 msgstr "ドラッグして並べ替え"
+
+#: lib/funkyabx_web/live/components/player.ex:128
+#, elixir-autogen, elixir-format
+msgid "Volume"
+msgstr "音量"

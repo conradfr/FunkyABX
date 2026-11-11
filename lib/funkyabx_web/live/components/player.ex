@@ -117,8 +117,16 @@ defmodule FunkyABXWeb.PlayerComponent do
               id="output-selector-comp"
               module={OutputSelectorComponent}
             />
-            <div id="volume-slider-wrapper" phx-update="ignore" class="d-none d-sm-block ms-3">
-              <div id="volume-slider"></div>
+            <div id="volume-slider-wrapper" phx-update="ignore" class="d-none d-sm-block ms-3 pt-1">
+              <input
+                type="range"
+                id="volume-slider"
+                min="0"
+                max="100"
+                step="any"
+                value="100"
+                aria-label={dgettext("test", "Volume")}
+              />
             </div>
           </div>
           <div :if={@test.nb_of_rounds > 1} class="flex-grow-1 p-2 text-center">

@@ -46,7 +46,7 @@ test: ## Start tests, pass the parameter "c=" to add options to phpunit, example
 ## —— API ———————————————————————————————————————————————————————————————
 
 app-dev:
-	@$(APP_CONT) iex -S mix phx.server
+	@$(APP_CONT) iex --sname app --cookie funkyabx -S mix phx.server
 
 ## —— Mix 🧙 ——————————————————————————————————————————————————————————————
 mix: ## Run mix, pass the parameter "c=" to run a given command, example: make mix c='deps.get'

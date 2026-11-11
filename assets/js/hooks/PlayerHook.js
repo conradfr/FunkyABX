@@ -1,7 +1,6 @@
 import EventEmitter from 'eventemitter3';
 import cookies from '../utils/cookies';
 import Player from '../player/Player';
-import noUiSlider from 'nouislider';
 import {
   COOKIE_TEST_WAVEFORM,
   COOKIE_TEST_ROTATE_SECONDS,
@@ -47,23 +46,30 @@ const PlayerHook = {
 
     this.player = loadPlayer(this.el.dataset.tracks);
 
+    // native range input (0 to 100) rendered by the player component
     const slider = document.getElementById('volume-slider');
-    noUiSlider.create(slider, {
-      start: cookies.get(COOKIE_VOLUME, 1) * 100,
-      connect: 'lower',
-      range: {
-        'min': 0,
-        'max': 100
-      }
-    });
+    if (slider !== null) {
+      // fill of the lower part of the track, see components/_volume.scss
+      const setSliderFill = () => {
+        slider.style.setProperty('--volume', String(Number(slider.value) / 100));
+      };
 
-    slider.noUiSlider.on('update.one', (e) => {
-      const volume = (e[0] / 100).toFixed(2);
-      cookies.set(COOKIE_VOLUME, volume);
-      if (this.player) {
-        this.player.setVolume(volume);
-      }
-    });
+      slider.value = String(cookies.get(COOKIE_VOLUME, 1) * 100);
+      setSliderFill();
+
+      // the slider is inside the player settings form: its events must not bubble up to LiveView,
+      // which would send them as a phx-change to the server (the volume is client side only)
+      slider.addEventListener('change', (e) => e.stopPropagation());
+      slider.addEventListener('input', (e) => {
+        e.stopPropagation();
+        const volume = (Number(slider.value) / 100).toFixed(2);
+        cookies.set(COOKIE_VOLUME, volume);
+        if (this.player) {
+          this.player.setVolume(volume);
+        }
+        setSliderFill();
+      });
+    }
 
     if ('setSinkId' in AudioContext.prototype) {
       this.pushEventTo(this.el, 'output_selector_detected', {});

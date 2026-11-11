@@ -1276,3 +1276,8 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "Drag to reorder"
 msgstr ""
+
+#: lib/funkyabx_web/live/components/player.ex:128
+#, elixir-autogen, elixir-format
+msgid "Volume"
+msgstr ""

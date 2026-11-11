@@ -1276,3 +1276,8 @@ msgstr "L'ordre des pistes dans le test est aléatoire"
 #, elixir-autogen, elixir-format
 msgid "Drag to reorder"
 msgstr "Glisser pour réordonner"
+
+#: lib/funkyabx_web/live/components/player.ex:128
+#, elixir-autogen, elixir-format
+msgid "Volume"
+msgstr "Volume"
