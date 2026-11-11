@@ -62,6 +62,9 @@
 
 .waveform-canvas {
   height: 50px;
+  // horizontal drag creates a cue, it must not scroll the page on touch screens
+  touch-action: pan-y;
+  user-select: none;
   //width: 100%;
 
   //border: 1px solid red;

@@ -37,7 +37,8 @@ export default class {
 
     // Cue
     this.cueBarLength = 7;
-    this.colorCue = '#c44811';
+    this.cueColor = '#c44811';
+    this.cueRegionColor = 'rgba(196, 72, 17, 0.2)';
 
     this.seconds = Math.round(this.audioData.length / buffer.sampleRate);
     this.nbPixelsPerSecond = Math.round(this.width / this.seconds);
@@ -52,13 +53,12 @@ export default class {
     if (this.drawWaveformUnder === true) {
       const ctxWaveform = this.canvasWaveform.getContext('2d');
       this.drawWaveform(currentPixel, active, ctxWaveform);
-      ctx.drawImage(this.canvasWaveform, 0, 0);
     }
 
     ctx.clearRect(
       0,
       0,
-      this.width,
+      this.canvas.width,
       this.canvas.height
     );
 
@@ -66,6 +66,7 @@ export default class {
       ctx.drawImage(this.canvasWaveform, 0, 0);
     }
 
+    this.drawCueRegion(startCuePixel, endCuePixel, ctx);
     this.drawTimeline(currentPixel, active, ctx);
     this.drawCue(startCuePixel, endCuePixel, ctx);
     this.isActive = active;
@@ -182,21 +183,31 @@ export default class {
 
   // ---------- CUE ----------
 
+  // highlight of the cued section, under the timeline, cut at the end of this particular track
+  drawCueRegion(startCuePixel, endCuePixel, ctx) {
+    if (startCuePixel === null || endCuePixel === null || startCuePixel >= this.width) {
+      return;
+    }
+
+    ctx.fillStyle = this.cueRegionColor;
+    ctx.fillRect(startCuePixel, 0, Math.min(endCuePixel, this.width) - startCuePixel, this.canvas.height);
+  }
+
   drawCue(startCuePixel, endCuePixel, ctx) {
     // ensure cue start point is not after the end of this particular track
     if (startCuePixel !== null && startCuePixel <= this.width) {
       const startToCaret = startCuePixel + this.cueBarLength;
-      this.drawHorizontalBar(startCuePixel, startToCaret, this.colorCue, 1, 10, ctx);
-      this.drawHorizontalBar(startCuePixel, startToCaret, this.colorCue, 1, this.canvas.height - 10, ctx);
-      this.drawVerticalBar(startCuePixel, 10, this.colorCue, ctx);
+      this.drawHorizontalBar(startCuePixel, startToCaret, this.cueColor, 1, 1, ctx);
+      this.drawHorizontalBar(startCuePixel, startToCaret, this.cueColor, 1, this.canvas.height - 1, ctx);
+      this.drawVerticalBar(startCuePixel, 1, this.cueColor, ctx);
     }
 
     // ensure cue end point is not after the end of this particular track
     if (endCuePixel !== null && endCuePixel <= this.width) {
       const endToCaret = endCuePixel - this.cueBarLength;
-      this.drawHorizontalBar(endCuePixel, endToCaret, this.colorCue, 1, 10, ctx);
-      this.drawHorizontalBar(endCuePixel, endToCaret, this.colorCue, 1, this.canvas.height - 10, ctx);
-      this.drawVerticalBar(endCuePixel, 10, this.colorCue, ctx);
+      this.drawHorizontalBar(endCuePixel, endToCaret, this.cueColor, 1, 1, ctx);
+      this.drawHorizontalBar(endCuePixel, endToCaret, this.cueColor, 1, this.canvas.height - 1, ctx);
+      this.drawVerticalBar(endCuePixel, 1, this.cueColor, ctx);
     }
   }
 

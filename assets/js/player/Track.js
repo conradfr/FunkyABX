@@ -2,7 +2,11 @@
 
 import Timeline from './Timeline';
 import * as playerState from '../config/state';
-import { CUE_OVER_TOLERANCE } from '../config/config'
+import {
+  CUE_DRAG_THRESHOLD_PX,
+  CUE_EDGE_GRAB_PX,
+  CUE_MIN_DURATION_SECONDS
+} from '../config/config';
 
 // Loudness normalization: a constant gain bringing the track to the common target loudness set by the player.
 // The true peak of a track must stay below this max, which limits how loud it can be made.
@@ -30,15 +34,11 @@ export default class {
     this.currentSeconds = 0;
     this.lastPixel = null;
 
-    // synced by player
-    this.startCuePixel = null;
-    this.endCuePixel = null;
-    this.endCuePixelPreTolerance = null;
-    this.endCuePixelPostTolerance = null;
-    // Player can't know when a cue end is reached so we take the longest track and elect it to detect
-    this.cueMaster = false;
-    this.cueDetectorLock = null;
-    this.startCueTime = null;
+    // cue (seconds), owned by the player and synced here only to be drawn (can be a drag preview)
+    this.cueStart = null;
+    this.cueEnd = null;
+    // pointer interaction in progress on the canvas (seek click or cue drag)
+    this.drag = null;
 
     this.tracksMaxDuration = null;
     this.sourceCtrl = null;
@@ -141,50 +141,11 @@ export default class {
     return loudness !== null && typeof loudness === 'object' ? loudness : null;
   }
 
-  setStartCueTime() {
-    // acting as a toggle (pixel 0 is a valid cue start)
-    if (this.startCuePixel !== null) {
-      this.startCuePixel = null;
-      this.startCueTime = null;
-    } else {
-      const newStartPixel = this.getCurrentPixel();
-      // not set if after cue end
-      if (this.endCuePixel !== null && this.endCuePixel < newStartPixel) {
-        return;
-      }
-
-      this.startCueTime = this.cueMaster ? this.getCurrentTime() : null;
-      this.startCuePixel = newStartPixel;
-    }
-
-    this.drawTimeline(true);
-    if (this.cueMaster) {
-      this.ee.emit('setCueStartTime', this.startCueTime);
-    }
-  }
-
-  setEndCueTime(totalTracks) {
-    // acting as a toggle
-    // slight timeout helps to avoid the leader resetting the cue before other tracks set their marker
-    setTimeout(() => {
-      if (this.endCuePixel !== null) {
-        this.endCuePixel = null;
-        this.endCuePixelPreTolerance = null;
-        this.endCuePixelPostTolerance = null;
-      } else {
-        const newEndPixel = this.getCurrentPixel();
-        // not set if before cue start
-        if (this.startCuePixel !== null && this.startCuePixel > newEndPixel) {
-          return;
-        }
-
-        this.endCuePixel = this.getCurrentPixel();
-        this.endCuePixelPreTolerance = this.endCuePixel - CUE_OVER_TOLERANCE;
-        this.endCuePixelPostTolerance = this.endCuePixel + CUE_OVER_TOLERANCE;
-      }
-
-      this.drawTimeline(true);
-    }, this.cueMaster ? totalTracks * 1 : 0);
+  // cue to draw, in seconds (null: not set)
+  setCue(start, end) {
+    this.cueStart = start;
+    this.cueEnd = end;
+    this.refreshTimeline();
   }
 
   getDuration() {
@@ -342,20 +303,12 @@ export default class {
 
     const currentPixel = this.getCurrentPixel();
     this.lastPixel = currentPixel !== null ? Math.round(currentPixel) : this.lastPixel || 0;
-    this.waveform.draw(this.lastPixel, this.active, this.startCuePixel, this.endCuePixel);
-
-    // CUE OVER DETECTION
-
-    if (this.cueMaster === true && this.endCuePixel !== null
-      && currentPixel >= this.endCuePixelPreTolerance && currentPixel < this.endCuePixelPostTolerance
-      && !this.cueDetectorLock) {
-      this.cueDetectorLock = true;
-      this.ee.emit('cueIsOver', this.startCueTime);
-    } else if (this.cueMaster === true && this.endCuePixel !== null
-      && (currentPixel < this.endCuePixelPreTolerance || currentPixel >= this.endCuePixelPostTolerance)) {
-      // playhead left the detection window: the next cue end can be detected again
-      this.cueDetectorLock = null;
-    }
+    this.waveform.draw(
+      this.lastPixel,
+      this.active,
+      this.timeToPixel(this.cueStart),
+      this.timeToPixel(this.cueEnd)
+    );
   }
 
   createCanvas(canvasParentElem) {
@@ -368,15 +321,140 @@ export default class {
     canvasElem.height = canvasParentElem.offsetHeight;
     canvasElem.className = 'waveform-canvas cursor-link';
 
-    canvasElem.addEventListener('click', (e) => {
-      /* eslint-disable max-len */
-      const time = Math.floor(((e.clientX - e.target.getBoundingClientRect().x) * this.tracksMaxDuration) / e.target.width);
-      this.ee.emit('waveformClick', { track_hash: e.target.dataset.hash, time });
-    });
+    // a click seeks, a click + drag creates a cue (or adjusts it when grabbing one of its edges)
+    canvasElem.addEventListener('pointerdown', (e) => this.onPointerDown(e, canvasElem));
+    canvasElem.addEventListener('pointermove', (e) => this.onPointerMove(e, canvasElem));
+    canvasElem.addEventListener('pointerup', (e) => this.onPointerUp(e, canvasElem));
+    canvasElem.addEventListener('pointercancel', () => this.onPointerCancel());
 
     canvasParentElem.appendChild(canvasElem);
 
     return canvasElem;
+  }
+
+  // ---------- POINTER (seek & cue drag) ----------
+
+  onPointerDown(e, canvasElem) {
+    if (e.button !== 0 || !this.tracksMaxDuration) {
+      return;
+    }
+
+    // avoid selecting the page text while dragging
+    e.preventDefault();
+    // keep receiving the events when the pointer leaves the canvas during the drag
+    canvasElem.setPointerCapture(e.pointerId);
+
+    const time = this.eventToTime(e, canvasElem);
+
+    this.drag = {
+      originX: e.clientX,
+      originTime: time,
+      // fixed side of the cue being dragged: the opposite edge when grabbing an edge, otherwise where the drag started
+      anchorTime: this.getDragAnchorTime(this.getCueEdgeAt(e, canvasElem), time),
+      dragging: false
+    };
+  }
+
+  onPointerMove(e, canvasElem) {
+    if (this.drag === null) {
+      // hovering: show that an edge of the cue can be grabbed
+      canvasElem.style.cursor = this.getCueEdgeAt(e, canvasElem) !== null ? 'ew-resize' : '';
+      return;
+    }
+
+    // small moves are still considered a click
+    if (this.drag.dragging === false && Math.abs(e.clientX - this.drag.originX) < CUE_DRAG_THRESHOLD_PX) {
+      return;
+    }
+
+    this.drag.dragging = true;
+    this.ee.emit('cueDrag', this.toCueRange(this.drag.anchorTime, this.eventToTime(e, canvasElem)));
+  }
+
+  onPointerUp(e, canvasElem) {
+    if (this.drag === null) {
+      return;
+    }
+
+    const { originTime, anchorTime, dragging } = this.drag;
+    this.drag = null;
+
+    if (dragging === false) {
+      this.ee.emit('waveformClick', { track_hash: this.src.hash, time: originTime });
+      return;
+    }
+
+    const range = this.toCueRange(anchorTime, this.eventToTime(e, canvasElem));
+    if (range.end - range.start < CUE_MIN_DURATION_SECONDS) {
+      this.ee.emit('cueDragCancel');
+      return;
+    }
+
+    this.ee.emit('cueDragEnd', range);
+  }
+
+  onPointerCancel() {
+    if (this.drag === null) {
+      return;
+    }
+
+    const { dragging } = this.drag;
+    this.drag = null;
+
+    if (dragging === true) {
+      this.ee.emit('cueDragCancel');
+    }
+  }
+
+  getDragAnchorTime(edge, time) {
+    if (edge === 'start') {
+      return this.cueEnd;
+    }
+
+    if (edge === 'end') {
+      return this.cueStart;
+    }
+
+    return time;
+  }
+
+  // time (seconds) at the pointer position, the canvas spanning the duration of the longest track
+  eventToTime(e, canvasElem) {
+    const rect = canvasElem.getBoundingClientRect();
+    if (rect.width === 0) {
+      return 0;
+    }
+
+    const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width);
+
+    return (x * this.tracksMaxDuration) / rect.width;
+  }
+
+  // edge of the cue ('start' / 'end') under the pointer, null if none. Only complete cues can be adjusted
+  getCueEdgeAt(e, canvasElem) {
+    if (this.cueStart === null || this.cueEnd === null || !this.tracksMaxDuration) {
+      return null;
+    }
+
+    const rect = canvasElem.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const timeToX = (time) => (time * rect.width) / this.tracksMaxDuration;
+    // edges after the end of this track are not drawn on it, so they can't be grabbed here
+    const duration = this.getDuration();
+
+    const distanceToStart = this.cueStart <= duration ? Math.abs(x - timeToX(this.cueStart)) : Infinity;
+    const distanceToEnd = this.cueEnd <= duration ? Math.abs(x - timeToX(this.cueEnd)) : Infinity;
+
+    if (Math.min(distanceToStart, distanceToEnd) > CUE_EDGE_GRAB_PX) {
+      return null;
+    }
+
+    return distanceToStart <= distanceToEnd ? 'start' : 'end';
+  }
+
+  // dragging backwards is allowed
+  toCueRange(timeA, timeB) {
+    return { start: Math.min(timeA, timeB), end: Math.max(timeA, timeB) };
   }
 
   createWaveform(canvasElem) {
@@ -389,6 +467,14 @@ export default class {
   }
 
   // ---------- UTILS ----------
+
+  timeToPixel(time) {
+    if (time === null || this.waveform === null || !this.tracksMaxDuration) {
+      return null;
+    }
+
+    return Math.round((time * this.waveform.canvas.width) / this.tracksMaxDuration);
+  }
 
   // current playback position in seconds, consistent with getCurrentPixel() whatever the player state
   getCurrentTime() {

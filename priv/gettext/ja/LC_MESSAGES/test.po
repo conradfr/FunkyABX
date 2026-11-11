@@ -57,8 +57,8 @@ msgstr "<small>あなたの順位:</small> %{rank}"
 
 #: lib/funkyabx_web/live/components/player.ex:106
 #, elixir-autogen, elixir-format
-msgid "<strong>Mouse/touch:</strong><ul><li>Click on play icon or track number to switch and/or start playing (+ctrl to rewind)</li><li>Click on a timeline/waveform to go to a specific time & track</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li></ul>"
-msgstr "<strong>マウス／タッチ:</strong><ul><li>再生アイコンまたはトラック番号をクリックで切替・再生 (+Ctrlで巻き戻し)</li><li>タイムライン／波形をクリックで特定の位置・トラックへ移動</li></ul><strong>キーボードショートカット:</strong><ul><li>スペース: 再生／一時停止</li><li>矢印: 前／次</li><li>1-9: トラック切替 (Alt/Option: +10)</li><li>Ctrl+キー: コマンド+巻き戻し</li><li>W: 波形の表示切替</li></ul>"
+msgid "<strong>Mouse/touch:</strong><ul><li>Click on play icon or track number to switch and/or start playing (+ctrl to rewind)</li><li>Click on a timeline/waveform to go to a specific time & track</li><li>Click + drag on a timeline/waveform to set a cue, drag its edges to adjust it</li></ul><strong>Keyboard shortcuts:</strong><ul><li>space: play/pause</li><li>arrows: previous/next</li><li>1-9: switch to track # (alt/option: +10)</li><li>ctrl+key: command + rewind</li><li>w: hide/show waveform</li><li>escape: clear cue</li></ul>"
+msgstr "<strong>マウス／タッチ:</strong><ul><li>再生アイコンまたはトラック番号をクリックで切替・再生 (+Ctrlで巻き戻し)</li><li>タイムライン／波形をクリックで特定の位置・トラックへ移動</li><li>タイムライン／波形をドラッグでキューを作成、端をドラッグで調整</li></ul><strong>キーボードショートカット:</strong><ul><li>スペース: 再生／一時停止</li><li>矢印: 前／次</li><li>1-9: トラック切替 (Alt/Option: +10)</li><li>Ctrl+キー: コマンド+巻き戻し</li><li>W: 波形の表示切替</li><li>Esc: キューを解除</li></ul>"
 
 #: lib/funkyabx_web/live/components/result/result_abx.ex:28
 #, elixir-autogen, elixir-format

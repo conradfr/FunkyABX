@@ -23,8 +23,9 @@ const PLAYER_EVENTS = [
   'audiorequeststatechange',
   'loadprogress',
   'waveformClick',
-  'setCueStartTime',
-  'cueIsOver'
+  'cueDrag',
+  'cueDragEnd',
+  'cueDragCancel'
 ];
 
 export default class {
@@ -60,7 +61,13 @@ export default class {
     this.normalization = normalization;
     this.drawWaveform = drawWaveform;
 
-    this.startCueTime = null;
+    // cue (named so to avoid confusion with the loop option), in seconds, null when not set
+    this.cue = { start: null, end: null };
+    // playback time at the previous cue end check, to detect when the cue end is crossed
+    this.lastCueCheckTime = null;
+    // cue drag preview, drawn at most once per frame
+    this.pendingCueDrag = null;
+    this.cueDragFrame = null;
 
     const trackList = this.tracks;
 
@@ -135,12 +142,28 @@ export default class {
       this.play(track_hash, time, true);
     });
 
-    this.ee.on('setCueStartTime', async (params) => {
-      this.startCueTime = params;
+    // the cue being dragged is only drawn, it's applied to the playback when the drag ends
+    this.ee.on('cueDrag', (range) => {
+      this.pendingCueDrag = range;
+      if (this.cueDragFrame === null) {
+        this.cueDragFrame = requestAnimationFrame(() => {
+          this.cueDragFrame = null;
+          if (this.pendingCueDrag !== null) {
+            this.drawCue(this.pendingCueDrag.start, this.pendingCueDrag.end);
+            this.pendingCueDrag = null;
+          }
+        });
+      }
     });
 
-    this.ee.on('cueIsOver', async (params) => {
-      this.play(null, params || 0);
+    this.ee.on('cueDragEnd', ({ start, end }) => {
+      this.cancelCueDragPreview();
+      this.setCue(start, end, true);
+    });
+
+    this.ee.on('cueDragCancel', () => {
+      this.cancelCueDragPreview();
+      this.drawCue(this.cue.start, this.cue.end);
     });
 
     // ---------- LOAD ----------
@@ -177,17 +200,14 @@ export default class {
           (acc, curr) => curr.getDuration() > acc.getDuration() ? curr : acc
         );
 
-        /*
-          The player can't know when a cue end is reached
-          So we delegate that to the longest Track
-         */
-        this.maxDurationTrack.cueMaster = true;
         this.maxDuration = this.maxDurationTrack.getDuration();
-
 
         /* eslint-disable no-param-reassign */
         this.tracks = this.tracks.map((trackObj) => {
           trackObj.tracksMaxDuration = this.maxDuration;
+          // a cue may have been set with the buttons while loading
+          trackObj.cueStart = this.cue.start;
+          trackObj.cueEnd = this.cue.end;
           trackObj.drawTimeline();
           return trackObj;
         });
@@ -267,6 +287,8 @@ export default class {
     }
 
     const playoutPromises = [];
+    // playback restarts somewhere else, the cue end crossing detection starts over
+    this.lastCueCheckTime = null;
 
     this.tracks.forEach((track, index) => {
       track.setActive(index === this.currentTrackIndex);
@@ -279,7 +301,7 @@ export default class {
       }
 
       playoutPromises.push(
-        track.play(startTime ?? this.startCueTime)
+        track.play(startTime ?? this.cue.start)
       );
     });
 
@@ -295,6 +317,7 @@ export default class {
       this.timeInterval =
         setInterval(() => {
           this.currentTime = time.getTimeInMs();
+          this.checkCueEnd();
           this.tracks.forEach((track) => {
             track.refreshTimeline();
           });
@@ -449,14 +472,88 @@ export default class {
 
   // ---------- CUE ----------
 
-  async setStartCue() {
-    // we sync to tracks as they don't have access to the player
-    return await Promise.all(this.tracks.map(item => item.setStartCueTime()));
+  // current playback position (seconds), the longest track being the reference as it plays the whole time
+  getCurrentTime() {
+    return this.maxDurationTrack !== null ? this.maxDurationTrack.getCurrentTime() : 0;
   }
 
-  async setEndCue() {
-    // we sync to tracks as they don't have access to the player
-    return await Promise.all(this.tracks.map(item => item.setEndCueTime(this.tracks.length)));
+  // restart = jump to the cue start if playing (new cue from a drag)
+  setCue(start, end, restart) {
+    this.cue = { start, end };
+    this.drawCue(start, end);
+
+    if (restart === true && start !== null && this.state === playerState.PLAYER_PLAYING) {
+      this.play(null, start);
+    }
+  }
+
+  clearCue() {
+    this.cancelCueDragPreview();
+    this.setCue(null, null, false);
+  }
+
+  // button, acting as a toggle: set at the current position, not set if after cue end
+  setStartCue() {
+    if (this.cue.start !== null) {
+      this.setCue(null, this.cue.end, false);
+      return;
+    }
+
+    const currentTime = this.getCurrentTime();
+    if (this.cue.end !== null && currentTime > this.cue.end) {
+      return;
+    }
+
+    this.setCue(currentTime, this.cue.end, false);
+  }
+
+  // button, acting as a toggle: set at the current position, not set if before cue start
+  setEndCue() {
+    if (this.cue.end !== null) {
+      this.setCue(this.cue.start, null, false);
+      return;
+    }
+
+    const currentTime = this.getCurrentTime();
+    if (this.cue.start !== null && currentTime < this.cue.start) {
+      return;
+    }
+
+    this.setCue(this.cue.start, currentTime, false);
+  }
+
+  // we sync to tracks as they don't have access to the player, only to draw (cue applied or drag preview)
+  drawCue(start, end) {
+    this.tracks.forEach((track) => {
+      if (track instanceof Track) {
+        track.setCue(start, end);
+      }
+    });
+  }
+
+  cancelCueDragPreview() {
+    if (this.cueDragFrame !== null) {
+      cancelAnimationFrame(this.cueDragFrame);
+      this.cueDragFrame = null;
+    }
+    this.pendingCueDrag = null;
+  }
+
+  // when playback crosses the cue end it goes back to the cue start.
+  // Only a crossing counts, so seeking after the cue end plays normally
+  checkCueEnd() {
+    const currentTime = this.getCurrentTime();
+    const previousTime = this.lastCueCheckTime;
+    this.lastCueCheckTime = currentTime;
+
+    const { start, end } = this.cue;
+    if (end === null || previousTime === null) {
+      return;
+    }
+
+    if (previousTime < end && currentTime >= end) {
+      this.play(null, start ?? 0);
+    }
   }
 
   // ---------- CLEANUP ----------
@@ -473,6 +570,7 @@ export default class {
       this.timeInterval = null;
     }
 
+    this.cancelCueDragPreview();
     PLAYER_EVENTS.forEach((event) => this.ee.removeAllListeners(event));
   }
 

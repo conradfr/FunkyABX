@@ -149,6 +149,10 @@ const PlayerHook = {
           this.player.toggleDrawWaveform();
           break;
 
+        case 'Escape':
+          this.player.clearCue();
+          break;
+
         case 'ArrowDown':
         case 'ArrowRight':
           this.player.goToNext(event.ctrlKey);

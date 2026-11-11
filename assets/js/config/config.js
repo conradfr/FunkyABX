@@ -23,4 +23,9 @@ export const COOKIE_DEVICE = 'player-device';
 
 // ---------- CUE ----------
 
-export const CUE_OVER_TOLERANCE = 3;
+// a pointer move shorter than this (px) on a waveform is a click (seek), a longer one drags a cue
+export const CUE_DRAG_THRESHOLD_PX = 4;
+// distance (px) from an edge of the cue at which it can be grabbed to adjust it
+export const CUE_EDGE_GRAB_PX = 5;
+// shortest cue (seconds) a drag can create, a shorter drag is cancelled
+export const CUE_MIN_DURATION_SECONDS = 0.1;
