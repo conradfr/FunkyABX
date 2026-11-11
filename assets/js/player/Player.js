@@ -571,6 +571,11 @@ export default class {
     }
 
     this.cancelCueDragPreview();
+    this.tracks.forEach((track) => {
+      if (track instanceof Track) {
+        track.destroy();
+      }
+    });
     PLAYER_EVENTS.forEach((event) => this.ee.removeAllListeners(event));
   }
 

@@ -1005,7 +1005,10 @@ defmodule FunkyABXWeb.TestFormLive do
                         {input_value(fp, :original_filename)}
                       </div>
                     <% end %>
-                    <div class="col-sm-2 d-flex justify-content-between flex-row-reverse" style="min-width: 62px">
+                    <div
+                      class="col-sm-2 d-flex justify-content-between flex-row-reverse"
+                      style="min-width: 62px"
+                    >
                       <%= if input_value(fp, :id) != nil do %>
                         <button
                           type="button"

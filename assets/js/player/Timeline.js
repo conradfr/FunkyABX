@@ -45,6 +45,7 @@ export default class {
 
     this.lastCurrentBar = 0;
     this.isActive = false;
+    this.needsFullRedraw = true;
   }
 
   draw(currentPixel, active, startCuePixel, endCuePixel) {
@@ -75,33 +76,29 @@ export default class {
   // ---------- WAVEFORM ----------
 
   drawWaveform(currentPixel, active, ctx) {
-    if (active !== this.isActive) {
-      ctx.clearRect(
-        0,
-        0,
-        this.width,
-        this.canvas.height
-      );
-    }
+    // only the bars between the previous and the current playhead are redrawn, except on the first draw
+    // (new timeline, e.g. canvas resized while playing) or when the colors change
+    const fullRedraw = this.needsFullRedraw === true || active !== this.isActive;
+    this.needsFullRedraw = false;
 
     const currentBar = Math.round(currentPixel / (this.barWidth + this.barSpace));
 
     let clearXStart = 0;
     let clearXEnd = this.pixelData.length - 1;
 
-    if (currentBar > this.lastCurrentBar) {
+    if (fullRedraw === false && currentBar > this.lastCurrentBar) {
       clearXStart = Math.max(0, this.lastCurrentBar);
       clearXEnd = Math.min(currentBar, this.pixelData.length - 1);
-    } else if (currentBar < this.lastCurrentBar) {
+    } else if (fullRedraw === false && currentBar < this.lastCurrentBar) {
       clearXStart = Math.max(0, currentBar);
       clearXEnd = Math.min(this.lastCurrentBar, this.pixelData.length - 1);
     }
 
-    if (active !== this.isActive) {
+    if (fullRedraw === true) {
       ctx.clearRect(
         0,
         0,
-        this.width,
+        this.canvas.width,
         this.canvas.height
       );
     } else {

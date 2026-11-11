@@ -39,6 +39,9 @@ export default class {
     this.cueEnd = null;
     // pointer interaction in progress on the canvas (seek click or cue drag)
     this.drag = null;
+    // canvas following its wrapper size
+    this.resizeObserver = null;
+    this.resizeFrame = null;
 
     this.tracksMaxDuration = null;
     this.sourceCtrl = null;
@@ -328,8 +331,65 @@ export default class {
     canvasElem.addEventListener('pointercancel', () => this.onPointerCancel());
 
     canvasParentElem.appendChild(canvasElem);
+    this.observeResize(canvasParentElem, canvasElem);
 
     return canvasElem;
+  }
+
+  // ---------- RESIZE ----------
+
+  // The canvas has a fixed pixel size, so it follows its wrapper when the layout changes
+  // (on mobile the flex row can wrap the waveform below the track name, device rotation...)
+  observeResize(canvasParentElem, canvasElem) {
+    this.stopObservingResize();
+
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    this.resizeObserver = new ResizeObserver(() => {
+      if (this.resizeFrame !== null) {
+        return;
+      }
+
+      this.resizeFrame = requestAnimationFrame(() => {
+        this.resizeFrame = null;
+        this.resizeCanvas(canvasParentElem, canvasElem);
+      });
+    });
+    this.resizeObserver.observe(canvasParentElem);
+  }
+
+  stopObservingResize() {
+    if (this.resizeObserver !== null) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+
+    if (this.resizeFrame !== null) {
+      cancelAnimationFrame(this.resizeFrame);
+      this.resizeFrame = null;
+    }
+  }
+
+  resizeCanvas(canvasParentElem, canvasElem) {
+    const width = canvasParentElem.offsetWidth;
+    // detached (new round) / hidden / already the right size
+    if (!canvasElem.isConnected || width === 0 || width === canvasElem.width) {
+      return;
+    }
+
+    // the same canvas is kept so a drag in progress isn't interrupted
+    canvasElem.style.width = `${width}px`;
+    canvasElem.width = width;
+
+    // waveform bars & timeline depend on the width, the cue being in seconds it follows
+    this.createWaveform(canvasElem);
+    this.drawTimeline(true);
+  }
+
+  destroy() {
+    this.stopObservingResize();
   }
 
   // ---------- POINTER (seek & cue drag) ----------
@@ -491,32 +551,29 @@ export default class {
   }
 
   getCurrentPixel() {
-    // container is needed to allow multiple round with id/hash changing
-    const canvasContainer = document.getElementById(`waveform-${this.src.hash}`);
-    if (canvasContainer === null) {
+    if (this.waveform === null) {
       return;
     }
 
-    const canvasParentElem = canvasContainer.getElementsByClassName('waveform-wrapper')[0];
-    if (canvasParentElem === null) {
-      return;
-    }
+    // same scale as the waveform & the cue: the canvas pixel width.
+    // Not the wrapper's, which can differ until the canvas follows a layout change
+    const width = this.waveform.canvas.width;
 
     if (this.playerState === playerState.PLAYER_STOPPED) {
       return 0;
     } else if (this.source !== null && this.lastPlayingStartedAt !== null) {
       return ((((Date.now() - this.lastPlayingStartedAt) / 1000) + this.currentSeconds)
-        * canvasParentElem.offsetWidth) / this.tracksMaxDuration;
+        * width) / this.tracksMaxDuration;
     } else if (this.playerState === playerState.PLAYER_PLAYING) {
       // player is probably playing farther this track's duration.
-      return canvasParentElem.offsetWidth;
+      return width;
     } else if (this.pausedAt !== null && this.currentSeconds !== null) {
-      return (this.currentSeconds * canvasParentElem.offsetWidth) / this.tracksMaxDuration;
+      return (this.currentSeconds * width) / this.tracksMaxDuration;
     } else if (this.pausedAt !== null && this.lastPlayingStartedAt !== null) {
       return ((((this.pausedAt - this.lastPlayingStartedAt) / 1000))
-        * canvasParentElem.offsetWidth) / this.tracksMaxDuration;
+        * width) / this.tracksMaxDuration;
     } else {
-      return canvasParentElem.offsetWidth;
+      return width;
     } /* else {
       currentPixel = 0;
     } */
