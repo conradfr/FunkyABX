@@ -142,18 +142,18 @@ export default class {
   }
 
   setStartCueTime() {
-    // acting as a toggle
-    if (this.startCuePixel) {
+    // acting as a toggle (pixel 0 is a valid cue start)
+    if (this.startCuePixel !== null) {
       this.startCuePixel = null;
       this.startCueTime = null;
     } else {
       const newStartPixel = this.getCurrentPixel();
       // not set if after cue end
-      if (this.endCuePixel && this.endCuePixel < newStartPixel) {
+      if (this.endCuePixel !== null && this.endCuePixel < newStartPixel) {
         return;
       }
 
-      this.startCueTime = this.cueMaster ? ((Date.now() - this.lastPlayingStartedAt) / 1000) + this.currentSeconds : null;
+      this.startCueTime = this.cueMaster ? this.getCurrentTime() : null;
       this.startCuePixel = newStartPixel;
     }
 
@@ -174,7 +174,7 @@ export default class {
       } else {
         const newEndPixel = this.getCurrentPixel();
         // not set if before cue start
-        if (this.startCuePixel && this.startCuePixel > newEndPixel) {
+        if (this.startCuePixel !== null && this.startCuePixel > newEndPixel) {
           return;
         }
 
@@ -352,7 +352,8 @@ export default class {
       this.cueDetectorLock = true;
       this.ee.emit('cueIsOver', this.startCueTime);
     } else if (this.cueMaster === true && this.endCuePixel !== null
-      && (currentPixel <= this.endCuePixelPreTolerance) || currentPixel >= this.endCuePixelPreTolerance) {
+      && (currentPixel < this.endCuePixelPreTolerance || currentPixel >= this.endCuePixelPostTolerance)) {
+      // playhead left the detection window: the next cue end can be detected again
       this.cueDetectorLock = null;
     }
   }
@@ -388,6 +389,20 @@ export default class {
   }
 
   // ---------- UTILS ----------
+
+  // current playback position in seconds, consistent with getCurrentPixel() whatever the player state
+  getCurrentTime() {
+    if (this.playerState === playerState.PLAYER_STOPPED) {
+      return 0;
+    } else if (this.source !== null && this.lastPlayingStartedAt !== null) {
+      return ((Date.now() - this.lastPlayingStartedAt) / 1000) + this.currentSeconds;
+    } else if (this.pausedAt !== null && this.currentSeconds !== null) {
+      // currentSeconds already includes the time played before the pause
+      return this.currentSeconds;
+    }
+
+    return 0;
+  }
 
   getCurrentPixel() {
     // container is needed to allow multiple round with id/hash changing

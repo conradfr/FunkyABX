@@ -184,7 +184,7 @@ export default class {
 
   drawCue(startCuePixel, endCuePixel, ctx) {
     // ensure cue start point is not after the end of this particular track
-    if (startCuePixel !== null && startCuePixel <= this.canvas.width) {
+    if (startCuePixel !== null && startCuePixel <= this.width) {
       const startToCaret = startCuePixel + this.cueBarLength;
       this.drawHorizontalBar(startCuePixel, startToCaret, this.colorCue, 1, 10, ctx);
       this.drawHorizontalBar(startCuePixel, startToCaret, this.colorCue, 1, this.canvas.height - 10, ctx);
@@ -192,7 +192,7 @@ export default class {
     }
 
     // ensure cue end point is not after the end of this particular track
-    if (endCuePixel !== null && endCuePixel <= this.canvas.width) {
+    if (endCuePixel !== null && endCuePixel <= this.width) {
       const endToCaret = endCuePixel - this.cueBarLength;
       this.drawHorizontalBar(endCuePixel, endToCaret, this.colorCue, 1, 10, ctx);
       this.drawHorizontalBar(endCuePixel, endToCaret, this.colorCue, 1, this.canvas.height - 10, ctx);

@@ -14,6 +14,19 @@ import * as playerState from '../config/state';
 // Preferred loudness for normalization, lowered when a track can't reach it without its true peak going over the max
 const NORMALIZATION_TARGET_LUFS = -18;
 
+// Events listened by the player and its tracks on the shared emitter, removed when the player is replaced (new round)
+// push_event is not listed as it's listened by the hook
+const PLAYER_EVENTS = [
+  'playing',
+  'stopping',
+  'player_state',
+  'audiorequeststatechange',
+  'loadprogress',
+  'waveformClick',
+  'setCueStartTime',
+  'cueIsOver'
+];
+
 export default class {
   constructor(tracks, rotateSeconds, rotate, loop, volume, normalization, drawWaveform, ee, audioFiles, local) {
     this.ee = ee;
@@ -444,6 +457,23 @@ export default class {
   async setEndCue() {
     // we sync to tracks as they don't have access to the player
     return await Promise.all(this.tracks.map(item => item.setEndCueTime(this.tracks.length)));
+  }
+
+  // ---------- CLEANUP ----------
+
+  // detach this player from the shared emitter so a replacing player doesn't share its events
+  destroy() {
+    if (this.rotateInterval !== null) {
+      clearInterval(this.rotateInterval);
+      this.rotateInterval = null;
+    }
+
+    if (this.timeInterval !== null) {
+      clearInterval(this.timeInterval);
+      this.timeInterval = null;
+    }
+
+    PLAYER_EVENTS.forEach((event) => this.ee.removeAllListeners(event));
   }
 
   // ---------- OUTPUT DEVICE ----------

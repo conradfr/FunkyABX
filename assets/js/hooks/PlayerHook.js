@@ -264,12 +264,10 @@ const PlayerHook = {
     this.handleEvent('update_tracks', (params) => {
       this.stop();
       this.pushEventTo(this.el, 'stopping');
+      if (this.player !== null && this.player !== undefined) {
+        this.player.destroy();
+      }
       this.player = null;
-
-      this.ee.removeAllListeners('waveformClick');
-      this.ee.removeAllListeners('playing');
-      this.ee.removeAllListeners('stopping');
-      this.ee.removeAllListeners('player_state');
 
       this.player = loadPlayer(params.tracks);
     });
